@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Ecclesia</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_reserve_change">ReserveChangeActivity</string>
+    <string name="title_activity_reserve_cancel">ReserveCancelActivity</string>
+    <string name="title_activity_history_search">HistorySearchActivity</string>
+    <string name="title_activity_reserve">ReserveActivity</string>
+
+    <string-array name="mokuteki">
+        <item>打合わせ</item>
+        <item>商談</item>
+        <item>事業方針</item>
+        <item>プロジェクト報告</item>
+        <item>決算報告</item>
+        <item>定例会</item>
+    </string-array>
+    <string-array name="bihin">
+        <item>プロジェクター</item>
+        <item>なし</item>
+    </string-array>
+    <string-array name="kaisi">
+        <item>2017/01/18 09:00</item>
+    </string-array>
+    <string-array name="syuryo">
+        <item>2017/01/18 11:00</item>
+    </string-array>
+    <string-array name="member">
+        <item>骨川筋衛門：骨部</item>
+    </string-array>
+    <string-array name="room">
+        <item>特別会議室</item>
+        <item>会議室A</item>
+        <item>会議室B</item>
+        <item>会議室C</item>
+    </string-array>
+    <string name="title_activity_reserve_confirm">ReserveConfirmActivity</string>
+</resources>
