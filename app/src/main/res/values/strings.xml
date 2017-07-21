@@ -38,4 +38,5 @@
         <item>会議室C</item>
     </string-array>
     <string name="title_activity_reserve_confirm">ReserveConfirmActivity</string>
+    <string name="title_activity_add_member">AddMemberActivity</string>
 </resources>

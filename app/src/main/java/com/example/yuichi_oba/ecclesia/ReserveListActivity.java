@@ -8,8 +8,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -17,7 +18,10 @@ import android.view.MenuItem;
 // _/_/
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 public class ReserveListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+
+    Button bt_reserve;
+    Button bt_reserve_confirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,12 @@ public class ReserveListActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        bt_reserve = (Button) findViewById(R.id.bt_reserve);
+        bt_reserve.setOnClickListener(this);
+        bt_reserve_confirm = (Button) findViewById(R.id.bt_reserve_confirm);
+        bt_reserve_confirm.setOnClickListener(this);
+
     }
 
     @Override
@@ -44,38 +54,6 @@ public class ReserveListActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    // _/_/
-    // _/_/ オプション画面の作成メソッド
-    // _/_/
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    // _/_/
-    // _/_/ オプション画面を選択したときの処理
-    // _/_/
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
@@ -92,19 +70,12 @@ public class ReserveListActivity extends AppCompatActivity
 
         Intent intent = null;
         switch (id) {
-//            case R.id.nav_reserve_list:
-//                // 自classなのでなにもしない
-//                break;
-            case R.id.nav_reserve_change:
-                intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
-                break;
-//            case R.id.nav_reserve_cancel:
-//                intent = new Intent(getApplicationContext(), ReserveCancelActivity.class);
-//                break;
             case R.id.nav_rireki:
                 intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
                 break;
             case R.id.nav_admin_auth:
+                MyDialog myDialog = new MyDialog();
+                myDialog.show(getFragmentManager(), "aaa");
                 break;
 
         }
@@ -118,5 +89,21 @@ public class ReserveListActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        Intent intent;
+        switch (id) {
+            case R.id.bt_reserve:
+                intent = new Intent(getApplicationContext(), ReserveActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.bt_reserve_confirm:
+                intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 }

@@ -19,10 +19,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ReserveChangeActivity"
-            android:label="@string/title_activity_reserve_change"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".HistorySearchActivity"
             android:label="@string/title_activity_history_search"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -33,7 +29,7 @@
         <activity
             android:name=".ReserveConfirmActivity"
             android:label="@string/title_activity_reserve_confirm"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

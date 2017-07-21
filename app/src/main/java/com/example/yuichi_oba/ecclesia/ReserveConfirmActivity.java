@@ -1,5 +1,6 @@
 package com.example.yuichi_oba.ecclesia;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -87,7 +88,24 @@ public class ReserveConfirmActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        Intent intent = null;
         int id = item.getItemId();
+        switch (id) {
+            case R.id.nav_reserve_list:
+                intent = new Intent(getApplicationContext(), ReserveListActivity.class);
+                break;
+            case R.id.nav_rireki:
+                intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
+                break;
+            case R.id.nav_admin_auth:
+                MyDialog myDialog = new MyDialog();
+                myDialog.show(getFragmentManager(), "aaa");
+                break;
+
+        }
+        if (intent != null) {
+            startActivity(intent);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

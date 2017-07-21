@@ -1,6 +1,8 @@
 package com.example.yuichi_oba.ecclesia;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -9,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -34,6 +38,20 @@ public class ReserveActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        /***
+         * フローティングボタン押下時の処理
+         *
+         * 会議参加者選択画面に遷移する
+         */
+        FloatingActionButton fbn = (FloatingActionButton) findViewById(R.id.fbn_addMember);
+        fbn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // ここで、参加者
+                Toast.makeText(ReserveActivity.this, "Floting Button Push!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -87,6 +105,25 @@ public class ReserveActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        Intent intent = null;
+        switch (id) {
+            case R.id.nav_reserve_list:
+                intent = new Intent(getApplicationContext(), ReserveListActivity.class);
+                break;
+            case R.id.nav_rireki:
+                intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
+                break;
+            case R.id.nav_admin_auth:
+                MyDialog myDialog = new MyDialog();
+                myDialog.show(getFragmentManager(), "aaa");
+                break;
+
+        }
+        if (intent != null) {
+            startActivity(intent);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

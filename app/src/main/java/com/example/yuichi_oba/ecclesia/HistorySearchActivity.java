@@ -96,16 +96,12 @@ public class HistorySearchActivity extends AppCompatActivity
             case R.id.nav_reserve_list:
                 intent = new Intent(getApplicationContext(), ReserveListActivity.class);
                 break;
-            case R.id.nav_reserve_change:
-                intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
-                break;
-//            case R.id.nav_reserve_cancel:
-//                intent = new Intent(getApplicationContext(), ReserveCancelActivity.class);
-//                break;
 //            case R.id.nav_rireki:
-//                // 自classなので何もしない
+//                intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
 //                break;
             case R.id.nav_admin_auth:
+                MyDialog myDialog = new MyDialog();
+                myDialog.show(getFragmentManager(), "aaa");
                 break;
 
         }

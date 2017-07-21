@@ -13,9 +13,22 @@
     tools:context="com.example.yuichi_oba.ecclesia.ReserveListActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <TextView
+    <Button
+        android:text="予約(暫定"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="予約一覧画面"
-        android:textSize="30sp" />
+        android:layout_marginStart="108dp"
+        android:layout_marginTop="60dp"
+        android:id="@+id/bt_reserve"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="予約詳細(暫定"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bt_reserve"
+        android:layout_alignStart="@+id/bt_reserve"
+        android:layout_marginTop="35dp"
+        android:id="@+id/bt_reserve_confirm" />
 </RelativeLayout>
