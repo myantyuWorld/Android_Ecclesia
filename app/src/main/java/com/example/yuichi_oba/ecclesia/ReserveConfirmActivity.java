@@ -10,6 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -71,9 +74,19 @@ public class ReserveConfirmActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        Intent intent;
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.option_earlyOut:
+                Toast.makeText(this, "早期退出", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.option_reserveChange:
+                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.option_extention:
+                intent = new Intent(getApplicationContext(), ExtentionActivity.class);
+                startActivity(intent);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -98,8 +111,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
                 break;
             case R.id.nav_admin_auth:
-                MyDialog myDialog = new MyDialog();
-                myDialog.show(getFragmentManager(), "aaa");
+                AuthDialog authDialog = new AuthDialog();
+                authDialog.show(getFragmentManager(), "aaa");
                 break;
 
         }

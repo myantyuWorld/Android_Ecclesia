@@ -10,6 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.SearchView;
+
+import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -19,6 +27,9 @@ import android.view.MenuItem;
 public class HistorySearchActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    SearchView searchView;
+    ListView listView;
+    List<String> list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +47,15 @@ public class HistorySearchActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        list = new ArrayList<>();
+        for (int i = 0; i < 10; i++)
+        {
+            list.add("test");
+        }
+        listView = (ListView) findViewById(R.id.list_history);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
+
+        listView.setAdapter(adapter);
     }
 
     @Override
@@ -100,8 +120,8 @@ public class HistorySearchActivity extends AppCompatActivity
 //                intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
 //                break;
             case R.id.nav_admin_auth:
-                MyDialog myDialog = new MyDialog();
-                myDialog.show(getFragmentManager(), "aaa");
+                AuthDialog authDialog = new AuthDialog();
+                authDialog.show(getFragmentManager(), "aaa");
                 break;
 
         }

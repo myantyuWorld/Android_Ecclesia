@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
 // _/_/ 予約状況(リストで視覚的にわかりやすい）を表示するアクティビティ
@@ -74,8 +76,8 @@ public class ReserveListActivity extends AppCompatActivity
                 intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
                 break;
             case R.id.nav_admin_auth:
-                MyDialog myDialog = new MyDialog();
-                myDialog.show(getFragmentManager(), "aaa");
+                AuthDialog authDialog = new AuthDialog();
+                authDialog.show(getFragmentManager(), "aaa");
                 break;
 
         }

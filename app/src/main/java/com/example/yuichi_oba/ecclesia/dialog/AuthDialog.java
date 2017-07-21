@@ -1,4 +1,4 @@
-package com.example.yuichi_oba.ecclesia;
+package com.example.yuichi_oba.ecclesia.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,11 +9,13 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.yuichi_oba.ecclesia.R;
+
 /**
  * Created by Yuichi-Oba on 2017/07/21.
  */
 
-public class MyDialog extends DialogFragment {
+public class AuthDialog extends DialogFragment {
 
     /***
      * 管理者認証用ダイアログ

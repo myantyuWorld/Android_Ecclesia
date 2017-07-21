@@ -30,7 +30,8 @@
             android:name=".ReserveConfirmActivity"
             android:label="@string/title_activity_reserve_confirm"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AddMemberActivity"></activity>
+        <activity android:name=".AddMemberActivity" />
+        <activity android:name=".ExtentionActivity"></activity>
     </application>
 
 </manifest>
