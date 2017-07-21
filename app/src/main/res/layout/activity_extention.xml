@@ -4,7 +4,7 @@
     android:id="@+id/activity_extention"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.yuichi_oba.ecclesia.ExtentionActivity">
+    tools:context="com.example.yuichi_oba.ecclesia.activity.ExtentionActivity">
 
     <Button
         android:text="延長"

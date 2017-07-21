@@ -1,9 +1,11 @@
-package com.example.yuichi_oba.ecclesia;
+package com.example.yuichi_oba.ecclesia.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import com.example.yuichi_oba.ecclesia.R;
 
 public class AddMemberActivity extends AppCompatActivity
     implements View.OnClickListener{
