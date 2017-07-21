@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -49,7 +48,9 @@ public class ReserveActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 // ここで、参加者
-                Toast.makeText(ReserveActivity.this, "Floting Button Push!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(ReserveActivity.this, "Floting Button Push!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), AddMemberActivity.class);
+                startActivity(intent);
             }
         });
     }
