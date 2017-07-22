@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.yuichi_oba.ecclesia.activity.AddMemberActivity">
+    tools:context="com.example.yuichi_oba.ecclesia.AddMemberActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,9 +27,11 @@
                 android:checked="true" />
 
             <Spinner
-                android:id="@+id/spinner"
+                android:id="@+id/sp_add_history"
+                android:entries="@array/sp_add_history"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:spinnerMode="dialog" />
         </LinearLayout>
 
         <LinearLayout
@@ -70,8 +72,8 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="Name"
-                        android:textAlignment="viewEnd" />
+                        android:textAlignment="viewEnd"
+                        android:id="@+id/ed_add_company" />
 
                 </LinearLayout>
 
@@ -96,8 +98,8 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="Name"
-                        android:textAlignment="viewEnd" />
+                        android:textAlignment="viewEnd"
+                        android:id="@+id/ed_add_depart" />
 
                 </LinearLayout>
 
@@ -122,8 +124,8 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="Name"
-                        android:textAlignment="viewEnd" />
+                        android:textAlignment="viewEnd"
+                        android:id="@+id/ed_add_position" />
 
                 </LinearLayout>
 
@@ -148,8 +150,8 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textPersonName"
-                        android:text="Name"
-                        android:textAlignment="viewEnd" />
+                        android:textAlignment="viewEnd"
+                        android:id="@+id/ed_add_name" />
 
                 </LinearLayout>
 
@@ -173,8 +175,8 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="textEmailAddress"
-                        android:text="Name"
-                        android:textAlignment="viewEnd" />
+                        android:textAlignment="viewEnd"
+                        android:id="@+id/ed_add_email" />
 
                 </LinearLayout>
 
@@ -199,8 +201,8 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:inputType="phone"
-                        android:text="Name"
-                        android:textAlignment="viewEnd" />
+                        android:textAlignment="viewEnd"
+                        android:id="@+id/ed_add_tel" />
 
                 </LinearLayout>
 
