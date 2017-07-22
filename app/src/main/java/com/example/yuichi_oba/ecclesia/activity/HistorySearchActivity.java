@@ -23,6 +23,16 @@ import java.util.List;
 // へろーぐちおさん
 //
 
+/*************************************************************************************
+ *
+ *                                  Hint!
+ *
+ *  １．サーチビューでなんか打った時(会社名とか）にListView絞り込むやつ　  ｐ１８９
+ *  ２．自作アダプタやら自作のレイアウトやらなんやら                       ｐ１６４～ｐ１９２
+ *  外部設計の履歴検索にあるまんまをつくる
+ *
+ **************************************************************************************/
+
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
 // _/_/ 利用履歴を検索するアクティビティ
@@ -60,6 +70,7 @@ public class HistorySearchActivity extends AppCompatActivity
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
 
         listView.setAdapter(adapter);
+
     }
 
     @Override
