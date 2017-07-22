@@ -1,4 +1,4 @@
-﻿package com.example.yuichi_oba.ecclesia.activity;
+package com.example.yuichi_oba.ecclesia.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
