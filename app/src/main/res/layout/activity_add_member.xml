@@ -89,7 +89,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="部署"
+                        android:text="氏名"
                         android:textSize="18sp" />
 
                     <EditText
@@ -99,7 +99,7 @@
                         android:ems="10"
                         android:inputType="textPersonName"
                         android:textAlignment="viewEnd"
-                        android:id="@+id/ed_add_depart" />
+                        android:id="@+id/ed_add_name" />
 
                 </LinearLayout>
 
@@ -141,7 +141,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="氏名"
+                        android:text="部署"
                         android:textSize="18sp" />
 
                     <EditText
@@ -151,7 +151,7 @@
                         android:ems="10"
                         android:inputType="textPersonName"
                         android:textAlignment="viewEnd"
-                        android:id="@+id/ed_add_name" />
+                        android:id="@+id/ed_add_depart" />
 
                 </LinearLayout>
 
