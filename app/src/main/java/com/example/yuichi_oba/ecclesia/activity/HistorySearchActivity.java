@@ -9,7 +9,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -40,6 +43,77 @@ import java.util.List;
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 public class HistorySearchActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    
+    private class ListItem {
+        private long id;
+        private String purpose;
+        private String date;
+        private String gaiyou;
+        private String company;
+        private String companyMember;
+
+        public long getId() {
+            return id;
+        }
+
+        public String getPurpose() {
+            return purpose;
+        }
+        public String getDate() {
+            return date;
+        }
+        public String getGaiyou() {
+            return gaiyou;
+        }
+        public String getCompany() {
+            return company;
+        }
+        public String getCompanyMember() {
+            return companyMember;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+        public void setPurpose(String purpose) {
+            this.purpose = purpose;
+        }
+        public void setDate(String date) {
+            this.date = date;
+        }
+        public void setGaiyou(String gaiyou) {
+            this.gaiyou = gaiyou;
+        }
+        public void setCompany(String company) {
+            this.company = company;
+        }
+        public void setCompanyMember(String companyMember) {
+            this.companyMember = companyMember;
+        }
+    }
+
+    private class MyListAdapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            return 0;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            return null;
+        }
+    }
 
     SearchView searchView;
     ListView listView;
