@@ -1,4 +1,4 @@
-package com.example.yuichi_oba.ecclesia.activity;
+package com.example.yuichi_oba.ecclesia;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,30 +8,27 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+import android.widget.Toast;
 
-import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
-// _/_/ 予約状況(リストで視覚的にわかりやすい）を表示するアクティビティ
+// _/_/ 予約の詳細・確認を行うアクティビティ
 // _/_/
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-public class ReserveListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
-
-    Button bt_reserve;
-    Button bt_reserve_confirm;
+public class ReserveConfirmActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_reserve_confirm);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -41,12 +38,6 @@ public class ReserveListActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        bt_reserve = (Button) findViewById(R.id.bt_reserve);
-        bt_reserve.setOnClickListener(this);
-        bt_reserve_confirm = (Button) findViewById(R.id.bt_reserve_confirm);
-        bt_reserve_confirm.setOnClickListener(this);
-
     }
 
     @Override
@@ -61,18 +52,61 @@ public class ReserveListActivity extends AppCompatActivity
 
     // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
     // _/_/
+    // _/_/ オプション画面を作成するメソッド
+    // _/_/
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.reserve_confirm, menu);
+        return true;
+    }
+
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // _/_/
+    // _/_/ オプションを選択したときの処理
+    // _/_/
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        Intent intent;
+        //noinspection SimplifiableIfStatement
+        switch (id) {
+            case R.id.option_earlyOut:
+                Toast.makeText(this, "早期退出", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.option_reserveChange:
+                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.option_extention:
+                intent = new Intent(getApplicationContext(), ExtentionActivity.class);
+                startActivity(intent);
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // _/_/
     // _/_/ ナビを選択したときの処理
     // _/_/
     // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here
-        // .
-        int id = item.getItemId();
-
+        // Handle navigation view item clicks here.
         Intent intent = null;
+        int id = item.getItemId();
         switch (id) {
+            case R.id.nav_reserve_list:
+                intent = new Intent(getApplicationContext(), ReserveListActivity.class);
+                break;
             case R.id.nav_rireki:
                 intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
                 break;
@@ -82,9 +116,6 @@ public class ReserveListActivity extends AppCompatActivity
                 break;
 
         }
-        /***
-         * 画面遷移
-         */
         if (intent != null) {
             startActivity(intent);
         }
@@ -92,21 +123,5 @@ public class ReserveListActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-        Intent intent;
-        switch (id) {
-            case R.id.bt_reserve:
-                intent = new Intent(getApplicationContext(), ReserveActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.bt_reserve_confirm:
-                intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-                startActivity(intent);
-                break;
-        }
     }
 }

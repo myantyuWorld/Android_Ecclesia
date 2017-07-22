@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.ReserveListActivity"
+            android:name=".ReserveListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -19,19 +19,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.HistorySearchActivity"
+            android:name=".HistorySearchActivity"
             android:label="@string/title_activity_history_search"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.ReserveActivity"
+            android:name=".ReserveActivity"
             android:label="@string/title_activity_reserve"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.ReserveConfirmActivity"
+            android:name=".ReserveConfirmActivity"
             android:label="@string/title_activity_reserve_confirm"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.AddMemberActivity" />
-        <activity android:name=".activity.ExtentionActivity"></activity>
+        <activity
+            android:name=".AddMemberActivity"
+            android:label="参加者登録" />
+        <activity
+            android:name=".ExtentionActivity"
+            android:label="延長" />
     </application>
 
 </manifest>

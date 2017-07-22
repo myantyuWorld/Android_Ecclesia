@@ -1,11 +1,10 @@
-package com.example.yuichi_oba.ecclesia.activity;
+package com.example.yuichi_oba.ecclesia;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.ExtensionDialog;
 
 public class ExtentionActivity extends AppCompatActivity

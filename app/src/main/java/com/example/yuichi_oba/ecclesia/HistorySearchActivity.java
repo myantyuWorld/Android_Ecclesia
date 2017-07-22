@@ -1,4 +1,4 @@
-package com.example.yuichi_oba.ecclesia.activity;
+package com.example.yuichi_oba.ecclesia;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 
 import java.util.ArrayList;
