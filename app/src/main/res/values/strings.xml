@@ -32,6 +32,7 @@
         <item>骨川筋衛門：骨部</item>
     </string-array>
     <string-array name="room">
+        <item>希望なし</item>
         <item>特別会議室</item>
         <item>会議室A</item>
         <item>会議室B</item>
