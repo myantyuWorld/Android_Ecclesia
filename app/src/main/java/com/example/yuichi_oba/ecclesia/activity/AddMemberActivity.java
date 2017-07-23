@@ -1,5 +1,7 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.tools.DB;
 
 public class AddMemberActivity extends AppCompatActivity
         implements View.OnClickListener {
@@ -148,15 +151,20 @@ public class AddMemberActivity extends AppCompatActivity
      * 各種Widgetの初期化処理メソッド
      */
     private void init() {
-        bt_cancel = (Button) findViewById(R.id.bt_addmem_cancel);
-        bt_regist = (Button) findViewById(R.id.bt_addmem_regist);
-        ed_company = (EditText) findViewById(R.id.ed_add_company);
-        ed_name = (EditText) findViewById(R.id.ed_add_name);
+        bt_cancel = (Button) findViewById(R.id.bt_addmem_cancel);       //  キャンセルボタン
+        bt_regist = (Button) findViewById(R.id.bt_addmem_regist);       //  登録（追加？）ボタン
+        ed_company = (EditText) findViewById(R.id.ed_add_company);      //  会社入力項目
+        ed_name = (EditText) findViewById(R.id.ed_add_name);            //  氏名入力項目
 //        ed_depart = (EditText) findViewById(R.id.ed_add_depart);
 //        ed_position = (EditText) findViewById(R.id.ed_add_position);
-        ed_email = (EditText) findViewById(R.id.ed_add_email);
-        ed_tel = (EditText) findViewById(R.id.ed_add_tel);
-        rbn_group = (RadioGroup) findViewById(R.id.rbngroup_addmember);
+        ed_email = (EditText) findViewById(R.id.ed_add_email);          //  Email入力項目
+        ed_tel = (EditText) findViewById(R.id.ed_add_tel);              //  電話入力項目
+        rbn_group = (RadioGroup) findViewById(R.id.rbngroup_addmember); //  ラジオボタングループ
+        //  会社履歴スピナーの項目の設定
         sp_history = (Spinner) findViewById(R.id.sp_add_history);
+        // DB 検索して、予約した人の「会社名 ： 予約者苗字」で出す
+        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+
     }
 }

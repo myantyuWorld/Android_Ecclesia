@@ -71,13 +71,23 @@
             android:orientation="horizontal"
             android:layout_weight="1">
 
+            <TextView
+                android:text="会社"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView5"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:layout_margin="5dp" />
+
             <Spinner
                 android:id="@+id/sp_add_history"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:entries="@array/sp_add_history"
                 android:spinnerMode="dialog"
-                android:layout_margin="10dp" />
+                android:layout_margin="5dp" />
         </LinearLayout>
 
         <LinearLayout
