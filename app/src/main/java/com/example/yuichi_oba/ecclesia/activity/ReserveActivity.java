@@ -51,7 +51,7 @@ public class ReserveActivity extends AppCompatActivity
             public void onClick(View view) {
                 // ここで、参加者
 //                Toast.makeText(ReserveActivity.this, "Floting Button Push!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), AddMemberActivity.class);
+                Intent intent = new Intent(getApplication(), AddMemberActivity.class);
                 startActivity(intent);
             }
         });
