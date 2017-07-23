@@ -76,7 +76,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:entries="@array/sp_add_history"
-                android:spinnerMode="dialog" />
+                android:spinnerMode="dialog"
+                android:layout_margin="10dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -85,9 +86,9 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="0dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -106,13 +107,13 @@
                         android:textSize="18sp" />
 
                     <EditText
-                        android:id="@+id/ed_add_company"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
                         android:inputType="textPersonName"
-                        android:textAlignment="viewEnd" />
+                        android:ems="10"
+                        android:id="@+id/ed_add_company"
+                        android:layout_weight="1"
+                        android:textAlignment="textEnd" />
 
                 </LinearLayout>
 
@@ -157,14 +158,12 @@
                         android:text="役職"
                         android:textSize="18sp" />
 
-                    <EditText
-                        android:id="@+id/ed_add_position"
+                    <Spinner
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:id="@+id/spinner2"
                         android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="textPersonName"
-                        android:textAlignment="viewEnd" />
+                        android:entries="@array/sp_add_history" />
 
                 </LinearLayout>
 
@@ -183,14 +182,12 @@
                         android:text="部署"
                         android:textSize="18sp" />
 
-                    <EditText
-                        android:id="@+id/ed_add_depart"
+                    <Spinner
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:id="@+id/spinner3"
                         android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="textPersonName"
-                        android:textAlignment="viewEnd" />
+                        android:entries="@array/sp_add_history" />
 
                 </LinearLayout>
 

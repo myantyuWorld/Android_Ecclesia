@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
@@ -18,13 +19,14 @@ public class AddMemberActivity extends AppCompatActivity
 
     Button bt_cancel;
     Button bt_regist;
-    EditText ed_company;
-    EditText ed_depart;
-    EditText ed_position;
+//    EditText ed_company;
+//    EditText ed_depart;
+//    EditText ed_position;
     EditText ed_name;
     EditText ed_email;
     EditText ed_tel;
     RadioGroup rbn_group;
+    Spinner sp_history;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,20 +45,20 @@ public class AddMemberActivity extends AppCompatActivity
         /***
          * EditTextへの入力監視リスナー登録
          */
-        //  「会社」
-        ed_company.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-            // 入力し終わった最後にこのメソッドがcall
-            @Override
-            public void afterTextChanged(Editable editable) {
-                Toast.makeText(AddMemberActivity.this, "会社入力し終わった", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        //  「会社」
+//        ed_company.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//            }
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//            }
+//            // 入力し終わった最後にこのメソッドがcall
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//                Toast.makeText(AddMemberActivity.this, "会社入力し終わった", Toast.LENGTH_SHORT).show();
+//            }
+//        });
         //  「氏名」
         ed_name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -84,16 +86,18 @@ public class AddMemberActivity extends AppCompatActivity
                 switch (checkedId) {
                     case R.id.rbn_add_history:      // 履歴から選択
                         // 各項目入力できないようにする
-                        ed_company.setFocusable(false);
+//                        ed_company.setFocusable(false);
                         ed_name.setFocusable(false);
-                        ed_depart.setFocusable(false);
-                        ed_position.setFocusable(false);
+//                        ed_depart.setFocusable(false);
+//                        ed_position.setFocusable(false);
                         ed_tel.setFocusable(false);
                         ed_email.setFocusable(false);
+                        sp_history.setEnabled(true);
                         break;
                     case R.id.rbn_add_newregist:    // 新規登録
                         // 再度編集可能にするメソッドをcall
                         setAgainEditable();
+                        sp_history.setEnabled(false);
                         break;
                 }
             }
@@ -135,18 +139,18 @@ public class AddMemberActivity extends AppCompatActivity
      */
     private void setAgainEditable() {
         // 全Edittextに対して、再編集可能にする
-        ed_company.setFocusable(true);
-        ed_company.setEnabled(true);
-        ed_company.setFocusableInTouchMode(true);
+//        ed_company.setFocusable(true);
+//        ed_company.setEnabled(true);
+//        ed_company.setFocusableInTouchMode(true);
         ed_name.setFocusable(true);
         ed_name.setEnabled(true);
         ed_name.setFocusableInTouchMode(true);
-        ed_depart.setFocusable(true);
-        ed_depart.setEnabled(true);
-        ed_depart.setFocusableInTouchMode(true);
-        ed_position.setFocusable(true);
-        ed_position.setEnabled(true);
-        ed_position.setFocusableInTouchMode(true);
+//        ed_depart.setFocusable(true);
+//        ed_depart.setEnabled(true);
+//        ed_depart.setFocusableInTouchMode(true);
+//        ed_position.setFocusable(true);
+//        ed_position.setEnabled(true);
+//        ed_position.setFocusableInTouchMode(true);
         ed_tel.setFocusable(true);
         ed_tel.setEnabled(true);
         ed_tel.setFocusableInTouchMode(true);
@@ -161,12 +165,13 @@ public class AddMemberActivity extends AppCompatActivity
     private void init() {
         bt_cancel = (Button) findViewById(R.id.bt_addmem_cancel);
         bt_regist = (Button) findViewById(R.id.bt_addmem_regist);
-        ed_company = (EditText) findViewById(R.id.ed_add_company);
+//        ed_company = (EditText) findViewById(R.id.ed_add_company);
         ed_name = (EditText) findViewById(R.id.ed_add_name);
-        ed_depart = (EditText) findViewById(R.id.ed_add_depart);
-        ed_position = (EditText) findViewById(R.id.ed_add_position);
+//        ed_depart = (EditText) findViewById(R.id.ed_add_depart);
+//        ed_position = (EditText) findViewById(R.id.ed_add_position);
         ed_email = (EditText) findViewById(R.id.ed_add_email);
         ed_tel = (EditText) findViewById(R.id.ed_add_tel);
         rbn_group = (RadioGroup) findViewById(R.id.rbngroup_addmember);
+        sp_history = (Spinner) findViewById(R.id.sp_add_history);
     }
 }
