@@ -2,8 +2,6 @@ package com.example.yuichi_oba.ecclesia.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +17,7 @@ public class AddMemberActivity extends AppCompatActivity
 
     Button bt_cancel;
     Button bt_regist;
-//    EditText ed_company;
+    EditText ed_company;
 //    EditText ed_depart;
 //    EditText ed_position;
     EditText ed_name;
@@ -45,32 +43,19 @@ public class AddMemberActivity extends AppCompatActivity
         /***
          * EditTextへの入力監視リスナー登録
          */
-//        //  「会社」
-//        ed_company.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//            }
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//            }
-//            // 入力し終わった最後にこのメソッドがcall
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//                Toast.makeText(AddMemberActivity.this, "会社入力し終わった", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        //  「会社」
+        ed_company.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Toast.makeText(AddMemberActivity.this, "会社入力し終わった", Toast.LENGTH_SHORT).show();
+            }
+        });
         //  「氏名」
-        ed_name.addTextChangedListener(new TextWatcher() {
+        ed_name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-            // 入力し終わった最後にこのメソッドがcall
-            @Override
-            public void afterTextChanged(Editable editable) {
-                Toast.makeText(AddMemberActivity.this, "氏名が入力し終わった", Toast.LENGTH_SHORT).show();
+            public void onFocusChange(View view, boolean b) {
+                Toast.makeText(AddMemberActivity.this, "氏名入力し終わった", Toast.LENGTH_SHORT).show();
+
             }
         });
         /***
@@ -86,7 +71,7 @@ public class AddMemberActivity extends AppCompatActivity
                 switch (checkedId) {
                     case R.id.rbn_add_history:      // 履歴から選択
                         // 各項目入力できないようにする
-//                        ed_company.setFocusable(false);
+                        ed_company.setFocusable(false);
                         ed_name.setFocusable(false);
 //                        ed_depart.setFocusable(false);
 //                        ed_position.setFocusable(false);
@@ -139,9 +124,9 @@ public class AddMemberActivity extends AppCompatActivity
      */
     private void setAgainEditable() {
         // 全Edittextに対して、再編集可能にする
-//        ed_company.setFocusable(true);
-//        ed_company.setEnabled(true);
-//        ed_company.setFocusableInTouchMode(true);
+        ed_company.setFocusable(true);
+        ed_company.setEnabled(true);
+        ed_company.setFocusableInTouchMode(true);
         ed_name.setFocusable(true);
         ed_name.setEnabled(true);
         ed_name.setFocusableInTouchMode(true);
@@ -165,7 +150,7 @@ public class AddMemberActivity extends AppCompatActivity
     private void init() {
         bt_cancel = (Button) findViewById(R.id.bt_addmem_cancel);
         bt_regist = (Button) findViewById(R.id.bt_addmem_regist);
-//        ed_company = (EditText) findViewById(R.id.ed_add_company);
+        ed_company = (EditText) findViewById(R.id.ed_add_company);
         ed_name = (EditText) findViewById(R.id.ed_add_name);
 //        ed_depart = (EditText) findViewById(R.id.ed_add_depart);
 //        ed_position = (EditText) findViewById(R.id.ed_add_position);
