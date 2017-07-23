@@ -30,6 +30,7 @@ public class DB extends SQLiteOpenHelper {
     // Constructor
     public DB(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+//        super(context, String.valueOf(R.string.db_name), null, DB_VERSION);
         this.context = context;
         this.dbPath = context.getDatabasePath(DB_NAME);
     }

@@ -23,12 +23,14 @@ public class AddMemberActivity extends AppCompatActivity
     EditText ed_email;
     EditText ed_tel;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_member);
 
+        /***
+         * キャンセル・登録ボタンのリスナー登録
+         */
         bt_cancel = (Button) findViewById(R.id.bt_addmem_cancel);
         bt_cancel.setOnClickListener(this);
         bt_regist = (Button) findViewById(R.id.bt_addmem_regist);
@@ -63,12 +65,10 @@ public class AddMemberActivity extends AppCompatActivity
         ed_name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             // 入力し終わった最後にこのメソッドがcall
@@ -96,10 +96,15 @@ public class AddMemberActivity extends AppCompatActivity
         //
         //  「TEL」
         //
+        ed_tel = (EditText) findViewById(R.id.ed_add_tel);
 
 
     }
 
+    /***
+     * 各ボタン押下時の処理
+     * @param view
+     */
     @Override
     public void onClick(View view) {
         int id = view.getId();
@@ -114,6 +119,9 @@ public class AddMemberActivity extends AppCompatActivity
                 /***
                  * ここで、新規登録ならば、社外者ファイルへの登録を行う
                  */
+                // ラジオボタンをみて、新規登録ラジオボタンなら、入力された情報の重複チェックを行う
+
+                // 社外者ファイルへのインサートを行う
                 break;
         }
     }
