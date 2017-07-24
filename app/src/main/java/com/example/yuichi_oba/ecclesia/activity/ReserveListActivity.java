@@ -14,6 +14,7 @@ import android.widget.Button;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -105,6 +106,11 @@ public class ReserveListActivity extends AppCompatActivity
                 break;
             case R.id.bt_reserve_confirm:
                 intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+
+                // 遷移先に、オブジェクト渡しする
+                ReserveInfo reserveInfo = new ReserveInfo();
+                reserveInfo.setRe_id("0001");
+                intent.putExtra("reserve_info", reserveInfo);
                 startActivity(intent);
                 break;
         }

@@ -24,7 +24,7 @@
         android:layout_alignParentStart="true" />
 
     <Button
-        android:text="予約詳細(暫定"
+        android:text="予約詳細(暫定0001を検索する"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/bt_reserve"

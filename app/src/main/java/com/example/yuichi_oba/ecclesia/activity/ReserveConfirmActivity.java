@@ -1,6 +1,9 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,10 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
+import com.example.yuichi_oba.ecclesia.tools.DB;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -23,6 +30,18 @@ import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 public class ReserveConfirmActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    TextView txt_overview;
+    TextView txt_purpose;
+    TextView txt_startTime;
+    TextView txt_endTime;
+    TextView txt_applicant;
+    TextView txt_inOutHouse;
+    TextView txt_conferenceRoom;
+    TextView txt_fixtures;
+    TextView txt_remarks;
+    Spinner sp_member;
+
+    ReserveInfo reserveInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +58,64 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        init();
+
+        // 遷移前の画面から、オブジェクトを受け取る
+        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("reserve_info");
+        // 予約情報クラスのインスタンスから、予約情報詳細をＤＢ検索して、画面にマッピングする
+        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from v_reserve where re_id = ?", new String[]{reserveInfo.getRe_id()});
+
+        while (c.moveToNext()) {
+            // 予約情報クラスのインスタンスに、ＤＢ検索した結果をセットする
+            setReserveInfo(c);
+            // インスタンスと、画面情報をマッピングする
+            setWidgetInfo();
+
+        }
+    }
+
+    /***
+     * // インスタンスと、画面情報をマッピングする
+     */
+    private void setWidgetInfo() {
+        txt_overview.setText(reserveInfo.getRe_overview());
+        txt_purpose.setText(reserveInfo.getRe_purpose());
+        txt_startTime.setText(reserveInfo.getRe_startTime());
+        txt_endTime.setText(reserveInfo.getRe_endTime());
+        txt_applicant.setText(reserveInfo.getRe_rePerson());
+        txt_conferenceRoom.setText(reserveInfo.getRe_conference_room());
+    }
+
+    /***
+     * // 予約情報クラスのインスタンスに、ＤＢ検索した結果をセットする
+     * @param c
+     */
+    private void setReserveInfo(Cursor c) {
+        reserveInfo.setRe_overview("aaaaaa");
+        reserveInfo.setRe_purpose(c.getString(9));
+        reserveInfo.setRe_startTime(c.getString(6));
+        reserveInfo.setRe_endTime(c.getString(7));
+        reserveInfo.setRe_rePerson(c.getString(2));
+        reserveInfo.setRe_conference_room(c.getString(11));
+    }
+
+    /***
+     * 画面の各ウィジェットの初期化処理
+     */
+    private void init() {
+        txt_overview = (TextView) findViewById(R.id.txt_rd_overView);
+        txt_purpose = (TextView) findViewById(R.id.txt_rd_purpose);
+        txt_startTime = (TextView) findViewById(R.id.txt_rd_startTime);
+        txt_endTime = (TextView) findViewById(R.id.txt_rd_endTime);
+        txt_applicant = (TextView) findViewById(R.id.txt_rd_applicant);
+        txt_inOutHouse = (TextView) findViewById(R.id.txt_rd_inOutHouse);
+        txt_conferenceRoom = (TextView) findViewById(R.id.txt_rd_room);
+        txt_fixtures = (TextView) findViewById(R.id.txt_rd_fixtures);
+        txt_remarks = (TextView) findViewById(R.id.txt_rd_remarks);
+        sp_member = (Spinner) findViewById(R.id.sp_rd_member);
     }
 
     @Override

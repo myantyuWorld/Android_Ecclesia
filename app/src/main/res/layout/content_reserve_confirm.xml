@@ -13,7 +13,9 @@
 
         android:layout_width="395dp"
         android:layout_height="587dp"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
         <!--w368
             h495-->
         <LinearLayout
@@ -33,9 +35,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
+                tools:layout_editor_absoluteY="8dp"
+                android:layout_margin="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -50,7 +53,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textSize="18sp" />
             </LinearLayout>
             <!--お試し線-->
             <!--<View-->
@@ -64,9 +68,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
+                tools:layout_editor_absoluteY="8dp"
+                android:layout_margin="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -80,7 +85,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -89,9 +95,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
+                tools:layout_editor_absoluteY="8dp"
+                android:layout_margin="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -105,7 +112,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="3.9"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -114,9 +122,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
+                tools:layout_editor_absoluteY="8dp"
+                android:layout_margin="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -130,7 +139,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="3.9"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:lineSpacingExtra="18sp"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -139,9 +150,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
+                tools:layout_editor_absoluteY="8dp"
+                android:layout_margin="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -155,7 +167,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="2.65"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -164,9 +177,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
+                tools:layout_editor_absoluteY="8dp"
+                android:layout_margin="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -189,9 +203,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
+                tools:layout_editor_absoluteY="8dp"
+                android:layout_margin="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -205,7 +220,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="4.8"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -214,9 +230,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
+                tools:layout_editor_absoluteY="8dp"
+                android:layout_margin="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -230,7 +247,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="7.1"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -239,9 +257,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
+                tools:layout_editor_absoluteY="8dp"
+                android:layout_margin="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -255,7 +274,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -264,9 +284,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
+                tools:layout_editor_absoluteY="8dp"
+                android:layout_margin="5dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -280,14 +301,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:layout_margin="5dp">
 
                 <Button
                     android:text="OK"
