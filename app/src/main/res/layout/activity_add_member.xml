@@ -86,7 +86,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:entries="@array/sp_add_history"
-                android:spinnerMode="dialog"
                 android:layout_margin="5dp" />
         </LinearLayout>
 
@@ -171,9 +170,9 @@
                     <Spinner
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/spinner2"
+                        android:id="@+id/sp_add_potision"
                         android:layout_weight="1"
-                        android:entries="@array/sp_add_history" />
+                        android:entries="@array/sp_position" />
 
                 </LinearLayout>
 
@@ -195,7 +194,7 @@
                     <Spinner
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/spinner3"
+                        android:id="@+id/sp_add_depart"
                         android:layout_weight="1"
                         android:entries="@array/sp_add_history" />
 
