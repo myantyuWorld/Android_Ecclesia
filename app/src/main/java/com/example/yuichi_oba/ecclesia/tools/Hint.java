@@ -32,7 +32,8 @@ public class Hint {
      *
      *      ③   遷移後のアクティビティでのオブジェクト受け取り
      *      ④   Intent in = getIntent();
-     *      ⑤   ex) StoreData s = (StoreData) intent.getSerializableExtra(key)
+     *      ⑤   ex)     StoreData s = (StoreData) intent.getSerializableExtra(key)
+     *                   このとき、StoreDataは "implements Serializable" する
      *
      *
      *
