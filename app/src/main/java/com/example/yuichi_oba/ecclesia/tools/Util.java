@@ -1,7 +1,10 @@
 package com.example.yuichi_oba.ecclesia.tools;
 
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+
+import java.util.List;
 
 /**
  * Created by Yuichi-Oba on 2017/07/24.
@@ -26,4 +29,5 @@ public class Util {
         // なければ０を返す
         return 0;
     }
+
 }

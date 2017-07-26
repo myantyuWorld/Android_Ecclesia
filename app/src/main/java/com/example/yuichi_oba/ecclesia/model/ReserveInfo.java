@@ -1,6 +1,7 @@
 package com.example.yuichi_oba.ecclesia.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class ReserveInfo implements Serializable {
     private String re_startTime;
     private String re_endTime;
     private String re_rePerson;
-    private List<String> re_member;
+    private List<String> re_member = new ArrayList<>();
     private int re_flg;
     private String re_conference_room;
     private String re_marks;

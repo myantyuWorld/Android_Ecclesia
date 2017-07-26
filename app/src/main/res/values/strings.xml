@@ -55,6 +55,12 @@
         <item>主任</item>
         <item>一般社員</item>
     </string-array>
+
+    <string-array name="re_id">
+        <item>0001</item>
+        <item>0002</item>
+        <item>0003</item>
+    </string-array>
     <string name="title_activity_reserve_confirm">ReserveConfirmActivity</string>
     <string name="title_activity_add_member">AddMemberActivity</string>
 

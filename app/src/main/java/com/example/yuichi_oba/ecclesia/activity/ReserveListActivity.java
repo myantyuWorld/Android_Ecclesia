@@ -8,9 +8,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
@@ -24,8 +27,12 @@ import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
 public class ReserveListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
+    private static final String TAG = ReserveListActivity.class.getSimpleName();
+    public static final String RESERVE_INFO = "reserve_info";
+
     Button bt_reserve;
-    Button bt_reserve_confirm;
+    Spinner spinner;
+    ReserveInfo reserveInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +50,29 @@ public class ReserveListActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        reserveInfo = new ReserveInfo();
+
         bt_reserve = (Button) findViewById(R.id.bt_reserve);
         bt_reserve.setOnClickListener(this);
-        bt_reserve_confirm = (Button) findViewById(R.id.bt_reserve_confirm);
-        bt_reserve_confirm.setOnClickListener(this);
+        spinner = (Spinner) findViewById(R.id.spinner2);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                Toast.makeText(ReserveListActivity.this, "test", Toast.LENGTH_SHORT).show();
+                Spinner s = (Spinner) adapterView;
+                String re_id = s.getSelectedItem().toString();
+                Log.d(TAG, re_id);
+                reserveInfo.setRe_id(re_id);
+
+                Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+                intent.putExtra(RESERVE_INFO, reserveInfo);
+                startActivity(intent);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
 
     }
 
@@ -102,15 +128,6 @@ public class ReserveListActivity extends AppCompatActivity
         switch (id) {
             case R.id.bt_reserve:
                 intent = new Intent(getApplicationContext(), ReserveActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.bt_reserve_confirm:
-                intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-
-                // 遷移先に、オブジェクト渡しする
-                ReserveInfo reserveInfo = new ReserveInfo();
-                reserveInfo.setRe_id("0001");
-                intent.putExtra("reserve_info", reserveInfo);
                 startActivity(intent);
                 break;
         }
