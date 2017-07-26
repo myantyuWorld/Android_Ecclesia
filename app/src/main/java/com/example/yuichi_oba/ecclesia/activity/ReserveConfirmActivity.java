@@ -45,7 +45,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     TextView txt_conferenceRoom;
     TextView txt_fixtures;
     TextView txt_remarks;
-    Spinner sp_member;
+    Spinner sp_member;              // 会議参加者を表示するスピナー // TODO: 2017/07/26 これは、ダイアログでいい？？ 
 
     ReserveInfo reserveInfo;
 
@@ -71,8 +71,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
         reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("reserve_info");
         // 予約詳細をDB検索して、画面にマッピングするメソッド
         dbSearchReserveConfirm();
-
-
     }
 
     private void dbSearchReserveConfirm() {
