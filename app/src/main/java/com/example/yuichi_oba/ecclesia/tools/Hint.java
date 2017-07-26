@@ -9,6 +9,10 @@ public class Hint {
      *      ②   ArrayAdapter<String> adapter = new ...(this, android.R.layout.simple..., list);
      *      ③   spinner.setAdapter(adapter)で OK!
      *
+     *      cf) リスナー setOnItemSelectedListener
+     *                  Spinner spinner = (Spinner) adapterView;
+     *                  String name = spinner.getSelectedItem().toString();
+     *
      *
      * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
      * _/_/_/                    DB検索
