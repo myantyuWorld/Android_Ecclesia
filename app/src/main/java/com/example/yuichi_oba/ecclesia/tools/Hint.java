@@ -3,7 +3,9 @@ package com.example.yuichi_oba.ecclesia.tools;
 public class Hint {
     /***
      * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-     * _/_/_/                Spinner値の動的設定
+     * _/_/_/
+     * _/_/_/         Spinner値の動的設定
+     * _/_/_/
      * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
      *      ①   リスト作成（スピナーに設定したい型でーー＞ま、ふつうList<String> ）
      *      ②   ArrayAdapter<String> adapter = new ...(this, android.R.layout.simple..., list);
@@ -15,7 +17,9 @@ public class Hint {
      *
      *
      * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-     * _/_/_/                    DB検索
+     * _/_/_/
+     * _/_/_/          DB検索
+     * _/_/_/
      * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
      *      ①   SQLiteOpenHelper helper = new DB(getApplicationContext());
      *      ②   SQLiteDatabase db = helper.getReadableDatabase();   // 読み取り専用
@@ -25,7 +29,9 @@ public class Hint {
      *
      *
      * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+     * _/_/_/
      * _/_/_/           Intentでの値渡し ＋ オブジェクト渡し
+     * _/_/_/
      * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
      *      ①   Inten in = new Intent(getApplicationContext(), 次の画面のクラス名.class);
      *      ②   intent.putExtra("key", object);
@@ -34,16 +40,35 @@ public class Hint {
      *      ④   Intent in = getIntent();
      *      ⑤   ex)     StoreData s = (StoreData) intent.getSerializableExtra(key)
      *                   このとき、StoreDataは "implements Serializable" する
+     *                   Bundle も同じ！
      *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
+     * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+     * _/_/_/
+     * _/_/_/           ダイアログ
+     * _/_/_/
+     * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+     *      ①   MyDialog extends DialogFragment {...}
+     *      ②   onCreateDialog を　オーバーライド
+     *      ③   基本形の例
+                        @Override
+                        public Dialog onCreateDialog(Bundle savedInstanceState) {
+                        return new AlertDialog.Builder(getActivity())
+                        .setTitle("タイトル")
+                        .setMessage("メッセージ")
+                        .create();
+                        }
+
+                         @Override
+                         public void onPause() {
+                         super.onPause();
+
+                         // onPause でダイアログを閉じる場合
+                         dismiss();
+                         }
+
+            ④   使用する際は、
+                         MyDialog d = new MyDialog();
+                         d.show(getFragmentManager(), "key");
      *
      *
      */

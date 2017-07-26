@@ -187,13 +187,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.40"
                     android:text="参加者"
-                    android:textSize="20dp" />
-
-                <Spinner
-                    android:layout_width="165dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/sp_rd_member"
-                    android:layout_weight="0.45" />
+                    android:textSize="20dp"
+                    android:id="@+id/txt_member" />
 
             </LinearLayout>
 
