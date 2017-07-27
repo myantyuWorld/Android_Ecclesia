@@ -1,5 +1,9 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,8 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +37,7 @@ import java.util.List;
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 public class ReserveConfirmActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
     private static final String TAG = ReserveConfirmActivity.class.getSimpleName();
 
     TextView txt_overview;
@@ -45,9 +49,38 @@ public class ReserveConfirmActivity extends AppCompatActivity
     TextView txt_conferenceRoom;
     TextView txt_fixtures;
     TextView txt_remarks;
-    Spinner sp_member;              // 会議参加者を表示するスピナー // TODO: 2017/07/26 これは、ダイアログでいい？？
+    TextView txt_member;              // 会議参加者を表示するスピナー // TODO: 2017/07/26 これは、ダイアログでいい？？
 
-    ReserveInfo reserveInfo;
+    static ReserveInfo reserveInfo;
+
+    // TODO: 2017/07/26 会議参加者をリスト形式で出す、カスタムレイアウト＆ダイアログ！
+    private static class MemberConfirmDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // 会議参加者データ
+            CharSequence[] items = reserveInfo.getRe_member().toArray(new CharSequence[reserveInfo.getRe_member().size()]);
+
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle("会議参加者一覧")
+                    .setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    })
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    })
+                    .create();
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            dismiss();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,9 +243,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
         txt_applicant.setText(reserveInfo.getRe_rePerson());
         txt_conferenceRoom.setText(reserveInfo.getRe_conference_room());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, reserveInfo.getRe_member());
-        sp_member.setAdapter(adapter);
-
     }
 
     /***
@@ -242,7 +272,16 @@ public class ReserveConfirmActivity extends AppCompatActivity
         txt_conferenceRoom = (TextView) findViewById(R.id.txt_rd_room);
         txt_fixtures = (TextView) findViewById(R.id.txt_rd_fixtures);
         txt_remarks = (TextView) findViewById(R.id.txt_rd_remarks);
-        sp_member = (Spinner) findViewById(R.id.sp_rd_member);
+        txt_member = (TextView) findViewById(R.id.txt_member);
+        txt_member.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Toast.makeText(ReserveConfirmActivity.this, "test", Toast.LENGTH_SHORT).show();
+                MemberConfirmDialog memberConfirmDialog = new MemberConfirmDialog();
+                memberConfirmDialog.show(getFragmentManager(), "ccc");
+            }
+        });
+
     }
 
 
