@@ -49,11 +49,11 @@ public class ReserveConfirmActivity extends AppCompatActivity
     TextView txt_conferenceRoom;
     TextView txt_fixtures;
     TextView txt_remarks;
-    TextView txt_member;              // 会議参加者を表示するスピナー // TODO: 2017/07/26 これは、ダイアログでいい？？
+    TextView txt_member;              // 会議参加者を表示するスピナー // DO: 2017/07/26 これは、ダイアログでいい？？
 
     static ReserveInfo reserveInfo;
 
-    // TODO: 2017/07/26 会議参加者をリスト形式で出す、カスタムレイアウト＆ダイアログ！
+    // DO: 2017/07/26 会議参加者をリスト形式で出す、カスタムレイアウト＆ダイアログ！
     private static class MemberConfirmDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
