@@ -72,11 +72,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialogInterface, int i) {
                         }
                     })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                        }
-                    })
                     .create();
         }
 
