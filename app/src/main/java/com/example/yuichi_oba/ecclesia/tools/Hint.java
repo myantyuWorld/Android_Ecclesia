@@ -69,6 +69,12 @@ public class Hint {
             ④   使用する際は、
                          MyDialog d = new MyDialog();
                          d.show(getFragmentManager(), "key");
+
+            ⑤   ダイアログにリストを出す
+                 .setItems(items, new DialogInterface.OnClickLister(){...}
+             CharSequence[] items =
+                reserveInfo.getRe_member().toArray(new CharSequence[reserveInfo.getRe_member().size()]);
+
      *
      *
      */

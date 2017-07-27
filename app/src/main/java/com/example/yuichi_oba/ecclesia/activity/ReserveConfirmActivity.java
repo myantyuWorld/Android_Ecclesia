@@ -38,36 +38,6 @@ import java.util.List;
 public class ReserveConfirmActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    // TODO: 2017/07/26 会議参加者をリスト形式で出す、カスタムレイアウト＆ダイアログ！
-    private static class MemberConfirmDialog extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return new AlertDialog.Builder(getActivity())
-                    .setTitle("")
-                    .setMessage("")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                        }
-                    })
-                    .create();
-        }
-
-        @Override
-        public void onPause() {
-            super.onPause();
-
-            dismiss();
-        }
-    }
-
     private static final String TAG = ReserveConfirmActivity.class.getSimpleName();
 
     TextView txt_overview;
@@ -81,7 +51,41 @@ public class ReserveConfirmActivity extends AppCompatActivity
     TextView txt_remarks;
     TextView txt_member;              // 会議参加者を表示するスピナー // TODO: 2017/07/26 これは、ダイアログでいい？？
 
-    ReserveInfo reserveInfo;
+    static ReserveInfo reserveInfo;
+
+    // TODO: 2017/07/26 会議参加者をリスト形式で出す、カスタムレイアウト＆ダイアログ！
+    private static class MemberConfirmDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // 会議参加者データ
+            CharSequence[] items = reserveInfo.getRe_member().toArray(new CharSequence[reserveInfo.getRe_member().size()]);
+
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle("会議参加者一覧")
+                    .setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    })
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    })
+                    .create();
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            dismiss();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
