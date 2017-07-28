@@ -15,7 +15,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -80,6 +79,38 @@ public class ReserveConfirmActivity extends AppCompatActivity
         }
 
         // ダイアログを破棄するメソッドーー＞HCP不要
+        @Override
+        public void onPause() {
+            super.onPause();
+            dismiss();
+        }
+    }
+
+    /***
+     * 「早期退出」オプション選択時の ダイアログフラグメントクラス
+     */
+    private static class EarlyOutDialog extends DialogFragment{
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle("早期退出")
+                    .setMessage("この会議を早期退出しますか？")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // OK選択で、早期退出ロジックスタート！
+                            Toast.makeText(getActivity(), "早期退出", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // 特に何もしない
+                        }
+                    })
+                    .create();
+        }
+
         @Override
         public void onPause() {
             super.onPause();
@@ -165,7 +196,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
         switch (id) {
             // 「早期退出」が選択された
             case R.id.option_earlyOut:
-                Toast.makeText(this, "早期退出", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "早期退出", Toast.LENGTH_SHORT).show();
+                EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
+                earlyOutDialog.show(getFragmentManager(), "ddd");
                 break;
             // 「予約変更」が選択された
             case R.id.option_reserveChange:
