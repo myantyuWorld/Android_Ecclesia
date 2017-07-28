@@ -37,7 +37,7 @@ public class Hint {
      *      ②   intent.putExtra("key", object);
      *
      *      ③   遷移後のアクティビティでのオブジェクト受け取り
-     *      ④   Intent in = getIntent();
+     *      ④   Intent in = getIntent();;
      *      ⑤   ex)     StoreData s = (StoreData) intent.getSerializableExtra(key)
      *                   このとき、StoreDataは "implements Serializable" する
      *                   Bundle も同じ！
