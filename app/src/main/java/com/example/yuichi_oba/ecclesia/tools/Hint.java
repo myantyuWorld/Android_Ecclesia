@@ -37,7 +37,7 @@ public class Hint {
      *      ②   intent.putExtra("key", object);
      *
      *      ③   遷移後のアクティビティでのオブジェクト受け取り
-     *      ④   Intent in = getIntent();
+     *      ④   Intent in = getIntent();;
      *      ⑤   ex)     StoreData s = (StoreData) intent.getSerializableExtra(key)
      *                   このとき、StoreDataは "implements Serializable" する
      *                   Bundle も同じ！
@@ -69,6 +69,12 @@ public class Hint {
             ④   使用する際は、
                          MyDialog d = new MyDialog();
                          d.show(getFragmentManager(), "key");
+
+            ⑤   ダイアログにリストを出す
+                 .setItems(items, new DialogInterface.OnClickLister(){...}
+             CharSequence[] items =
+                reserveInfo.getRe_member().toArray(new CharSequence[reserveInfo.getRe_member().size()]);
+
      *
      *
      */

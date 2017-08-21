@@ -8,21 +8,24 @@ import java.util.List;
  * Created by Yuichi-Oba on 2017/07/24.
  */
 
+/***
+ * 予約情報を管理するクラス
+ */
 public class ReserveInfo implements Serializable {
 
     /***
      * Field
      */
-    private String re_id;
-    private String re_overview;
-    private String re_purpose;
-    private String re_startTime;
-    private String re_endTime;
-    private String re_rePerson;
-    private List<String> re_member = new ArrayList<>();
-    private int re_flg;
-    private String re_conference_room;
-    private String re_marks;
+    private String re_id;                               // 予約ID
+    private String re_overview;                         // 概要
+    private String re_purpose;                          // 会議目的名
+    private String re_startTime;                        // 開始日時
+    private String re_endTime;                          // 終了日時
+    private String re_rePerson;                         // ―→ 現状使っていないため、HCP不要
+    private List<String> re_member = new ArrayList<>(); // 会議参加者を記録するリスト
+    private int re_flg;                                 // 社内（０）社外（１）
+    private String re_conference_room;                  // 会議室名
+    private String re_marks;                            // 備考？だったけ(笑)
 
     /***
      * Constractor

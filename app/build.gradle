@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    maven { url 'http://repo1.maven.org/maven2' }
+}
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
