@@ -5,10 +5,15 @@
       <module fileurl="file://$PROJECT_DIR$/Android_ecclesia.iml" filepath="$PROJECT_DIR$/Android_ecclesia.iml" />
       <module fileurl="file://$PROJECT_DIR$/Android_ecclesia.iml" filepath="$PROJECT_DIR$/Android_ecclesia.iml" />
 <<<<<<< HEAD
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/Android_ecclesia.iml" filepath="$PROJECT_DIR$/Android_ecclesia.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
 =======
 >>>>>>> syama/master
+=======
+      <module fileurl="file://$PROJECT_DIR$/Android_ecclesia.iml" filepath="$PROJECT_DIR$/Android_ecclesia.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+>>>>>>> moriguchi/moriguchi
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
