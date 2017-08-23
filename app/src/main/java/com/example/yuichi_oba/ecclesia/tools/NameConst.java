@@ -6,5 +6,5 @@ package com.example.yuichi_oba.ecclesia.tools;
 
 public class NameConst {
 
-
+    public static final int LINE_WIDGH = 20;
 }
