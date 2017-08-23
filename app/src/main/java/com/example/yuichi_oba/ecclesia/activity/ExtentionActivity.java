@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
@@ -54,19 +56,31 @@ public class ExtentionActivity extends AppCompatActivity
     }
 
     Button bt_extension;
+    Spinner sp_time;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_extention);
 
         bt_extension = (Button) findViewById(R.id.bt_ex_extention);
+        sp_time = (Spinner) findViewById(R.id.extention_time);
         bt_extension.setOnClickListener(this);
+        bt_extension.setEnabled(false);
+        
+//        sp_time.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                bt_extension.setEnabled(true);
+//            }
+//        });
     }
 
     @Override
     public void onClick(View view) {
+
+
         ExtensionDialog dialog = new ExtensionDialog();
-        dialog.show(getFragmentManager(), "bbb");
+//        dialog.show(getFragmentManager(), "bbb");
 
 
 //        finish();
