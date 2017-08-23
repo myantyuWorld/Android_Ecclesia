@@ -4,13 +4,60 @@
     android:id="@+id/activity_extention"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.yuichi_oba.ecclesia.activity.ExtentionActivity">
+    tools:context="com.example.yuichi_oba.ecclesia.activity.ExtentionActivity"
+    tools:showIn="@layout/app_bar_extention">
+
+    <Spinner
+        android:id="@+id/extention_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView8"
+        android:layout_marginStart="11dp"
+        android:layout_toEndOf="@+id/bt_ex_extention" />
 
     <Button
         android:text="延長"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/bt_ex_extention"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="162dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="終了予定時間"
+        android:textAllCaps="false"
+        android:textSize="24sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="99dp" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="22dp"
+        android:gravity="center"
+        android:text="終了予定時間が入るザマス"
+        android:textAllCaps="false"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="延長時間"
+        android:textAllCaps="false"
+        android:textSize="24sp"
+        android:layout_above="@+id/bt_ex_extention"
+        android:layout_toStartOf="@+id/bt_ex_extention"
+        android:layout_marginBottom="70dp" />
+
 </RelativeLayout>
