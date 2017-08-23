@@ -1,5 +1,7 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -15,12 +17,14 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 //
 // へろーぐちおさん
@@ -93,25 +97,49 @@ public class HistorySearchActivity extends AppCompatActivity
     }
 
     private class MyListAdapter extends BaseAdapter{
+        private Context context = null;
+        private ArrayList<ListItem> data = null;
+        private int resource = 0;
 
+        public MyListAdapter(Context context, ArrayList<ListItem> listdata, int resource) {
+            this.context = context;
+            this.data = listdata;
+            this.resource = resource;
+        }
+
+        //データの個数を取得
         @Override
         public int getCount() {
+            return data.size();
+        }
+
+        //指定された項目を取得
+        @Override
+        public Object getItem(int position) {
+            return data.get(position);
+        }
+
+        //指定された項目を識別するためのID値を取得
+        @Override
+        public long getItemId(int position) {
             return 0;
         }
 
         @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            return null;
+        public View getView(int position, View convertView, ViewGroup parent) {
+            Activity activity = (Activity) context;
+            ListItem item = (ListItem) getItem(position);
+            //初回かどうか確認
+            if (convertView == null) {
+                //Layoutを取得
+                convertView = activity.getLayoutInflater().inflate(resource, null);
+            }
+            ((TextView) convertView.findViewById(R.id.purpose)).setText(item.getPurpose());
+            ((TextView) convertView.findViewById(R.id.date)).setText(item.getDate());
+            ((TextView) convertView.findViewById(R.id.gaiyou)).setText(item.getGaiyou());
+            ((TextView) convertView.findViewById(R.id.company)).setText(item.getCompany());
+            ((TextView) convertView.findViewById(R.id.companyMember)).setText(item.getCompanyMember());
+            return convertView;
         }
     }
 
@@ -134,15 +162,31 @@ public class HistorySearchActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        //リストに表示するデータを準備
+        String pupose[] = {"定例会","商談"};
+        String date[] = {"2017/02/20","2018/01/31"};
+        String gaiyou[] = {"内定懇談会","Ecclesiaの売り込み"};
+        String company[] = {"株式会社ostraca","株式会社トミー"};
+        String companyMember[] = {"xxxx様","yyyy様"};
 
-        list = new ArrayList<>();
-        for (int i = 0; i < 10; i++)
+
+        //配列の内容をListItemオブジェクトに詰め替え
+        ArrayList<ListItem> list = new ArrayList<>();
+        for (int i = 0; i < pupose.length; i++)
         {
-            list.add("test");
+            ListItem item = new ListItem();
+            item.setId((new Random()).nextLong());
+            item.setPurpose(pupose[i]);
+            item.setDate(date[i]);
+            item.setGaiyou(gaiyou[i]);
+            item.setCompany(company[i]);
+            item.setCompanyMember(companyMember[i]);
+            list.add(item);
         }
-        listView = (ListView) findViewById(R.id.list_history);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
 
+        //ListItemとレイアウトとを関連付け
+        MyListAdapter adapter = new MyListAdapter(this, list,R.layout.list_search_item);
+        listView = (ListView) findViewById(R.id.list_history);
         listView.setAdapter(adapter);
 
     }
