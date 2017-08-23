@@ -13,11 +13,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
@@ -184,10 +187,67 @@ public class HistorySearchActivity extends AppCompatActivity
             list.add(item);
         }
 
+        //スピナーを取得
+        Spinner sp_mokuteki = (Spinner) findViewById(R.id.spinner_mokuteki);
+        //スピナーに対してのイベントリスナーを登録
+        sp_mokuteki.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Spinner sp = (Spinner) parent;
+                //選択項目を取得し、その値で検索をする？それとトースト表示
+                Toast.makeText(HistorySearchActivity.this,String.format("選択目的 : %s",sp.getSelectedItem()),
+                        Toast.LENGTH_SHORT).show();
+
+            }
+             //項目が選択されなかったときの処理(今は空)
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        Spinner sp_company = (Spinner) findViewById(R.id.spinner_company);
+        //スピナーに対してのイベントリスナーを登録
+        sp_company.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
         //ListItemとレイアウトとを関連付け
         MyListAdapter adapter = new MyListAdapter(this, list,R.layout.list_search_item);
-        listView = (ListView) findViewById(R.id.list_history);
+       final ListView listView = (ListView) findViewById(R.id.list_history);
         listView.setAdapter(adapter);
+        //フィルター機能有効化
+        listView.setTextFilterEnabled(true);
+
+        //検索ボックスに入力されたときの処理を定義
+         SearchView sv = (SearchView) findViewById(R.id.search);
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String text) {
+                text.trim();
+                if (text == null || text.isEmpty()) {
+                    listView.clearTextFilter();
+                } else {
+                    listView.setFilterText(text);
+                }
+                return false;
+            }
+        });
+
+
+
 
     }
 

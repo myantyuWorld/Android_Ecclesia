@@ -10,6 +10,7 @@
     <string name="title_activity_history_search">HistorySearchActivity</string>
     <string name="title_activity_reserve">ReserveActivity</string>
 
+    <string name="spnOs_mokuteki">目的を選択してください。</string>
     <string-array name="mokuteki">
         <item>打合わせ</item>
         <item>商談</item>
@@ -17,6 +18,13 @@
         <item>プロジェクト報告</item>
         <item>決算報告</item>
         <item>定例会</item>
+    </string-array>
+    <string name="spnOs_company">会社名を選択してください。</string>
+    <string-array name="company">
+        <item>株式会社ostraca</item>
+        <item>株式会社ニッポン放送</item>
+        <item>株式会社toyota</item>
+        <item>株式会社docomo</item>
     </string-array>
     <string-array name="bihin">
         <item>プロジェクター</item>
