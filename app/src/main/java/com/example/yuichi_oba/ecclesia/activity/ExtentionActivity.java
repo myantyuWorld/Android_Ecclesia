@@ -66,10 +66,10 @@ public class ExtentionActivity extends AppCompatActivity
         sp_time = (Spinner) findViewById(R.id.extention_time);
         bt_extension.setOnClickListener(this);
         bt_extension.setEnabled(false);
-        
+
 //        sp_time.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 //                bt_extension.setEnabled(true);
 //            }
 //        });
@@ -80,7 +80,7 @@ public class ExtentionActivity extends AppCompatActivity
 
 
         ExtensionDialog dialog = new ExtensionDialog();
-//        dialog.show(getFragmentManager(), "bbb");
+        dialog.show(getFragmentManager(), "bbb");
 
 
 //        finish();
