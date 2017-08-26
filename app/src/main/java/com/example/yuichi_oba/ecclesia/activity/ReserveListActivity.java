@@ -1,23 +1,34 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.icu.util.Calendar;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.DatePicker;
+import android.widget.TextView;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
+import com.example.yuichi_oba.ecclesia.tools.DB;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -25,23 +36,43 @@ import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
 // _/_/
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 public class ReserveListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    /***
-     * デバッグ用
-     */
     private static final String TAG = ReserveListActivity.class.getSimpleName();
     public static final String RESERVE_INFO = "reserve_info";
-    /***
-     * ここまで
-     */
 
-    Button bt_reserve;          // 予約ボタン
-    Spinner spinner;            // 予約IDのスピナー
+
+    /***
+     * 会議予約一覧を表示・選択するための、日付選択用ダイアログ
+     */
+    private class MyDialog extends DialogFragment {
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Calendar cal = Calendar.getInstance();
+            return new DatePickerDialog(
+                    getActivity(),
+                    new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                            txtDate.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+                        }
+                    },
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)
+            );
+        }
+    }
+
+    TextView txtDate;
+    Employee employee;
     ReserveInfo reserveInfo;    // 予約情報記録クラスの変数
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "ReserveListActivity->onCreate()");
         /***
          * レイアウト情報をマッピングする
          */
@@ -66,33 +97,17 @@ public class ReserveListActivity extends AppCompatActivity
         reserveInfo = new ReserveInfo();
 
         // 各ウィジェットの初期化処理
-        bt_reserve = (Button) findViewById(R.id.bt_reserve);
-        spinner = (Spinner) findViewById(R.id.spinner2);
-        // リスナー登録
-        bt_reserve.setOnClickListener(this);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            // スピナーのアイテムを選択したときの処理
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                Toast.makeText(ReserveListActivity.this, "test", Toast.LENGTH_SHORT).show();
-                Spinner s = (Spinner) adapterView;
-                String re_id = s.getSelectedItem().toString();
-                Log.d(TAG, re_id);
-                reserveInfo.setRe_id(re_id);
+        init();
 
-                Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-                intent.putExtra(RESERVE_INFO, reserveInfo);
-                startActivity(intent);
-            }
+        // Permission error となる・・・なんで？
+        // 端末ＩＭＥＩの取得
+        String terminalImei = getTerminalImei();
+        getEmployeeInfo(terminalImei);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                // なにもしない
-            }
-        });
 
 
     }
+
 
     // ようわからん(笑) ＝＝＞ HCPには書かんでいいよ
     @Override
@@ -105,11 +120,12 @@ public class ReserveListActivity extends AppCompatActivity
         }
     }
 
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    // _/_/
-    // _/_/ ナビを選択したときの処理
-    // _/_/
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    /***
+     * ナビを選択したときの処理
+     *
+     * @param item
+     * @return
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -141,23 +157,65 @@ public class ReserveListActivity extends AppCompatActivity
         return true;
     }
 
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+
     /***
-     * ボタンクリック時の処理
-     * @param view
+     * 画面のウィジェットの初期化処理メソッド
      */
-    @Override
-    public void onClick(View view) {
-        // ビューから、どのボタンが押されたかIDを取得する
-        int id = view.getId();
-        Intent intent;
-        // idで処理を分ける
-        switch (id) {
-            // 「予約」ボタン押下時
-            case R.id.bt_reserve:
-                // Intentクラスのインスタンス生成し、画面遷移させる
-                intent = new Intent(getApplicationContext(), ReserveActivity.class);
-                startActivity(intent);
-                break;
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void init() {
+        Log.d(TAG, "init()");
+        employee = new Employee();
+        txtDate = (TextView) findViewById(R.id.txtDate);
+        Calendar c = Calendar.getInstance();
+        txtDate.setText(String.format("%04d/%02d/%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DATE)));
+        txtDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "txtDate click!");
+                MyDialog d = new MyDialog();
+                d.show(getFragmentManager(), "dateDialog");
+            }
+        });
+
+    }
+
+    public String getTerminalImei() {
+        Log.d(TAG, "getTerminalImei()");
+        TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+//        return manager.getDeviceId();
+        return "352272080218786";   // 大馬 の 端末ＩＭＥＩ
+    }
+
+    private void getEmployeeInfo(String terminalImei) {
+        Log.d(TAG, "getEmployeeInfo()");
+        // 端末ＩＭＥＩから社員ＩＤを取得する
+        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from m_terminal where ter_id = ?", new String[]{terminalImei});
+        if (c.moveToNext()) {
+            // 端末ＩＭＥＩから社員ＩＤ取得が成功した
+            employee.setEmp_id(c.getString(1));
+        }
+        Log.d(TAG, employee.getEmp_id());
+        // 社員ＩＤが空またはＮＵＬＬでなければ次のロジックを実行する
+        if (!employee.getEmp_id().isEmpty()) {
+            c = db.rawQuery("select * from t_emp where emp_id = ?", new String[]{employee.getEmp_id()});
+            if (c.moveToNext()) {
+                // 社員ＩＤから社員情報を検索して、設定する
+                employee.setEmp_name(c.getString(1));
+                employee.setEmp_tel(c.getString(2));
+                employee.setEmp_mailaddr(c.getString(3));
+                employee.setDep_id(c.getString(4));
+                employee.setPos_id(c.getString(5));
+            } else {
+                Log.d(TAG, "社員情報の取得に失敗しました");
+            }
         }
     }
+
+
+
 }
