@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
@@ -66,8 +67,8 @@ public class ReserveListActivity extends AppCompatActivity
         reserveInfo = new ReserveInfo();
 
         // 各ウィジェットの初期化処理
-        bt_reserve = (Button) findViewById(R.id.bt_reserve);
-        spinner = (Spinner) findViewById(R.id.spinner2);
+//        bt_reserve = (Button) findViewById(R.id.bt_reserve);
+//        spinner = (Spinner) findViewById(R.id.spinner2);
         // リスナー登録
         bt_reserve.setOnClickListener(this);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -153,10 +154,13 @@ public class ReserveListActivity extends AppCompatActivity
         // idで処理を分ける
         switch (id) {
             // 「予約」ボタン押下時
-            case R.id.bt_reserve:
-                // Intentクラスのインスタンス生成し、画面遷移させる
-                intent = new Intent(getApplicationContext(), ReserveActivity.class);
-                startActivity(intent);
+//            case R.id.bt_reserve:
+//                // Intentクラスのインスタンス生成し、画面遷移させる
+//                intent = new Intent(getApplicationContext(), ReserveActivity.class);
+//                startActivity(intent);
+//                break;
+            case R.id.txt_date:
+                Toast.makeText(this, "txt_date click", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
