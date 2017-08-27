@@ -17,7 +17,7 @@ import java.io.OutputStream;
 
 public class DB extends SQLiteOpenHelper {
     private static final int    DB_VERSION      = 1;
-    private static final String DB_FILE_NAME    = "ecclesia.db";
+    private static final String DB_FILE_NAME    = "ecclesia2.db";
     private static final String DB_NAME         = "ecclesia";
 
 

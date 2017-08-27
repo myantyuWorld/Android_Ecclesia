@@ -10,72 +10,118 @@
     tools:showIn="@layout/app_bar_main">
 
     <view
-        android:id="@+id/sv"
-        class="com.example.yuichi_oba.ecclesia.view.SimpleView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        class="com.example.yuichi_oba.ecclesia.view.SimpleView" />
 
     <TextView
-        android:id="@+id/txt_date"
+        android:text="yyyy/MM/dd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="10dp"
-        android:text="yyyy/MM/dd"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:textStyle="bold|italic" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/txtDate"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/txt_date"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="15dp"
+        android:textStyle="normal|bold|italic"
+        android:textAlignment="center"
+        android:textSize="36sp" />
+
+    <TextView
+        android:text="08:00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtDate"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="87dp"
+        android:id="@+id/textView" />
+
+    <TextView
+        android:text="09:00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_alignStart="@+id/textView"
+        android:layout_marginTop="49dp"
+        android:id="@+id/textView7" />
+
+    <TextView
+        android:text="10:00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView7"
+        android:layout_alignStart="@+id/textView7"
+        android:layout_marginTop="49dp"
+        android:id="@+id/textView8" />
+
+    <TextView
+        android:text="11:00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView8"
+        android:layout_alignStart="@+id/textView8"
+        android:layout_marginTop="50dp"
+        android:id="@+id/textView9" />
+
+    <TextView
+        android:text="12:00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView9"
+        android:layout_alignStart="@+id/textView9"
+        android:layout_marginTop="48dp"
+        android:id="@+id/textView10" />
+
+    <TextView
+        android:text="13:00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/textView10"
+        android:layout_marginBottom="28dp"
+        android:id="@+id/textView11" />
+
+    <TextView
         android:text="特別"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView7"
-        android:layout_marginStart="50dp"
-        android:layout_toEndOf="@+id/textView7"
-        android:text="A"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
-    <TextView
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="12dp"
         android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView11"
-        android:layout_marginStart="65dp"
-        android:layout_toEndOf="@+id/textView11"
-        android:text="B"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textSize="30sp"
+        android:layout_below="@+id/txtDate"
+        android:layout_toEndOf="@+id/textView" />
 
     <TextView
-        android:id="@+id/textView13"
+        android:text="B"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/textView12"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="35dp"
+        android:layout_toEndOf="@+id/textView13"
+        android:layout_marginStart="33dp"
+        android:id="@+id/textView14"
+        android:textSize="30sp"
+        android:elevation="1dp"
+        android:layout_marginLeft="15dp"
+        android:paddingLeft="15dp" />
+
+    <TextView
+        android:text="A"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:id="@+id/textView13"
+        android:textSize="30sp"
+        android:layout_alignTop="@+id/textView12"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
         android:text="C"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
-
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView14"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="0dp"
+        android:id="@+id/textView15"
+        android:textSize="30sp" />
 </RelativeLayout>

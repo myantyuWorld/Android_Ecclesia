@@ -4,11 +4,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
-
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 /**
@@ -16,6 +14,8 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
  */
 
 public class SimpleView extends View {
+
+
 
     /***
      * Constractor
@@ -43,71 +43,53 @@ public class SimpleView extends View {
         // 描画のためのスタイルの設定
         Paint p = new Paint();
         p.setColor(Color.DKGRAY);
-        p.setStrokeWidth(LINE_WIDGH);
         p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(10);
 
+        // 特別会議室 Ａ Ｂ Ｃ 列の描画
+        onDrawRoom(p, canvas);
+        // 時間割の描画
+        onDrawTimeTable(p, canvas);
+
+    }
+
+    /***
+     * 時間割の枠を描画するメソッド
+     * @param p
+     * @param canvas
+     */
+    private void onDrawTimeTable(Paint p, Canvas canvas) {
+        float x = 216;
         Paint p2 = new Paint();
-        p2.setColor(Color.BLACK);
-        p2.setStrokeWidth(1.0f);
-
-        Paint tokubetu = new Paint();
-        tokubetu.setColor(Color.BLUE);
-        Paint room_a = new Paint();
-        room_a.setColor(Color.RED);
-        Paint room_b = new Paint();
-        room_a.setColor(Color.CYAN);
-        Paint room_c = new Paint();
-        room_a.setColor(Color.YELLOW);
-
-
-//        Paint[] colors = new Paint[4];
-//        colors[0].setColor(Color.RED);
-//        colors[1].setColor(Color.BLUE);
-//        colors[2].setColor(Color.CYAN);
-//        colors[3].setColor(Color.YELLOW);
-
-
-        // ビュー側への描画
-        float y = 150;
-//        canvas.drawLine(0,0,1080,0,p);
-//        canvas.drawLine(0,y,1080,y,p);
-
-//        Rect rect = new Rect(50, 100, 100, 200);
-        // l t r b
-        canvas.drawRect(5, 5, 1080, y, p);
-        canvas.drawRect(5, y, 1080, 1700, p);
-        canvas.drawRect(5, y, 1080, y + 200, p);
-        canvas.drawRect(5, y, 100, 1700, p);
-        float x = 345;
-        float x2 = 100;
-        for (int i = 0; i < 4; i++) {
-            canvas.drawLine(x, y, x, 1700, p2);
-            canvas.drawLine(x, y, x, y + 200, p);
-//            canvas.drawRect(x - 10,y,x + 245 - 10, y + 200, colors[i]);
-            switch (i) {
-                case 0:
-                    canvas.drawRect(x2 - 10, y, x2 + 245 - 10, y + 200, tokubetu);
-                    break;
-                case 1:
-                    canvas.drawRect(x2 - 10, y, x2 + 245 - 10, y + 200, room_a);
-                    break;
-                case 2:
-                    canvas.drawRect(x2 - 10, y, x2 + 245 - 10, y + 200, room_b);
-                    break;
-                case 3:
-                    canvas.drawRect(x2 - 10, y, x2 + 245 - 10, y + 200, room_c);
-                    break;
+        p2.setStrokeWidth(2.0f);
+        float y_timetable = 300;
+        for (int i = 1; i <= 4; i++) {
+            canvas.drawLine(i * x, y_timetable, i * x, MAX_HEIGHT, p2);
+        }
+        float y = 100;
+        for (int i = 4; i < 17; i++) {
+            canvas.drawLine(x, i * y, MAX_WIDTH, i * y, p2);
+            if (i % 2 == 1) {
+                canvas.drawLine(ZERO, i * y, x, i * y, p);
             }
-            x += 245;
-            x2 += 245;
         }
+        canvas.drawRect(ZERO, y_timetable, MAX_WIDTH, MAX_HEIGHT, p);
+        canvas.drawLine(x, y_timetable, x, MAX_HEIGHT, p);
+    }
 
-        float y2 = 350;
-        for (int i = 0; i < 36; i++) {
-            canvas.drawLine(5, y2, 1080, y2, p2);
-            y2 += 50;
+    /***
+     * 会議室の枠を描画するメソッド
+     * @param p
+     * @param canvas
+     */
+    private void onDrawRoom(Paint p, Canvas canvas) {
+        float x = 216;
+        float room_y = 150;
+        canvas.drawRect(ZERO, room_y, MAX_WIDTH, 2 * room_y, p);
+        canvas.drawLine(ZERO, room_y, ZERO, 2 * room_y, p);   // sx sy ex ey
+        for (int i = 1; i <= 4; i++) {
+            canvas.drawLine(i * x, room_y, i * x, 2 * room_y, p);
         }
-
 
     }
 }
