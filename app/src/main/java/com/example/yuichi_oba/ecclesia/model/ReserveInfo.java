@@ -19,8 +19,11 @@ public class ReserveInfo implements Serializable {
     private String re_id;                               // 予約ID
     private String re_overview;                         // 概要
     private String re_purpose;                          // 会議目的名
-    private String re_startTime;                        // 開始日時
+    private String re_startDay;                        // 開始日時
+    private String re_endDay;                          // 終了日時
+    private String re_startTime;                          // 終了日時
     private String re_endTime;                          // 終了日時
+    private String re_roomId;
     private String re_rePerson;                         // ―→ 現状使っていないため、HCP不要
     private List<String> re_member = new ArrayList<>(); // 会議参加者を記録するリスト
     private int re_flg;                                 // 社内（０）社外（１）
@@ -31,6 +34,17 @@ public class ReserveInfo implements Serializable {
      * Constractor
      */
     public ReserveInfo() {
+    }
+
+    public ReserveInfo(String re_id, String re_overview, String re_startDay, String re_endDay, String re_startTime, String re_endTime, String re_flg, String room_id) {
+        this.re_id = re_id;
+        this.re_overview = re_overview;
+        this.re_startDay = re_startDay;
+        this.re_endDay = re_endDay;
+        this.re_startTime = re_startTime;
+        this.re_endTime = re_endTime;
+        this.re_flg = Integer.parseInt(re_flg);
+        this.re_roomId = room_id;
     }
 
     /***
@@ -66,6 +80,15 @@ public class ReserveInfo implements Serializable {
     public String getRe_purpose() {
         return re_purpose;
     }
+    public String getRe_startDay() {
+        return re_startDay;
+    }
+    public String getRe_endDay() {
+        return re_endDay;
+    }
+    public String getRe_roomId() {
+        return re_roomId;
+    }
 
     public void setRe_id(String re_id) {
         this.re_id = re_id;
@@ -96,5 +119,14 @@ public class ReserveInfo implements Serializable {
     }
     public void setRe_purpose(String re_purpose) {
         this.re_purpose = re_purpose;
+    }
+    public void setRe_startDay(String re_startDay) {
+        this.re_startDay = re_startDay;
+    }
+    public void setRe_endDay(String re_endDay) {
+        this.re_endDay = re_endDay;
+    }
+    public void setRe_roomId(String re_roomId) {
+        this.re_roomId = re_roomId;
     }
 }
