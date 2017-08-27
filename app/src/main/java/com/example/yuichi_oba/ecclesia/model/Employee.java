@@ -56,4 +56,5 @@ public class Employee {
     public void setPos_id(String pos_id) {
         this.pos_id = pos_id;
     }
+
 }

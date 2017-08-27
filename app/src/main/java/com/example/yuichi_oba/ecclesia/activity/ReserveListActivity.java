@@ -3,10 +3,14 @@ package com.example.yuichi_oba.ecclesia.activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +22,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +35,9 @@ import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
 // _/_/ 予約状況(リストで視覚的にわかりやすい）を表示するアクティビティ
@@ -41,6 +49,32 @@ public class ReserveListActivity extends AppCompatActivity
     private static final String TAG = ReserveListActivity.class.getSimpleName();
     public static final String RESERVE_INFO = "reserve_info";
 
+    public class TimeTable extends View {
+        public TimeTable(Context context) {
+            super(context);
+        }
+
+        public TimeTable(Context context, AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+        public TimeTable(Context context, AttributeSet attrs, int defStyleAttr) {
+            super(context, attrs, defStyleAttr);
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+
+            // 描画のためのスタイルの設定
+            Paint p = new Paint();
+            p.setColor(Color.RED);
+            p.setStyle(Paint.Style.STROKE);
+            p.setStrokeWidth(10);
+
+            canvas.drawLine(0,200,500,200, p);
+        }
+    }
 
     /***
      * 会議予約一覧を表示・選択するための、日付選択用ダイアログ
@@ -67,7 +101,7 @@ public class ReserveListActivity extends AppCompatActivity
 
     TextView txtDate;
     Employee employee;
-    ReserveInfo reserveInfo;    // 予約情報記録クラスの変数
+    List<ReserveInfo> reserveInfo;    // 予約情報記録クラスの変数
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -92,19 +126,19 @@ public class ReserveListActivity extends AppCompatActivity
         /***
          * ここまで
          */
-
-        // 予約情報クラスのインスタンス生成
-        reserveInfo = new ReserveInfo();
-
         // 各ウィジェットの初期化処理
         init();
 
         // Permission error となる・・・なんで？
         // 端末ＩＭＥＩの取得
         String terminalImei = getTerminalImei();
+        // 社員情報の設定
         getEmployeeInfo(terminalImei);
-
-
+        // 予約情報の設定
+        getReserveInfo();
+        for (ReserveInfo r : reserveInfo) {
+            Log.d(TAG, r.getRe_id() + " : " + r.getRe_startTime() + "(" + r.getRe_endTime() + ") room_id : " + r.getRe_roomId());
+        }
 
     }
 
@@ -167,7 +201,11 @@ public class ReserveListActivity extends AppCompatActivity
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void init() {
         Log.d(TAG, "init()");
+        // 社員クラスのインスタンスを生成
         employee = new Employee();
+        // 予約情報クラスのインスタンス生成
+        reserveInfo = new ArrayList<>();
+        // 画面情報の設定
         txtDate = (TextView) findViewById(R.id.txtDate);
         Calendar c = Calendar.getInstance();
         txtDate.setText(String.format("%04d/%02d/%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DATE)));
@@ -182,6 +220,10 @@ public class ReserveListActivity extends AppCompatActivity
 
     }
 
+    /***
+     * アプリを立ち上げた社員の端末ＩＭＥＩを返すメソッド
+     * @return 端末ＩＭＥＩ
+     */
     public String getTerminalImei() {
         Log.d(TAG, "getTerminalImei()");
         TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
@@ -189,6 +231,10 @@ public class ReserveListActivity extends AppCompatActivity
         return "352272080218786";   // 大馬 の 端末ＩＭＥＩ
     }
 
+    /***
+     * 端末ＩＭＥＩから社員情報を取得し、設定するメソッド
+     * @param terminalImei  端末ＩＭＥＩ
+     */
     private void getEmployeeInfo(String terminalImei) {
         Log.d(TAG, "getEmployeeInfo()");
         // 端末ＩＭＥＩから社員ＩＤを取得する
@@ -214,7 +260,34 @@ public class ReserveListActivity extends AppCompatActivity
                 Log.d(TAG, "社員情報の取得に失敗しました");
             }
         }
+        Log.d(TAG, employee.getEmp_id() + " : " + employee.getEmp_name());
     }
+
+    /***
+     *
+     */
+    public void getReserveInfo() {
+        Log.d(TAG, "getReserveInfo()");
+        // 参加者テーブルから、予約ＩＤを取得
+        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from v_reserve_member where emp_id = ?", new String[]{employee.getEmp_id()});
+        while (c.moveToNext()) {
+            // その社員が参加した会議情報をリストに追加する
+            ReserveInfo r = new ReserveInfo(
+                    c.getString(0),
+                    c.getString(1),
+                    c.getString(2),
+                    c.getString(3),
+                    c.getString(4),
+                    c.getString(5),
+                    c.getString(6),
+                    c.getString(11)
+            );
+            reserveInfo.add(r);
+        }
+    }
+
 
 
 
