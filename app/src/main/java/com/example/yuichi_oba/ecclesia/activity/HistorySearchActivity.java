@@ -13,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -25,11 +24,6 @@ import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-//
-// へろーぐちおさん
-//
-
 /*************************************************************************************
  *
  *                                  Hint!

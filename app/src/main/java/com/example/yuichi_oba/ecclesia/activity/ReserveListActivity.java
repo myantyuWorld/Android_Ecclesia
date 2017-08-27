@@ -1,5 +1,6 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -79,7 +80,7 @@ public class ReserveListActivity extends AppCompatActivity
     /***
      * 会議予約一覧を表示・選択するための、日付選択用ダイアログ
      */
-    private class MyDialog extends DialogFragment {
+    public static class MyDialog extends DialogFragment {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -87,6 +88,7 @@ public class ReserveListActivity extends AppCompatActivity
             return new DatePickerDialog(
                     getActivity(),
                     new DatePickerDialog.OnDateSetListener() {
+                        @SuppressLint("DefaultLocale")
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                             txtDate.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
@@ -99,11 +101,11 @@ public class ReserveListActivity extends AppCompatActivity
         }
     }
 
-    TextView txtDate;
+    static TextView txtDate;
     Employee employee;
     List<ReserveInfo> reserveInfo;    // 予約情報記録クラスの変数
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "ReserveListActivity->onCreate()");
