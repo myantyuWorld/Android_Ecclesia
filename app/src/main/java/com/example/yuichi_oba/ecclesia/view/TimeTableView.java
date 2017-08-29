@@ -8,6 +8,7 @@ import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
@@ -23,9 +24,18 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 
 public class TimeTableView extends View {
 
+    public static final String TOKUBETSU = "0001";
+    public static final String ROOM_A = "0002";
+    public static final String ROOM_B = "0003";
+    public static final String ROOM_C = "0004";
     private Paint p;
     private Paint p2;
-    private Paint timetable;
+    private Paint room;
+    private Paint tokubetsu;
+    private Paint roomA;
+    private Paint roomB;
+    private Paint roomC;
+
     private float[] timeFloats = {300,500,700,900,1100,1300,1500};
 
     public TimeTableView(Context context) {
@@ -52,13 +62,32 @@ public class TimeTableView extends View {
         onDrawTimeTable(c);
 
         // アプリを立ち上げた社員の予約情報の描画
+        int cnt = 0;
         for (ReserveInfo r : reserveInfo) {
             String sTime = r.getRe_startTime();
             String eTime = r.getRe_endTime();
             String room_id = r.getRe_roomId();
 
             RectF rectF = retRectCooperation(sTime, eTime, room_id);
-            c.drawRoundRect(rectF, 30, 30, timetable);
+            // 予約会議の座標情報を記録する
+            reserveInfo.get(cnt).setCoop(new float[]{rectF.left, rectF.top, rectF.right, rectF.bottom});
+            switch (room_id) {
+                case "0001":
+                    room = tokubetsu;
+                    break;
+                case "0002":
+                    room = roomA;
+                    break;
+                case "0003":
+                    room = roomB;
+                    break;
+                case "0004":
+                    room = roomC;
+                    break;
+            }
+            // 予約会議の描画
+            c.drawRoundRect(rectF, 30, 30, room);
+            cnt++;
         }
     }
 
@@ -72,19 +101,19 @@ public class TimeTableView extends View {
         float sX = 0, eX = 0, sY = 0, eY = 0;
         float x = 216;
         switch (room_id) {
-            case "0001":
+            case TOKUBETSU:
                 sX = x;
                 eX = 2 * x;
                 break;
-            case "0002":
+            case ROOM_A:
                 sX = 2 * x;
                 eX = 3 * x;
                 break;
-            case "0003":
+            case ROOM_B:
                 sX = 3 * x;
                 eX = 4 * x;
                 break;
-            case "0004":
+            case ROOM_C:
                 sX = 4 * x;
                 eX = 5 * x;
                 break;
@@ -130,6 +159,7 @@ public class TimeTableView extends View {
      */
     private void init() {
         Log.d("call", "call TimeTableView->init()");
+        // 枠線用
         p = new Paint();
         p.setColor(Color.DKGRAY);
         p.setStyle(Paint.Style.STROKE);
@@ -138,14 +168,68 @@ public class TimeTableView extends View {
         p2 = new Paint();
         p2.setStrokeWidth(2.0f);
 
-        timetable = new Paint();
-        timetable.setColor(Color.RED);
-        timetable.setStyle(Paint.Style.FILL);
-        p.setStrokeWidth(10);
-//        for (ReserveInfo r : reserveInfo){
-//            Log.d("call", r.getRe_id() + " : " + r.getRe_startTime() + "(" + r.getRe_endTime() + ") room_id : " + r.getRe_roomId());
-//        }
+        // 特別会議室用
+        tokubetsu = new Paint();
+        tokubetsu.setColor(Color.parseColor("#E91E63"));
+        tokubetsu.setStyle(Paint.Style.FILL);
+        tokubetsu.setStrokeWidth(10);
+
+        // 会議室Ａ用
+        roomA = new Paint();
+        roomA.setColor(Color.parseColor("#536DFE"));
+        roomA.setStyle(Paint.Style.FILL);
+        roomA.setStrokeWidth(10);
+
+        // 会議室Ｂ用
+        roomB = new Paint();
+        roomB.setColor(Color.parseColor("#4CAF50"));
+        roomB.setStyle(Paint.Style.FILL);
+        roomB.setStrokeWidth(10);
+
+        // 会議室Ｃ用
+        roomC = new Paint();
+        roomC.setColor(Color.parseColor("#FFC107"));
+        roomC.setStyle(Paint.Style.FILL);
+        roomC.setStrokeWidth(10);
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        switch (e.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                // タップした座標を取得する
+                float x = e.getX();
+                float y = e.getY();
+                // x座標を基に、どの会議室か特定する
+                String room_id = "";
+                float wX = 216;
+                if (x > wX && x < 2 * wX) {
+                    Log.d("call", "tokubetu");
+                    room_id = TOKUBETSU;
+                } else if (x > 2 * wX && x < 3 * wX) {
+                    Log.d("call", "roomA");
+                    room_id = ROOM_A;
+                } else if (x > 3 * wX && x < 4 * wX) {
+                    Log.d("call", "roomB");
+                    room_id = ROOM_B;
+                } else if (x > 4 * wX && x < 5 * wX) {
+                    Log.d("call", "roomC");
+                    room_id = ROOM_C;
+                }
+                Log.d("call", room_id);
+                // y座標を基に、どの時間帯がタップされたかをチェックし、予約情報を返す
+
+
+
+                for (ReserveInfo r : reserveInfo) {
+                    if (r.getRe_roomId().equals(room_id)) {
+                        Log.d("call", r.getRe_id());
+                    }
+                }
+                // その予約情報をもって、予約確認（ReserveConfirmActivity）に飛ぶ
+                break;
+        }
+        return true;
+    }
 
 }

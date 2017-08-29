@@ -29,6 +29,8 @@ public class ReserveInfo implements Serializable {
     private int re_flg;                                 // 社内（０）社外（１）
     private String re_conference_room;                  // 会議室名
     private String re_marks;                            // 備考？だったけ(笑)
+    // 座標情報を格納する(sX sY eX eY)
+    private float[] coop;
 
     /***
      * Constractor
@@ -89,6 +91,9 @@ public class ReserveInfo implements Serializable {
     public String getRe_roomId() {
         return re_roomId;
     }
+    public float[] getCoop() {
+        return coop;
+    }
 
     public void setRe_id(String re_id) {
         this.re_id = re_id;
@@ -128,5 +133,8 @@ public class ReserveInfo implements Serializable {
     }
     public void setRe_roomId(String re_roomId) {
         this.re_roomId = re_roomId;
+    }
+    public void setCoop(float[] coop) {
+        this.coop = coop;
     }
 }
