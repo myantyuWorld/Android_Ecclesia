@@ -12,7 +12,12 @@
     <view
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        class="com.example.yuichi_oba.ecclesia.view.SimpleView" />
+        class="com.example.yuichi_oba.ecclesia.view.RoomView" />
+
+    <view
+        class="com.example.yuichi_oba.ecclesia.view.TimeTableView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <TextView
         android:text="yyyy/MM/dd"

@@ -103,31 +103,12 @@ public class ReserveListActivity extends AppCompatActivity
 
     static TextView txtDate;
     Employee employee;
-    List<ReserveInfo> reserveInfo;    // 予約情報記録クラスの変数
+    public static List<ReserveInfo> reserveInfo;    // 予約情報記録クラスの変数
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "ReserveListActivity->onCreate()");
-        /***
-         * レイアウト情報をマッピングする
-         */
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        /***
-         * ここまで
-         */
         // 各ウィジェットの初期化処理
         init();
 
@@ -141,6 +122,31 @@ public class ReserveListActivity extends AppCompatActivity
         for (ReserveInfo r : reserveInfo) {
             Log.d(TAG, r.getRe_id() + " : " + r.getRe_startTime() + "(" + r.getRe_endTime() + ") room_id : " + r.getRe_roomId());
         }
+        setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        // 画面情報の設定
+        txtDate = (TextView) findViewById(R.id.txtDate);
+//        Calendar c = Calendar.getInstance();
+//        txtDate.setText(String.format(Locale.JAPAN, "%04d/%02d/%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DATE)));
+        txtDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "txtDate click!");
+                MyDialog d = new MyDialog();
+                d.show(getFragmentManager(), "dateDialog");
+            }
+        });
 
     }
 
@@ -200,26 +206,12 @@ public class ReserveListActivity extends AppCompatActivity
     /***
      * 画面のウィジェットの初期化処理メソッド
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void init() {
         Log.d(TAG, "init()");
         // 社員クラスのインスタンスを生成
         employee = new Employee();
         // 予約情報クラスのインスタンス生成
         reserveInfo = new ArrayList<>();
-        // 画面情報の設定
-        txtDate = (TextView) findViewById(R.id.txtDate);
-        Calendar c = Calendar.getInstance();
-        txtDate.setText(String.format("%04d/%02d/%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DATE)));
-        txtDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "txtDate click!");
-                MyDialog d = new MyDialog();
-                d.show(getFragmentManager(), "dateDialog");
-            }
-        });
-
     }
 
     /***
