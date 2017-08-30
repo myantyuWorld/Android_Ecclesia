@@ -259,6 +259,7 @@ public class ReserveListActivity extends AppCompatActivity
                                 // 特定した会議予約IDを予約確認（ReserveConfirmActivity）に渡す
 //                            Intent in = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
 //                            in.putExtra("reserveInfo", r.getRe_id());
+                                Log.d("call", "ここで、予約確認に遷移させる");
                             }
                         }
                     }
@@ -267,7 +268,6 @@ public class ReserveListActivity extends AppCompatActivity
             }
             return false;
         }
-
     }
 
     private static final String TAG = ReserveListActivity.class.getSimpleName();
