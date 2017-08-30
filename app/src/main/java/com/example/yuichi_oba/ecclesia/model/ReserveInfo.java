@@ -24,6 +24,10 @@ public class ReserveInfo implements Serializable {
     private String re_startTime;                          // 終了日時
     private String re_endTime;                          // 終了日時
     private String re_roomId;
+    private String re_startDay;                         // 開始日
+    private String re_startTime;                        // 開始時刻
+    private String re_endDay;                           // 終了日
+    private String re_endTime;                          // 終了時刻
     private String re_rePerson;                         // ―→ 現状使っていないため、HCP不要
     private List<String> re_member = new ArrayList<>(); // 会議参加者を記録するリスト
     private int re_flg;                                 // 社内（０）社外（１）
@@ -58,9 +62,11 @@ public class ReserveInfo implements Serializable {
     public String getRe_overview() {
         return re_overview;
     }
+    public String getRe_startDay() { return re_startDay; }
     public String getRe_startTime() {
         return re_startTime;
     }
+    public String getRe_endDay() { return re_endDay; }
     public String getRe_endTime() {
         return re_endTime;
     }
@@ -101,9 +107,11 @@ public class ReserveInfo implements Serializable {
     public void setRe_overview(String re_overview) {
         this.re_overview = re_overview;
     }
+    public void setRe_startDay(String re_startDay) { this.re_startDay = re_startDay; }
     public void setRe_startTime(String re_startTime) {
         this.re_startTime = re_startTime;
     }
+    public void setRe_endDay(String re_endDay) { this.re_endDay = re_endDay; }
     public void setRe_endTime(String re_endTime) {
         this.re_endTime = re_endTime;
     }
