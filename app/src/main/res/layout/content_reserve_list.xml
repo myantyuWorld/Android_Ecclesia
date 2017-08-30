@@ -15,7 +15,7 @@
         class="com.example.yuichi_oba.ecclesia.view.RoomView" />
 
     <view
-        class="com.example.yuichi_oba.ecclesia.view.TimeTableView"
+        class="com.example.yuichi_oba.ecclesia.activity.ReserveListActivity$TimeTableView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

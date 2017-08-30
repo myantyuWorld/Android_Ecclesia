@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -143,10 +144,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
         // 各ウィジェットの初期化処理メソッド
         init();
-        // 遷移前の画面から、オブジェクトを受け取る
-        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("reserve_info");
+        // 予約一覧（ReserveListActivity）から特定した会議予約IDを受け取る
+//        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("reserve_info");
+        String re_id = getIntent().getStringExtra("reserveInfo");
+        Log.d("call", re_id);
         // 予約詳細をDB検索して、画面にマッピングするメソッド
-        dbSearchReserveConfirm();
+//        dbSearchReserveConfirm();
     }
 
 
