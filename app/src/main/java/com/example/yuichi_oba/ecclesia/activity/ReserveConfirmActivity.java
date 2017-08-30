@@ -30,6 +30,8 @@ import com.example.yuichi_oba.ecclesia.tools.DB;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
 // _/_/ 予約の詳細・確認を行うアクティビティ
@@ -43,8 +45,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     TextView txt_overview;              // 概要
     TextView txt_purpose;               // 会議目的
-    TextView txt_startTime;             // 開始日時
-    TextView txt_endTime;               // 終了日時
+//    TextView txt_startDay;              // 開始日
+//    TextView txt_endday;                // 終了日
+    TextView txt_startTime;             // 開始時刻
+    TextView txt_endTime;               // 終了時刻
     TextView txt_applicant;             // 予約者
     TextView txt_inOutHouse;            // 社外社内区分
     TextView txt_conferenceRoom;        // 使用会議室
@@ -211,6 +215,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
             // 「延長」が選択された
             case R.id.option_extention:
                 intent = new Intent(getApplicationContext(), ExtentionActivity.class);
+                intent.putExtra("EX", reserveInfo);
                 startActivity(intent);
                 break;
         }
@@ -270,8 +275,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
     private void setWidgetInfo() {
         txt_overview.setText(reserveInfo.getRe_overview());                 // 項目「概要」に予約情報の概要を設定する(以下同様
         txt_purpose.setText(reserveInfo.getRe_purpose());                   // 目的
-        txt_startTime.setText(reserveInfo.getRe_startTime());               // 開始日時
-        txt_endTime.setText(reserveInfo.getRe_endTime());                   // 終了日時
+//        txt_startDay.setText(reserveInfo.getRe_startDay());                 // 開始日
+        txt_startTime.setText(reserveInfo.getRe_startTime());               // 開始時刻
+//        txt_endday.setText(reserveInfo.getRe_endDay());                     // 終了日
+        txt_endTime.setText(reserveInfo.getRe_endTime());                   // 終了時刻
         txt_applicant.setText(reserveInfo.getRe_rePerson());                // 予約者
         txt_conferenceRoom.setText(reserveInfo.getRe_conference_room());    // 会議室
     }
@@ -283,11 +290,13 @@ public class ReserveConfirmActivity extends AppCompatActivity
      */
     private void setReserveInfo(Cursor c) {
         reserveInfo.setRe_overview("aaaaaa");               // 予約情報クラスのインスタンスに、概要をセットする(以下同様
-        reserveInfo.setRe_purpose(c.getString(9));          // 会議目的名
-        reserveInfo.setRe_startTime(c.getString(6));        // 開始日時
-        reserveInfo.setRe_endTime(c.getString(7));          // 終了日時
-        reserveInfo.setRe_rePerson(c.getString(2));         // 予約者
-        reserveInfo.setRe_conference_room(c.getString(11)); // 会議室名
+        reserveInfo.setRe_purpose(c.getString(NINE));          // 会議目的名
+//        reserveInfo.setRe_startDay();                     開始日は現在ビューにないので後に追記か、代替案が必要
+//        reserveInfo.setRe_endDay();                       同上
+        reserveInfo.setRe_startTime(c.getString(SIX));        // 開始時刻
+        reserveInfo.setRe_endTime(c.getString(SEVEN));          // 終了時刻
+        reserveInfo.setRe_rePerson(c.getString(TWO));         // 予約者
+        reserveInfo.setRe_conference_room(c.getString(EREVEN)); // 会議室名
     }
 
     /***
@@ -296,8 +305,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
     private void init() {
         txt_overview = (TextView) findViewById(R.id.txt_rd_overView);       // 「概要」テキストビューを取得(以下同様
         txt_purpose = (TextView) findViewById(R.id.txt_rd_purpose);         // 会議目的名
-        txt_startTime = (TextView) findViewById(R.id.txt_rd_startTime);     // 開始日時
-        txt_endTime = (TextView) findViewById(R.id.txt_rd_endTime);         // 終了日時
+//        txt_startDay = (TextView) findViewById(R.id.cre_startDay);          // 開始日
+        txt_startTime = (TextView) findViewById(R.id.txt_rd_startTime);     // 開始時刻
+//        txt_endday = (TextView) findViewById(R.id.txt_rd_endDay);           // 終了日
+        txt_endTime = (TextView) findViewById(R.id.txt_rd_endTime);         // 終了時刻
         txt_applicant = (TextView) findViewById(R.id.txt_rd_applicant);     // 予約者
         txt_inOutHouse = (TextView) findViewById(R.id.txt_rd_inOutHouse);   // 社内社外区分
         txt_conferenceRoom = (TextView) findViewById(R.id.txt_rd_room);     // 会議室名
