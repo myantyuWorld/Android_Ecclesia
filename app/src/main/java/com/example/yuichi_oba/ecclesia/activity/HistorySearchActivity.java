@@ -165,7 +165,7 @@ public class HistorySearchActivity extends AppCompatActivity
 
 
         //配列の内容をListItemオブジェクトに詰め替え
-        ArrayList<ListItem> list = new ArrayList<>();
+        final ArrayList<ListItem> list = new ArrayList<>();
         for (int i = 0; i < pupose.length; i++)
         {
             ListItem item = new ListItem();
@@ -182,6 +182,29 @@ public class HistorySearchActivity extends AppCompatActivity
         MyListAdapter adapter = new MyListAdapter(this, list,R.layout.list_search_item);
         listView = (ListView) findViewById(R.id.list_history);
         listView.setAdapter(adapter);
+
+        //フィルタ機能を有効化
+        listView.setTextFilterEnabled(true);
+
+        //serchviewの検索ボックスに入力された時の処理
+        SearchView sv = (SearchView) findViewById(R.id.search);
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String text) {
+                if (text == null || text.isEmpty()) {
+                    text.trim();
+                    listView.clearTextFilter();
+                } else {
+                    listView.setFilterText(text);
+                }
+                return false;
+            }
+        });
 
     }
 
