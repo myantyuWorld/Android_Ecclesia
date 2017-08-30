@@ -56,7 +56,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     /***
      * 会議参加者をリスト形式で出す、ダイアログフラグメントクラス
      */
-    private static class MemberConfirmDialog extends DialogFragment {
+    public static class MemberConfirmDialog extends DialogFragment {
         // ダイアログを生成するメソッド
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -89,7 +89,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     /***
      * 「早期退出」オプション選択時の ダイアログフラグメントクラス
      */
-    private static class EarlyOutDialog extends DialogFragment{
+    public static class EarlyOutDialog extends DialogFragment{
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new AlertDialog.Builder(getActivity())
