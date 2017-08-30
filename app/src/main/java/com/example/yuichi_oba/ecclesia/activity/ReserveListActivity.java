@@ -54,6 +54,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 public class ReserveListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
     public static class TimeTableView extends View {
 
         public static final String TOKUBETSU = "0001";
@@ -256,7 +257,7 @@ public class ReserveListActivity extends AppCompatActivity
                             if (room_id.equals(r.getRe_roomId())) {
                                 Log.d("call", r.getRe_id());
                                 // 特定した会議予約IDを予約確認（ReserveConfirmActivity）に渡す
-//                            Intent in = new Intent(ReserveListActivity.this, ReserveConfirmActivity.class);
+//                            Intent in = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
 //                            in.putExtra("reserveInfo", r.getRe_id());
                             }
                         }
@@ -264,11 +265,10 @@ public class ReserveListActivity extends AppCompatActivity
                     // その予約情報をもって、予約確認（ReserveConfirmActivity）に飛ぶ
                     break;
             }
-            return true;
+            return false;
         }
 
     }
-
 
     private static final String TAG = ReserveListActivity.class.getSimpleName();
     public static final String RESERVE_INFO = "reserve_info";
@@ -345,7 +345,6 @@ public class ReserveListActivity extends AppCompatActivity
         });
 
     }
-
 
     // ようわからん(笑) ＝＝＞ HCPには書かんでいいよ
     @Override
@@ -477,8 +476,5 @@ public class ReserveListActivity extends AppCompatActivity
             reserveInfo.add(r);
         }
     }
-
-
-
 
 }
