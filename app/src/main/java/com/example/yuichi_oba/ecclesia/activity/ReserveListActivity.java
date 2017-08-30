@@ -50,33 +50,6 @@ public class ReserveListActivity extends AppCompatActivity
     private static final String TAG = ReserveListActivity.class.getSimpleName();
     public static final String RESERVE_INFO = "reserve_info";
 
-    public class TimeTable extends View {
-        public TimeTable(Context context) {
-            super(context);
-        }
-
-        public TimeTable(Context context, AttributeSet attrs) {
-            super(context, attrs);
-        }
-
-        public TimeTable(Context context, AttributeSet attrs, int defStyleAttr) {
-            super(context, attrs, defStyleAttr);
-        }
-
-        @Override
-        protected void onDraw(Canvas canvas) {
-            super.onDraw(canvas);
-
-            // 描画のためのスタイルの設定
-            Paint p = new Paint();
-            p.setColor(Color.RED);
-            p.setStyle(Paint.Style.STROKE);
-            p.setStrokeWidth(10);
-
-            canvas.drawLine(0,200,500,200, p);
-        }
-    }
-
     /***
      * 会議予約一覧を表示・選択するための、日付選択用ダイアログ
      */

@@ -200,6 +200,7 @@ public class TimeTableView extends View {
                 // タップした座標を取得する
                 float x = e.getX();
                 float y = e.getY();
+                Log.d("call", e.getX() + " : " + e.getY());
                 // x座標を基に、どの会議室か特定する
                 String room_id = "";
                 float wX = 216;
@@ -216,14 +217,12 @@ public class TimeTableView extends View {
                     Log.d("call", "roomC");
                     room_id = ROOM_C;
                 }
-                Log.d("call", room_id);
                 // y座標を基に、どの時間帯がタップされたかをチェックし、予約情報を返す
-
-
-
                 for (ReserveInfo r : reserveInfo) {
-                    if (r.getRe_roomId().equals(room_id)) {
-                        Log.d("call", r.getRe_id());
+                    if (r.getCoop()[1] < y && r.getCoop()[3] > y) {
+                        if (room_id.equals(r.getRe_roomId())) {
+                            Log.d("call", r.getRe_id());
+                        }
                     }
                 }
                 // その予約情報をもって、予約確認（ReserveConfirmActivity）に飛ぶ
