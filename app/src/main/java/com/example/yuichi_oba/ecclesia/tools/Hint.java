@@ -24,7 +24,7 @@ public class Hint {
      *      ①   SQLiteOpenHelper helper = new DB(getApplicationContext());
      *      ②   SQLiteDatabase db = helper.getReadableDatabase();   // 読み取り専用
      *                                                               // 書き込みたいなら、getWritable~~~();
-     *      ③   Cursor c = rawQuery("SQL文", ?に該当するやつ（new String[]{});
+     *      ③   Cursor c = rawQuery("SQL文", ?に該当するやつ（new String[]{});     // Cursorはでgetする場合は0オリジン
      *      ④   if (c.moveToNext()){...} or while (c.moveToNext()){...}
      *
      *
