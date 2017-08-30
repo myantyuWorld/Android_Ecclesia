@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
 
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+
 public class ExtentionActivity extends AppCompatActivity
     implements View.OnClickListener{
 
@@ -26,7 +28,7 @@ public class ExtentionActivity extends AppCompatActivity
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new AlertDialog.Builder(getActivity())
-                    .setTitle("延長確認")
+                    .setTitle(EX + CONF)
                     .setMessage("延長を実行しますか？")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override

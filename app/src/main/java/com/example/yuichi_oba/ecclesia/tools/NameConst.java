@@ -14,4 +14,7 @@ public class NameConst {
     public static final int THREE = 3;
     public static final int FOUR = 4;
     public static final int FIVE = 5;
+
+    public static final String EX = "延長";
+    public static final String CONF = "確認";
 }
