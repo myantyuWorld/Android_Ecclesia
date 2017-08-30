@@ -36,6 +36,7 @@ public class AuthDialog extends DialogFragment {
                         /***
                          * ここで、管理者認証を行い、良ければ、管理者画面に遷移するといっても、管理者画面はなし・・・
                          */
+                        
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
