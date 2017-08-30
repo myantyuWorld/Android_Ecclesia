@@ -72,6 +72,16 @@
     <string name="title_activity_reserve_confirm">ReserveConfirmActivity</string>
     <string name="title_activity_add_member">AddMemberActivity</string>
 
+    <string-array name="sp_exTime">
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+        <item>75</item>
+        <item>90</item>
+        <item>105</item>
+        <item>120</item>
+    </string-array>
+
     <!--_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/-->
     <!--_/_/_/          DB関連の名前付き定数化                 -->
     <!--_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/-->

@@ -18,4 +18,7 @@ public class NameConst {
 
     public static final String EX = "延長";
     public static final String CONF = "確認";
+    public static final String JIKKOUQUE = "を実行しますか？";
+    public static final String JIKKOU = "を実行しました";
+    public static final String OK = "OK";
 }
