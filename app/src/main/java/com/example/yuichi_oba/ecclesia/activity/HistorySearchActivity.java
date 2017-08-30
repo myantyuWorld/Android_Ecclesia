@@ -3,6 +3,9 @@ package com.example.yuichi_oba.ecclesia.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,16 +13,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+import com.example.yuichi_oba.ecclesia.tools.DB;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +98,46 @@ public class HistorySearchActivity extends AppCompatActivity
             this.companyMember = companyMember;
         }
     }
+    private class Purpose {
+        private String pur_id;
+        private String pur_name;
+        public String getPur_id() {
+            return pur_id;
+        }
+
+        public void setPur_id(String pur_id) {
+            this.pur_id = pur_id;
+        }
+
+        public String getPur_name() {
+            return pur_name;
+        }
+
+        public void setPur_name(String pur_name) {
+            this.pur_name = pur_name;
+        }
+
+    }
+    private class Company {
+        private String com_id;
+        private String com_name;
+
+        public String getCom_id() {
+            return com_id;
+        }
+
+        public void setCom_id(String com_id) {
+            this.com_id = com_id;
+        }
+
+        public String getCom_name() {
+            return com_name;
+        }
+
+        public void setCom_name(String com_name) {
+            this.com_name = com_name;
+        }
+    }
 
     private class MyListAdapter extends BaseAdapter{
         private Context context = null;
@@ -139,9 +188,11 @@ public class HistorySearchActivity extends AppCompatActivity
 
     SearchView searchView;
     ListView listView;
-    List<String> list;
+    List<Purpose> purpose;
+    List<Company> company;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("call", "HistorySearchActivity->onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -178,10 +229,76 @@ public class HistorySearchActivity extends AppCompatActivity
             list.add(item);
         }
 
+
+        //データベース検索
+        purpose= new ArrayList<>();
+        List<String> strings = new ArrayList<>();
+        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from m_purpose", new String[]{});
+        while (c.moveToNext()) {
+            strings.add(c.getString(1));
+            Purpose p = new Purpose();
+            p.setPur_id(c.getString(0));
+            p.setPur_name(c.getString(1));
+            Log.d("call", c.getString(0) + " : " + c.getString(1));
+            purpose.add(p);
+        }
+        //スピナーを取得
+        Spinner sp_mokuteki = (Spinner) findViewById(R.id.spinner_mokuteki);
+        //
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item,strings);
+        sp_mokuteki.setAdapter(adapter);
+        //スピナーに対してのイベントリスナーを登録
+        sp_mokuteki.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Spinner sp = (Spinner) parent;
+                //選択項目を取得し、その値で検索をする？それとトースト表示
+                Toast.makeText(HistorySearchActivity.this,String.format("選択目的 : %s",sp.getSelectedItem()),
+                        Toast.LENGTH_SHORT).show();
+                        Log.d("call","");
+            }
+            //項目が選択されなかったときの処理(今は空)
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        //データベース検索(会社名)
+        //company = new ArrayList<>();
+        List<String> strings1 = new ArrayList<>();
+        SQLiteOpenHelper helper2 = new DB(getApplicationContext());
+        SQLiteDatabase db2 = helper.getReadableDatabase();
+        Cursor cursor = db2.rawQuery("select * from m_company", new String[]{});
+        while (cursor.moveToNext()) {
+            strings1.add(cursor.getString(1));
+            Log.d("call", cursor.getString(1));
+        }
+
+        //スピナーを取得
+        Spinner sp_company = (Spinner) findViewById(R.id.spinner_company);
+        //adapterを宣言
+        ArrayAdapter<String> adapter_com = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,strings1);
+        sp_company.setAdapter(adapter_com);
+
+        //スピナーに対してのイベントリスナーを登録
+        sp_company.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Spinner sp = (Spinner) parent;
+                //スピナーに対しての処理
+                Toast.makeText(HistorySearchActivity.this,String.format("選択会社名 : %s",sp.getSelectedItem()),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
         //ListItemとレイアウトとを関連付け
-        MyListAdapter adapter = new MyListAdapter(this, list,R.layout.list_search_item);
+        MyListAdapter adapter2 = new MyListAdapter(this, list,R.layout.list_search_item);
         listView = (ListView) findViewById(R.id.list_history);
-        listView.setAdapter(adapter);
+        listView.setAdapter(adapter2);
 
         //フィルタ機能を有効化
         listView.setTextFilterEnabled(true);
