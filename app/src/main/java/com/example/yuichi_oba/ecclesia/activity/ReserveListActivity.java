@@ -310,6 +310,7 @@ public class ReserveListActivity extends AppCompatActivity
          */
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+            Log.d("call", "ReserveListActivity->onCreate()");
             final LinearLayout layout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.dialog_auth, null);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -318,17 +319,18 @@ public class ReserveListActivity extends AppCompatActivity
                     .setPositiveButton("認証", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Toast.makeText(getActivity(), "認証", Toast.LENGTH_SHORT).show();
+                            Log.d("call", "認証");
                             EditText id = (EditText) layout.findViewById(R.id.dia_empId);
                             EditText pass = (EditText) layout.findViewById(R.id.dia_empPass);
 
-                            Log.d("call", id.toString() + " : " + pass.toString());
+                            Log.d("call", id.getText().toString() + " : " + pass.getText().toString());
                             /***
                              * ここで、管理者認証を行い、良ければ、管理者画面に遷移するといっても、管理者画面はなし・・・
                              */
                             SQLiteOpenHelper helper = new DB(getContext());
                             SQLiteDatabase db = helper.getReadableDatabase();
-                            Cursor c = db.rawQuery("select * from m_admin where admin_id = ? and admin_pass = ?", new String[]{id.toString(), pass.toString()});
+                            Cursor c = db.rawQuery("select * from m_admin where admin_id = ? and admin_pass = ?",
+                                    new String[]{id.getText().toString(), pass.getText().toString()});
                             if (c.moveToNext()) {
                                 // ログイン成功
                                 Log.d("call", "ログイン成功");
