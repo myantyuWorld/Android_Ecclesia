@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
@@ -254,7 +255,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
             // 「管理者認証」が選択された
             case R.id.nav_admin_auth:
                 // 管理者認証ダイアログを生成する
-                ReserveListActivity.AuthDialog authDialog = new ReserveListActivity.AuthDialog();
+                AuthDialog authDialog = new AuthDialog();
                 authDialog.show(getFragmentManager(), "aaa");
                 break;
 
