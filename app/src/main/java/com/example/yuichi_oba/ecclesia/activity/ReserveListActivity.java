@@ -1,12 +1,10 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,7 +13,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,23 +26,22 @@ import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.MAX_HEIGHT;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.MAX_WIDTH;
@@ -301,64 +297,7 @@ public class ReserveListActivity extends AppCompatActivity
         }
     }
 
-    public static class AuthDialog extends DialogFragment {
-
-        /***
-         * 管理者認証用ダイアログ
-         * @param savedInstanceState
-         * @return
-         */
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final LinearLayout layout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.dialog_auth, null);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            return builder.setTitle("")
-                    .setView(layout)
-                    .setPositiveButton("認証", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Toast.makeText(getActivity(), "認証", Toast.LENGTH_SHORT).show();
-                            EditText id = (EditText) layout.findViewById(R.id.dia_empId);
-                            EditText pass = (EditText) layout.findViewById(R.id.dia_empPass);
-
-                            Log.d("call", id.toString() + " : " + pass.toString());
-                            /***
-                             * ここで、管理者認証を行い、良ければ、管理者画面に遷移するといっても、管理者画面はなし・・・
-                             */
-                            SQLiteOpenHelper helper = new DB(getContext());
-                            SQLiteDatabase db = helper.getReadableDatabase();
-                            Cursor c = db.rawQuery("select * from m_admin where admin_id = ? and admin_pass = ?", new String[]{id.toString(), pass.toString()});
-                            if (c.moveToNext()) {
-                                // ログイン成功
-                                Log.d("call", "ログイン成功");
-                            }
-                            // ログイン失敗
-                            else {
-
-                            }
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Toast.makeText(getActivity(), "Cancel", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .create();
-        }
-
-        /***
-         * ダイアログを閉じる際の処理
-         */
-        @Override
-        public void onPause() {
-            super.onPause();
-
-            dismiss();
-        }
-    }
-
+    @SuppressLint("StaticFieldLeak")
     static TextView txtDate;
     Employee employee;
     public static List<ReserveInfo> reserveInfo;    // 予約情報記録クラスの変数
@@ -395,8 +334,8 @@ public class ReserveListActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         // 画面情報の設定
         txtDate = (TextView) findViewById(R.id.txtDate);
-//        Calendar c = Calendar.getInstance();
-//        txtDate.setText(String.format(Locale.JAPAN, "%04d/%02d/%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DATE)));
+        final Calendar c = Calendar.getInstance();
+        txtDate.setText(String.format(Locale.JAPAN, "%04d/%02d/%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DATE)));
         txtDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

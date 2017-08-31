@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
@@ -87,9 +88,9 @@ public class ReserveActivity extends AppCompatActivity
                 intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
                 break;
             case R.id.nav_admin_auth:
-//                AuthDialog authDialog = new AuthDialog();
-//                authDialog.show(getFragmentManager(), "aaa");
-//                break;
+                AuthDialog authDialog = new AuthDialog();
+                authDialog.show(getFragmentManager(), "aaa");
+                break;
 
         }
         if (intent != null) {

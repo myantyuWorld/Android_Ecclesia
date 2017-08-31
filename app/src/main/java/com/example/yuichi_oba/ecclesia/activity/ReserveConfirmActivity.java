@@ -16,16 +16,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
@@ -133,52 +131,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
             dismiss();
         }
     }
-    /***
-     *  管理者認証ダイアログフラグメントクラス
-     */
-    public static class AuthDialog extends DialogFragment {
-
-    /***
-     * 管理者認証用ダイアログ
-     * @param savedInstanceState
-     * @return
-     */
-    @Override
-    public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        Log.d("call", "AuthDialog->onCreateDialog()");
-        final LinearLayout layout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.dialog_auth, null);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        return builder.setTitle("")
-                .setView(layout)
-                .setPositiveButton("認証", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.d("call", "認証");
-                        EditText id = (EditText) layout.findViewById(R.id.dia_empId);
-                        EditText pass = (EditText) layout.findViewById(R.id.dia_empPass);
-                        ReserveConfirmActivity reserveConfirmActivity = (ReserveConfirmActivity)getActivity();
-                        reserveConfirmActivity.onReturnValue(new String[]{id.toString(), pass.toString()});
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getActivity(), "Cancel", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .create();
-    }
-
-    /***
-     * ダイアログを閉じる際の処理
-     */
-    @Override
-    public void onPause() {
-        super.onPause();
-        dismiss();
-    }
-}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -412,10 +364,5 @@ public class ReserveConfirmActivity extends AppCompatActivity
         // 次に、会議参加者をDB検索する、予約情報クラスのインスタンスに会議参加者情報をセットする
         reserveInfo.setRe_member(list);
     }
-
-    private void onReturnValue(String[] info) {
-        Log.d("call", "ReserveConfirmActivity->onReturnValue()");
-    }
-
 
 }
