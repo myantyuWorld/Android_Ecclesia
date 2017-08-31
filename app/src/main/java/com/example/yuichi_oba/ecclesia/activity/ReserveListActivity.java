@@ -496,10 +496,13 @@ public class ReserveListActivity extends AppCompatActivity
             // 端末ＩＭＥＩから社員ＩＤ取得が成功した
             employee.setEmp_id(c.getString(1));
         }
+        c.close();
+        SQLiteOpenHelper helper2 = new DB(getApplicationContext());
+        SQLiteDatabase db2 = helper2.getReadableDatabase();
         Log.d(TAG, employee.getEmp_id());
         // 社員ＩＤが空またはＮＵＬＬでなければ次のロジックを実行する
         if (!employee.getEmp_id().isEmpty()) {
-            c = db.rawQuery("select * from t_emp where emp_id = ?", new String[]{employee.getEmp_id()});
+            c = db2.rawQuery("select * from t_emp where emp_id = ?", new String[]{employee.getEmp_id()});
             if (c.moveToNext()) {
                 // 社員ＩＤから社員情報を検索して、設定する
                 employee.setEmp_name(c.getString(1));
