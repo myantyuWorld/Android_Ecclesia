@@ -365,9 +365,4 @@ public class ReserveConfirmActivity extends AppCompatActivity
         reserveInfo.setRe_member(list);
     }
 
-    private void onReturnValue(String[] info) {
-        Log.d("call", "ReserveConfirmActivity->onReturnValue()");
-    }
-
-
 }
