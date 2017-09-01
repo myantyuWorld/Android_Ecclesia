@@ -147,7 +147,7 @@ public class TimeTableView extends View {
             canvas.drawLine(i * x, y_timetable, i * x, MAX_HEIGHT, p2);
         }
         float y = 100;
-        for (int i = 4; i < 17; i++) {
+        for (int i = 4; i < 28; i++) {
             canvas.drawLine(x, i * y, MAX_WIDTH, i * y, p2);
             if (i % 2 == 1) {
                 canvas.drawLine(ZERO, i * y, x, i * y, p);
