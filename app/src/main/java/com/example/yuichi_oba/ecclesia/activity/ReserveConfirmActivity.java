@@ -216,7 +216,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 break;
             // 「予約変更」が選択された
             case R.id.option_reserveChange:
-                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
+                intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+                intent.putExtra("Change", reserveInfo);
+                startActivity(intent);
+//                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
                 // 予約情報インスタンスを次の画面にオブジェクト渡しする
                 break;
             // 「延長」が選択された
