@@ -30,10 +30,6 @@ import com.example.yuichi_oba.ecclesia.tools.DB;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.EREVEN;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.NINE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SEVEN;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SIX;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.TWO;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
@@ -300,13 +296,13 @@ public class ReserveConfirmActivity extends AppCompatActivity
      */
     private void setReserveInfo(Cursor c) {
         reserveInfo.setRe_overview("aaaaaa");               // 予約情報クラスのインスタンスに、概要をセットする(以下同様
-        reserveInfo.setRe_purpose(c.getString(NINE));          // 会議目的名
+        reserveInfo.setRe_purpose(c.getString(1));          // 会議目的名
 //        reserveInfo.setRe_startDay();                     開始日は現在ビューにないので後に追記か、代替案が必要
 //        reserveInfo.setRe_endDay();                       同上
-        reserveInfo.setRe_startTime(c.getString(SIX));        // 開始時刻
-        reserveInfo.setRe_endTime(c.getString(SEVEN));          // 終了時刻
+        reserveInfo.setRe_startTime(c.getString(4));        // 開始時刻
+        reserveInfo.setRe_endTime(c.getString(5));          // 終了時刻
         reserveInfo.setRe_rePerson(c.getString(TWO));         // 予約者
-        reserveInfo.setRe_conference_room(c.getString(EREVEN)); // 会議室名
+        reserveInfo.setRe_conference_room(c.getString(12)); // 会議室名
     }
 
     /***
@@ -346,18 +342,20 @@ public class ReserveConfirmActivity extends AppCompatActivity
         // 予約情報クラスのインスタンスから、予約情報詳細をＤＢ検索して、画面にマッピングする
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor c = db.rawQuery("select * from t_reserve where re_id = ?", new String[]{reserveInfo.getRe_id()});
+        Cursor c = db.rawQuery("select * from v_reserve_member where re_id = ?", new String[]{reserveInfo.getRe_id()});
+        List<String> list = new ArrayList<>();
         // 検索結果が存在する
         if (c.moveToNext()) {
             // 予約情報クラスのインスタンスに、ＤＢ検索した結果をセットする
             setReserveInfo(c);
             // インスタンスと、画面情報をマッピングする
             setWidgetInfo();
+            // 会議参加者を追加する 15 16
+            list.add(c.getString(15) + " : " + c.getString(16));
         }
         c.close();
 
         // 次に、会議参加者をDB検索する、予約情報クラスのインスタンスに会議参加者情報をセットする
-        List<String> list = new ArrayList<>();
         reserveInfo.setRe_member(list);
     }
 
