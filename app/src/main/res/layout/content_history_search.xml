@@ -10,11 +10,55 @@
     tools:showIn="@layout/app_bar_history_search">
 
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="306dp"
-        android:layout_marginTop="520dp" />
+        android:layout_alignParentStart="true"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinner_mokuteki"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/mokuteki"
+                android:prompt="@string/spnOs_mokuteki"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:id="@+id/spinner_company"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/company"
+                android:prompt="@string/spnOs_company"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <SearchView
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:iconifiedByDefault="false"
+                app:queryHint="検索文字列を入力"
+                tools:ignore="MissingPrefix" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/list_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 </RelativeLayout>

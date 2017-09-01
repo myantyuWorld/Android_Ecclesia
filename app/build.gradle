@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    maven { url 'http://repo1.maven.org/maven2' }
+}
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -9,7 +12,6 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -17,6 +19,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
 }
 
 dependencies {

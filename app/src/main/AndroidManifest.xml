@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.yuichi_oba.ecclesia">
 
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -30,8 +32,12 @@
             android:name=".activity.ReserveConfirmActivity"
             android:label="@string/title_activity_reserve_confirm"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.AddMemberActivity" />
-        <activity android:name=".activity.ExtentionActivity"></activity>
+        <activity
+            android:name=".activity.AddMemberActivity"
+            android:label="参加者登録" />
+        <activity
+            android:name=".activity.ExtentionActivity"
+            android:label="延長" />
     </application>
 
 </manifest>

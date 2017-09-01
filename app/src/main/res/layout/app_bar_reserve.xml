@@ -35,15 +35,14 @@
         android:layout_width="wrap_content"
         android:layout_height="70dp"
         android:clickable="true"
-        app:srcCompat="@android:drawable/ic_input_add"
         android:id="@+id/fbn_addMember"
-        app:backgroundTint="?android:attr/textColorSecondaryNoDisable"
-        android:layout_marginEnd="13dp"
+        app:backgroundTint="?android:attr/textColorLinkInverse"
         app:elevation="7dp"
-        app:fabSize="mini"
-        android:layout_below="@+id/appBarLayout"
+        app:fabSize="normal"
+        android:layout_marginBottom="183dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="235dp" />
+        app:srcCompat="@android:drawable/ic_menu_zoom" />
 
 
 </RelativeLayout>

@@ -10,6 +10,7 @@
     <string name="title_activity_history_search">HistorySearchActivity</string>
     <string name="title_activity_reserve">ReserveActivity</string>
 
+    <string name="spnOs_mokuteki">目的を選択してください。</string>
     <string-array name="mokuteki">
         <item>打合わせ</item>
         <item>商談</item>
@@ -17,6 +18,13 @@
         <item>プロジェクト報告</item>
         <item>決算報告</item>
         <item>定例会</item>
+    </string-array>
+    <string name="spnOs_company">会社名を選択してください。</string>
+    <string-array name="company">
+        <item>株式会社ostraca</item>
+        <item>株式会社ニッポン放送</item>
+        <item>株式会社toyota</item>
+        <item>株式会社docomo</item>
     </string-array>
     <string-array name="bihin">
         <item>プロジェクター</item>
@@ -32,11 +40,127 @@
         <item>骨川筋衛門：骨部</item>
     </string-array>
     <string-array name="room">
+        <item>希望なし</item>
         <item>特別会議室</item>
         <item>会議室A</item>
         <item>会議室B</item>
         <item>会議室C</item>
     </string-array>
+    <string-array name="sp_add_history">
+        <item>item 1</item>
+        <item>item 2</item>
+        <item>item 3</item>
+        <item>item 4</item>
+    </string-array>
+    <string-array name="sp_position">
+        <item>取締役会長</item>
+        <item>代表取締役</item>
+        <item>取締役</item>
+        <item>執行役員</item>
+        <item>部長</item>
+        <item>課長</item>
+        <item>係長</item>
+        <item>主任</item>
+        <item>一般社員</item>
+    </string-array>
+
+    <string-array name="re_id">
+        <item>0001</item>
+        <item>0002</item>
+        <item>0003</item>
+    </string-array>
     <string name="title_activity_reserve_confirm">ReserveConfirmActivity</string>
     <string name="title_activity_add_member">AddMemberActivity</string>
+
+    <string-array name="sp_exTime">
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+        <item>75</item>
+        <item>90</item>
+        <item>105</item>
+        <item>120</item>
+    </string-array>
+
+    <!--_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/-->
+    <!--_/_/_/          DB関連の名前付き定数化                 -->
+    <!--_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/-->
+    <!--<string name="db_file_name">ecclesia.db</string>-->
+    <!--<string name="db_name">ecclesia</string>-->
+    <!--    MASTER     -->
+    <string name="db_m_company">m_company</string>
+    <string name="db_m_conference_room">m_conference_room</string>
+    <string name="db_m_depart">m_depart</string>
+    <string name="db_m_position">m_position</string>
+    <string name="db_m_purpose">m_purpose</string>
+
+    <!--    TRAN       -->
+    <string name="db_t_admin">t_admin</string>
+    <string name="db_t_employee">t_employee</string>
+    <string name="db_t_extension">t_extension</string>
+    <string name="db_t_member">t_member</string>
+    <string name="db_t_out_employee">t_out_employee</string>
+    <string name="db_t_reserve">t_reserve</string>
+    <string name="db_t_terminal_info">t_terminal_info</string>
+
+    <!--COLUMN NAMES-->
+    <!--COMPANY-->
+    <string name="db_com_id">com_id</string>
+    <string name="db_com_name">com_name</string>
+
+    <!--CONFERENCE_ROOM-->
+    <string name="db_confe_id">confe_id</string>
+    <string name="db_confe_name">confe_name</string>
+    <string name="db_confe_people">confe_people</string>
+
+    <!--DEPAERMENT-->
+    <string name="db_dep_id">dep_id</string>
+    <string name="db_dep_name">dep_name</string>
+
+    <!--POSITION-->
+    <string name="db_po_id">po_id</string>
+    <string name="db_po_name">po_name</string>
+    <string name="db_po_priority">po_priority</string>
+
+    <!--PURPOSE-->
+    <string name="db_pur_id">pur_id</string>
+    <string name="db_pur_name">pur_name</string>
+    <string name="db_pur_priority">pur_priority</string>
+
+    <!--ADMIN-->
+    <string name="db_admin_id">admin_id</string>
+    <string name="db_admin_pass">admin_pass</string>
+
+    <!--EMPLOYEE-->
+    <string name="db_emp_id">emp_id</string>
+    <string name="db_emp_name">emp_name</string>
+    <string name="db_emp_tel">emp_tel</string>
+    <string name="db_emp_mailaddr">emp_mailaddr</string>
+
+    <!--RESERVE-->
+    <string name="db_re_id">re_id</string>
+    <string name="db_re_start_time">re_start_time</string>
+    <string name="db_re_end_time">re_end_time</string>
+
+    <!--EXTENSITON-->
+    <string name="db_ex_start_time">ex_start_time</string>
+    <string name="db_ex_end_time">ex_end_time</string>
+
+    <!--MEMBER-->
+    <string name="db_member_id">member_id</string>
+
+    <!--OUT_EMPLOYEE-->
+    <string name="db_out_id">out_id</string>
+    <string name="db_out_name">out_name</string>
+    <string name="db_out_tel">out_tel</string>
+    <string name="db_out_mailaddr">out_mailaddr</string>
+
+    <!--TERMINAL-->
+    <string name="db_terminal_number">terminal_number</string>
+
+    
+
+
+
+
 </resources>
