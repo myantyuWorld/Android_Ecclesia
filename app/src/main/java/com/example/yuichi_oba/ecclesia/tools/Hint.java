@@ -50,32 +50,42 @@ public class Hint {
      *      ①   MyDialog extends DialogFragment {...}
      *      ②   onCreateDialog を　オーバーライド
      *      ③   基本形の例
-                        @Override
-                        public Dialog onCreateDialog(Bundle savedInstanceState) {
-                        return new AlertDialog.Builder(getActivity())
-                        .setTitle("タイトル")
-                        .setMessage("メッセージ")
-                        .create();
-                        }
+     @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+     return new AlertDialog.Builder(getActivity())
+     .setTitle("タイトル")
+     .setMessage("メッセージ")
+     .create();
+     }
 
-                         @Override
-                         public void onPause() {
-                         super.onPause();
+     @Override public void onPause() {
+     super.onPause();
 
-                         // onPause でダイアログを閉じる場合
-                         dismiss();
-                         }
+     // onPause でダイアログを閉じる場合
+     dismiss();
+     }
 
-            ④   使用する際は、
-                         MyDialog d = new MyDialog();
-                         d.show(getFragmentManager(), "key");
+     ④   使用する際は、
+     MyDialog d = new MyDialog();
+     d.show(getFragmentManager(), "key");
 
-            ⑤   ダイアログにリストを出す
-                 .setItems(items, new DialogInterface.OnClickLister(){...}
-             CharSequence[] items =
-                reserveInfo.getRe_member().toArray(new CharSequence[reserveInfo.getRe_member().size()]);
+     ⑤   ダイアログにリストを出す
+     .setItems(items, new DialogInterface.OnClickLister(){...}
+     CharSequence[] items =
+     reserveInfo.getRe_member().toArray(new CharSequence[reserveInfo.getRe_member().size()]);
 
      *
      *
+     */
+
+    /***
+     * リスト1.8: 点を描画
+     mPaint.setStrokeWidth(1.0f);
+     for (int i = 0; i &lt; 300; i++) {
+     if (i % 5 != 0) {
+     continue;
+     }
+
+     canvas.drawPoint(100, 100 + i, mPaint);
+     }
      */
 }
