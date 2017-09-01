@@ -73,7 +73,7 @@ public class ReserveChangeActivity extends AppCompatActivity
     // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {.
+    public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         Intent intent = null;
