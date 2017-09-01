@@ -134,6 +134,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("call", "ReserveConfirmActivity->onCreate()");
         /***
          * レイアウト情報をマッピングする
          */
@@ -158,11 +159,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
         // 各ウィジェットの初期化処理メソッド
         init();
         // 予約一覧（ReserveListActivity）から特定した会議予約IDを受け取る
-//        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("reserve_info");
-        String re_id = getIntent().getStringExtra("reserveInfo");
-        Log.d("call", re_id);
+        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("reserve_info");
+        Log.d("call", reserveInfo.getRe_id());
         // 予約詳細をDB検索して、画面にマッピングするメソッド
-//        dbSearchReserveConfirm();
+        dbSearchReserveConfirm();
     }
 
     /***
@@ -339,10 +339,11 @@ public class ReserveConfirmActivity extends AppCompatActivity
      * 予約詳細をDB検索して、画面へ反映させるメソッド
      */
     private void dbSearchReserveConfirm() {
+        Log.d("call", "ReserveConfirmActivity->dbSearchReserveConfirm()");
         // 予約情報クラスのインスタンスから、予約情報詳細をＤＢ検索して、画面にマッピングする
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor c = db.rawQuery("select * from v_reserve where re_id = ?", new String[]{reserveInfo.getRe_id()});
+        Cursor c = db.rawQuery("select * from t_reserve where re_id = ?", new String[]{reserveInfo.getRe_id()});
         // 検索結果が存在する
         if (c.moveToNext()) {
             // 予約情報クラスのインスタンスに、ＤＢ検索した結果をセットする
@@ -350,18 +351,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
             // インスタンスと、画面情報をマッピングする
             setWidgetInfo();
         }
+        c.close();
 
-        c = db.rawQuery("select * from v_member where re_id = ?", new String[]{reserveInfo.getRe_id()});
-        List<String> list = new ArrayList<>();
-        // 検索結果の最後まで繰り返す
-        while (c.moveToNext()) {
-            // HCP不要
-//            Log.d(TAG, "setReserveInfo: " + c.getString(2));
-//            String member = String.format("%s : %s", c.getString(2), c.getString(6));
-            // フォーマットをかけた文字列を生成し、リストに追加する
-            list.add(String.format("%s : %s", c.getString(2), c.getString(6)));
-        }
         // 次に、会議参加者をDB検索する、予約情報クラスのインスタンスに会議参加者情報をセットする
+        List<String> list = new ArrayList<>();
         reserveInfo.setRe_member(list);
     }
 
