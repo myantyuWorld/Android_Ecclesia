@@ -10,23 +10,11 @@
     tools:showIn="@layout/app_bar_history_search">
 
 
-    <LinearLayout
-        android:orientation="vertical"
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
-
-        <SearchView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/list_history"
-            android:headerDividersEnabled="false"
-            android:footerDividersEnabled="false" />
-
-    </LinearLayout>
+        android:layout_marginStart="306dp"
+        android:layout_marginTop="520dp" />
 </RelativeLayout>

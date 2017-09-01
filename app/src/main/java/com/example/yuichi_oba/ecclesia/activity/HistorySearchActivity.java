@@ -118,6 +118,15 @@ public class HistorySearchActivity extends AppCompatActivity
     SearchView searchView;
     ListView listView;
     List<String> list;
+
+    //Searchview関係
+    //フィルター有効化
+
+    //検索ボックスに入力されたときの条件
+    SearchView sv = (SearchView) findViewById(R.id.search);
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
