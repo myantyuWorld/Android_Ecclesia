@@ -62,7 +62,7 @@ public class TimeTableView extends View {
         Log.d("call", "TimeTableView->onDraw()");
 
         timeFloats = new float[24];
-        for (int i = 0, j = 200; i < timeFloats.length; i++) {
+        for (int i = 0, j = 100; i < timeFloats.length; i++) {
             timeFloats[i] = j;
             j += Y_HEIGHT * 2;
         }
