@@ -69,14 +69,14 @@ public class TimeTableView extends View {
         // 特別会議室 Ａ Ｂ Ｃ 列の描画
         float x = X_WIGDH;
         float room_y = 100;
-        c.drawRect(ZERO, room_y, MAX_WIDTH, 2 * room_y, p);
-        c.drawLine(ZERO, room_y, ZERO, 2 * room_y, p);   // sx sy ex ey
+        c.drawRect(ZERO, 0, MAX_WIDTH, room_y, p);
+        c.drawLine(ZERO, 0, ZERO, room_y, p);   // sx sy ex ey
         for (int i = 1; i <= 4; i++) {
-            c.drawLine(i * x, room_y, i * x, 2 * room_y, p);
+            c.drawLine(i * x, 0, i * x, room_y, p);
         }
 
         // 会議室名の描画
-        float y_conference = 160;
+        float y_conference = 60;
         c.drawText("特別", 316, y_conference, p_txtConference);
         c.drawText("A", 532, y_conference, p_txtConference);
         c.drawText("B", 748, y_conference, p_txtConference);
@@ -85,7 +85,7 @@ public class TimeTableView extends View {
         // 時間割の枠の描画
         onDrawTimeTable(c);
         // 時間の文字の描画 text x y paint
-        for (int i = 0, j = 250; i < 24; i++) {
+        for (int i = 0, j = 150; i < 24; i++) {
             String time = String.format("%02d:00", i);
             c.drawText(time, 100, j, p_txtTime);
             j += Y_HEIGHT * 2;
@@ -176,7 +176,7 @@ public class TimeTableView extends View {
      */
     private void onDrawTimeTable(Canvas canvas) {
         float x = 216;
-        float y_timetable = 200;
+        float y_timetable = 100;
         for (int i = 1; i <= 4; i++) {
             canvas.drawLine(i * x, y_timetable, i * x, 2200, p2);
         }
