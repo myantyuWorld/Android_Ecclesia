@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -14,9 +15,7 @@ import android.view.View;
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
 
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.reserveInfo;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.MAX_HEIGHT;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.MAX_WIDTH;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 /**
  * Created by Yuichi-Oba on 2017/08/28.
@@ -24,10 +23,8 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 
 public class TimeTableView extends View {
 
-    public static final String TOKUBETSU = "0001";
-    public static final String ROOM_A = "0002";
-    public static final String ROOM_B = "0003";
-    public static final String ROOM_C = "0004";
+    public static final int Y_HEIGHT = 40;
+    public static final int X_WIGDH = 216;
     private Paint p;
     private Paint p2;
     private Paint room;
@@ -35,10 +32,12 @@ public class TimeTableView extends View {
     private Paint roomA;
     private Paint roomB;
     private Paint roomC;
+    private Paint p_txtTime;
+    private Paint p_txtConference;
     private float x = 0;    // タップしたｘ座標
     private float y = 0;    // タップしたｙ座標
 
-    private float[] timeFloats = {300,500,700,900,1100,1300,1500};
+    private float[] timeFloats;
     public boolean thread_flg;
 
     public TimeTableView(Context context) {
@@ -61,10 +60,45 @@ public class TimeTableView extends View {
     @Override
     protected void onDraw(Canvas c) {
         Log.d("call", "TimeTableView->onDraw()");
+
+        timeFloats = new float[24];
+        for (int i = 0, j = 200; i < timeFloats.length; i++) {
+            timeFloats[i] = j;
+            j += Y_HEIGHT * 2;
+        }
+        // 特別会議室 Ａ Ｂ Ｃ 列の描画
+        float x = X_WIGDH;
+        float room_y = 100;
+        c.drawRect(ZERO, room_y, MAX_WIDTH, 2 * room_y, p);
+        c.drawLine(ZERO, room_y, ZERO, 2 * room_y, p);   // sx sy ex ey
+        for (int i = 1; i <= 4; i++) {
+            c.drawLine(i * x, room_y, i * x, 2 * room_y, p);
+        }
+
+        // 会議室名の描画
+        float y_conference = 160;
+        c.drawText("特別", 316, y_conference, p_txtConference);
+        c.drawText("A", 532, y_conference, p_txtConference);
+        c.drawText("B", 748, y_conference, p_txtConference);
+        c.drawText("C", 964, y_conference, p_txtConference);
+
         // 時間割の枠の描画
         onDrawTimeTable(c);
+        // 時間の文字の描画 text x y paint
+        for (int i = 0, j = 250; i < 24; i++) {
+            String time = String.format("%02d:00", i);
+            c.drawText(time, 100, j, p_txtTime);
+            j += Y_HEIGHT * 2;
+        }
 
         // アプリを立ち上げた社員の予約情報の描画
+        onDrawConference(c);
+
+
+
+    }
+
+    private void onDrawConference(Canvas c) {
         int cnt = 0;
         for (ReserveInfo r : reserveInfo) {
             String sTime = r.getRe_startTime();
@@ -121,16 +155,16 @@ public class TimeTableView extends View {
                 eX = 5 * x;
                 break;
         }
-        int s = Integer.parseInt(sTime.split("：")[0]) - 8; // 08:00 -> 8 => 8 - 8 = 0
+        int s = Integer.parseInt(sTime.split("：")[0]); // 08:00 -> 8 => 8 - 8 = 0
         sY = timeFloats[s];
         if (Integer.parseInt(sTime.split("：")[1]) >= 30) {
-            sY += 100;
+            sY += Y_HEIGHT;
         }
 
-        int e = Integer.parseInt(eTime.split("：")[0]) - 8; // 10:30 -> 10 - 8 = 2
+        int e = Integer.parseInt(eTime.split("：")[0]); // 10:30 -> 10 - 8 = 2
         eY = timeFloats[e];
         if (Integer.parseInt(eTime.split("：")[1]) >= 30) { // 30 >= 30
-            eY += 100;
+            eY += Y_HEIGHT;
         }
 
         return new RectF(sX, sY, eX, eY);
@@ -142,19 +176,19 @@ public class TimeTableView extends View {
      */
     private void onDrawTimeTable(Canvas canvas) {
         float x = 216;
-        float y_timetable = 300;
+        float y_timetable = 200;
         for (int i = 1; i <= 4; i++) {
             canvas.drawLine(i * x, y_timetable, i * x, MAX_HEIGHT, p2);
         }
-        float y = 100;
-        for (int i = 4; i < 28; i++) {
-            canvas.drawLine(x, i * y, MAX_WIDTH, i * y, p2);
-            if (i % 2 == 1) {
-                canvas.drawLine(ZERO, i * y, x, i * y, p);
+        // 中の線の線
+        float y = Y_HEIGHT;
+        for (int i = 1; i < 48; i++) {
+            canvas.drawLine(x, y_timetable + i * y, MAX_WIDTH, y_timetable + i * y, p2);
+            if (i % 2 == 0) {
+                canvas.drawLine(ZERO, y_timetable +  i * y, x, y_timetable + i * y, p);
             }
         }
-        canvas.drawRect(ZERO, y_timetable, MAX_WIDTH, MAX_HEIGHT, p);
-        canvas.drawLine(x, y_timetable, x, MAX_HEIGHT, p);
+        canvas.drawRect(ZERO, y_timetable, MAX_WIDTH, 2000, p);
     }
 
     /***
@@ -194,10 +228,24 @@ public class TimeTableView extends View {
         roomC.setColor(Color.parseColor("#FFC107"));
         roomC.setStyle(Paint.Style.FILL);
         roomC.setStrokeWidth(10);
+
+        // テキスト用
+        p_txtTime = new Paint();
+        p_txtTime.setTypeface(Typeface.MONOSPACE);
+        p_txtTime.setTextSize(40);
+        p_txtTime.setTextAlign(Paint.Align.CENTER);
+        p_txtTime.setColor(Color.BLACK);
+
+        p_txtConference = new Paint();
+        p_txtConference.setTypeface(Typeface.MONOSPACE);
+        p_txtConference.setTextSize(60);
+        p_txtConference.setTextAlign(Paint.Align.CENTER);
+        p_txtConference.setColor(Color.BLACK);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
+        Log.d("call", "TimeTableView->onTouchEvent()");
         switch (e.getAction()) {
             case MotionEvent.ACTION_UP:
                 // タップした座標を取得する
@@ -222,33 +270,34 @@ public class TimeTableView extends View {
      */
     public String getSelectedReserve()
     {
+        Log.d("call", "TimeTableView->getSelectedReserve()");
         //
         String re_id = "";
         while (thread_flg) {
             float wX = 216;
-            if (x > wX && x < 2 * wX) {
-                Log.d("call", "tokubetu");
-                re_id = TOKUBETSU;
-            } else if (x > 2 * wX && x < 3 * wX) {
-                Log.d("call", "roomA");
-                re_id = ROOM_A;
-            } else if (x > 3 * wX && x < 4 * wX) {
-                Log.d("call", "roomB");
-                re_id = ROOM_B;
-            } else if (x > 4 * wX && x < 5 * wX) {
-                Log.d("call", "roomC");
-                re_id = ROOM_C;
-            }
-            // re_id と y座標を基に、どの会議がタップされたかを返す
-            for (ReserveInfo r : reserveInfo) {
-                if (r.getCoop() != null && r.getCoop()[1] < y && r.getCoop()[3] > y) {
-                    // 特定した
-                    if (re_id.equals(r.getRe_roomId())) {
-                        re_id = r.getRe_id();
-                        thread_flg = false;
+                if (x > wX && x < 2 * wX) {
+                    Log.d("call", "tokubetu");
+                    re_id = TOKUBETSU;
+                } else if (x > 2 * wX && x < 3 * wX) {
+                    Log.d("call", "roomA");
+                    re_id = ROOM_A;
+                } else if (x > 3 * wX && x < 4 * wX) {
+                    Log.d("call", "roomB");
+                    re_id = ROOM_B;
+                } else if (x > 4 * wX && x < 5 * wX) {
+                    Log.d("call", "roomC");
+                    re_id = ROOM_C;
+                }
+                // re_id と y座標を基に、どの会議がタップされたかを返す
+                for (ReserveInfo r : reserveInfo) {
+                    if (r.getCoop() != null && r.getCoop()[1] < y && r.getCoop()[3] > y) {
+                        // 特定した
+                        if (re_id.equals(r.getRe_roomId())) {
+                            re_id = r.getRe_id();
+                            thread_flg = false;
+                        }
                     }
                 }
-            }
         }
         Log.d("call", "Re_id : " + re_id);
         return re_id;

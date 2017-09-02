@@ -396,6 +396,7 @@ public class ReserveListActivity extends AppCompatActivity
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d("call", "Thread");
                 String re_id = timeTableView.getSelectedReserve();
                 Log.d("call", re_id);
                 ReserveInfo reserveInfo = new ReserveInfo();
@@ -466,6 +467,7 @@ public class ReserveListActivity extends AppCompatActivity
             } else {
                 Log.d(TAG, "社員情報の取得に失敗しました");
             }
+            c.close();
         }
         Log.d(TAG, employee.getEmp_id() + " : " + employee.getEmp_name());
     }
