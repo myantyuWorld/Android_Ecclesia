@@ -178,7 +178,7 @@ public class TimeTableView extends View {
         float x = 216;
         float y_timetable = 200;
         for (int i = 1; i <= 4; i++) {
-            canvas.drawLine(i * x, y_timetable, i * x, MAX_HEIGHT, p2);
+            canvas.drawLine(i * x, y_timetable, i * x, 2200, p2);
         }
         // 中の線の線
         float y = Y_HEIGHT;
@@ -188,7 +188,7 @@ public class TimeTableView extends View {
                 canvas.drawLine(ZERO, y_timetable +  i * y, x, y_timetable + i * y, p);
             }
         }
-        canvas.drawRect(ZERO, y_timetable, MAX_WIDTH, 2000, p);
+        canvas.drawRect(ZERO, y_timetable, MAX_WIDTH, y_timetable + 48 * y, p);
     }
 
     /***

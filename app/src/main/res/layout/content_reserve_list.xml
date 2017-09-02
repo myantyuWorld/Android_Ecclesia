@@ -20,12 +20,25 @@
         android:textSize="24sp"
         android:textStyle="normal|bold|italic" />
 
-    <view
-        android:id="@+id/timetable"
-        class="com.example.yuichi_oba.ecclesia.view.TimeTableView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
-        android:layout_marginTop="0dp" />
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <view
+                android:id="@+id/timetable"
+                class="com.example.yuichi_oba.ecclesia.view.TimeTableView"
+                android:layout_width="match_parent"
+                android:layout_height="710dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginTop="0dp" />
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

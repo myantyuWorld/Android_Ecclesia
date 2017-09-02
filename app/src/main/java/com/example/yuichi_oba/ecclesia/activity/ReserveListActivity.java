@@ -335,7 +335,7 @@ public class ReserveListActivity extends AppCompatActivity
             }
         });
 
-        timeTableView = (TimeTableView) findViewById(R.id.timetable);
+        timeTableView = (TimeTableView) this.findViewById(R.id.timetable);
         timeTableView.reView();
 
     }
