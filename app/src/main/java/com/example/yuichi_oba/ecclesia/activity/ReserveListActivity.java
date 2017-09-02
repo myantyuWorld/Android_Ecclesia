@@ -299,16 +299,6 @@ public class ReserveListActivity extends AppCompatActivity
         // 各ウィジェットの初期化処理
         init();
 
-        // Permission error となる・・・なんで？
-        // 端末ＩＭＥＩの取得
-        String terminalImei = getTerminalImei();
-        // 社員情報の設定
-        getEmployeeInfo(terminalImei);
-        // 予約情報の設定
-        getReserveInfo();
-        for (ReserveInfo r : reserveInfo) {
-            Log.d(TAG, r.getRe_id() + " : " + r.getRe_startTime() + "(" + r.getRe_endTime() + ") room_id : " + r.getRe_roomId());
-        }
         setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -325,7 +315,7 @@ public class ReserveListActivity extends AppCompatActivity
         // 画面情報の設定
         txtDate = (TextView) findViewById(R.id.txtDate);
         final Calendar c = Calendar.getInstance();
-        txtDate.setText(String.format(Locale.JAPAN, "%04d/%02d/%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1, c.get(Calendar.DATE)));
+        txtDate.setText(String.format(Locale.JAPAN, "%04d/%02d/%02d", c.get(Calendar.YEAR) + 1, 1, 17));
         txtDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -334,6 +324,16 @@ public class ReserveListActivity extends AppCompatActivity
                 d.show(getFragmentManager(), "dateDialog");
             }
         });
+        // Permission error となる・・・なんで？
+        // 端末ＩＭＥＩの取得
+        String terminalImei = getTerminalImei();
+        // 社員情報の設定
+        getEmployeeInfo(terminalImei);
+        // 予約情報の設定
+        getReserveInfo();
+        for (ReserveInfo r : reserveInfo) {
+            Log.d(TAG, r.getRe_id() + " : " + r.getRe_startTime() + "(" + r.getRe_endTime() + ") room_id : " + r.getRe_roomId());
+        }
 
         timeTableView = (TimeTableView) this.findViewById(R.id.timetable);
         timeTableView.reView();
@@ -456,7 +456,8 @@ public class ReserveListActivity extends AppCompatActivity
         Log.d(TAG, employee.getEmp_id());
         // 社員ＩＤが空またはＮＵＬＬでなければ次のロジックを実行する
         if (!employee.getEmp_id().isEmpty()) {
-            c = db2.rawQuery("select * from t_emp where emp_id = ?", new String[]{employee.getEmp_id()});
+            c = db2.rawQuery("select * from t_emp where emp_id = ?",
+                    new String[]{employee.getEmp_id()});
             if (c.moveToNext()) {
                 // 社員ＩＤから社員情報を検索して、設定する
                 employee.setEmp_name(c.getString(1));
@@ -480,7 +481,12 @@ public class ReserveListActivity extends AppCompatActivity
         // 参加者テーブルから、予約ＩＤを取得
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor c = db.rawQuery("select * from v_reserve_member where emp_id = ?", new String[]{employee.getEmp_id()});
+        String today = txtDate.getText().toString();    // アプリ起動時の日付を取得（作品展用に来年の１月１７日を設定）
+        Log.d("call", today);
+        
+        // ***  アプリ起動時の日付で自分の参加会議を検索する *** //
+        Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?",
+                new String[]{employee.getEmp_id(), today});
         while (c.moveToNext()) {
             // その社員が参加した会議情報をリストに追加する
             ReserveInfo r = new ReserveInfo(
@@ -491,7 +497,7 @@ public class ReserveListActivity extends AppCompatActivity
                     c.getString(4),
                     c.getString(5),
                     c.getString(6),
-                    c.getString(11)
+                    c.getString(12)
             );
             reserveInfo.add(r);
         }
