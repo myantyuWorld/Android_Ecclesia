@@ -289,6 +289,7 @@ public class TimeTableView extends View {
                     re_id = ROOM_C;
                 }
                 // re_id と y座標を基に、どの会議がタップされたかを返す
+
                 for (ReserveInfo r : reserveInfo) {
                     if (r.getCoop() != null && r.getCoop()[1] < y && r.getCoop()[3] > y) {
                         // 特定した

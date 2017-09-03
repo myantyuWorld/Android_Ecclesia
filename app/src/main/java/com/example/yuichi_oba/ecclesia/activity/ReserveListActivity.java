@@ -21,8 +21,10 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
@@ -277,11 +279,14 @@ public class ReserveListActivity extends AppCompatActivity
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                             txtDate.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+
+                            timeTableView.reView();
                         }
                     },
                     cal.get(Calendar.YEAR),
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)
+
             );
         }
     }
@@ -290,7 +295,7 @@ public class ReserveListActivity extends AppCompatActivity
     static TextView txtDate;
     Employee employee;
     public static List<ReserveInfo> reserveInfo;    // 予約情報記録クラスの変数
-    TimeTableView timeTableView;
+    static TimeTableView timeTableView;
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     @Override
@@ -316,14 +321,7 @@ public class ReserveListActivity extends AppCompatActivity
         txtDate = (TextView) findViewById(R.id.txtDate);
         final Calendar c = Calendar.getInstance();
         txtDate.setText(String.format(Locale.JAPAN, "%04d/%02d/%02d", c.get(Calendar.YEAR) + 1, 1, 17));
-        txtDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "txtDate click!");
-                MyDialog d = new MyDialog();
-                d.show(getFragmentManager(), "dateDialog");
-            }
-        });
+
         // Permission error となる・・・なんで？
         // 端末ＩＭＥＩの取得
         String terminalImei = getTerminalImei();
@@ -337,6 +335,36 @@ public class ReserveListActivity extends AppCompatActivity
 
         timeTableView = (TimeTableView) this.findViewById(R.id.timetable);
         timeTableView.reView();
+
+        txtDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "txtDate click!");
+                MyDialog d = new MyDialog();
+                d.show(getFragmentManager(), "dateDialog");
+            }
+        });
+
+        Button btPrev = (Button) findViewById(R.id.bt_prev);
+        btPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(ReserveListActivity.this, "Prev", Toast.LENGTH_SHORT).show();
+                getReserveInfo();
+                timeTableView.reView();
+            }
+        });
+        Button btNext = (Button) findViewById(R.id.bt_next);
+        btNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(ReserveListActivity.this, "Next", Toast.LENGTH_SHORT).show();
+                getReserveInfo();
+                timeTableView.reView();
+            }
+        });
+
+
 
     }
 
@@ -483,7 +511,7 @@ public class ReserveListActivity extends AppCompatActivity
         SQLiteDatabase db = helper.getReadableDatabase();
         String today = txtDate.getText().toString();    // アプリ起動時の日付を取得（作品展用に来年の１月１７日を設定）
         Log.d("call", today);
-        
+
         // ***  アプリ起動時の日付で自分の参加会議を検索する *** //
         Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?",
                 new String[]{employee.getEmp_id(), today});
