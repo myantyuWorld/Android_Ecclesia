@@ -190,7 +190,7 @@ public class HistorySearchActivity extends AppCompatActivity
     ListView listView;
     List<Purpose> purpose;
     List<Company> companiesy;
-    List<ListItem> listItems;
+    ArrayList<ListItem> listItems;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "HistorySearchActivity->onCreate()");
@@ -218,6 +218,7 @@ public class HistorySearchActivity extends AppCompatActivity
             li.setId(c_list.getLong(0));
             li.setGaiyou(c_list.getString(1));
             li.setDate(c_list.getString(2));
+            listItems.add(li);
             // addするメソッドを書く
         }
         //リストに表示するデータを準備
@@ -310,7 +311,7 @@ public class HistorySearchActivity extends AppCompatActivity
         });
 
         //ListItemとレイアウトとを関連付け
-        MyListAdapter adapter = new MyListAdapter(this, list,R.layout.list_search_item);
+        MyListAdapter adapter = new MyListAdapter(this, listItems,R.layout.list_search_item);
         listView = (ListView) findViewById(R.id.list_history);
         listView.setAdapter(adapter);
 
