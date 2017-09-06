@@ -62,11 +62,9 @@ public class ReserveInfo implements Serializable {
     public String getRe_overview() {
         return re_overview;
     }
-    public String getRe_startDay() { return re_startDay; }
     public String getRe_startTime() {
         return re_startTime;
     }
-    public String getRe_endDay() { return re_endDay; }
     public String getRe_endTime() {
         return re_endTime;
     }
@@ -107,11 +105,9 @@ public class ReserveInfo implements Serializable {
     public void setRe_overview(String re_overview) {
         this.re_overview = re_overview;
     }
-    public void setRe_startDay(String re_startDay) { this.re_startDay = re_startDay; }
     public void setRe_startTime(String re_startTime) {
         this.re_startTime = re_startTime;
     }
-    public void setRe_endDay(String re_endDay) { this.re_endDay = re_endDay; }
     public void setRe_endTime(String re_endTime) {
         this.re_endTime = re_endTime;
     }

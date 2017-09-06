@@ -30,7 +30,7 @@ import com.example.yuichi_oba.ecclesia.tools.DB;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.TWO;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -48,7 +48,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //    TextView txt_startDay;              // 開始日
 //    TextView txt_endday;                // 終了日
     TextView txt_startTime;             // 開始時刻
-    TextView txt_endTime;               // 終了時刻
+    TextView txt_endTime;               // -終了時刻
     TextView txt_applicant;             // 予約者
     TextView txt_inOutHouse;            // 社外社内区分
     TextView txt_conferenceRoom;        // 使用会議室
@@ -57,6 +57,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
     TextView txt_member;                // 会議参加者を表示するスピナー // DO: 2017/07/26 これは、ダイアログでいい？？
 
     static ReserveInfo reserveInfo;     // 予約情報クラスの変数
+
+    /***
+     *  実験用
+     ***/
+    private String id = "";
+    private String pass = "";
 
     /***
      * 会議参加者をリスト形式で出す、ダイアログフラグメントクラス
@@ -90,7 +96,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
             dismiss();
         }
     }
-
     /***
      * 「早期退出」オプション選択時の ダイアログフラグメントクラス
      */
@@ -125,6 +130,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("call", "ReserveConfirmActivity->onCreate()");
         /***
          * レイアウト情報をマッピングする
          */
@@ -149,14 +155,11 @@ public class ReserveConfirmActivity extends AppCompatActivity
         // 各ウィジェットの初期化処理メソッド
         init();
         // 予約一覧（ReserveListActivity）から特定した会議予約IDを受け取る
-//        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("reserve_info");
-        String re_id = getIntent().getStringExtra("reserveInfo");
-        Log.d("call", re_id);
+        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("reserve_info");
+        Log.d("call", reserveInfo.getRe_id());
         // 予約詳細をDB検索して、画面にマッピングするメソッド
-//        dbSearchReserveConfirm();
+        dbSearchReserveConfirm();
     }
-
-
 
     /***
      * アクティビティのライフサイクルとして、別の画面にいってまた帰ってきたとき、コールされる
@@ -209,7 +212,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 break;
             // 「予約変更」が選択された
             case R.id.option_reserveChange:
-                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
+                intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+                intent.putExtra("Change", reserveInfo);
+                startActivity(intent);
+//                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
                 // 予約情報インスタンスを次の画面にオブジェクト渡しする
                 break;
             // 「延長」が選択された
@@ -290,13 +296,13 @@ public class ReserveConfirmActivity extends AppCompatActivity
      */
     private void setReserveInfo(Cursor c) {
         reserveInfo.setRe_overview("aaaaaa");               // 予約情報クラスのインスタンスに、概要をセットする(以下同様
-        reserveInfo.setRe_purpose(c.getString(NINE));          // 会議目的名
+        reserveInfo.setRe_purpose(c.getString(1));          // 会議目的名
 //        reserveInfo.setRe_startDay();                     開始日は現在ビューにないので後に追記か、代替案が必要
 //        reserveInfo.setRe_endDay();                       同上
-        reserveInfo.setRe_startTime(c.getString(SIX));        // 開始時刻
-        reserveInfo.setRe_endTime(c.getString(SEVEN));          // 終了時刻
+        reserveInfo.setRe_startTime(c.getString(4));        // 開始時刻
+        reserveInfo.setRe_endTime(c.getString(5));          // 終了時刻
         reserveInfo.setRe_rePerson(c.getString(TWO));         // 予約者
-        reserveInfo.setRe_conference_room(c.getString(EREVEN)); // 会議室名
+        reserveInfo.setRe_conference_room(c.getString(12)); // 会議室名
     }
 
     /***
@@ -332,31 +338,25 @@ public class ReserveConfirmActivity extends AppCompatActivity
      * 予約詳細をDB検索して、画面へ反映させるメソッド
      */
     private void dbSearchReserveConfirm() {
+        Log.d("call", "ReserveConfirmActivity->dbSearchReserveConfirm()");
         // 予約情報クラスのインスタンスから、予約情報詳細をＤＢ検索して、画面にマッピングする
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor c = db.rawQuery("select * from v_reserve where re_id = ?", new String[]{reserveInfo.getRe_id()});
+        Cursor c = db.rawQuery("select * from v_reserve_member where re_id = ?", new String[]{reserveInfo.getRe_id()});
+        List<String> list = new ArrayList<>();
         // 検索結果が存在する
         if (c.moveToNext()) {
             // 予約情報クラスのインスタンスに、ＤＢ検索した結果をセットする
             setReserveInfo(c);
             // インスタンスと、画面情報をマッピングする
             setWidgetInfo();
+            // 会議参加者を追加する 15 16
+            list.add(c.getString(15) + " : " + c.getString(16));
         }
+        c.close();
 
-        c = db.rawQuery("select * from v_member where re_id = ?", new String[]{reserveInfo.getRe_id()});
-        List<String> list = new ArrayList<>();
-        // 検索結果の最後まで繰り返す
-        while (c.moveToNext()) {
-            // HCP不要
-//            Log.d(TAG, "setReserveInfo: " + c.getString(2));
-//            String member = String.format("%s : %s", c.getString(2), c.getString(6));
-            // フォーマットをかけた文字列を生成し、リストに追加する
-            list.add(String.format("%s : %s", c.getString(2), c.getString(6)));
-        }
         // 次に、会議参加者をDB検索する、予約情報クラスのインスタンスに会議参加者情報をセットする
         reserveInfo.setRe_member(list);
     }
-
 
 }

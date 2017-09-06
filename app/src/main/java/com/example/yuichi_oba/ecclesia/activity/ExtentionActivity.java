@@ -48,7 +48,7 @@ public class ExtentionActivity extends AppCompatActivity
                             /***
                              * 延長情報をDBに書き込む
                              */
-
+                            dbInsertExtension();
 
                             /***
                              * 画面をころして、予約一覧画面に遷移する
