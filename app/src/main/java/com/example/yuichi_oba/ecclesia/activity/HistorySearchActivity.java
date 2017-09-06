@@ -184,6 +184,7 @@ public class HistorySearchActivity extends AppCompatActivity
             ((TextView) convertView.findViewById(R.id.companyMember)).setText(item.getCompanyMember());
             return convertView;
         }
+
     }
 
     SearchView searchView;
@@ -213,14 +214,17 @@ public class HistorySearchActivity extends AppCompatActivity
         SQLiteOpenHelper listdeta = new DB(getApplicationContext());
         SQLiteDatabase db_list = listdeta.getReadableDatabase();
         Cursor c_list = db_list.rawQuery("select * from v_reserve_member", new String[]{});
+        //会社用のデータベース
         while (c_list.moveToNext()) {
             ListItem li = new ListItem();
             li.setId(c_list.getLong(0));
             li.setGaiyou(c_list.getString(1));
             li.setDate(c_list.getString(2));
-            listItems.add(li);
+            li.setCompanyMember(c_list.getString(16));
             // addするメソッドを書く
+            listItems.add(li);
         }
+
         //リストに表示するデータを準備
 //        String pupose[] = {"定例会","商談"};
 //        String date[] = {"2017/02/20","2018/01/31"};
@@ -256,7 +260,6 @@ public class HistorySearchActivity extends AppCompatActivity
             p.setPur_id(c.getString(0));
             p.setPur_name(c.getString(1));
             Log.d("call", c.getString(0) + " : " + c.getString(1));
-
             purpose.add(p);
         }
 
@@ -296,25 +299,25 @@ public class HistorySearchActivity extends AppCompatActivity
             Log.d("call",cursor.getString(1));
         }
 
-//        //スピナーを取得
-//        Spinner sp_company = (Spinner) findViewById(R.id.spinner_company);
-//        //adapterを宣言
-//        ArrayAdapter<String> adapter_com = new ArrayAdapter<>(this,
-//                android.R.layout.simple_spinner_dropdown_item,strings1);
-//        sp_company.setAdapter(adapter_com);
-//        Log.d("call", "");
-//        //スピナーに対してのイベントリスナーを登録
-//        sp_company.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                Spinner sp = (Spinner) parent;
-//                //スピナーに対しての処理
-//                Toast.makeText(HistorySearchActivity.this,String.format("選択会社名 : %s",sp.getSelectedItem()),Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {}
-//        });
+        //スピナーを取得
+        Spinner sp_company = (Spinner) findViewById(R.id.spinner_company);
+        //adapterを宣言
+        ArrayAdapter<String> adapter_com = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item,strings1);
+        sp_company.setAdapter(adapter_com);
+        Log.d("call", "");
+        //スピナーに対してのイベントリスナーを登録
+        sp_company.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Spinner sp = (Spinner) parent;
+                //スピナーに対しての処理
+                Toast.makeText(HistorySearchActivity.this,String.format("選択会社名 : %s",sp.getSelectedItem()),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
 
         //ListItemとレイアウトとを関連付け
         MyListAdapter adapter1 = new MyListAdapter(this, listItems,R.layout.list_search_item);
@@ -325,8 +328,8 @@ public class HistorySearchActivity extends AppCompatActivity
         listView.setTextFilterEnabled(true);
 
         //serchviewの検索ボックスに入力された時の処理
-        SearchView sv = (SearchView) findViewById(R.id.search);
-        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView  = (SearchView) findViewById(R.id.search);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 return false;
