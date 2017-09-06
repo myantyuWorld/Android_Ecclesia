@@ -12,11 +12,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
+
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 public class ReserveCheckActivity extends AppCompatActivity
 implements NavigationView.OnNavigationItemSelectedListener{
@@ -31,7 +34,9 @@ implements NavigationView.OnNavigationItemSelectedListener{
     TextView txt_conferenceRoom;        // 使用会議室
     TextView txt_fixtures;              // 備品？
     TextView txt_remarks;               // 備考
-    TextView txt_member;                // 会議参加者
+    TextView txt_member;         // 会議参加者
+
+    Button button;
 
     static ReserveInfo reserveInfo;     // 予約情報クラスの変数
 
@@ -56,6 +61,30 @@ implements NavigationView.OnNavigationItemSelectedListener{
         txt_startDay = (TextView) findViewById(R.id.check_startDay);
         txt_endday = (TextView) findViewById(R.id.check_endDay);
         txt_startTime = (TextView) findViewById(R.id.check_startDay);
+        txt_endTime = (TextView) findViewById(R.id.check_endTime);
+        txt_applicant = (TextView) findViewById(R.id.check_applicant);
+        txt_inOutHouse = (TextView) findViewById(R.id.check_inOutHouse);
+        txt_conferenceRoom = (TextView) findViewById(R.id.check_room);
+        txt_fixtures = (TextView) findViewById(R.id.check_remarks);
+        txt_remarks = (TextView) findViewById(R.id.check_remarks);
+        txt_member = (TextView) findViewById(R.id.check_member);
+        button = (Button) findViewById(R.id.check_btn);
+
+        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("Check");
+
+        txt_overview.setText(reserveInfo.getRe_overview());
+        txt_purpose.setText(reserveInfo.getRe_purpose());
+        txt_startDay.setText(reserveInfo.getRe_startDay());
+        txt_endday.setText(reserveInfo.getRe_endDay());
+        txt_startTime.setText(reserveInfo.getRe_startTime());
+        txt_endTime.setText(reserveInfo.getRe_endTime());
+//        txt_applicant.setText(reserveInfo.get);
+        if (reserveInfo.getRe_flg() == ZERO) {
+            txt_inOutHouse.setText("社内");
+        } else {
+            txt_inOutHouse.setText("社外");
+        }
+
     }
 
     @Override

@@ -30,44 +30,44 @@ public class ExtentionActivity extends AppCompatActivity
     Spinner sp_time;
     ReserveInfo reserveInfo;
 
-    /***
-     *  延長アクティビティで使用するダイアログクラス
-     */
-    public class ExtensionDialog extends DialogFragment {
-
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return new AlertDialog.Builder(getActivity())
-                    .setTitle(EX + CONF)
-                    .setMessage(EX + JIKKOUQUE)
-                    .setPositiveButton(OK, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Toast.makeText(getActivity(), EX + JIKKOU, Toast.LENGTH_SHORT).show();
-                            /***
-                             * 延長情報をDBに書き込む
-                             */
-                            dbInsertExtension();
-
-                            /***
-                             * 画面をころして、予約一覧画面に遷移する
-                             */
-                            Intent intent = new Intent(getActivity(), ReserveListActivity.class);
-                            startActivity(intent);
-                            dismiss();
-                        }
-                    })
-                    .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Toast.makeText(getActivity(), "キャンセル", Toast.LENGTH_SHORT).show();
-                            dismiss();
-                        }
-                    })
-                    .create();
-        }
-    }
+//    /***
+//     *  延長アクティビティで使用するダイアログクラス
+//     */
+//    public class ExtensionDialog extends DialogFragment {
+//
+//
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            return new AlertDialog.Builder(getActivity())
+//                    .setTitle(EX + CONF)
+//                    .setMessage(EX + JIKKOUQUE)
+//                    .setPositiveButton(OK, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                            Toast.makeText(getActivity(), EX + JIKKOU, Toast.LENGTH_SHORT).show();
+//                            /***
+//                             * 延長情報をDBに書き込む
+//                             */
+//                            dbInsertExtension();
+//
+//                            /***
+//                             * 画面をころして、予約一覧画面に遷移する
+//                             */
+//                            Intent intent = new Intent(getActivity(), ReserveListActivity.class);
+//                            startActivity(intent);
+//                            dismiss();
+//                        }
+//                    })
+//                    .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                            Toast.makeText(getActivity(), "キャンセル", Toast.LENGTH_SHORT).show();
+//                            dismiss();
+//                        }
+//                    })
+//                    .create();
+//        }
+//    }
 
 //    public class ExtensionResult extends DialogFragment {
 //        @Override
@@ -103,8 +103,8 @@ public class ExtentionActivity extends AppCompatActivity
     public void onClick(View view) {
 
 
-        ExtensionDialog dialog = new ExtensionDialog();
-        dialog.show(getFragmentManager(), "bbb");
+//        ExtensionDialog dialog = new ExtensionDialog();
+//        dialog.show(getFragmentManager(), "bbb");
 
 
 //        finish();
