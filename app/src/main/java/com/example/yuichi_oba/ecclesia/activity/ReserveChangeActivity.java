@@ -1,6 +1,9 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -11,25 +14,35 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
+import com.example.yuichi_oba.ecclesia.tools.DB;
+
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
-// _/_/ 予約を行うアクティビティ
+// _/_/ 予約変更を行うアクティビティ
 // _/_/
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-public class ReserveActivity extends AppCompatActivity
+public class ReserveChangeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    ReserveInfo reserveInfo ;
+    Button editBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reserve);
+        setContentView(R.layout.activity_reserve_change);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        editBtn = (Button) findViewById(R.id.cre_editbtn);
         setSupportActionBar(toolbar);
+
+        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("Change");
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -41,18 +54,23 @@ public class ReserveActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        /***
-         * フローティングボタン押下時の処理
-         *
-         * 会議参加者選択画面に遷移する
-         */
+
         FloatingActionButton fbn = (FloatingActionButton) findViewById(R.id.fbn_addMember);
         fbn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // ここで、参加者
-//                Toast.makeText(ReserveActivity.this, "Floting Button Push!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplication(), AddMemberActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reserveChange();
+                Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
+                intent.putExtra("Check", reserveInfo);
                 startActivity(intent);
             }
         });
@@ -68,6 +86,7 @@ public class ReserveActivity extends AppCompatActivity
         }
     }
 
+
     // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
     // _/_/
     // _/_/ ナビを選択したときの処理
@@ -76,7 +95,6 @@ public class ReserveActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         Intent intent = null;
@@ -100,5 +118,19 @@ public class ReserveActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void reserveChange(){
+        ContentValues con = new ContentValues();
+        con.put("re_overview", reserveInfo.getRe_overview());
+        con.put("re_startday", reserveInfo.getRe_startDay());
+        con.put("re_endday", reserveInfo.getRe_endDay());
+        con.put("re_starttime", reserveInfo.getRe_startTime());
+        con.put("re_endtime", reserveInfo.getRe_endTime());
+        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
+        if (db.insert("t_reserve", null, con) > ZERO) {
+
+        }
     }
 }

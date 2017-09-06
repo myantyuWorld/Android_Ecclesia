@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +30,11 @@ import com.example.yuichi_oba.ecclesia.tools.DB;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.EREVEN;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.NINE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.SEVEN;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.SIX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.TWO;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -47,7 +52,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //    TextView txt_startDay;              // 開始日
 //    TextView txt_endday;                // 終了日
     TextView txt_startTime;             // 開始時刻
-    TextView txt_endTime;               // 終了時刻
+    TextView txt_endTime;               // -終了時刻
     TextView txt_applicant;             // 予約者
     TextView txt_inOutHouse;            // 社外社内区分
     TextView txt_conferenceRoom;        // 使用会議室
@@ -58,9 +63,15 @@ public class ReserveConfirmActivity extends AppCompatActivity
     static ReserveInfo reserveInfo;     // 予約情報クラスの変数
 
     /***
+     *  実験用
+     ***/
+    private String id = "";
+    private String pass = "";
+
+    /***
      * 会議参加者をリスト形式で出す、ダイアログフラグメントクラス
      */
-    private static class MemberConfirmDialog extends DialogFragment {
+    public static class MemberConfirmDialog extends DialogFragment {
         // ダイアログを生成するメソッド
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -89,11 +100,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
             dismiss();
         }
     }
-
     /***
      * 「早期退出」オプション選択時の ダイアログフラグメントクラス
      */
-    private static class EarlyOutDialog extends DialogFragment{
+    public static class EarlyOutDialog extends DialogFragment{
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new AlertDialog.Builder(getActivity())
@@ -147,13 +157,13 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
         // 各ウィジェットの初期化処理メソッド
         init();
-        // 遷移前の画面から、オブジェクトを受け取る
-        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("reserve_info");
+        // 予約一覧（ReserveListActivity）から特定した会議予約IDを受け取る
+//        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("reserve_info");
+        String re_id = getIntent().getStringExtra("reserveInfo");
+        Log.d("call", re_id);
         // 予約詳細をDB検索して、画面にマッピングするメソッド
-        dbSearchReserveConfirm();
+//        dbSearchReserveConfirm();
     }
-
-
 
     /***
      * アクティビティのライフサイクルとして、別の画面にいってまた帰ってきたとき、コールされる
@@ -206,7 +216,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 break;
             // 「予約変更」が選択された
             case R.id.option_reserveChange:
-                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
+                intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+                intent.putExtra("Change", reserveInfo);
+                startActivity(intent);
+//                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
                 // 予約情報インスタンスを次の画面にオブジェクト渡しする
                 break;
             // 「延長」が選択された
@@ -354,6 +367,5 @@ public class ReserveConfirmActivity extends AppCompatActivity
         // 次に、会議参加者をDB検索する、予約情報クラスのインスタンスに会議参加者情報をセットする
         reserveInfo.setRe_member(list);
     }
-
 
 }

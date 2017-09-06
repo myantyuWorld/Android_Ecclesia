@@ -2,18 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_reserve_edit"
+    android:id="@+id/content_reserve_check"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.yuichi_oba.ecclesia.activity.ReserveChangeActivity"
-    tools:showIn="@layout/app_bar_reserve_edit">
-
+    tools:context="com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity"
+    tools:showIn="@layout/app_bar_reserve_check">
 
     <ScrollView
 
         android:layout_width="395dp"
         android:layout_height="587dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:fillViewport="true">
         <!--w368
             h495-->
@@ -31,6 +32,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
@@ -46,16 +48,13 @@
                     android:text="概要"
                     android:textSize="20dp" />
 
-                <EditText
-                    android:id="@+id/cre_overview"
+                <TextView
+                    android:id="@+id/check_overView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="空欄でも可"
-                    android:inputType="textPersonName"
-                    android:textAlignment="center" />
-
+                    android:layout_weight="2"
+                    android:text="TextView"
+                    android:textSize="18sp" />
             </LinearLayout>
             <!--お試し線-->
             <!--<View-->
@@ -66,10 +65,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="8dp">
 
@@ -80,21 +80,23 @@
                     android:text="目的"
                     android:textSize="20dp" />
 
-                <Spinner
-                    android:id="@+id/cre_purpose"
+                <TextView
+                    android:id="@+id/check_purpose"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:entries="@array/mokuteki" />
-
+                    android:layout_weight="2"
+                    android:text="TextView"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="8dp">
 
@@ -106,28 +108,22 @@
                     android:textSize="20dp" />
 
                 <TextView
-                    android:id="@+id/cre_startDay"
+                    android:id="@+id/check_startDay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3.9"
+                    android:layout_weight="2.74"
                     android:text="TextView"
-                    android:textAlignment="center" />
-
-                <Button
-                    android:id="@+id/cre_startDayBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="開始日入力" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="8dp">
 
@@ -135,33 +131,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="開始時間"
+                    android:text="開始時刻"
                     android:textSize="20dp" />
 
                 <TextView
-                    android:id="@+id/cre_startTime"
+                    android:id="@+id/check_startTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="3.9"
                     android:text="TextView"
-                    android:textAlignment="center" />
-
-                <Button
-                    android:id="@+id/cre_startTimeBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="開始時間入力" />
-
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="8dp">
 
@@ -173,28 +162,22 @@
                     android:textSize="20dp" />
 
                 <TextView
-                    android:id="@+id/cre_endDay"
+                    android:id="@+id/check_endDay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3.9"
+                    android:layout_weight="2.74"
                     android:text="TextView"
-                    android:textAlignment="center" />
-
-                <Button
-                    android:id="@+id/cre_endDayBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="終了日入力" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="8dp">
 
@@ -202,33 +185,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="終了時間"
+                    android:text="終了時刻"
                     android:textSize="20dp" />
 
                 <TextView
-                    android:id="@+id/cre_endTime"
+                    android:id="@+id/check_endTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="3.9"
+                    android:lineSpacingExtra="18sp"
                     android:text="TextView"
-                    android:textAlignment="center" />
-
-                <Button
-                    android:id="@+id/cre_endTimeBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="終了時間入力" />
-
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="8dp">
 
@@ -240,50 +217,43 @@
                     android:textSize="20dp" />
 
                 <TextView
-                    android:id="@+id/cre_applicant"
+                    android:id="@+id/check_applicant"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="2.65"
                     android:text="TextView"
-                    android:textAlignment="center" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="8dp">
 
                 <TextView
+                    android:id="@+id/check_member"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.40"
                     android:text="参加者"
                     android:textSize="20dp" />
 
-                <Spinner
-                    android:id="@+id/cre_member"
-                    android:layout_width="149dp"
-                    android:layout_height="wrap_content" />
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.45" />
-
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="8dp">
 
@@ -291,33 +261,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="社内"
+                    android:text="社内/社外"
                     android:textSize="20dp" />
 
-                <Switch
-                    android:id="@+id/cre_inoutsw"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:elevation="0dp" />
-
                 <TextView
-                    android:text="社外"
+                    android:id="@+id/check_inOutHouse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textView6"
-                    android:layout_weight="1"
-                    android:textSize="20sp"
-                    android:textAlignment="center" />
-
+                    android:layout_weight="4.8"
+                    android:text="TextView"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="8dp">
 
@@ -328,22 +291,23 @@
                     android:text="希望会議室"
                     android:textSize="20dp" />
 
-                <Spinner
-                    android:id="@+id/cre_room"
+                <TextView
+                    android:id="@+id/check_room"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:entries="@array/room" />
-
+                    android:layout_weight="7.1"
+                    android:text="TextView"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="8dp">
 
@@ -354,25 +318,23 @@
                     android:text="備品"
                     android:textSize="20dp" />
 
-                <EditText
-                    android:id="@+id/cre_fixtrues"
+                <TextView
+                    android:id="@+id/check_fixtures"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name"
-                    android:textAlignment="center" />
-
+                    android:layout_weight="2"
+                    android:text="TextView"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/stroke"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:padding="5dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="8dp">
 
@@ -383,34 +345,30 @@
                     android:text="備考"
                     android:textSize="20dp" />
 
-                <EditText
-                    android:id="@+id/cre_remarks"
+                <TextView
+                    android:id="@+id/check_remarks"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name"
-                    android:textAlignment="center" />
-
+                    android:layout_weight="2"
+                    android:text="TextView"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/cre_editbtn"
+                    android:id="@+id/check_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
                     android:layout_weight="1"
-                    android:text="変更" />
+                    android:text="OK" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
 
 </RelativeLayout>
