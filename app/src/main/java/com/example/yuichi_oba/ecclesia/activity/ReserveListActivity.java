@@ -32,6 +32,7 @@ import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.view.TimeTableView;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -279,8 +280,6 @@ public class ReserveListActivity extends AppCompatActivity
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                             txtDate.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
-
-                            timeTableView.reView();
                         }
                     },
                     cal.get(Calendar.YEAR),
@@ -294,14 +293,15 @@ public class ReserveListActivity extends AppCompatActivity
     @SuppressLint("StaticFieldLeak")
     static TextView txtDate;
     Employee employee;
-    public static List<ReserveInfo> reserveInfo;    // 予約情報記録クラスの変数
+//    public static List<ReserveInfo> reserveInfo;    // 予約情報記録クラスの変数   非同期エラーが起きるため使用禁止する！
     static TimeTableView timeTableView;
+    private int thCnt = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "ReserveListActivity->onCreate()");
-        // 各ウィジェットの初期化処理
+        /*** 各ウィジェットの初期化処理 ***/
         init();
 
         setContentView(R.layout.activity_main);
@@ -321,20 +321,18 @@ public class ReserveListActivity extends AppCompatActivity
         txtDate = (TextView) findViewById(R.id.txtDate);
         final Calendar c = Calendar.getInstance();
         txtDate.setText(String.format(Locale.JAPAN, "%04d/%02d/%02d", c.get(Calendar.YEAR) + 1, 1, 17));
+        /*** ここまで ***/
 
-        // Permission error となる・・・なんで？
-        // 端末ＩＭＥＩの取得
-        String terminalImei = getTerminalImei();
-        // 社員情報の設定
-        getEmployeeInfo(terminalImei);
+
+
         // 予約情報の設定
-        getReserveInfo();
-        for (ReserveInfo r : reserveInfo) {
-            Log.d(TAG, r.getRe_id() + " : " + r.getRe_startTime() + "(" + r.getRe_endTime() + ") room_id : " + r.getRe_roomId());
-        }
-
+//        getReserveInfo();
+//        for (ReserveInfo r : reserveInfo) {
+//            Log.d(TAG, r.getRe_id() + " : " + r.getRe_startTime() + "(" + r.getRe_endTime() + ") room_id : " + r.getRe_roomId());
+//        }
+        /*** 社員ID と アプリ起動時の日付を渡して、描画する ***/
         timeTableView = (TimeTableView) this.findViewById(R.id.timetable);
-        timeTableView.reView();
+        timeTableView.reView(employee.getEmp_id(), txtDate.getText().toString());
 
         txtDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -345,25 +343,33 @@ public class ReserveListActivity extends AppCompatActivity
             }
         });
 
-        Button btPrev = (Button) findViewById(R.id.bt_prev);
-        btPrev.setOnClickListener(new View.OnClickListener() {
+        /*** 予約情報リストの同期エラーがでるため、コメアウトします ***/
+//        Button btPrev = (Button) findViewById(R.id.bt_prev);
+//        btPrev.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(ReserveListActivity.this, "Prev", Toast.LENGTH_SHORT).show();
+//                getReserveInfo();
+//                timeTableView.reView(reserveInfo);
+//            }
+//        });
+//        Button btNext = (Button) findViewById(R.id.bt_next);
+//        btNext.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(ReserveListActivity.this, "Next", Toast.LENGTH_SHORT).show();
+//                getReserveInfo();
+//                timeTableView.reView(reserveInfo);
+//            }
+//        });
+        Button bt_search = (Button) findViewById(R.id.bt_search);
+        bt_search.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(ReserveListActivity.this, "Prev", Toast.LENGTH_SHORT).show();
-                getReserveInfo();
-                timeTableView.reView();
+            public void onClick(View v) {
+                Toast.makeText(ReserveListActivity.this, txtDate.getText().toString(), Toast.LENGTH_SHORT).show();
+                timeTableView.reView(employee.getEmp_id(), txtDate.getText().toString());
             }
         });
-        Button btNext = (Button) findViewById(R.id.bt_next);
-        btNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(ReserveListActivity.this, "Next", Toast.LENGTH_SHORT).show();
-                getReserveInfo();
-                timeTableView.reView();
-            }
-        });
-
 
 
     }
@@ -420,19 +426,27 @@ public class ReserveListActivity extends AppCompatActivity
         Log.d("call", "ReserveListActivity->onResume()");
         super.onResume();
 
-        timeTableView.thread_flg = true;
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+                if (thCnt != 0) {
+                    timeTableView.thread_flg = true;
+                    timeTableView.x = 0;
+                    timeTableView.y = 0;
+                }
                 Log.d("call", "Thread");
                 String re_id = timeTableView.getSelectedReserve();
-                Log.d("call", re_id);
+                Log.d("call", "re_id :: " + re_id);
+                if (re_id.equals(NONE)) {
+                    Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
+                    startActivity(intent);
+                }
                 ReserveInfo reserveInfo = new ReserveInfo();
                 reserveInfo.setRe_id(re_id);
                 Intent in = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
                 in.putExtra("reserve_info", reserveInfo);
                 startActivity(in);
-
+                thCnt++;
             }
         });
         thread.start();
@@ -450,7 +464,13 @@ public class ReserveListActivity extends AppCompatActivity
         // 社員クラスのインスタンスを生成
         employee = new Employee();
         // 予約情報クラスのインスタンス生成
-        reserveInfo = new ArrayList<>();
+//        reserveInfo = new ArrayList<>();
+
+        // Permission error となる・・・なんで？
+        // 端末ＩＭＥＩの取得
+        String terminalImei = getTerminalImei();
+        // 社員情報の設定
+        getEmployeeInfo(terminalImei);
     }
 
     /***
@@ -470,6 +490,7 @@ public class ReserveListActivity extends AppCompatActivity
      */
     private void getEmployeeInfo(String terminalImei) {
         Log.d(TAG, "getEmployeeInfo()");
+
         // 端末ＩＭＥＩから社員ＩＤを取得する
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -504,32 +525,32 @@ public class ReserveListActivity extends AppCompatActivity
     /***
      *
      */
-    public void getReserveInfo() {
-        Log.d(TAG, "getReserveInfo()");
-        // 参加者テーブルから、予約ＩＤを取得
-        SQLiteOpenHelper helper = new DB(getApplicationContext());
-        SQLiteDatabase db = helper.getReadableDatabase();
-        String today = txtDate.getText().toString();    // アプリ起動時の日付を取得（作品展用に来年の１月１７日を設定）
-        Log.d("call", today);
-
-        // ***  アプリ起動時の日付で自分の参加会議を検索する *** //
-        Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?",
-                new String[]{employee.getEmp_id(), today});
-        while (c.moveToNext()) {
-            // その社員が参加した会議情報をリストに追加する
-            ReserveInfo r = new ReserveInfo(
-                    c.getString(0),
-                    c.getString(1),
-                    c.getString(2),
-                    c.getString(3),
-                    c.getString(4),
-                    c.getString(5),
-                    c.getString(6),
-                    c.getString(12)
-            );
-            reserveInfo.add(r);
-        }
-        c.close();
-    }
+//    public void getReserveInfo() {
+//        Log.d(TAG, "getReserveInfo()");
+//        // 参加者テーブルから、予約ＩＤを取得
+//        SQLiteOpenHelper helper = new DB(getApplicationContext());
+//        SQLiteDatabase db = helper.getReadableDatabase();
+//        String today = txtDate.getText().toString();    // アプリ起動時の日付を取得（作品展用に来年の１月１７日を設定）
+//        Log.d("call", today);
+//
+//        // ***  アプリ起動時の日付で自分の参加会議を検索する *** //
+//        Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?",
+//                new String[]{employee.getEmp_id(), today});
+//        while (c.moveToNext()) {
+//            // その社員が参加した会議情報をリストに追加する
+//            ReserveInfo r = new ReserveInfo(
+//                    c.getString(0),
+//                    c.getString(1),
+//                    c.getString(2),
+//                    c.getString(3),
+//                    c.getString(4),
+//                    c.getString(5),
+//                    c.getString(6),
+//                    c.getString(12)
+//            );
+//            reserveInfo.add(r);
+//        }
+//        c.close();
+//    }
 
 }

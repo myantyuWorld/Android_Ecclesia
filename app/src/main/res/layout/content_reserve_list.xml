@@ -15,20 +15,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/bt_prev"
-            android:layout_width="76dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Prev" />
-
         <TextView
             android:id="@+id/txtDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
             android:padding="5dp"
             android:text="yyyy/MM/dd"
             android:textAlignment="center"
@@ -36,11 +29,13 @@
             android:textStyle="normal|bold|italic" />
 
         <Button
-            android:id="@+id/bt_next"
-            android:layout_width="76dp"
+            android:id="@+id/bt_search"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Next" />
+            android:text="Search!" />
+
     </LinearLayout>
 
     <ScrollView

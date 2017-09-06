@@ -1,6 +1,9 @@
 package com.example.yuichi_oba.ecclesia.view;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,10 +14,15 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
+import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.NameConst;
 
-import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.reserveInfo;
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 /**
@@ -34,20 +42,23 @@ public class TimeTableView extends View {
     private Paint roomC;
     private Paint p_txtTime;
     private Paint p_txtConference;
-    private float x = 0;    // タップしたｘ座標
-    private float y = 0;    // タップしたｙ座標
+    public float x = 0;    // タップしたｘ座標
+    public float y = 0;    // タップしたｙ座標
 
     private float[] timeFloats;
     public boolean thread_flg;
+    private List<ReserveInfo> reserveInfo;
 
     public TimeTableView(Context context) {
         super(context);
         init();
     }
+
     public TimeTableView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
+
     public TimeTableView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
@@ -95,12 +106,11 @@ public class TimeTableView extends View {
         onDrawConference(c);
 
 
-
     }
 
     private void onDrawConference(Canvas c) {
         int cnt = 0;
-        for (ReserveInfo r : reserveInfo) {
+        for (ReserveInfo r : this.reserveInfo) {
             String sTime = r.getRe_startTime();
             String eTime = r.getRe_endTime();
             String room_id = r.getRe_roomId();
@@ -185,7 +195,7 @@ public class TimeTableView extends View {
         for (int i = 1; i < 48; i++) {
             canvas.drawLine(x, y_timetable + i * y, MAX_WIDTH, y_timetable + i * y, p2);
             if (i % 2 == 0) {
-                canvas.drawLine(ZERO, y_timetable +  i * y, x, y_timetable + i * y, p);
+                canvas.drawLine(ZERO, y_timetable + i * y, x, y_timetable + i * y, p);
             }
         }
         canvas.drawRect(ZERO, y_timetable, MAX_WIDTH, y_timetable + 48 * y, p);
@@ -196,6 +206,8 @@ public class TimeTableView extends View {
      */
     private void init() {
         Log.d("call", "call TimeTableView->init()");
+        reserveInfo = new ArrayList<>();
+
         // 枠線用
         p = new Paint();
         p.setColor(Color.DKGRAY);
@@ -254,27 +266,53 @@ public class TimeTableView extends View {
                 Log.d("call", e.getX() + " : " + e.getY());
                 break;
         }
+
         return true;
     }
 
     /***
      *  再描画メソッド
+     * @param emp_id
+     * @param date
      */
-    public void reView() {
+    public void reView(String emp_id, String date) {
+        // DO: 2017/09/06 review()コールで、引数の日付をデータベース検索をかけたのち、自身のreserveInfoに格納する-> invalidate() で描画する
+        Log.d("call", "TimeTableView->reView()");
+        SQLiteOpenHelper helper = new DB(getContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?", new String[]{emp_id, date});
+        reserveInfo.clear();
+        while (c.moveToNext()) {
+            // 予約情報のインスタンス生成 :: 暫定的に下記引数です
+            ReserveInfo r = new ReserveInfo(
+                    c.getString(0),
+                    c.getString(1),
+                    c.getString(2),
+                    c.getString(3),
+                    c.getString(4),
+                    c.getString(5),
+                    c.getString(6),
+                    c.getString(12)
+            );
+            reserveInfo.add(r);
+            Log.d("call", c.getString(2) + " : " + c.getString(3));
+        }
+
         invalidate();
     }
 
     /***
      * タップした会議の予約ＩＤを返すメソッド
-     * @return  会議予約ＩＤ
+     * @return 会議予約ＩＤ
      */
-    public String getSelectedReserve()
-    {
+    public String getSelectedReserve() {
         Log.d("call", "TimeTableView->getSelectedReserve()");
         //
         String re_id = "";
         while (thread_flg) {
             float wX = 216;
+            // タッチされたか
+            if (isTouched()) {
                 if (x > wX && x < 2 * wX) {
                     Log.d("call", "tokubetu");
                     re_id = TOKUBETSU;
@@ -289,18 +327,44 @@ public class TimeTableView extends View {
                     re_id = ROOM_C;
                 }
                 // re_id と y座標を基に、どの会議がタップされたかを返す
-
-                for (ReserveInfo r : reserveInfo) {
+                int cnt = 0;
+                for (ReserveInfo r : this.reserveInfo) {
                     if (r.getCoop() != null && r.getCoop()[1] < y && r.getCoop()[3] > y) {
                         // 特定した
                         if (re_id.equals(r.getRe_roomId())) {
+                            Log.d("call", "会議を特定した！  " + r.getRe_roomId());
                             re_id = r.getRe_id();
                             thread_flg = false;
                         }
+                        cnt++;
                     }
                 }
+                Log.d("call", "cnt :: " + String.valueOf(cnt));
+                // TODO: 2017/09/06 該当する会議がないー→ 新規会議の予約画面に移行するロジックの実装
+                if (cnt > 0) {
+                    Log.d("call", "新規会議の登録ロジック開始！");
+                    return NameConst.NONE;
+                }
+                x = 0;
+                y = 0;
+            }
         }
         Log.d("call", "Re_id : " + re_id);
         return re_id;
+    }
+
+    /***
+     * 予約情報リストのディープコピーを行うメソッド
+     * @param reserveInfo_timetable
+     */
+    private void deepCopyReserveInfo(List<ReserveInfo> reserveInfo_timetable) {
+        // 予約情報を保持するリストのディープコピー
+    }
+
+    public boolean isTouched() {
+        if (x != 0 && y != 0) {
+            return true;
+        }
+        return false;
     }
 }
