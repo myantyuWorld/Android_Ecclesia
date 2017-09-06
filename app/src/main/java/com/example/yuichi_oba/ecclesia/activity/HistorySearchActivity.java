@@ -256,20 +256,26 @@ public class HistorySearchActivity extends AppCompatActivity
             p.setPur_id(c.getString(0));
             p.setPur_name(c.getString(1));
             Log.d("call", c.getString(0) + " : " + c.getString(1));
+
             purpose.add(p);
         }
-        //スピナーを取得
-        Spinner sp_mokuteki = (Spinner) findViewById(R.id.spinner_mokuteki);
+
+        for(String s:strings){
+            Log.d("call",s);
+        }
+       //スピナーを取得
+        Spinner sp = (Spinner) findViewById(R.id.spinner_mokuteki);
         //
-        ArrayAdapter<String> adapter_mokuteki = new ArrayAdapter<>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item,strings);
-        sp_mokuteki.setAdapter(adapter_mokuteki);
+        sp.setAdapter(adapter);
         //スピナーに対してのイベントリスナーを登録
-        sp_mokuteki.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Spinner sp = (Spinner) parent;
                 //選択項目を取得し、その値で検索をする？それとトースト表示
+
                 Toast.makeText(HistorySearchActivity.this,String.format("選択目的 : %s",sp.getSelectedItem()),
                         Toast.LENGTH_SHORT).show();
                         Log.d("call","");
@@ -287,33 +293,33 @@ public class HistorySearchActivity extends AppCompatActivity
         Cursor cursor = db2.rawQuery("select * from m_company", new String[]{});
         while (cursor.moveToNext()) {
             strings1.add(cursor.getString(1));
-            Log.d("call", "");
+            Log.d("call",cursor.getString(1));
         }
 
-        //スピナーを取得
-        Spinner sp_company = (Spinner) findViewById(R.id.spinner_company);
-        //adapterを宣言
-        ArrayAdapter<String> adapter_com = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item,strings1);
-        sp_company.setAdapter(adapter_com);
-        Log.d("call", "");
-        //スピナーに対してのイベントリスナーを登録
-        sp_company.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Spinner sp = (Spinner) parent;
-                //スピナーに対しての処理
-                Toast.makeText(HistorySearchActivity.this,String.format("選択会社名 : %s",sp.getSelectedItem()),Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
+//        //スピナーを取得
+//        Spinner sp_company = (Spinner) findViewById(R.id.spinner_company);
+//        //adapterを宣言
+//        ArrayAdapter<String> adapter_com = new ArrayAdapter<>(this,
+//                android.R.layout.simple_spinner_dropdown_item,strings1);
+//        sp_company.setAdapter(adapter_com);
+//        Log.d("call", "");
+//        //スピナーに対してのイベントリスナーを登録
+//        sp_company.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                Spinner sp = (Spinner) parent;
+//                //スピナーに対しての処理
+//                Toast.makeText(HistorySearchActivity.this,String.format("選択会社名 : %s",sp.getSelectedItem()),Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {}
+//        });
 
         //ListItemとレイアウトとを関連付け
-        MyListAdapter adapter = new MyListAdapter(this, listItems,R.layout.list_search_item);
+        MyListAdapter adapter1 = new MyListAdapter(this, listItems,R.layout.list_search_item);
         listView = (ListView) findViewById(R.id.list_history);
-        listView.setAdapter(adapter);
+        listView.setAdapter(adapter1);
 
         //フィルタ機能を有効化
         listView.setTextFilterEnabled(true);
@@ -329,7 +335,6 @@ public class HistorySearchActivity extends AppCompatActivity
             @Override
             public boolean onQueryTextChange(String text) {
                 if (text == null || text.isEmpty()) {
-                    text.trim();
                     listView.clearTextFilter();
                 } else {
                     listView.setFilterText(text);

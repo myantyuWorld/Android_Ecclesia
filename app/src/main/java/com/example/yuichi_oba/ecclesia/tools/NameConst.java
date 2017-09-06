@@ -8,6 +8,7 @@ public class NameConst {
     public static final int MAX_HEIGHT = 1700;
     public static final int MAX_WIDTH = 1080;
     public static final int LINE_WIDGH = 20;
+    public static final int ZERO = 0;
     public static final int ONE = 1;
     public static final int TWO = 2;
     public static final int THREE = 3;
