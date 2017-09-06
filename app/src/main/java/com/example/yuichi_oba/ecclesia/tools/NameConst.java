@@ -29,4 +29,10 @@ public class NameConst {
     public static final String OK = "OK";
 
     public static final String KEYEX = "EX"; // 受け渡し用キー
+
+    // yuichi
+    public static final String TOKUBETSU = "0001";
+    public static final String ROOM_A = "0002";
+    public static final String ROOM_B = "0003";
+    public static final String ROOM_C = "0004";
 }

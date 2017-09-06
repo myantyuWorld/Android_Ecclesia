@@ -19,6 +19,10 @@ public class ReserveInfo implements Serializable {
     private String re_id;                               // 予約ID
     private String re_overview;                         // 概要
     private String re_purpose;                          // 会議目的名
+    private String re_startDay;                        // 開始日時
+    private String re_endDay;                          // 終了日時
+    private String re_startTime;                          // 終了日時
+    private String re_endTime;                          // 終了日時
     private String re_roomId;
     private String re_startDay;                         // 開始日
     private String re_startTime;                        // 開始時刻
