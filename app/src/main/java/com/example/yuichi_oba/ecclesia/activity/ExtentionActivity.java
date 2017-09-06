@@ -68,7 +68,7 @@ public class ExtentionActivity extends AppCompatActivity
                     .create();
         }
     }
-    
+
 //    public class ExtensionResult extends DialogFragment {
 //        @Override
 //        public Dialog onCreateDialog(Bundle savedInstanceState) {
