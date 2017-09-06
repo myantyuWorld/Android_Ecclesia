@@ -32,6 +32,7 @@ import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.view.TimeTableView;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -435,7 +436,11 @@ public class ReserveListActivity extends AppCompatActivity
                 }
                 Log.d("call", "Thread");
                 String re_id = timeTableView.getSelectedReserve();
-                Log.d("call", re_id);
+                Log.d("call", "re_id :: " + re_id);
+                if (re_id.equals(NONE)) {
+                    Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
+                    startActivity(intent);
+                }
                 ReserveInfo reserveInfo = new ReserveInfo();
                 reserveInfo.setRe_id(re_id);
                 Intent in = new Intent(getApplicationContext(), ReserveConfirmActivity.class);

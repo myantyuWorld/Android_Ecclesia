@@ -14,9 +14,11 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
 import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.NameConst;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -274,7 +276,7 @@ public class TimeTableView extends View {
      * @param date
      */
     public void reView(String emp_id, String date) {
-        // TODO: 2017/09/06 review()コールで、引数の日付をデータベース検索をかけたのち、自身のreserveInfoに格納する-> invalidate() で描画する
+        // DO: 2017/09/06 review()コールで、引数の日付をデータベース検索をかけたのち、自身のreserveInfoに格納する-> invalidate() で描画する
         Log.d("call", "TimeTableView->reView()");
         SQLiteOpenHelper helper = new DB(getContext());
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -310,7 +312,7 @@ public class TimeTableView extends View {
         while (thread_flg) {
             float wX = 216;
             // タッチされたか
-            if (x != 0 && y != 0) {
+            if (isTouched()) {
                 if (x > wX && x < 2 * wX) {
                     Log.d("call", "tokubetu");
                     re_id = TOKUBETSU;
@@ -325,7 +327,7 @@ public class TimeTableView extends View {
                     re_id = ROOM_C;
                 }
                 // re_id と y座標を基に、どの会議がタップされたかを返す
-
+                int cnt = 0;
                 for (ReserveInfo r : this.reserveInfo) {
                     if (r.getCoop() != null && r.getCoop()[1] < y && r.getCoop()[3] > y) {
                         // 特定した
@@ -334,8 +336,17 @@ public class TimeTableView extends View {
                             re_id = r.getRe_id();
                             thread_flg = false;
                         }
+                        cnt++;
                     }
                 }
+                Log.d("call", "cnt :: " + String.valueOf(cnt));
+                // TODO: 2017/09/06 該当する会議がないー→ 新規会議の予約画面に移行するロジックの実装
+                if (cnt > 0) {
+                    Log.d("call", "新規会議の登録ロジック開始！");
+                    return NameConst.NONE;
+                }
+                x = 0;
+                y = 0;
             }
         }
         Log.d("call", "Re_id : " + re_id);
@@ -348,5 +359,12 @@ public class TimeTableView extends View {
      */
     private void deepCopyReserveInfo(List<ReserveInfo> reserveInfo_timetable) {
         // 予約情報を保持するリストのディープコピー
+    }
+
+    public boolean isTouched() {
+        if (x != 0 && y != 0) {
+            return true;
+        }
+        return false;
     }
 }

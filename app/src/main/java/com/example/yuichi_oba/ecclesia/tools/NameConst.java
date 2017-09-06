@@ -20,6 +20,8 @@ public class NameConst {
     public static final int NINE = 9;
     public static final int TEN = 10;
     public static final int EREVEN = 11;
+    public static final String NONE = "0";
+
 
     public static final String EX = "延長";
     public static final String CONF = "確認";
