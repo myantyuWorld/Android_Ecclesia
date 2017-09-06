@@ -15,13 +15,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
@@ -34,16 +39,31 @@ public class ReserveChangeActivity extends AppCompatActivity
     ReserveInfo reserveInfo ;
     Button editBtn;
 
+    EditText overview;
+    Spinner purpose;
+    TextView startDay;
+    TextView endDay;
+    TextView startTime;
+    TextView endTime;
+    Button startDayBtn;
+    Button endDayBtn;
+    Button startTimeBtn;
+    Button endTimeBtn;
+    TextView applicant;
+    Switch inout;
+    Spinner room;
+    EditText fixtrues;
+    EditText remarks;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reserve_change);
+
+        init();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        editBtn = (Button) findViewById(R.id.cre_editbtn);
         setSupportActionBar(toolbar);
-
-        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("Change");
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -67,13 +87,45 @@ public class ReserveChangeActivity extends AppCompatActivity
 
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                reserveChange();
+            public void onClick(View v){
+                setReserveInfo();
                 Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
                 intent.putExtra("Check", reserveInfo);
                 startActivity(intent);
             }
         });
+
+        inout.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    reserveInfo.setRe_flg(ONE);
+                } else {
+                    reserveInfo.setRe_flg(ZERO);
+                }
+            }
+        });
+    }
+
+    private void init() {
+        editBtn = (Button) findViewById(R.id.cre_editbtn);
+        overview = (EditText) findViewById(R.id.cre_overview);
+        purpose = (Spinner) findViewById(R.id.cre_purpose);
+        startDay = (TextView) findViewById(R.id.cre_startDay);
+        endDay = (TextView) findViewById(R.id.cre_endDay);
+        startTime = (TextView) findViewById(R.id.cre_startTime);
+        endTime = (TextView) findViewById(R.id.cre_endTime);
+        startDayBtn = (Button) findViewById(R.id.cre_startDayBtn);
+        endDayBtn = (Button) findViewById(R.id.cre_endDayBtn);
+        startTimeBtn = (Button) findViewById(R.id.cre_startTimeBtn);
+        endTimeBtn = (Button) findViewById(R.id.cre_endTimeBtn);
+        applicant = (TextView) findViewById(R.id.cre_applicant);
+        inout = (Switch) findViewById(R.id.cre_inoutsw);
+        room = (Spinner) findViewById(R.id.cre_room);
+        fixtrues = (EditText) findViewById(R.id.cre_fixtrues);
+        remarks = (EditText) findViewById(R.id.cre_remarks);
+
+        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra(KEYCHANGE);
     }
 
     @Override
@@ -120,17 +172,20 @@ public class ReserveChangeActivity extends AppCompatActivity
         return true;
     }
 
-    public void reserveChange(){
-        ContentValues con = new ContentValues();
-        con.put("re_overview", reserveInfo.getRe_overview());
-        con.put("re_startday", reserveInfo.getRe_startDay());
-        con.put("re_endday", reserveInfo.getRe_endDay());
-        con.put("re_starttime", reserveInfo.getRe_startTime());
-        con.put("re_endtime", reserveInfo.getRe_endTime());
-        SQLiteOpenHelper helper = new DB(getApplicationContext());
-        SQLiteDatabase db = helper.getWritableDatabase();
-        if (db.insert("t_reserve", null, con) > ZERO) {
+    // いずれ削除するテスト用メソッド
+    public void imitationEdit(){
 
-        }
+    }
+
+    public void setReserveInfo() {
+        reserveInfo.setRe_overview(overview.getText().toString());
+        reserveInfo.setRe_startDay(startDay.getText().toString());
+        reserveInfo.setRe_startTime(startTime.getText().toString());
+        reserveInfo.setRe_endDay(endDay.getText().toString());
+        reserveInfo.setRe_endTime(endTime.getText().toString());
+        reserveInfo.setRe_conference_room(room.getSelectedItem().toString());
+        reserveInfo.setRe_purpose(purpose.getSelectedItem().toString());
+        reserveInfo.setFixtrues(fixtrues.getText().toString());
+        reserveInfo.setRe_marks(remarks.getText().toString());
     }
 }

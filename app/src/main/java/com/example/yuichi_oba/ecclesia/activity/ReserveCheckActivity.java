@@ -1,6 +1,9 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
@@ -12,11 +15,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
+import com.example.yuichi_oba.ecclesia.tools.DB;
+
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 public class ReserveCheckActivity extends AppCompatActivity
 implements NavigationView.OnNavigationItemSelectedListener{
@@ -31,7 +39,9 @@ implements NavigationView.OnNavigationItemSelectedListener{
     TextView txt_conferenceRoom;        // 使用会議室
     TextView txt_fixtures;              // 備品？
     TextView txt_remarks;               // 備考
-    TextView txt_member;                // 会議参加者
+    TextView txt_member;         // 会議参加者
+
+    Button button;
 
     static ReserveInfo reserveInfo;     // 予約情報クラスの変数
 
@@ -51,11 +61,49 @@ implements NavigationView.OnNavigationItemSelectedListener{
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        init();
+    }
+
+    private void init() {
         txt_overview = (TextView) findViewById(R.id.check_overView);
         txt_purpose = (TextView) findViewById(R.id.check_purpose);
         txt_startDay = (TextView) findViewById(R.id.check_startDay);
         txt_endday = (TextView) findViewById(R.id.check_endDay);
-        txt_startTime = (TextView) findViewById(R.id.check_startDay);
+        txt_startTime = (TextView) findViewById(R.id.check_startTime);
+        txt_endTime = (TextView) findViewById(R.id.check_endTime);
+        txt_applicant = (TextView) findViewById(R.id.check_applicant);
+        txt_inOutHouse = (TextView) findViewById(R.id.check_inOutHouse);
+        txt_conferenceRoom = (TextView) findViewById(R.id.check_room);
+        txt_fixtures = (TextView) findViewById(R.id.check_fixtures);
+        txt_remarks = (TextView) findViewById(R.id.check_remarks);
+        txt_member = (TextView) findViewById(R.id.check_member);
+        button = (Button) findViewById(R.id.check_btn);
+
+        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra(KEYCHECK);
+
+        txt_overview.setText(reserveInfo.getRe_overview());
+        txt_purpose.setText(reserveInfo.getRe_purpose());
+        txt_startDay.setText(reserveInfo.getRe_startDay());
+        txt_endday.setText(reserveInfo.getRe_endDay());
+        txt_startTime.setText(reserveInfo.getRe_startTime());
+        txt_endTime.setText(reserveInfo.getRe_endTime());
+//        txt_applicant.setText(reserveInfo.get);
+        if (reserveInfo.getRe_flg() == ZERO) {
+            txt_inOutHouse.setText(IN);
+        } else {
+            txt_inOutHouse.setText(OUT);
+        }
+        txt_conferenceRoom.setText(reserveInfo.getRe_roomId());
+        txt_remarks.setText(reserveInfo.getRe_marks());
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reserveChange();
+                Intent intent = new Intent(getApplicationContext(), ReserveListActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -83,5 +131,21 @@ implements NavigationView.OnNavigationItemSelectedListener{
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void reserveChange(){
+        ContentValues con = new ContentValues();
+        con.put("re_overview", reserveInfo.getRe_overview());
+        con.put("re_startday", reserveInfo.getRe_startDay());
+        con.put("re_endday", reserveInfo.getRe_endDay());
+        con.put("re_starttime", reserveInfo.getRe_startTime());
+        con.put("re_endtime", reserveInfo.getRe_endTime());
+        con.put("re_switch", reserveInfo.getRe_flg());
+        con.put("re_fixtrue", reserveInfo.getFixtrues());
+        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
+        if (db.update("t_reserve", con, null, null) > ZERO) {
+
+        }
     }
 }

@@ -30,7 +30,7 @@ import com.example.yuichi_oba.ecclesia.tools.DB;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.TWO;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -45,8 +45,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     TextView txt_overview;              // 概要
     TextView txt_purpose;               // 会議目的
-//    TextView txt_startDay;              // 開始日
-//    TextView txt_endday;                // 終了日
+    TextView txt_startDay;              // 開始日
+    TextView txt_endday;                // 終了日
     TextView txt_startTime;             // 開始時刻
     TextView txt_endTime;               // -終了時刻
     TextView txt_applicant;             // 予約者
@@ -213,7 +213,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
             // 「予約変更」が選択された
             case R.id.option_reserveChange:
                 intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-                intent.putExtra("Change", reserveInfo);
+                intent.putExtra(KEYCHANGE, reserveInfo);
                 startActivity(intent);
 //                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
                 // 予約情報インスタンスを次の画面にオブジェクト渡しする
@@ -221,7 +221,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
             // 「延長」が選択された
             case R.id.option_extention:
                 intent = new Intent(getApplicationContext(), ExtentionActivity.class);
-                intent.putExtra("EX", reserveInfo);
+                intent.putExtra(KEYEX, reserveInfo);
                 startActivity(intent);
                 break;
         }
@@ -281,9 +281,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
     private void setWidgetInfo() {
         txt_overview.setText(reserveInfo.getRe_overview());                 // 項目「概要」に予約情報の概要を設定する(以下同様
         txt_purpose.setText(reserveInfo.getRe_purpose());                   // 目的
-//        txt_startDay.setText(reserveInfo.getRe_startDay());                 // 開始日
+        txt_startDay.setText(reserveInfo.getRe_startDay());                 // 開始日
         txt_startTime.setText(reserveInfo.getRe_startTime());               // 開始時刻
-//        txt_endday.setText(reserveInfo.getRe_endDay());                     // 終了日
+        txt_endday.setText(reserveInfo.getRe_endDay());                     // 終了日
         txt_endTime.setText(reserveInfo.getRe_endTime());                   // 終了時刻
         txt_applicant.setText(reserveInfo.getRe_rePerson());                // 予約者
         txt_conferenceRoom.setText(reserveInfo.getRe_conference_room());    // 会議室
@@ -311,9 +311,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
     private void init() {
         txt_overview = (TextView) findViewById(R.id.txt_rd_overView);       // 「概要」テキストビューを取得(以下同様
         txt_purpose = (TextView) findViewById(R.id.txt_rd_purpose);         // 会議目的名
-//        txt_startDay = (TextView) findViewById(R.id.cre_startDay);          // 開始日
+        txt_startDay = (TextView) findViewById(R.id.cre_startDay);          // 開始日
         txt_startTime = (TextView) findViewById(R.id.txt_rd_startTime);     // 開始時刻
-//        txt_endday = (TextView) findViewById(R.id.txt_rd_endDay);           // 終了日
+        txt_endday = (TextView) findViewById(R.id.txt_rd_endDay);           // 終了日
         txt_endTime = (TextView) findViewById(R.id.txt_rd_endTime);         // 終了時刻
         txt_applicant = (TextView) findViewById(R.id.txt_rd_applicant);     // 予約者
         txt_inOutHouse = (TextView) findViewById(R.id.txt_rd_inOutHouse);   // 社内社外区分

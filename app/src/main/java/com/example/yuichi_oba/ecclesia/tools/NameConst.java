@@ -29,8 +29,12 @@ public class NameConst {
     public static final String JIKKOUQUE = "を実行しますか？";
     public static final String JIKKOU = "を実行しました";
     public static final String OK = "OK";
+    public static final String IN = "社内";
+    public static final String OUT = "社外";
 
     public static final String KEYEX = "EX"; // 受け渡し用キー
+    public static final String KEYCHECK = "Check";
+    public static final String KEYCHANGE = "Change";
 
     // yuichi
     public static final String TOKUBETSU = "0001";
