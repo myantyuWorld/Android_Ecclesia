@@ -189,7 +189,8 @@ public class HistorySearchActivity extends AppCompatActivity
     SearchView searchView;
     ListView listView;
     List<Purpose> purpose;
-    List<Company> company;
+    List<Company> companiesy;
+    ArrayList<ListItem> listItems;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "HistorySearchActivity->onCreate()");
@@ -207,27 +208,40 @@ public class HistorySearchActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        //データベースを準備
+        listItems = new ArrayList<>();
+        SQLiteOpenHelper listdeta = new DB(getApplicationContext());
+        SQLiteDatabase db_list = listdeta.getReadableDatabase();
+        Cursor c_list = db_list.rawQuery("select * from v_reserve_member", new String[]{});
+        while (c_list.moveToNext()) {
+            ListItem li = new ListItem();
+            li.setId(c_list.getLong(0));
+            li.setGaiyou(c_list.getString(1));
+            li.setDate(c_list.getString(2));
+            listItems.add(li);
+            // addするメソッドを書く
+        }
         //リストに表示するデータを準備
-        String pupose[] = {"定例会","商談"};
-        String date[] = {"2017/02/20","2018/01/31"};
-        String gaiyou[] = {"内定懇談会","Ecclesiaの売り込み"};
-        String company[] = {"株式会社ostraca","株式会社トミー"};
-        String companyMember[] = {"xxxx様","yyyy様"};
+//        String pupose[] = {"定例会","商談"};
+//        String date[] = {"2017/02/20","2018/01/31"};
+//        String gaiyou[] = {"内定懇談会","Ecclesiaの売り込み"};
+//        String company[] = {"株式会社ostraca","株式会社トミー"};
+//        String companyMember[] = {"xxxx様","yyyy様"};
 
 
         //配列の内容をListItemオブジェクトに詰め替え
-        final ArrayList<ListItem> list = new ArrayList<>();
-        for (int i = 0; i < pupose.length; i++)
-        {
-            ListItem item = new ListItem();
-            item.setId((new Random()).nextLong());
-            item.setPurpose(pupose[i]);
-            item.setDate(date[i]);
-            item.setGaiyou(gaiyou[i]);
-            item.setCompany(company[i]);
-            item.setCompanyMember(companyMember[i]);
-            list.add(item);
-        }
+//        final ArrayList<ListItem> list = new ArrayList<>();
+//        for (int i = 0; i < pupose.length; i++)
+//        {
+//            ListItem item = new ListItem();
+//            item.setId((new Random()).nextLong());
+//            item.setPurpose(pupose[i]);
+//            item.setDate(date[i]);
+//            item.setGaiyou(gaiyou[i]);
+//            item.setCompany(company[i]);
+//            item.setCompanyMember(companyMember[i]);
+//            list.add(item);
+//        }
 
 
         //データベース検索
@@ -247,9 +261,9 @@ public class HistorySearchActivity extends AppCompatActivity
         //スピナーを取得
         Spinner sp_mokuteki = (Spinner) findViewById(R.id.spinner_mokuteki);
         //
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+        ArrayAdapter<String> adapter_mokuteki = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item,strings);
-        sp_mokuteki.setAdapter(adapter);
+        sp_mokuteki.setAdapter(adapter_mokuteki);
         //スピナーに対してのイベントリスナーを登録
         sp_mokuteki.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -266,22 +280,23 @@ public class HistorySearchActivity extends AppCompatActivity
         });
 
         //データベース検索(会社名)
-        //company = new ArrayList<>();
+        companiesy = new ArrayList<>();
         List<String> strings1 = new ArrayList<>();
         SQLiteOpenHelper helper2 = new DB(getApplicationContext());
-        SQLiteDatabase db2 = helper.getReadableDatabase();
+        SQLiteDatabase db2 = helper2.getReadableDatabase();
         Cursor cursor = db2.rawQuery("select * from m_company", new String[]{});
         while (cursor.moveToNext()) {
             strings1.add(cursor.getString(1));
-            Log.d("call", cursor.getString(1));
+            Log.d("call", "");
         }
 
         //スピナーを取得
         Spinner sp_company = (Spinner) findViewById(R.id.spinner_company);
         //adapterを宣言
-        ArrayAdapter<String> adapter_com = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,strings1);
+        ArrayAdapter<String> adapter_com = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item,strings1);
         sp_company.setAdapter(adapter_com);
-
+        Log.d("call", "");
         //スピナーに対してのイベントリスナーを登録
         sp_company.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -296,9 +311,9 @@ public class HistorySearchActivity extends AppCompatActivity
         });
 
         //ListItemとレイアウトとを関連付け
-        MyListAdapter adapter2 = new MyListAdapter(this, list,R.layout.list_search_item);
+        MyListAdapter adapter = new MyListAdapter(this, listItems,R.layout.list_search_item);
         listView = (ListView) findViewById(R.id.list_history);
-        listView.setAdapter(adapter2);
+        listView.setAdapter(adapter);
 
         //フィルタ機能を有効化
         listView.setTextFilterEnabled(true);
@@ -351,9 +366,9 @@ public class HistorySearchActivity extends AppCompatActivity
             case R.id.nav_reserve_list:
                 intent = new Intent(getApplicationContext(), ReserveListActivity.class);
                 break;
-//            case R.id.nav_rireki:
-//                intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
-//                break;
+            case R.id.nav_rireki:
+                intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
+                break;
             case R.id.nav_admin_auth:
                 AuthDialog authDialog = new AuthDialog();
                 authDialog.show(getFragmentManager(), "aaa");
