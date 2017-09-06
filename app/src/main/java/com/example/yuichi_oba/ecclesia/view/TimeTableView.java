@@ -1,6 +1,9 @@
 package com.example.yuichi_oba.ecclesia.view;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,7 +15,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
+import com.example.yuichi_oba.ecclesia.tools.DB;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.reserveInfo;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
@@ -39,6 +47,7 @@ public class TimeTableView extends View {
 
     private float[] timeFloats;
     public boolean thread_flg;
+    private List<ReserveInfo> reserveInfo_timetable;
 
     public TimeTableView(Context context) {
         super(context);
@@ -100,14 +109,14 @@ public class TimeTableView extends View {
 
     private void onDrawConference(Canvas c) {
         int cnt = 0;
-        for (ReserveInfo r : reserveInfo) {
+        for (ReserveInfo r : reserveInfo_timetable) {
             String sTime = r.getRe_startTime();
             String eTime = r.getRe_endTime();
             String room_id = r.getRe_roomId();
 
             RectF rectF = retRectCooperation(sTime, eTime, room_id);
             // 予約会議の座標情報を記録する
-            reserveInfo.get(cnt).setCoop(new float[]{rectF.left, rectF.top, rectF.right, rectF.bottom});
+            reserveInfo_timetable.get(cnt).setCoop(new float[]{rectF.left, rectF.top, rectF.right, rectF.bottom});
             switch (room_id) {
                 case "0001":
                     room = tokubetsu;
@@ -196,6 +205,7 @@ public class TimeTableView extends View {
      */
     private void init() {
         Log.d("call", "call TimeTableView->init()");
+
         // 枠線用
         p = new Paint();
         p.setColor(Color.DKGRAY);
@@ -254,13 +264,20 @@ public class TimeTableView extends View {
                 Log.d("call", e.getX() + " : " + e.getY());
                 break;
         }
+
         return true;
     }
 
     /***
      *  再描画メソッド
+     * @param date
      */
-    public void reView() {
+    public void reView(String date) {
+        // TODO: 2017/09/06 review()コールで、引数の日付をデータベース検索をかけたのち、自身のreserveInfoに格納する-> invalidate() で描画する
+        SQLiteOpenHelper helper = new DB(getContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?", new String[]{});
+
         invalidate();
     }
 
@@ -290,7 +307,7 @@ public class TimeTableView extends View {
                 }
                 // re_id と y座標を基に、どの会議がタップされたかを返す
 
-                for (ReserveInfo r : reserveInfo) {
+                for (ReserveInfo r : reserveInfo_timetable) {
                     if (r.getCoop() != null && r.getCoop()[1] < y && r.getCoop()[3] > y) {
                         // 特定した
                         if (re_id.equals(r.getRe_roomId())) {
@@ -302,5 +319,14 @@ public class TimeTableView extends View {
         }
         Log.d("call", "Re_id : " + re_id);
         return re_id;
+    }
+
+    /***
+     * 予約情報リストのディープコピーを行うメソッド
+     * @param reserveInfo_timetable
+     */
+    private void deepCopyReserveInfo(List<ReserveInfo> reserveInfo_timetable){
+        // 予約情報を保持するリストのディープコピー
+        this.reserveInfo_timetable = reserveInfo_timetable;
     }
 }

@@ -279,8 +279,6 @@ public class ReserveListActivity extends AppCompatActivity
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                             txtDate.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
-
-                            timeTableView.reView();
                         }
                     },
                     cal.get(Calendar.YEAR),
@@ -334,7 +332,7 @@ public class ReserveListActivity extends AppCompatActivity
         }
 
         timeTableView = (TimeTableView) this.findViewById(R.id.timetable);
-        timeTableView.reView();
+        timeTableView.reView(txtDate.getText().toString());
 
         txtDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -345,22 +343,31 @@ public class ReserveListActivity extends AppCompatActivity
             }
         });
 
-        Button btPrev = (Button) findViewById(R.id.bt_prev);
-        btPrev.setOnClickListener(new View.OnClickListener() {
+        /*** 予約情報リストの同期エラーがでるため、コメアウトします ***/
+//        Button btPrev = (Button) findViewById(R.id.bt_prev);
+//        btPrev.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(ReserveListActivity.this, "Prev", Toast.LENGTH_SHORT).show();
+//                getReserveInfo();
+//                timeTableView.reView(reserveInfo);
+//            }
+//        });
+//        Button btNext = (Button) findViewById(R.id.bt_next);
+//        btNext.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(ReserveListActivity.this, "Next", Toast.LENGTH_SHORT).show();
+//                getReserveInfo();
+//                timeTableView.reView(reserveInfo);
+//            }
+//        });
+        Button bt_search = (Button) findViewById(R.id.bt_search);
+        bt_search.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Toast.makeText(ReserveListActivity.this, "Prev", Toast.LENGTH_SHORT).show();
-                getReserveInfo();
-                timeTableView.reView();
-            }
-        });
-        Button btNext = (Button) findViewById(R.id.bt_next);
-        btNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(ReserveListActivity.this, "Next", Toast.LENGTH_SHORT).show();
-                getReserveInfo();
-                timeTableView.reView();
+            public void onClick(View v) {
+                Toast.makeText(ReserveListActivity.this, "click!", Toast.LENGTH_SHORT).show();
+                timeTableView.reView(txtDate.getText().toString());
             }
         });
 
@@ -450,7 +457,7 @@ public class ReserveListActivity extends AppCompatActivity
         // 社員クラスのインスタンスを生成
         employee = new Employee();
         // 予約情報クラスのインスタンス生成
-        reserveInfo = new ArrayList<>();
+        reserveInfo =  new ArrayList<>();
     }
 
     /***
