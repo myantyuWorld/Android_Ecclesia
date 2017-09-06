@@ -5,7 +5,6 @@ package com.example.yuichi_oba.ecclesia.tools;
  */
 
 public class NameConst {
-    public static final int ZERO = 0;
     public static final int MAX_HEIGHT = 1700;
     public static final int MAX_WIDTH = 1080;
     public static final int LINE_WIDGH = 20;
@@ -29,4 +28,10 @@ public class NameConst {
     public static final String OK = "OK";
 
     public static final String KEYEX = "EX"; // 受け渡し用キー
+
+    // yuichi
+    public static final String TOKUBETSU = "0001";
+    public static final String ROOM_A = "0002";
+    public static final String ROOM_B = "0003";
+    public static final String ROOM_C = "0004";
 }
