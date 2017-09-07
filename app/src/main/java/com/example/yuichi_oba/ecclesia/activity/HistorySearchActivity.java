@@ -27,12 +27,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
-//import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
+//import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 /*************************************************************************************
  *
  *                                  Hint!
@@ -185,6 +185,37 @@ public class HistorySearchActivity extends AppCompatActivity
             return convertView;
         }
 
+        /*** 大馬コーディング 独自フィルター ***/
+//        public class MyFilter extends Filter {
+//
+//            @Override
+//            protected FilterResults performFiltering(CharSequence c) {
+//                List<ListItem> list = new ArrayList<>();
+//                for (int i = 0, size = getCount(); i < size; i++){
+//                    ListItem d = (ListItem) getItem(i);
+//                    if (d.gaiyou != null && d.gaiyou.contains(c)
+//                            || d.company != null && d.company.contains(c)
+//                            || d.date != null && d.date.contains(c)){
+//                        list.add(d);
+//                    }
+//                }
+//                FilterResults f = new FilterResults();
+//                f.count = list.size();
+//                f.values = list;
+//
+//                return f;
+//            }
+//
+//            @Override
+//            protected void publishResults(CharSequence charSequence, FilterResults results) {
+//                if (results.count > 0){
+//                    List<ListItem> list = (List<ListItem>) results.values;
+//
+//
+//
+//                }
+//            }
+//        }
     }
 
     SearchView searchView;
