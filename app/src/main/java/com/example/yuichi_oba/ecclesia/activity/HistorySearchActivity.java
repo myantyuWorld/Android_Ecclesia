@@ -50,7 +50,14 @@ import java.util.Random;
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 public class HistorySearchActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    
+
+    public static final int COM_NAME = 24;
+    public static final int PUR_NAME = 26;
+    public static final int COM_MEMBER = 18;
+    public static final int DAY = 2;
+    public static final int GAIYOU = 1;
+    public static final int ID = 0;
+
     private class ListItem {
         private long id;
         private String purpose;
@@ -213,14 +220,16 @@ public class HistorySearchActivity extends AppCompatActivity
         listItems = new ArrayList<>();
         SQLiteOpenHelper listdeta = new DB(getApplicationContext());
         SQLiteDatabase db_list = listdeta.getReadableDatabase();
-        Cursor c_list = db_list.rawQuery("select * from v_reserve_member", new String[]{});
+        Cursor c_list = db_list.rawQuery("select * from v_reserve_member x, m_company y, m_purpose z where x.com_id=y.com_id and x.pur_id = z.pur_id", new String[]{});
         //会社用のデータベース
         while (c_list.moveToNext()) {
             ListItem li = new ListItem();
-            li.setId(c_list.getLong(0));
-            li.setGaiyou(c_list.getString(1));
-            li.setDate(c_list.getString(2));
-            li.setCompanyMember(c_list.getString(16));
+            li.setId(c_list.getLong(ID));
+            li.setGaiyou(c_list.getString(GAIYOU));
+            li.setDate(c_list.getString(DAY));
+            li.setCompanyMember(c_list.getString(COM_MEMBER));
+            li.setCompany(c_list.getString(COM_NAME));
+            li.setPurpose(c_list.getString(PUR_NAME));
             // addするメソッドを書く
             listItems.add(li);
         }
