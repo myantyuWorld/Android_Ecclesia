@@ -1,21 +1,13 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.ContentValues;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 
 import com.example.yuichi_oba.ecclesia.R;
@@ -85,7 +77,7 @@ public class ExtentionActivity extends AppCompatActivity
         reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("EX");
 
         bt_extension = (Button) findViewById(R.id.bt_ex_extention);
-        sp_time = (Spinner) findViewById(R.id.extention_time);
+        sp_time = (Spinner) findViewById(R.id.sp_endTime);
         bt_extension.setOnClickListener(this);
         bt_extension.setEnabled(false);
 

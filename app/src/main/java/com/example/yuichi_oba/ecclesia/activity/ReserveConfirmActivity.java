@@ -3,6 +3,7 @@ package com.example.yuichi_oba.ecclesia.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,9 +17,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -104,18 +107,16 @@ public class ReserveConfirmActivity extends AppCompatActivity
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new AlertDialog.Builder(getActivity())
                     .setTitle("早期退出")
-                    .setMessage("この会議を早期退出しますか？")
+                    .setMessage("早期退出しますか？")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            // OK選択で、早期退出ロジックスタート！
                             Toast.makeText(getActivity(), "早期退出", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            // 特に何もしない
                         }
                     })
                     .create();
@@ -126,6 +127,20 @@ public class ReserveConfirmActivity extends AppCompatActivity
             super.onPause();
             dismiss();
         }
+
+        public static class ExtentResultDialog extends DialogFragment {
+            @Override
+            public Dialog onCreateDialog(Bundle savedInstanceState) {
+                return new AlertDialog.Builder(getActivity()).setTitle("延長完了")
+                        .setMessage("延長が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).create();
+            }
+        }
+
     }
 
     @Override
@@ -206,9 +221,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
         switch (id) {
             // 「早期退出」が選択された
             case R.id.option_earlyOut:
-//                Toast.makeText(this, "早期退出", Toast.LENGTH_SHORT).show();
                 EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
-                earlyOutDialog.show(getFragmentManager(), "ddd");
+                earlyOutDialog.show(getFragmentManager(), "out");
                 break;
             // 「予約変更」が選択された
             case R.id.option_reserveChange:
@@ -220,9 +234,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 break;
             // 「延長」が選択された
             case R.id.option_extention:
-                intent = new Intent(getApplicationContext(), ExtentionActivity.class);
-                intent.putExtra(KEYEX, reserveInfo);
-                startActivity(intent);
+//                intent = new Intent(getApplicationContext(), ExtentionActivity.class);
+//                intent.putExtra(KEYEX, reserveInfo);
+//                startActivity(intent);
+
+                ExtentionDialog extentionDialog = new ExtentionDialog();
+                extentionDialog.show(getFragmentManager(), KEYEX);
                 break;
         }
         // 選択された結果（項目）を返す
@@ -357,6 +374,42 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
         // 次に、会議参加者をDB検索する、予約情報クラスのインスタンスに会議参加者情報をセットする
         reserveInfo.setRe_member(list);
+    }
+
+    public static class ExtentionDialog extends DialogFragment{
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final LinearLayout layout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.extention_dialog, null);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            return builder.setTitle(EX)
+                    .setView(layout)
+                    .setPositiveButton(EX, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+//                            ContentValues con = new ContentValues();
+//                            con.put("ex_endtime", reserveInfo.getRe_endTime());
+//                            SQLiteOpenHelper helper = new DB(getApplicationContext());
+//                            SQLiteDatabase db = helper.getWritableDatabase();
+//                            if (db.update("t_extension", con, "re_id = " + reserveInfo.getRe_id(), null) > ZERO) {
+//
+//                            }
+                        }
+                    }).setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).create();
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+
+            dismiss();
+        }
+
     }
 
 }

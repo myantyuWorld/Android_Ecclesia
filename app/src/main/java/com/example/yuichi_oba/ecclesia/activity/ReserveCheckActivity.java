@@ -37,9 +37,9 @@ implements NavigationView.OnNavigationItemSelectedListener{
     TextView txt_applicant;             // 予約者
     TextView txt_inOutHouse;            // 社外社内区分
     TextView txt_conferenceRoom;        // 使用会議室
-    TextView txt_fixtures;              // 備品？
+    TextView txt_fixtures;              // 備品
     TextView txt_remarks;               // 備考
-    TextView txt_member;         // 会議参加者
+    TextView txt_member;                // 会議参加者
 
     Button button;
 
