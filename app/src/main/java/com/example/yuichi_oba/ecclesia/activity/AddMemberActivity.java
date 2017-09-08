@@ -158,21 +158,21 @@ public class AddMemberActivity extends AppCompatActivity
                         String.format("[%s]が選択されました", rbn.getText()),
                         Toast.LENGTH_SHORT).show();
                 switch (checkedId) {
-                    case R.id.rbn_add_history:      // 履歴から選択
-                        // 各項目入力できないようにする
-                        ed_company.setFocusable(false);
-                        ed_name.setFocusable(false);
-//                        ed_depart.setFocusable(false);
-//                        ed_position.setFocusable(false);
-                        ed_tel.setFocusable(false);
-                        ed_email.setFocusable(false);
-                        sp_history.setEnabled(true);
-                        break;
-                    case R.id.rbn_add_newregist:    // 新規登録
-                        // 再度編集可能にするメソッドをcall
-                        setAgainEditable();
-                        sp_history.setEnabled(false);
-                        break;
+//                    case R.id.rbn_add_history:      // 履歴から選択
+//                        // 各項目入力できないようにする
+//                        ed_company.setFocusable(false);
+//                        ed_name.setFocusable(false);
+////                        ed_depart.setFocusable(false);
+////                        ed_position.setFocusable(false);
+//                        ed_tel.setFocusable(false);
+//                        ed_email.setFocusable(false);
+//                        sp_history.setEnabled(true);
+//                        break;
+//                    case R.id.rbn_add_newregist:    // 新規登録
+//                        // 再度編集可能にするメソッドをcall
+//                        setAgainEditable();
+//                        sp_history.setEnabled(false);
+//                        break;
                 }
             }
         });
@@ -195,19 +195,19 @@ public class AddMemberActivity extends AppCompatActivity
         int id = view.getId();
 
         switch (id) {
-            case R.id.bt_addmem_cancel:
-                finish();
-                break;
-            case R.id.bt_addmem_regist:
-                // 選択した参加者をResurveActivityにもっていく
-                Toast.makeText(this, "参加者登録", Toast.LENGTH_SHORT).show();
-                /***
-                 * ここで、新規登録ならば、社外者ファイルへの登録を行う
-                 */
-                // ラジオボタンをみて、新規登録ラジオボタンなら、入力された情報の重複チェックを行う
-
-                // 社外者ファイルへのインサートを行う
-                break;
+//            case R.id.bt_addmem_cancel:
+//                finish();
+//                break;
+//            case R.id.bt_addmem_regist:
+//                // 選択した参加者をResurveActivityにもっていく
+//                Toast.makeText(this, "参加者登録", Toast.LENGTH_SHORT).show();
+//                /***
+//                 * ここで、新規登録ならば、社外者ファイルへの登録を行う
+//                 */
+//                // ラジオボタンをみて、新規登録ラジオボタンなら、入力された情報の重複チェックを行う
+//
+//                // 社外者ファイルへのインサートを行う
+//                break;
         }
     }
     // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
@@ -244,18 +244,18 @@ public class AddMemberActivity extends AppCompatActivity
      * 各種Widgetの初期化処理メソッド
      */
     private void init() {
-        bt_cancel = (Button) findViewById(R.id.bt_addmem_cancel);       //  キャンセルボタン
-        bt_regist = (Button) findViewById(R.id.bt_addmem_regist);       //  登録（追加？）ボタン
-        ed_company = (EditText) findViewById(R.id.ed_add_company);      //  会社入力項目
-        ed_name = (EditText) findViewById(R.id.ed_add_name);            //  氏名入力項目
-//        ed_depart = (EditText) findViewById(R.id.ed_add_depart);
-//        ed_position = (EditText) findViewById(R.id.ed_add_position);
-        ed_email = (EditText) findViewById(R.id.ed_add_email);          //  Email入力項目
-        ed_tel = (EditText) findViewById(R.id.ed_add_tel);              //  電話入力項目
-        rbn_group = (RadioGroup) findViewById(R.id.rbngroup_addmember); //  ラジオボタングループ
-        sp_history = (Spinner) findViewById(R.id.sp_add_history);       //  会社履歴スピナー
-        sp_position = (Spinner) findViewById(R.id.sp_add_potision);     //  役職スピナー
-        sp_depart = (Spinner) findViewById(R.id.sp_add_depart);         //  部署スピナー
+//        bt_cancel = (Button) findViewById(R.id.bt_addmem_cancel);       //  キャンセルボタン
+//        bt_regist = (Button) findViewById(R.id.bt_addmem_regist);       //  登録（追加？）ボタン
+//        ed_company = (EditText) findViewById(R.id.ed_add_company);      //  会社入力項目
+//        ed_name = (EditText) findViewById(R.id.ed_add_name);            //  氏名入力項目
+////        ed_depart = (EditText) findViewById(R.id.ed_add_depart);
+////        ed_position = (EditText) findViewById(R.id.ed_add_position);
+//        ed_email = (EditText) findViewById(R.id.ed_add_email);          //  Email入力項目
+//        ed_tel = (EditText) findViewById(R.id.ed_add_tel);              //  電話入力項目
+//        rbn_group = (RadioGroup) findViewById(R.id.rbngroup_addmember); //  ラジオボタングループ
+//        sp_history = (Spinner) findViewById(R.id.sp_add_history);       //  会社履歴スピナー
+//        sp_position = (Spinner) findViewById(R.id.sp_add_potision);     //  役職スピナー
+//        sp_depart = (Spinner) findViewById(R.id.sp_add_depart);         //  部署スピナー
         /***
          * 履歴スピナーの各種設定
          */

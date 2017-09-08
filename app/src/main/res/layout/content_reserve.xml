@@ -14,8 +14,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
         android:layout_above="@+id/br_re_confirm">
 
         <RelativeLayout
@@ -28,7 +28,116 @@
                 id="@+id/view3"
                 layout_width="match_parent"
                 android:layout_width="wrap_content"
-                android:layout_height="730dp" />
+                android:layout_height="730dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="TextView"
+                android:textSize="24sp"
+                android:textStyle="bold|italic"
+                android:layout_below="@+id/button9"
+                android:layout_alignEnd="@+id/button9"
+                android:layout_marginEnd="7dp"
+                android:layout_alignStart="@+id/button8" />
+
+            <Button
+                android:id="@+id/button8"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/button6"
+                android:layout_below="@+id/button6"
+                android:layout_marginTop="22dp"
+                android:text="終了日時" />
+
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/spinner"
+                android:layout_below="@+id/spinner"
+                android:layout_marginTop="28dp"
+                android:text="開始日時" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/editText"
+                android:layout_alignStart="@+id/editText"
+                android:layout_below="@+id/editText"
+                android:layout_marginTop="32dp" />
+
+            <Button
+                android:id="@+id/button9"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/button8"
+                android:layout_alignEnd="@+id/button7"
+                android:text="終了時刻" />
+
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/button9"
+                android:layout_below="@+id/textView10"
+                android:layout_marginTop="41dp"
+                android:layout_alignStart="@+id/textView10" />
+
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/spinner"
+                android:layout_alignTop="@+id/button6"
+                android:text="開始時刻" />
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="14dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Name"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true" />
+
+            <Switch
+                android:id="@+id/switch3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="37dp"
+                android:layout_below="@+id/spinner2"
+                android:layout_alignEnd="@+id/textView10"
+                android:layout_marginEnd="84dp" />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="43dp"
+                android:text="TextView"
+                android:textSize="24sp"
+                android:textStyle="bold|italic"
+                android:layout_below="@+id/switch3"
+                android:layout_alignStart="@+id/spinner2"
+                android:layout_alignEnd="@+id/spinner2" />
+
+            <Spinner
+                android:id="@+id/spinner3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="45dp"
+                android:layout_below="@+id/textView12"
+                android:layout_alignEnd="@+id/textView12"
+                android:layout_alignStart="@+id/spinner2" />
 
         </RelativeLayout>
     </ScrollView>
@@ -41,90 +150,6 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
         android:padding="0dp"
-        android:text="Button" />
+        android:text="内容確認" />
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/br_re_confirm"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="39dp"
-        android:layout_marginTop="13dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name" />
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/editText"
-        android:layout_marginTop="32dp"
-        android:layout_alignStart="@+id/editText"
-        android:layout_alignEnd="@+id/editText" />
-
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text="Button"
-        android:layout_below="@+id/spinner"
-        android:layout_alignStart="@+id/spinner" />
-
-    <Button
-        android:id="@+id/button7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/spinner"
-        android:layout_alignTop="@+id/button6"
-        android:text="Button" />
-
-    <Button
-        android:id="@+id/button8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/button6"
-        android:layout_below="@+id/button6"
-        android:layout_marginTop="22dp"
-        android:text="Button" />
-
-    <Button
-        android:id="@+id/button9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/button8"
-        android:layout_alignEnd="@+id/button7"
-        android:text="Button" />
-
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
-        android:text="TextView"
-        android:textSize="24sp"
-        android:textStyle="bold|italic"
-        android:layout_below="@+id/button8"
-        android:layout_alignStart="@+id/button8" />
-
-    <Spinner
-        android:id="@+id/spinner2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView10"
-        android:layout_below="@+id/textView10"
-        android:layout_marginTop="41dp"
-        android:layout_alignEnd="@+id/button9" />
-
-    <Switch
-        android:id="@+id/switch2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="11dp"
-        android:text="Switch"
-        android:layout_above="@+id/br_re_confirm"
-        android:layout_alignStart="@+id/spinner2"
-        android:layout_alignEnd="@+id/spinner2" />
 </RelativeLayout>
