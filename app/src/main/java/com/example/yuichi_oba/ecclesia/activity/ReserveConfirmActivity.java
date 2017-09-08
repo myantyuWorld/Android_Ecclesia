@@ -309,18 +309,18 @@ public class ReserveConfirmActivity extends AppCompatActivity
      * 画面の各ウィジェットの初期化処理
      */
     private void init() {
-        txt_overview = (TextView) findViewById(R.id.txt_rd_overView);       // 「概要」テキストビューを取得(以下同様
-        txt_purpose = (TextView) findViewById(R.id.txt_rd_purpose);         // 会議目的名
+//        txt_overview = (TextView) findViewById(R.id.txt_rd_overView);       // 「概要」テキストビューを取得(以下同様
+//        txt_purpose = (TextView) findViewById(R.id.txt_rd_purpose);         // 会議目的名
 //        txt_startDay = (TextView) findViewById(R.id.cre_startDay);          // 開始日
         txt_startTime = (TextView) findViewById(R.id.txt_rd_startTime);     // 開始時刻
 //        txt_endday = (TextView) findViewById(R.id.txt_rd_endDay);           // 終了日
         txt_endTime = (TextView) findViewById(R.id.txt_rd_endTime);         // 終了時刻
         txt_applicant = (TextView) findViewById(R.id.txt_rd_applicant);     // 予約者
-        txt_inOutHouse = (TextView) findViewById(R.id.txt_rd_inOutHouse);   // 社内社外区分
-        txt_conferenceRoom = (TextView) findViewById(R.id.txt_rd_room);     // 会議室名
-        txt_fixtures = (TextView) findViewById(R.id.txt_rd_fixtures);       // 備品
-        txt_remarks = (TextView) findViewById(R.id.txt_rd_remarks);         // 備考
-        txt_member = (TextView) findViewById(R.id.txt_member);              // 参加者
+//        txt_inOutHouse = (TextView) findViewById(R.id.txt_rd_inOutHouse);   // 社内社外区分
+//        txt_conferenceRoom = (TextView) findViewById(R.id.txt_rd_room);     // 会議室名
+//        txt_fixtures = (TextView) findViewById(R.id.txt_rd_fixtures);       // 備品
+//        txt_remarks = (TextView) findViewById(R.id.txt_rd_remarks);         // 備考
+//        txt_member = (TextView) findViewById(R.id.txt_member);              // 参加者
         // 「参加者」テキストにリスナー登録
         txt_member.setOnClickListener(new View.OnClickListener() {
             @Override
