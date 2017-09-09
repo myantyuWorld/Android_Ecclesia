@@ -14,7 +14,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
 import com.example.yuichi_oba.ecclesia.tools.DB;
@@ -23,7 +22,12 @@ import com.example.yuichi_oba.ecclesia.tools.NameConst;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.MAX_WIDTH;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ROOM_A;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ROOM_B;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ROOM_C;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.TOKUBETSU;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 
 /**
  * Created by Yuichi-Oba on 2017/08/28.
@@ -33,6 +37,14 @@ public class TimeTableView extends View {
 
     public static final int Y_HEIGHT = 40;
     public static final int X_WIGDH = 216;
+    public static final int RE_ID = 0;
+    public static final int RE_OVERVIEW = 1;
+    public static final int RE_START_DAY = 2;
+    public static final int RE_END_DAY = 3;
+    public static final int RE_START_TIME = 4;
+    public static final int RE_END_TIME = 5;
+    public static final int RE_SWITCH = 6;
+    public static final int RE_ROOM_ID = 10;
     private Paint p;
     private Paint p2;
     private Paint room;
@@ -285,14 +297,14 @@ public class TimeTableView extends View {
         while (c.moveToNext()) {
             // 予約情報のインスタンス生成 :: 暫定的に下記引数です
             ReserveInfo r = new ReserveInfo(
-                    c.getString(0),
-                    c.getString(1),
-                    c.getString(2),
-                    c.getString(3),
-                    c.getString(4),
-                    c.getString(5),
-                    c.getString(6),
-                    c.getString(12)
+                    c.getString(RE_ID),
+                    c.getString(RE_OVERVIEW),
+                    c.getString(RE_START_DAY),
+                    c.getString(RE_END_DAY),
+                    c.getString(RE_START_TIME),
+                    c.getString(RE_END_TIME),
+                    c.getString(RE_SWITCH),
+                    c.getString(RE_ROOM_ID)
             );
             reserveInfo.add(r);
             Log.d("call", c.getString(2) + " : " + c.getString(3));
