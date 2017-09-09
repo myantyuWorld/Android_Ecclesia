@@ -3,7 +3,6 @@ package com.example.yuichi_oba.ecclesia.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,7 +19,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +31,10 @@ import com.example.yuichi_oba.ecclesia.tools.DB;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.TWO;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -330,25 +331,25 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //        txt_overview = (TextView) findViewById(R.id.txt_rd_overView);       // 「概要」テキストビューを取得(以下同様
 //        txt_purpose = (TextView) findViewById(R.id.txt_rd_purpose);         // 会議目的名
 //        txt_startDay = (TextView) findViewById(R.id.cre_startDay);          // 開始日
-        txt_startTime = (TextView) findViewById(R.id.txt_rd_startTime);     // 開始時刻
-        txt_endday = (TextView) findViewById(R.id.txt_rd_endDay);           // 終了日
-        txt_endTime = (TextView) findViewById(R.id.txt_rd_endTime);         // 終了時刻
-        txt_applicant = (TextView) findViewById(R.id.txt_rd_applicant);     // 予約者
+//        txt_startTime = (TextView) findViewById(R.id.txt_rd_startTime);     // 開始時刻
+//        txt_endday = (TextView) findViewById(R.id.txt_rd_endDay);           // 終了日
+//        txt_endTime = (TextView) findViewById(R.id.txt_rd_endTime);         // 終了時刻
+//        txt_applicant = (TextView) findViewById(R.id.txt_rd_applicant);     // 予約者
 //        txt_inOutHouse = (TextView) findViewById(R.id.txt_rd_inOutHouse);   // 社内社外区分
 //        txt_conferenceRoom = (TextView) findViewById(R.id.txt_rd_room);     // 会議室名
 //        txt_fixtures = (TextView) findViewById(R.id.txt_rd_fixtures);       // 備品
 //        txt_remarks = (TextView) findViewById(R.id.txt_rd_remarks);         // 備考
 //        txt_member = (TextView) findViewById(R.id.txt_member);              // 参加者
         // 「参加者」テキストにリスナー登録
-        txt_member.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Toast.makeText(ReserveConfirmActivity.this, "test", Toast.LENGTH_SHORT).show();
-                // 会議参加者ダイアログを生成する
-                MemberConfirmDialog memberConfirmDialog = new MemberConfirmDialog();
-                memberConfirmDialog.show(getFragmentManager(), "ccc");
-            }
-        });
+//        txt_member.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                Toast.makeText(ReserveConfirmActivity.this, "test", Toast.LENGTH_SHORT).show();
+//                // 会議参加者ダイアログを生成する
+//                MemberConfirmDialog memberConfirmDialog = new MemberConfirmDialog();
+//                memberConfirmDialog.show(getFragmentManager(), "ccc");
+//            }
+//        });
 
     }
 

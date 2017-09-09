@@ -32,12 +32,11 @@ import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.view.TimeTableView;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
+
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -292,7 +291,7 @@ public class ReserveListActivity extends AppCompatActivity
 
     @SuppressLint("StaticFieldLeak")
     static TextView txtDate;
-    Employee employee;
+    public static Employee employee;
 //    public static List<ReserveInfo> reserveInfo;    // 予約情報記録クラスの変数   非同期エラーが起きるため使用禁止する！
     static TimeTableView timeTableView;
     private int thCnt = 0;

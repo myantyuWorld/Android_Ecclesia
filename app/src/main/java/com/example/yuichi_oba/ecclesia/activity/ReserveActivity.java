@@ -1,6 +1,9 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -11,9 +14,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
+import com.example.yuichi_oba.ecclesia.tools.DB;
+
+import java.util.ArrayList;
+import java.util.List;
+
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
@@ -23,6 +35,11 @@ import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 public class ReserveActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private Spinner sp_purpose;
+    private Spinner sp_member;
+    private ReserveInfo reserveInfo;
+    static List<String> member = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +70,57 @@ public class ReserveActivity extends AppCompatActivity
                 // ここで、参加者
 //                Toast.makeText(ReserveActivity.this, "Floting Button Push!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplication(), AddMemberActivity.class);
+                intent.putExtra("emp_id", ReserveListActivity.employee.getEmp_id());
                 startActivity(intent);
+            }
+        });
+
+        init();
+
+
+
+    }
+
+    //*** 各ウィジェットの初期化処理メソッド ***//
+    private void init() {
+
+        reserveInfo = new ReserveInfo();
+
+        sp_member = (Spinner) findViewById(R.id.sp_re_member);
+        sp_purpose = (Spinner) findViewById(R.id.sp_re_purpose);
+
+        ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, member);
+        sp_member.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        //*** 会議目的を検索して、目的スピナーに登録する ***//
+        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        List<String> purpose = new ArrayList<>();
+        Cursor c = db.rawQuery("select * from m_purpose", null);
+        while (c.moveToNext()) {
+            purpose.add(c.getString(0) + ":" + c.getString(1));
+        }
+        c.close();
+        ArrayAdapter<String> adapter_purpose = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, purpose);
+        sp_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }
