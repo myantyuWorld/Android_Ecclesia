@@ -154,7 +154,7 @@ public class AddMemberActivity extends AppCompatActivity
          * 履歴スピナーの各種設定
          */
         // DB 検索して、予約した人の「会社名 ： 参加者苗字」で出す
-        // TODO: 2017/09/09 参加回数を求めて、上位１０人ずつを出すSQLの実装 
+        // TODO: 2017/09/09 参加回数を求めて、上位１０人ずつを出すSQLの実装
         setSpinnerHistory();
         // リスナー登録
         sp_history.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
