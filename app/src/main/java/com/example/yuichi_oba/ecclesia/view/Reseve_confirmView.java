@@ -61,12 +61,13 @@ public class Reseve_confirmView extends View {
         c.drawRect(0,1080,0,1920,p_line);
         float room = 120;
         float room_x = 60;
+        p_text.setTextAlign(Paint.Align.LEFT);
         // sx = 左上 sy　=　左下 ex　=　幅 ey　=　右下
         c.drawLine(0,room,1080,room,p_out_line);
         for (int i = 1 ; i <=11 ; i++) {
             c.drawLine(0, room * i, 1080, room * i, p_out_line);
             c.drawText(name[i - 1], 100, room_x, p_text);
-            c.drawText(content[i - 1], 500, room_x, p_text);
+            c.drawText(content[i - 1], 400, room_x, p_text);
             room_x += room;
         }
     }
