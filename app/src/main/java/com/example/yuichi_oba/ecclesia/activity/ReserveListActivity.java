@@ -29,15 +29,15 @@ import android.widget.Toast;
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
-import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.view.TimeTableView;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-//import static com.example.yuichi_oba.ecclesia.activity.MyDialog.employee;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
+
+//import static com.example.yuichi_oba.ecclesia.activity.MyDialog.employee;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -201,6 +201,8 @@ public class ReserveListActivity extends AppCompatActivity
 //        }
         /*** 社員ID と アプリ起動時の日付を渡して、描画する ***/
         timeTableView = (TimeTableView) this.findViewById(R.id.timetable);
+        Log.d("call", employee.getId());
+        Log.d("call", txtDate.getText().toString());
         timeTableView.reView(employee.getId(), txtDate.getText().toString());
 
         txtDate.setOnClickListener(new View.OnClickListener() {
@@ -308,11 +310,13 @@ public class ReserveListActivity extends AppCompatActivity
                     startActivity(intent);
                 }
 //                ReserveInfo reserveInfo = new ReserveInfo();
-                Reserve reserveInfo = new Reserve();
-                reserveInfo.setRe_id(re_id);
-                Intent in = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-//                in.putExtra("reserve_info", reserveInfo);
-                startActivity(in);
+                // TODO: 2017/09/15  //*** 考えるので、いったんコメアウト ***//
+
+//                Reserve reserveInfo = new Reserve();
+//                reserveInfo.setRe_id(re_id);
+//                Intent in = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+////                in.putExtra("reserve_info", reserveInfo);
+//                startActivity(in);
                 thCnt++;
             }
         });

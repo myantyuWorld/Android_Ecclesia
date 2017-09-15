@@ -297,9 +297,19 @@ public class TimeTableView extends View {
         reserveInfo.clear();
         while (c.moveToNext()) {
             // 予約情報のインスタンス生成
+            // TODO: 2017/09/15 ここで、検索結果のすべてを記録する
             Reserve r = new Reserve();
             r.setRe_id(c.getString(RE_ID));
-
+            r.setRe_name(c.getString(1));
+            r.setRe_startDay(c.getString(2));
+            r.setRe_endDay(c.getString(3));
+            r.setRe_startTime(c.getString(4));
+            r.setRe_endTime(c.getString(5));
+            r.setRe_switch(c.getString(6));
+            r.setRe_fixtures(c.getString(7));
+            r.setRe_remarks(c.getString(8));
+            r.setRe_room_id(c.getString(10));
+            
             reserveInfo.add(r);
             Log.d("call", c.getString(2) + " : " + c.getString(3));
         }
