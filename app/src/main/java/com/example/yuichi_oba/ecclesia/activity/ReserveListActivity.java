@@ -45,7 +45,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
 // _/_/
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 public class ReserveListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
 
     public static final int EMP_NAME = 1;
     public static final int EMP_TEL = 2;
@@ -293,6 +293,7 @@ public class ReserveListActivity extends AppCompatActivity
     protected void onResume() {
         Log.d("call", "ReserveListActivity->onResume()");
         super.onResume();
+        timeTableView.thread_flg = true;
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -301,13 +302,20 @@ public class ReserveListActivity extends AppCompatActivity
                     timeTableView.thread_flg = true;
                     timeTableView.x = 0;
                     timeTableView.y = 0;
+                    thCnt = 0;
                 }
                 Log.d("call", "Thread");
                 String re_id = timeTableView.getSelectedReserve();
                 Log.d("call", "re_id :: " + re_id);
+                //*** 新規予約登録画面への遷移 ***//
                 if (re_id.equals(NONE)) {
-                    Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
-                    startActivity(intent);
+                    Log.d("call", "新規予約登録画面への遷移");
+//                    Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
+//                    startActivity(intent);
+                } else {
+                    Log.d("call", "予約確認画面への遷移");
+//                    Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+//                    startActivity(intent);
                 }
 //                ReserveInfo reserveInfo = new ReserveInfo();
                 // TODO: 2017/09/15  //*** 考えるので、いったんコメアウト ***//
@@ -318,10 +326,18 @@ public class ReserveListActivity extends AppCompatActivity
 ////                in.putExtra("reserve_info", reserveInfo);
 //                startActivity(in);
                 thCnt++;
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
+
         thread.start();
+
     }
+
 
     //*** SelfMadeMethod ***//
 

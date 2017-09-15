@@ -117,15 +117,14 @@ public class Reserve {
     public void setRe_room_id(String re_room_id) { this.re_room_id = re_room_id; }
     public String getRe_room_name() {return re_room_name; }
     public void setRe_room_name(String re_room_name) { this.re_room_name = re_room_name; }
-
     public float[] getCoop() {
         return coop;
     }
-
     public void setCoop(float[] coop) {
         this.coop = coop;
     }
     //*** SelfMadeMethod ***//
+
     //*** 参加者優先度を計算するメソッド ***//
 
     //*** 会議の時間帯の重複をチェックするメソッド ***//
