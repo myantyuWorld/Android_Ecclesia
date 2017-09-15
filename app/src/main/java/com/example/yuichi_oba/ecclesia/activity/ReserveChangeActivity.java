@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+import com.example.yuichi_oba.ecclesia.model.Reserve;
 
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
@@ -31,7 +32,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 public class ReserveChangeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    ReserveInfo reserveInfo ;
+    Reserve reserveInfo ;
     Button editBtn;
 
     EditText overview;
@@ -85,7 +86,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             public void onClick(View v){
                 setReserveInfo();
                 Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
-                intent.putExtra("Check", reserveInfo);
+                intent.putExtra("Check", reserveInfo);  // Reserveにimplement Selialize
                 startActivity(intent);
             }
         });
@@ -94,9 +95,9 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    reserveInfo.setRe_flg(ONE);
+                    reserveInfo.setRe_switch(String.valueOf(ONE));
                 } else {
-                    reserveInfo.setRe_flg(ZERO);
+                    reserveInfo.setRe_switch(String.valueOf(ZERO));
                 }
             }
         });
@@ -120,7 +121,7 @@ public class ReserveChangeActivity extends AppCompatActivity
         fixtrues = (EditText) findViewById(R.id.cre_fixtrues);
         remarks = (EditText) findViewById(R.id.cre_remarks);
 
-        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra(KEYCHANGE);
+        reserveInfo = (Reserve) getIntent().getSerializableExtra(KEYCHANGE);
     }
 
     @Override
@@ -173,14 +174,15 @@ public class ReserveChangeActivity extends AppCompatActivity
     }
 
     public void setReserveInfo() {
-        reserveInfo.setRe_overview(overview.getText().toString());
+        reserveInfo.setRe_name(overview.getText().toString());
         reserveInfo.setRe_startDay(startDay.getText().toString());
         reserveInfo.setRe_startTime(startTime.getText().toString());
         reserveInfo.setRe_endDay(endDay.getText().toString());
         reserveInfo.setRe_endTime(endTime.getText().toString());
-        reserveInfo.setRe_conference_room(room.getSelectedItem().toString());
-        reserveInfo.setRe_purpose(purpose.getSelectedItem().toString());
-        reserveInfo.setFixtrues(fixtrues.getText().toString());
-        reserveInfo.setRe_marks(remarks.getText().toString());
+        // 今Reserveに会議室がない
+        reserveInfo.setRe_room_name(room.getSelectedItem().toString());
+        reserveInfo.setRe_purpose_name(purpose.getSelectedItem().toString());
+        reserveInfo.setRe_fixtures(fixtrues.getText().toString());
+        reserveInfo.setRe_remarks(remarks.getText().toString());
     }
 }
