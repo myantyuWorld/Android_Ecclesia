@@ -86,7 +86,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             public void onClick(View v){
                 setReserveInfo();
                 Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
-                intent.putExtra("Check", reserveInfo);  // Reserveにimplement Selialize
+//                intent.putExtra("Check", reserveInfo);  // Reserveにimplement Selialize
                 startActivity(intent);
             }
         });

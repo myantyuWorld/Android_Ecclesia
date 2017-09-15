@@ -8,7 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
-import static com.example.yuichi_oba.ecclesia.R.menu.reserve;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Yuichi-Oba on 2017/08/27.
@@ -80,26 +81,30 @@ public class Employee {
 
     //*** Self Made Method ***//
     //*** 参加会議を抽出するメソッド ***//
-    public void extractParticipationMeet(String today){
+    public void extractParticipationMeet(String today) {
         Context context = ReserveListActivity.getInstance();
         SQLiteOpenHelper helper = new DB(context);
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?",
                 new String[]{this.getId(), today});
+
+        List<Reserve> reserves = new ArrayList<>();
         while (c.moveToNext()) {
             // その社員が参加した会議情報をリストに追加する
-            Reserve r = new Reserve(
-                    c.getString(RE_ID),
-                    c.getString(RE_NAME),
-                    c.getString(RE_START_DAY),
-                    c.getString(RE_START_TIME),
-                    c.getString(RE_END_DAY),
-                    c.getString(RE_END_TIME),
-                    c.getString(RE_FIXTURES),
-                    c.getString(RE_REMARKS),
-                    c.getString(RE_SWITCH)
-            );
-            reserve.add(r);
+//            Reserve r = new Reserve(
+//                    c.getString(RE_ID),
+//                    c.getString(RE_NAME),
+//                    c.getString(RE_START_DAY),
+//                    c.getString(RE_START_TIME),
+//                    c.getString(RE_END_DAY),
+//                    c.getString(RE_END_TIME),
+//                    c.getString(RE_FIXTURES),
+//                    c.getString(RE_REMARKS),
+//                    c.getString(RE_SWITCH)
+//            );
+            Reserve r = new Reserve();
+            reserves.add(r);
+        }
     }
 
 }

@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.NameConst;
 
@@ -36,6 +37,7 @@ public class TimeTableView extends View {
 
     public static final int Y_HEIGHT = 40;
     public static final int X_WIGDH = 216;
+
     public static final int RE_ID = 0;
     public static final int RE_OVERVIEW = 1;
     public static final int RE_START_DAY = 2;
@@ -58,7 +60,7 @@ public class TimeTableView extends View {
 
     private float[] timeFloats;
     public boolean thread_flg;
-    private List<ReserveInfo> reserveInfo;
+    private List<Reserve> reserveInfo;
 
     public TimeTableView(Context context) {
         super(context);
@@ -121,10 +123,10 @@ public class TimeTableView extends View {
 
     private void onDrawConference(Canvas c) {
         int cnt = 0;
-        for (ReserveInfo r : this.reserveInfo) {
+        for (Reserve r : this.reserveInfo) {
             String sTime = r.getRe_startTime();
             String eTime = r.getRe_endTime();
-            String room_id = r.getRe_roomId();
+            String room_id = r.getRe_room_id();
 
             RectF rectF = retRectCooperation(sTime, eTime, room_id);
             // 予約会議の座標情報を記録する
@@ -294,17 +296,10 @@ public class TimeTableView extends View {
         Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?", new String[]{emp_id, date});
         reserveInfo.clear();
         while (c.moveToNext()) {
-            // 予約情報のインスタンス生成 :: 暫定的に下記引数です
-            ReserveInfo r = new ReserveInfo(
-                    c.getString(RE_ID),
-                    c.getString(RE_OVERVIEW),
-                    c.getString(RE_START_DAY),
-                    c.getString(RE_END_DAY),
-                    c.getString(RE_START_TIME),
-                    c.getString(RE_END_TIME),
-                    c.getString(RE_SWITCH),
-                    c.getString(RE_ROOM_ID)
-            );
+            // 予約情報のインスタンス生成
+            Reserve r = new Reserve();
+            r.setRe_id(c.getString(RE_ID));
+
             reserveInfo.add(r);
             Log.d("call", c.getString(2) + " : " + c.getString(3));
         }
@@ -339,11 +334,11 @@ public class TimeTableView extends View {
                 }
                 // re_id と y座標を基に、どの会議がタップされたかを返す
                 int cnt = 0;
-                for (ReserveInfo r : this.reserveInfo) {
+                for (Reserve r : this.reserveInfo) {
                     if (r.getCoop() != null && r.getCoop()[1] < y && r.getCoop()[3] > y) {
                         // 特定した
-                        if (re_id.equals(r.getRe_roomId())) {
-                            Log.d("call", "会議を特定した！  " + r.getRe_roomId());
+                        if (re_id.equals(r.getRe_room_id())) {
+                            Log.d("call", "会議を特定した！  " + r.getRe_room_id());
                             re_id = r.getRe_id();
                             thread_flg = false;
                         }
@@ -362,14 +357,6 @@ public class TimeTableView extends View {
         }
         Log.d("call", "Re_id : " + re_id);
         return re_id;
-    }
-
-    /***
-     * 予約情報リストのディープコピーを行うメソッド
-     * @param reserveInfo_timetable
-     */
-    private void deepCopyReserveInfo(List<ReserveInfo> reserveInfo_timetable) {
-        // 予約情報を保持するリストのディープコピー
     }
 
     public boolean isTouched() {

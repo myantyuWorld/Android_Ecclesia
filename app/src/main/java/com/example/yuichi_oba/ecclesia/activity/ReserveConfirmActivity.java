@@ -30,10 +30,9 @@ import com.example.yuichi_oba.ecclesia.tools.DB;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity.reserveInfo;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.TWO;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -59,7 +58,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     TextView txt_remarks;               // 備考
     TextView txt_member;                // 会議参加者を表示するスピナー // DO: 2017/07/26 これは、ダイアログでいい？？
 
-    static ReserveInfo reserveInfo;     // 予約情報クラスの変数
+//    static ReserveInfo reserveInfo;     // 予約情報クラスの変数
 
     /***
      *  実験用
@@ -72,25 +71,25 @@ public class ReserveConfirmActivity extends AppCompatActivity
      */
     public static class MemberConfirmDialog extends DialogFragment {
         // ダイアログを生成するメソッド
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // 会議参加者データ
-            CharSequence[] items = reserveInfo.getRe_member().toArray(new CharSequence[reserveInfo.getRe_member().size()]);
-
-            return new AlertDialog.Builder(getActivity())
-                    .setTitle("会議参加者一覧")
-                    .setItems(items, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                        }
-                    })
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                        }
-                    })
-                    .create();
-        }
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            // 会議参加者データ
+//            CharSequence[] items = reserveInfo.getRe_member().toArray(new CharSequence[reserveInfo.getRe_member().size()]);
+//
+//            return new AlertDialog.Builder(getActivity())
+//                    .setTitle("会議参加者一覧")
+//                    .setItems(items, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                        }
+//                    })
+//                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                        }
+//                    })
+//                    .create();
+//        }
 
         // ダイアログを破棄するメソッドーー＞HCP不要
         @Override
@@ -168,9 +167,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
          */
 
         // 各ウィジェットの初期化処理メソッド
-        init();
+//        init();
         // 予約一覧（ReserveListActivity）から特定した会議予約IDを受け取る
-        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("reserve_info");
+//        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("reserve_info");
         Log.d("call", reserveInfo.getRe_id());
         // 予約詳細をDB検索して、画面にマッピングするメソッド
         dbSearchReserveConfirm();
@@ -227,7 +226,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
             // 「予約変更」が選択された
             case R.id.option_reserveChange:
                 intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-                intent.putExtra(KEYCHANGE, reserveInfo);
+//                intent.putExtra(KEYCHANGE, reserveInfo);
                 startActivity(intent);
 //                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
                 // 予約情報インスタンスを次の画面にオブジェクト渡しする
@@ -296,14 +295,14 @@ public class ReserveConfirmActivity extends AppCompatActivity
      * // インスタンスと、画面情報をマッピングする
      */
     private void setWidgetInfo() {
-        txt_overview.setText(reserveInfo.getRe_overview());                 // 項目「概要」に予約情報の概要を設定する(以下同様
-        txt_purpose.setText(reserveInfo.getRe_purpose());                   // 目的
-        txt_startDay.setText(reserveInfo.getRe_startDay());                 // 開始日
-        txt_startTime.setText(reserveInfo.getRe_startTime());               // 開始時刻
-        txt_endday.setText(reserveInfo.getRe_endDay());                     // 終了日
-        txt_endTime.setText(reserveInfo.getRe_endTime());                   // 終了時刻
-        txt_applicant.setText(reserveInfo.getRe_rePerson());                // 予約者
-        txt_conferenceRoom.setText(reserveInfo.getRe_conference_room());    // 会議室
+//        txt_overview.setText(reserveInfo.getRe_overview());                 // 項目「概要」に予約情報の概要を設定する(以下同様
+//        txt_purpose.setText(reserveInfo.getRe_purpose());                   // 目的
+//        txt_startDay.setText(reserveInfo.getRe_startDay());                 // 開始日
+//        txt_startTime.setText(reserveInfo.getRe_startTime());               // 開始時刻
+//        txt_endday.setText(reserveInfo.getRe_endDay());                     // 終了日
+//        txt_endTime.setText(reserveInfo.getRe_endTime());                   // 終了時刻
+//        txt_applicant.setText(reserveInfo.getRe_rePerson());                // 予約者
+//        txt_conferenceRoom.setText(reserveInfo.getRe_conference_room());    // 会議室
     }
 
     /***
@@ -312,14 +311,15 @@ public class ReserveConfirmActivity extends AppCompatActivity
      * @param c
      */
     private void setReserveInfo(Cursor c) {
-        reserveInfo.setRe_overview("aaaaaa");               // 予約情報クラスのインスタンスに、概要をセットする(以下同様
-        reserveInfo.setRe_purpose(c.getString(1));          // 会議目的名
-//        reserveInfo.setRe_startDay();                     開始日は現在ビューにないので後に追記か、代替案が必要
-//        reserveInfo.setRe_endDay();                       同上
-        reserveInfo.setRe_startTime(c.getString(4));        // 開始時刻
-        reserveInfo.setRe_endTime(c.getString(5));          // 終了時刻
-        reserveInfo.setRe_rePerson(c.getString(TWO));         // 予約者
-        reserveInfo.setRe_conference_room(c.getString(12)); // 会議室名
+//        reserveInfo.setRe_overview("aaaaaa");               // 予約情報クラスのインスタンスに、概要をセットする(以下同様
+//        reserveInfo.setRe_purpose(c.getString(1));          // 会議目的名
+////        reserveInfo.setRe_startDay();                     開始日は現在ビューにないので後に追記か、代替案が必要
+////        reserveInfo.setRe_endDay();                       同上
+//        reserveInfo.setRe_startTime(c.getString(4));        // 開始時刻
+//        reserveInfo.setRe_endTime(c.getString(5));          // 終了時刻
+//        reserveInfo.setRe_rePerson(c.getString(TWO));         // 予約者
+//        reserveInfo.setRe_conference_room(c.getString(12)); // 会議室名
+//    }
     }
 
     /***
@@ -374,7 +374,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
         c.close();
 
         // 次に、会議参加者をDB検索する、予約情報クラスのインスタンスに会議参加者情報をセットする
-        reserveInfo.setRe_member(list);
+//        reserveInfo.setRe_member(list);
     }
 
     public static class ExtentionDialog extends DialogFragment{

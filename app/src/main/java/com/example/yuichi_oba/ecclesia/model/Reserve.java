@@ -23,10 +23,10 @@ public class Reserve {
     private String re_applicant;
     private String re_room_id;
     private String re_room_name;
+    private float[] coop;
 
-    public Reserve(String string, String string1, String string2, String string3, String string4, String string5, String string6, String string7, String string8) {
+    public Reserve() {
     }
-
 
     //*** GetterSetter ***//
     public String getRe_id() {
@@ -113,22 +113,38 @@ public class Reserve {
     public void setRe_applicant(String re_applicant) {
         this.re_applicant = re_applicant;
     }
-
     public String getRe_room_id() { return re_room_id; }
     public void setRe_room_id(String re_room_id) { this.re_room_id = re_room_id; }
     public String getRe_room_name() {return re_room_name; }
     public void setRe_room_name(String re_room_name) { this.re_room_name = re_room_name; }
 
+    public float[] getCoop() {
+        return coop;
+    }
+
+    public void setCoop(float[] coop) {
+        this.coop = coop;
+    }
     //*** SelfMadeMethod ***//
     //*** 参加者優先度を計算するメソッド ***//
+
     //*** 会議の時間帯の重複をチェックするメソッド ***//
+
     //*** 優先度をチェックするメソッド ***//
+
     //*** 予約を確定するメソッド ***//
+
     //*** 予約をキャンセルするメソッド ***//
+
     //*** 早期退出するメソッド ***//
+
     //*** 終了時間を延長するメソッド ***//
+
     //*** 予約を変更するメソッド ***//
+
     //*** 通知メールを送るメソッド ***//
+
     //*** 通知をするメソッド ***//
+
     //*** 追い出しを行うメソッド ***//
 }

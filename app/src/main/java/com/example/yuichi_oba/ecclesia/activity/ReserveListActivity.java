@@ -29,13 +29,14 @@ import android.widget.Toast;
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
+import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.view.TimeTableView;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-import static com.example.yuichi_oba.ecclesia.activity.MyDialog.employee;
+//import static com.example.yuichi_oba.ecclesia.activity.MyDialog.employee;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
@@ -57,73 +58,75 @@ public class ReserveListActivity extends AppCompatActivity
         public String getId() {
             return id;
         }
+
         public void setId(String id) {
             this.id = id;
         }
+
         public String getImeiNumber() {
             return imeiNumber;
         }
+
         public void setImeiNumber(String imeiNumber) {
             this.imeiNumber = imeiNumber;
         }
 
         //*** SelfMadeMethod ***//
         //*** 端末IMEIを取得するメソッド ***//
-        public String getTerminalImei() {
+        public void getTerminalImei() {
             Log.d(TAG, "getTerminalImei()");
             TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 //        return manager.getDeviceId();
-            return "352272080218786";   // 大馬 の 端末ＩＭＥＩ
+            // TODO: 2017/09/15 ハードコーディング!
+            this.setId("352272080218786");   // 大馬 の 端末ＩＭＥＩ
         }
 
         //*** 社員を認証するメソッド ***//
         public String authEmployee() {
+            Log.d("call", "ReserveListActivity->authEmployee()");
             String emp_id = "";
             SQLiteOpenHelper helper = new DB(getApplicationContext());
             SQLiteDatabase db = helper.getReadableDatabase();
-            Cursor c = db.rawQuery("select * from m_terminal where ter_id = ?", new String[]{this.getImeiNumber()});
+            Cursor c = db.rawQuery("select * from m_terminal where ter_id = ?", new String[]{this.imeiNumber});
             if (c.moveToNext()) {
                 // 端末ＩＭＥＩから社員ＩＤ取得が成功した
                 emp_id = c.getString(1);
+                Log.d("call", "authEmployee success");
             }
             c.close();
-
+            Log.d("call", emp_id);
             return emp_id;
         }
 
         //*** 認証済み社員を生成するメソッド ***//
-        public void getEmployeeInfo(){
+        public Employee getEmployeeInfo() {
             String emp_id = authEmployee();
             if (!emp_id.isEmpty()) {
                 SQLiteOpenHelper helper2 = new DB(getApplicationContext());
                 SQLiteDatabase db2 = helper2.getReadableDatabase();
                 // 社員ＩＤが空またはＮＵＬＬでなければ次のロジックを実行する
-                    Cursor c = db2.rawQuery("select * from v_employee where emp_id = ?",
-                            new String[]{emp_id});
-                    if (c.moveToNext()) {
-                        // 社員ＩＤから社員情報を検索して、設定する
-                        Employee e = new Employee();
-                        e.setId(emp_id);
-                        e.setName(c.getString(1));
-                        e.setTel(c.getString(2));
-                        e.setMailaddr(c.getString(3));
-                        e.setDep_name(c.getString(7));
-                        e.setPos_name(c.getString(9));
-                        e.setPos_priority(c.getString(10));
-                    }
-                    c.close();
+                Cursor c = db2.rawQuery("select * from v_employee where emp_id = ?",
+                        new String[]{emp_id});
+                if (c.moveToNext()) {
+                    // 社員ＩＤから社員情報を検索して、設定する
+                    Employee e = new Employee();
+                    e.setId(emp_id);
+                    e.setName(c.getString(1));
+                    e.setTel(c.getString(2));
+                    e.setMailaddr(c.getString(3));
+                    e.setDep_name(c.getString(7));
+                    e.setPos_name(c.getString(9));
+                    e.setPos_priority(c.getString(10));
+
+                    return e;
                 }
+                c.close();
             }
+            return null;
         }
+    }
 
-
-
-    private static final String TAG = ReserveListActivity.class.getSimpleName();
-    public static final String RESERVE_INFO = "reserve_info";
-
-    /***
-     * 会議予約一覧を表示・選択するための、日付選択用ダイアログ
-     */
+    //*** 日付選択用ダイアログフラグメント ***//
     public static class MyDialog extends DialogFragment {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
@@ -146,19 +149,26 @@ public class ReserveListActivity extends AppCompatActivity
         }
     }
 
+
+    private static final String TAG = ReserveListActivity.class.getSimpleName();
+    public static final String RESERVE_INFO = "reserve_info";
+
+
     @SuppressLint("StaticFieldLeak")
     static TextView txtDate;
-    public static Employee employee;
-//    public static List<ReserveInfo> reserveInfo;    // 予約情報記録クラスの変数   非同期エラーが起きるため使用禁止する！
     static TimeTableView timeTableView;
+    public static Employee employee;
     private int thCnt = 0;
+    public static ReserveListActivity instance = null;
+
+//    public static List<ReserveInfo> reserveInfo;    // 予約情報記録クラスの変数   非同期エラーが起きるため使用禁止する！
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         instance = this;
         Log.d(TAG, "ReserveListActivity->onCreate()");
-        /*** 各ウィジェットの初期化処理 ***/
+        /*** 各ウィジェットの初期化処理 && 社員情報の取得 ***/
         init();
 
         setContentView(R.layout.activity_main);
@@ -181,7 +191,6 @@ public class ReserveListActivity extends AppCompatActivity
         /*** ここまで ***/
 
 
-
         // 予約情報の設定
 //        getReserveInfo();
 //        for (ReserveInfo r : reserveInfo) {
@@ -189,7 +198,7 @@ public class ReserveListActivity extends AppCompatActivity
 //        }
         /*** 社員ID と アプリ起動時の日付を渡して、描画する ***/
         timeTableView = (TimeTableView) this.findViewById(R.id.timetable);
-        timeTableView.reView(employee.getEmp_id(), txtDate.getText().toString());
+        timeTableView.reView(employee.getId(), txtDate.getText().toString());
 
         txtDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,13 +233,14 @@ public class ReserveListActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Toast.makeText(ReserveListActivity.this, txtDate.getText().toString(), Toast.LENGTH_SHORT).show();
-                timeTableView.reView(employee.getEmp_id(), txtDate.getText().toString());
+                timeTableView.reView(employee.getId(), txtDate.getText().toString());
             }
         });
 
 
     }
 
+    //*** 戻るボタン押下時の処理 ***//
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -241,9 +251,7 @@ public class ReserveListActivity extends AppCompatActivity
         }
     }
 
-    /***
-     * ナビを選択したときの処理
-     */
+    //*** ナビを選択したときの処理 ***//
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -275,9 +283,7 @@ public class ReserveListActivity extends AppCompatActivity
         return true;
     }
 
-    /***
-     * 画面が表示・再表示されたらコールされる
-     */
+    //*** 画面が表示・再表示されたらコールされる ***//
     @Override
     protected void onResume() {
         Log.d("call", "ReserveListActivity->onResume()");
@@ -298,10 +304,11 @@ public class ReserveListActivity extends AppCompatActivity
                     Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
                     startActivity(intent);
                 }
-                ReserveInfo reserveInfo = new ReserveInfo();
+//                ReserveInfo reserveInfo = new ReserveInfo();
+                Reserve reserveInfo = new Reserve();
                 reserveInfo.setRe_id(re_id);
                 Intent in = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-                in.putExtra("reserve_info", reserveInfo);
+//                in.putExtra("reserve_info", reserveInfo);
                 startActivity(in);
                 thCnt++;
             }
@@ -309,30 +316,25 @@ public class ReserveListActivity extends AppCompatActivity
         thread.start();
     }
 
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    //*** SelfMadeMethod ***//
 
-    /***
-     * 画面のウィジェットの初期化処理メソッド
-     */
+    //*** ウィジェットの初期化処理メソッド ***//
     private void init() {
         Log.d(TAG, "init()");
-        // 社員クラスのインスタンスを生成
-        employee = new Employee();
-        // 予約情報クラスのインスタンス生成
-//        reserveInfo = new ArrayList<>();
+        // IMEIクラスのインスタンスを生成
+        Imei imei = new Imei();
+        imei.getTerminalImei(); // 端末IMEIを取得する
 
-        // Permission error となる・・・なんで？
-        // 端末ＩＭＥＩの取得
-        String terminalImei = getTerminalImei();
         // 社員情報の設定
-        getEmployeeInfo(terminalImei);
+        Object o = imei.getEmployeeInfo(); // 端末IMEIから、社員クラスのインスタンスを生成
+        if (o != null) {
+            employee = (Employee) o;
+        }
     }
 
-    public static ReserveListActivity instance = null;
 
-    public static ReserveListActivity getInstance(){
+    //*** この画面のインスタンスを返すメソッド（非アクティビティクラスで、DB検索する際に使用する） ***//
+    public static ReserveListActivity getInstance() {
         return instance;
     }
 
@@ -346,11 +348,6 @@ public class ReserveListActivity extends AppCompatActivity
 ////        return manager.getDeviceId();
 //        return "352272080218786";   // 大馬 の 端末ＩＭＥＩ
 //    }
-
-    /***
-     * 端末ＩＭＥＩから社員情報を取得し、設定するメソッド
-     * @param terminalImei  端末ＩＭＥＩ
-     */
 //    private void getEmployeeInfo(String terminalImei) {
 //        Log.d(TAG, "getEmployeeInfo()");
 //
