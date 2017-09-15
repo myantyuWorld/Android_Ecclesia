@@ -3,25 +3,14 @@ package com.example.yuichi_oba.ecclesia.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
-import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
-import com.example.yuichi_oba.ecclesia.tools.DB;
 
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 
 /**
  * 延長画面をダイアログにしたらどうなるか.

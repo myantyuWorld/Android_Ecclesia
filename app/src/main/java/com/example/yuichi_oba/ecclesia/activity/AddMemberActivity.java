@@ -16,7 +16,6 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.example.yuichi_oba.ecclesia.R;
-import com.example.yuichi_oba.ecclesia.model.Member;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
