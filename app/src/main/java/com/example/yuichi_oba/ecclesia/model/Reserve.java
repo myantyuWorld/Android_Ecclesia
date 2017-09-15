@@ -22,6 +22,10 @@ public class Reserve {
     private String re_pur_priority;
     private String re_applicant;
 
+    public Reserve(String string, String string1, String string2, String string3, String string4, String string5, String string6, String string7, String string8) {
+    }
+
+
     //*** GetterSetter ***//
     public String getRe_id() {
         return re_id;
