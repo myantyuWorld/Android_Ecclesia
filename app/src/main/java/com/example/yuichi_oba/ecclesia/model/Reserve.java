@@ -21,6 +21,8 @@ public class Reserve {
     private String re_purpose_name;
     private String re_pur_priority;
     private String re_applicant;
+    private String re_room_id;
+    private String re_room_name;
 
     //*** GetterSetter ***//
     public String getRe_id() {
@@ -107,6 +109,11 @@ public class Reserve {
     public void setRe_applicant(String re_applicant) {
         this.re_applicant = re_applicant;
     }
+
+    public String getRe_room_id() { return re_room_id; }
+    public void setRe_room_id(String re_room_id) { this.re_room_id = re_room_id; }
+    public String getRe_room_name() {return re_room_name; }
+    public void setRe_room_name(String re_room_name) { this.re_room_name = re_room_name; }
 
     //*** SelfMadeMethod ***//
     //*** 参加者優先度を計算するメソッド ***//

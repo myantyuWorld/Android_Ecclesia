@@ -11,6 +11,7 @@ import android.widget.Spinner;
 
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
@@ -19,7 +20,7 @@ public class ExtentionActivity extends AppCompatActivity
     implements View.OnClickListener{
     Button bt_extension;
     Spinner sp_time;
-    ReserveInfo reserveInfo;
+    Reserve reserveInfo;
 
 //    /***
 //     *  延長アクティビティで使用するダイアログクラス
@@ -73,7 +74,7 @@ public class ExtentionActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_extention);
 
-        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("EX");
+        reserveInfo = (Reserve) getIntent().getSerializableExtra("EX");
 
         bt_extension = (Button) findViewById(R.id.bt_ex_extention);
         sp_time = (Spinner) findViewById(R.id.sp_endTime);
