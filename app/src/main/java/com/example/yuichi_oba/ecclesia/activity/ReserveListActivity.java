@@ -47,6 +47,13 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
 public class ReserveListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final int EMP_NAME = 1;
+    public static final int EMP_TEL = 2;
+    public static final int EMP_MAIL_ADDR = 4;
+    public static final int DEP_NAME = 5;
+    public static final int POS_NAME = 7;
+    public static final int POS_PRIORITY = 8;
+
     //*** 端末IMEIクラス ***//
     public class Imei {
 
@@ -58,15 +65,12 @@ public class ReserveListActivity extends AppCompatActivity
         public String getId() {
             return id;
         }
-
         public void setId(String id) {
             this.id = id;
         }
-
         public String getImeiNumber() {
             return imeiNumber;
         }
-
         public void setImeiNumber(String imeiNumber) {
             this.imeiNumber = imeiNumber;
         }
@@ -78,7 +82,7 @@ public class ReserveListActivity extends AppCompatActivity
             TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 //        return manager.getDeviceId();
             // TODO: 2017/09/15 ハードコーディング!
-            this.setId("352272080218786");   // 大馬 の 端末ＩＭＥＩ
+            this.setImeiNumber("352272080218786");   // 大馬 の 端末ＩＭＥＩ
         }
 
         //*** 社員を認証するメソッド ***//
@@ -90,16 +94,15 @@ public class ReserveListActivity extends AppCompatActivity
             Cursor c = db.rawQuery("select * from m_terminal where ter_id = ?", new String[]{this.imeiNumber});
             if (c.moveToNext()) {
                 // 端末ＩＭＥＩから社員ＩＤ取得が成功した
-                emp_id = c.getString(1);
-                Log.d("call", "authEmployee success");
+                emp_id = c.getString(EMP_NAME);
             }
             c.close();
-            Log.d("call", emp_id);
             return emp_id;
         }
 
         //*** 認証済み社員を生成するメソッド ***//
         public Employee getEmployeeInfo() {
+            Log.d("call", TAG + "->getEmployeeInfo()");
             String emp_id = authEmployee();
             if (!emp_id.isEmpty()) {
                 SQLiteOpenHelper helper2 = new DB(getApplicationContext());
@@ -111,12 +114,12 @@ public class ReserveListActivity extends AppCompatActivity
                     // 社員ＩＤから社員情報を検索して、設定する
                     Employee e = new Employee();
                     e.setId(emp_id);
-                    e.setName(c.getString(1));
-                    e.setTel(c.getString(2));
-                    e.setMailaddr(c.getString(3));
-                    e.setDep_name(c.getString(7));
-                    e.setPos_name(c.getString(9));
-                    e.setPos_priority(c.getString(10));
+                    e.setName(c.getString(EMP_NAME));
+                    e.setTel(c.getString(EMP_TEL));
+                    e.setMailaddr(c.getString(EMP_MAIL_ADDR));
+                    e.setDep_name(c.getString(DEP_NAME));
+                    e.setPos_name(c.getString(POS_NAME));
+                    e.setPos_priority(c.getString(POS_PRIORITY));
 
                     return e;
                 }
@@ -329,6 +332,7 @@ public class ReserveListActivity extends AppCompatActivity
         Object o = imei.getEmployeeInfo(); // 端末IMEIから、社員クラスのインスタンスを生成
         if (o != null) {
             employee = (Employee) o;
+            Log.d("call", employee.toString());
         }
     }
 
