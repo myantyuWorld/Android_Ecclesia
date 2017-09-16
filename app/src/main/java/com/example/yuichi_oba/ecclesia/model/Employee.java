@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
  * Created by Yuichi-Oba on 2017/08/27.
  */
 
-public class Employee {
+public class Employee implements Serializable{
 
     public static final int RE_ID = 0;
     public static final int RE_NAME = 1;

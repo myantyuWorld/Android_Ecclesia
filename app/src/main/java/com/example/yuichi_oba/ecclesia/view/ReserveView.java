@@ -69,11 +69,11 @@ public class ReserveView extends View {
         for (int i = 1; i < 13; i += 2) {
             c.drawRect(0 + padding, i * y + padding - y, 1080 - padding, i * y - padding, p2);
         }
-        c.drawLine(200, 0, 200, 2200, p);
+        c.drawLine(250, 0, 250, 2200, p);
 
         float y_txt = 100;
-        float x_koumoku = 5;
-        String[] koumoku = new String[]{"概要", "目的", "開始", "終了", "申請者", "参加者", "社内/社外", "会社名", "希望会議室", "備品", "備考"};
+        float x_koumoku = 30;
+        String[] koumoku = new String[]{"概要", "目的", "開始", "終了", "申請者", "参加者", "社内/社外", "会社名", "会議室", "備品", "備考"};
         for (int i = 0; i < koumoku.length; i++) {
             c.drawText(koumoku[i], x_koumoku, y_txt, p_koumoku);
             y_txt += y;
