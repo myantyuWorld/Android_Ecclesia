@@ -41,8 +41,19 @@
                 android:layout_below="@+id/bt_re_eTime"
                 android:layout_marginEnd="7dp"
                 android:layout_marginTop="28dp"
+                android:text="aaa"
+                android:textAlignment="center"
                 android:textSize="24sp"
                 android:textStyle="bold|italic" />
+
+            <Button
+                android:id="@+id/bt_re_sDay"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/sp_re_purpose"
+                android:layout_below="@+id/sp_re_purpose"
+                android:layout_marginTop="15dp"
+                android:text="開始日時" />
 
             <Button
                 android:id="@+id/bt_re_eDay"
@@ -54,22 +65,12 @@
                 android:text="終了日時" />
 
             <Button
-                android:id="@+id/bt_re_sDay"
+                android:id="@+id/bt_re_sTime"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/sp_re_purpose"
-                android:layout_below="@+id/sp_re_purpose"
-                android:layout_marginTop="15dp"
-                android:text="開始日時" />
-
-            <Spinner
-                android:id="@+id/sp_re_purpose"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/ed_gaiyou"
-                android:layout_alignStart="@+id/ed_gaiyou"
-                android:layout_below="@+id/ed_gaiyou"
-                android:layout_marginTop="0dp" />
+                android:layout_alignEnd="@+id/sp_re_purpose"
+                android:layout_alignTop="@+id/bt_re_sDay"
+                android:text="開始時刻" />
 
             <Button
                 android:id="@+id/bt_re_eTime"
@@ -80,6 +81,15 @@
                 android:text="終了時刻" />
 
             <Spinner
+                android:id="@+id/sp_re_purpose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/ed_gaiyou"
+                android:layout_alignStart="@+id/ed_gaiyou"
+                android:layout_below="@+id/ed_gaiyou"
+                android:layout_marginTop="0dp" />
+
+            <Spinner
                 android:id="@+id/sp_re_member"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,14 +97,6 @@
                 android:layout_below="@+id/txt_re_shinseisya"
                 android:layout_marginTop="41dp"
                 android:layout_alignStart="@+id/txt_re_shinseisya" />
-
-            <Button
-                android:id="@+id/bt_re_sTime"
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/sp_re_purpose"
-                android:layout_alignTop="@+id/bt_re_sDay"
-                android:text="開始時刻" />
 
             <EditText
                 android:id="@+id/ed_gaiyou"
@@ -127,14 +129,34 @@
                 android:textSize="24sp"
                 android:textStyle="bold|italic" />
 
+            <EditText
+                android:id="@+id/edi_fixture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/sp_room"
+                android:layout_below="@+id/sp_room"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/edi_remark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/edi_fixture"
+                android:layout_below="@+id/edi_fixture"
+                android:layout_marginTop="28dp"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
             <Spinner
-                android:id="@+id/spinner3"
+                android:id="@+id/sp_room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="45dp"
-                android:layout_below="@+id/textView12"
                 android:layout_alignEnd="@+id/textView12"
-                android:layout_alignStart="@+id/sp_re_member" />
+                android:layout_alignStart="@+id/sp_re_member"
+                android:layout_below="@+id/textView12"
+                android:layout_marginTop="10dp" />
 
         </RelativeLayout>
     </ScrollView>

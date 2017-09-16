@@ -38,6 +38,7 @@
         <activity
             android:name=".activity.ExtentionActivity"
             android:label="延長" />
+        <activity android:name=".activity.TestActivity"></activity>
     </application>
 
 </manifest>

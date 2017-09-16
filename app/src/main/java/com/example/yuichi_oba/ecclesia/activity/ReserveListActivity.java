@@ -285,7 +285,6 @@ public class ReserveListActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
     //*** 画面が表示・再表示されたらコールされる (画面遷移はここ！)***//
     @Override
     protected void onResume() {
@@ -309,6 +308,7 @@ public class ReserveListActivity extends AppCompatActivity
                 if (re_id.equals(NONE)) {
                     Log.d("call", "新規予約登録画面への遷移");
                     Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
+                    intent.putExtra("emp", employee);
                     startActivity(intent);
                 } else {
                     Log.d("call", "予約確認画面への遷移");

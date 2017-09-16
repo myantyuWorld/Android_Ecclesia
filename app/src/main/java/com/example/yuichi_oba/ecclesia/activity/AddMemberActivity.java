@@ -17,12 +17,13 @@ import android.widget.Spinner;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddMemberActivity extends AppCompatActivity
-        implements View.OnClickListener {
+        implements View.OnClickListener, MyInterface {
 
     public static final String SELECT_ADD_HISTORY = "";
     //*** NameConst には、移動しないこと！ ***//
@@ -69,11 +70,7 @@ public class AddMemberActivity extends AppCompatActivity
          * 各種Widgetの初期化処理
          */
         init();
-        /***
-         * キャンセル・登録ボタンのリスナー登録
-         */
-        bt_cancel.setOnClickListener(this);
-        bt_regist.setOnClickListener(this);
+        setWidgetListener();
 
     }
 
@@ -135,9 +132,10 @@ public class AddMemberActivity extends AppCompatActivity
     /***
      * 各種Widgetの初期化処理メソッド
      */
-    private void init() {
+    public void init() {
         bt_cancel = (Button) findViewById(R.id.bt_add_cancel);       //  キャンセルボタン
         bt_regist = (Button) findViewById(R.id.bt_add_regist);       //  登録（追加？）ボタン
+
 //        ed_company = (EditText) findViewById(R.id.ed_add_company);      //  会社入力項目
 //        ed_name = (EditText) findViewById(R.id.ed_add_name);            //  氏名入力項目
 ////        ed_depart = (EditText) findViewById(R.id.ed_add_depart);
@@ -187,6 +185,18 @@ public class AddMemberActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void setWidgetListener() {
+        bt_regist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("call", "add regist");
+                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
     //*** 部署スピナーの項目を動的設定するメソッド ***//
     private void setSpinnerDepart() {
         // ＤＢ検索
@@ -224,6 +234,7 @@ public class AddMemberActivity extends AppCompatActivity
 //            m.setCom_name("社内");
 //            m.setDep_name(c.getString(EMP_DEP_NAME));
 //            m.setPo_name(c.getString(EMP_POS_NAME));
+
 //            // list add
 //            members.add(m);
 //            list.add(m.getCom_name() + ":" + m.getEmp_name());
