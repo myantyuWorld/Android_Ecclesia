@@ -21,6 +21,9 @@ public class Reseve_confirmView extends View {
     private Paint p_text;
     private Paint p_rect;       // 交互に色違いにする用
 
+    private String[] name = {"概要", "目的", "開始時間", "終了時間", "申請者", "参加者", "社内/社外", "会社名", "希望会議室", "備品", "その他"};
+    private String[] content = {"システム開発の組み合わせ", "打合せ", "2017/01/18 09:00", "2017/01/18 11:00", "石山大樹", "大馬祐一 : 管理部", "社内", "株式会社Ostraca", "会議室A", "プロジェクタ", "無し"};
+
     //*** Constractor ***//
     public Reseve_confirmView(Context context) {
         super(context);
@@ -62,10 +65,6 @@ public class Reseve_confirmView extends View {
         p_rect.setStyle(Paint.Style.FILL);
 
     }
-
-    private String[] name = {"概要", "目的", "開始時間", "終了時間", "申請者", "参加者", "社内/社外", "会社名", "希望会議室", "備品", "その他"};
-    private String[] content = {"システム開発の組み合わせ", "打合せ", "2017/01/18 09:00", "2017/01/18 11:00", "石山大樹", "大馬祐一 : 管理部", "社内", "株式会社Ostraca", "会議室A", "プロジェクタ", "無し"};
-
     //*** 描画メソッド ***//
     @Override
     protected void onDraw(Canvas c) {

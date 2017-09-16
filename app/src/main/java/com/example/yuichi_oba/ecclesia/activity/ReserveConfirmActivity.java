@@ -66,9 +66,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     private String id = "";
     private String pass = "";
 
-    /***
-     * 会議参加者をリスト形式で出す、ダイアログフラグメントクラス
-     */
+    //*** 会議参加者をリスト形式で出す、ダイアログフラグメントクラス ***//
     public static class MemberConfirmDialog extends DialogFragment {
         // ダイアログを生成するメソッド
 //        @Override
@@ -98,9 +96,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
             dismiss();
         }
     }
-    /***
-     * 「早期退出」オプション選択時の ダイアログフラグメントクラス
-     */
+    //*** 早期退出」オプション選択時の ダイアログフラグメントクラス ***//
     public static class EarlyOutDialog extends DialogFragment{
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -142,6 +138,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     }
 
+    //*** onCreate ***//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "ReserveConfirmActivity->onCreate()");
@@ -174,16 +171,13 @@ public class ReserveConfirmActivity extends AppCompatActivity
         // 予約詳細をDB検索して、画面にマッピングするメソッド
         dbSearchReserveConfirm();
     }
-
-    /***
-     * アクティビティのライフサイクルとして、別の画面にいってまた帰ってきたとき、コールされる
-     */
+    //*** アクティビティのライフサイクルとして、別の画面にいってまた帰ってきたとき、コールされる ***//
     @Override
     protected void onStart() {
         super.onStart();
         dbSearchReserveConfirm();
     }
-
+    //*** 戻るボタン押下時の処理 ***//
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -193,23 +187,13 @@ public class ReserveConfirmActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    // _/_/
-    // _/_/ オプション画面を作成するメソッド
-    // _/_/
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    //*** オプション画面を作成するメソッド ***//
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.reserve_confirm, menu);
         return true;
     }
-
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    // _/_/
-    // _/_/ オプションを選択したときの処理
-    // _/_/
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    //*** オプションを選択したときの処理 ***//
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // 選択されたオプションのIDを取得し、代入する
@@ -244,12 +228,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
         // 選択された結果（項目）を返す
         return super.onOptionsItemSelected(item);
     }
-
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    // _/_/
-    // _/_/ ナビを選択したときの処理
-    // _/_/
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    //*** ナビを選択したときの処理 ***//
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -285,15 +264,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
         return true;
     }
 
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    // _/_/
-    // _/_/ SELF MADE METHOD
-    // _/_/
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-
-    /***
-     * // インスタンスと、画面情報をマッピングする
-     */
+    //*** SelfMadeMethod ***//
+    //*** インスタンスと、画面情報をマッピングするメソッド ***//
     private void setWidgetInfo() {
 //        txt_overview.setText(reserveInfo.getRe_overview());                 // 項目「概要」に予約情報の概要を設定する(以下同様
 //        txt_purpose.setText(reserveInfo.getRe_purpose());                   // 目的
@@ -304,12 +276,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //        txt_applicant.setText(reserveInfo.getRe_rePerson());                // 予約者
 //        txt_conferenceRoom.setText(reserveInfo.getRe_conference_room());    // 会議室
     }
-
-    /***
-     * // 予約情報クラスのインスタンスに、ＤＢ検索した結果をセットする
-     *
-     * @param c
-     */
+    //*** 予約情報クラスのインスタンスに、ＤＢ検索した結果をセットする ***//
     private void setReserveInfo(Cursor c) {
 //        reserveInfo.setRe_overview("aaaaaa");               // 予約情報クラスのインスタンスに、概要をセットする(以下同様
 //        reserveInfo.setRe_purpose(c.getString(1));          // 会議目的名
@@ -321,10 +288,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //        reserveInfo.setRe_conference_room(c.getString(12)); // 会議室名
 //    }
     }
-
-    /***
-     * 画面の各ウィジェットの初期化処理
-     */
+    //*** 画面の各ウィジェットの初期化処理メソッド ***//
     private void init() {
 
 //        txt_overview = (TextView) findViewById(R.id.txt_rd_overView);       // 「概要」テキストビューを取得(以下同様
@@ -351,10 +315,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //        });
 
     }
-
-    /***
-     * 予約詳細をDB検索して、画面へ反映させるメソッド
-     */
+    //*** 予約詳細をDB検索して、画面へ反映させるメソッド ***//
     private void dbSearchReserveConfirm() {
         Log.d("call", "ReserveConfirmActivity->dbSearchReserveConfirm()");
         // 予約情報クラスのインスタンスから、予約情報詳細をＤＢ検索して、画面にマッピングする

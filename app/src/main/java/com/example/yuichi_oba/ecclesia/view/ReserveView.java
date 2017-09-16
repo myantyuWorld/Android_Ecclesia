@@ -51,7 +51,6 @@ public class ReserveView extends View {
         p_koumoku.setTextSize(40);
 
     }
-
     // *** ペイントの描画メソッド *** //
     @Override
     protected void onDraw(Canvas c) {

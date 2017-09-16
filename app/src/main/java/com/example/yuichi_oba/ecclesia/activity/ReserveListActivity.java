@@ -288,7 +288,7 @@ public class ReserveListActivity extends AppCompatActivity
         return true;
     }
 
-    //*** 画面が表示・再表示されたらコールされる ***//
+    //*** 画面が表示・再表示されたらコールされる (画面遷移はここ！)***//
     @Override
     protected void onResume() {
         Log.d("call", "ReserveListActivity->onResume()");
