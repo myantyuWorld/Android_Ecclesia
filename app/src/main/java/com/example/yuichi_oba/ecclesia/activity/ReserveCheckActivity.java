@@ -26,18 +26,18 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 public class ReserveCheckActivity extends AppCompatActivity
 implements NavigationView.OnNavigationItemSelectedListener{
-    TextView txt_overview;              // 概要
-    TextView txt_purpose;               // 会議目的
-    TextView txt_startDay;              // 開始日
-    TextView txt_endday;                // 終了日
-    TextView txt_startTime;             // 開始時刻
-    TextView txt_endTime;               // -終了時刻
-    TextView txt_applicant;             // 予約者
-    TextView txt_inOutHouse;            // 社外社内区分
-    TextView txt_conferenceRoom;        // 使用会議室
-    TextView txt_fixtures;              // 備品
-    TextView txt_remarks;               // 備考
-    TextView txt_member;                // 会議参加者
+//    TextView txt_overview;              // 概要
+//    TextView txt_purpose;               // 会議目的
+//    TextView txt_startDay;              // 開始日
+//    TextView txt_endday;                // 終了日
+//    TextView txt_startTime;             // 開始時刻
+//    TextView txt_endTime;               // -終了時刻
+//    TextView txt_applicant;             // 予約者
+//    TextView txt_inOutHouse;            // 社外社内区分
+//    TextView txt_conferenceRoom;        // 使用会議室
+//    TextView txt_fixtures;              // 備品
+//    TextView txt_remarks;               // 備考
+//    TextView txt_member;                // 会議参加者
 
     Button button;
 
@@ -63,19 +63,19 @@ implements NavigationView.OnNavigationItemSelectedListener{
     }
 
     private void init() {
-        txt_overview = (TextView) findViewById(R.id.check_overView);
-        txt_purpose = (TextView) findViewById(R.id.check_purpose);
-        txt_startDay = (TextView) findViewById(R.id.check_startDay);
-        txt_endday = (TextView) findViewById(R.id.check_endDay);
-        txt_startTime = (TextView) findViewById(R.id.check_startTime);
-        txt_endTime = (TextView) findViewById(R.id.check_endTime);
-        txt_applicant = (TextView) findViewById(R.id.check_applicant);
-        txt_inOutHouse = (TextView) findViewById(R.id.check_inOutHouse);
-        txt_conferenceRoom = (TextView) findViewById(R.id.check_room);
-        txt_fixtures = (TextView) findViewById(R.id.check_fixtures);
-        txt_remarks = (TextView) findViewById(R.id.check_remarks);
-        txt_member = (TextView) findViewById(R.id.check_member);
-        button = (Button) findViewById(R.id.check_btn);
+//        txt_overview = (TextView) findViewById(R.id.check_overView);
+//        txt_purpose = (TextView) findViewById(R.id.check_purpose);
+//        txt_startDay = (TextView) findViewById(R.id.check_startDay);
+//        txt_endday = (TextView) findViewById(R.id.check_endDay);
+//        txt_startTime = (TextView) findViewById(R.id.check_startTime);
+//        txt_endTime = (TextView) findViewById(R.id.check_endTime);
+//        txt_applicant = (TextView) findViewById(R.id.check_applicant);
+//        txt_inOutHouse = (TextView) findViewById(R.id.check_inOutHouse);
+//        txt_conferenceRoom = (TextView) findViewById(R.id.check_room);
+//        txt_fixtures = (TextView) findViewById(R.id.check_fixtures);
+//        txt_remarks = (TextView) findViewById(R.id.check_remarks);
+//        txt_member = (TextView) findViewById(R.id.check_member);
+        button = (Button) findViewById(R.id.correct);
 
         reserveInfo = (Reserve) getIntent().getSerializableExtra(KEYCHECK);
 

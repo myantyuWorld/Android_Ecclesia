@@ -17,400 +17,158 @@
         android:fillViewport="true">
         <!--w368
             h495-->
-        <LinearLayout
-
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/stroke"
-            android:orientation="vertical"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp">
-            <!--android:weightSum="3"-->
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <view
+                class="com.example.yuichi_oba.ecclesia.view.ReserveView"
+                id="@+id/view3"
+                layout_width="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="730dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true" />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/txt_cre_shinseisya"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/bt_cre_eTime"
+                android:layout_alignStart="@+id/bt_cre_eDay"
+                android:layout_below="@+id/bt_cre_eTime"
+                android:layout_marginEnd="7dp"
+                android:layout_marginTop="28dp"
+                android:text="aaa"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold|italic" />
+
+            <Button
+                android:id="@+id/bt_cre_sDay"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/sp_cre_purpose"
+                android:layout_below="@+id/sp_cre_purpose"
+                android:layout_marginTop="15dp"
+                android:text="開始日時" />
+
+            <Button
+                android:id="@+id/bt_cre_eDay"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/bt_cre_sDay"
+                android:layout_below="@+id/bt_cre_sDay"
+                android:layout_marginTop="22dp"
+                android:text="終了日時" />
+
+            <Button
+                android:id="@+id/bt_cre_sTime"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/sp_cre_purpose"
+                android:layout_alignTop="@+id/bt_cre_sDay"
+                android:text="開始時刻" />
+
+            <Button
+                android:id="@+id/bt_cre_eTime"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/bt_cre_eDay"
+                android:layout_alignEnd="@+id/bt_cre_sTime"
+                android:text="終了時刻" />
+
+            <Spinner
+                android:id="@+id/sp_cre_purpose"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/stroke"
-                android:orientation="horizontal"
-                android:padding="5dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/ed_c_gaiyou"
+                android:layout_alignStart="@+id/ed_c_gaiyou"
+                android:layout_below="@+id/ed_c_gaiyou"
+                android:layout_marginTop="0dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-
-                    android:text="概要"
-                    android:textSize="20dp" />
-
-                <EditText
-                    android:id="@+id/cre_overview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="空欄でも可"
-                    android:inputType="textPersonName"
-                    android:textAlignment="center" />
-
-            </LinearLayout>
-            <!--お試し線-->
-            <!--<View-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="1dp"-->
-            <!--android:background="@android:color/darker_gray" />-->
-
-            <LinearLayout
+            <Spinner
+                android:id="@+id/sp_cre_member"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/stroke"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/bt_cre_eTime"
+                android:layout_alignStart="@+id/txt_cre_shinseisya"
+                android:layout_below="@+id/txt_cre_shinseisya"
+                android:layout_marginTop="41dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="目的"
-                    android:textSize="20dp" />
+            <EditText
+                android:id="@+id/ed_c_gaiyou"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="14dp"
+                android:ems="10"
+                android:inputType="textPersonName" />
 
-                <Spinner
-                    android:id="@+id/cre_purpose"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/mokuteki" />
+            <Switch
+                android:id="@+id/switch3_c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/txt_cre_shinseisya"
+                android:layout_below="@+id/sp_cre_member"
+                android:layout_marginEnd="84dp"
+                android:layout_marginTop="37dp" />
 
-            </LinearLayout>
+            <TextView
+                android:id="@+id/textView12_c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/sp_cre_member"
+                android:layout_alignStart="@+id/sp_cre_member"
+                android:layout_below="@+id/switch3_c"
+                android:layout_marginTop="43dp"
+                android:textSize="24sp"
+                android:textStyle="bold|italic" />
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/edi_fixture_c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/sp_room_c"
+                android:layout_below="@+id/sp_room_c"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/edi_remark_c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/edi_fixture_c"
+                android:layout_below="@+id/edi_fixture_c"
+                android:layout_marginTop="28dp"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+            <Spinner
+                android:id="@+id/sp_room_c"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/stroke"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/textView12"
+                android:layout_alignStart="@+id/sp_cre_member"
+                android:layout_below="@+id/textView12"
+                android:layout_marginTop="10dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="開始日"
-                    android:textSize="20dp" />
-
-                <TextView
-                    android:id="@+id/cre_startDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3.9"
-                    android:text="TextView"
-                    android:textAlignment="center" />
-
-                <Button
-                    android:id="@+id/cre_startDayBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="開始日入力" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/stroke"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="開始時間"
-                    android:textSize="20dp" />
-
-                <TextView
-                    android:id="@+id/cre_startTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3.9"
-                    android:text="TextView"
-                    android:textAlignment="center" />
-
-                <Button
-                    android:id="@+id/cre_startTimeBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="開始時間入力" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/stroke"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="終了日"
-                    android:textSize="20dp" />
-
-                <TextView
-                    android:id="@+id/cre_endDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3.9"
-                    android:text="TextView"
-                    android:textAlignment="center" />
-
-                <Button
-                    android:id="@+id/cre_endDayBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="終了日入力" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/stroke"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="終了時間"
-                    android:textSize="20dp" />
-
-                <TextView
-                    android:id="@+id/cre_endTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3.9"
-                    android:text="TextView"
-                    android:textAlignment="center" />
-
-                <Button
-                    android:id="@+id/cre_endTimeBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="終了時間入力" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/stroke"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="申請者"
-                    android:textSize="20dp" />
-
-                <TextView
-                    android:id="@+id/cre_applicant"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2.65"
-                    android:text="TextView"
-                    android:textAlignment="center" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/stroke"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.40"
-                    android:text="参加者"
-                    android:textSize="20dp" />
-
-                <Spinner
-                    android:id="@+id/cre_member"
-                    android:layout_width="149dp"
-                    android:layout_height="wrap_content" />
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.45" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/stroke"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="社内"
-                    android:textSize="20dp" />
-
-                <Switch
-                    android:id="@+id/cre_inoutsw"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:elevation="0dp" />
-
-                <TextView
-                    android:text="社外"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView6"
-                    android:layout_weight="1"
-                    android:textSize="20sp"
-                    android:textAlignment="center" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/stroke"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="希望会議室"
-                    android:textSize="20dp" />
-
-                <Spinner
-                    android:id="@+id/cre_room"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:entries="@array/room" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/stroke"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="備品"
-                    android:textSize="20dp" />
-
-                <EditText
-                    android:id="@+id/cre_fixtrues"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name"
-                    android:textAlignment="center" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/stroke"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="備考"
-                    android:textSize="20dp" />
-
-                <EditText
-                    android:id="@+id/cre_remarks"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="Name"
-                    android:textAlignment="center" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <Button
-                    android:id="@+id/cre_editbtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:layout_weight="1"
-                    android:text="変更" />
-            </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/changebtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5dp"
+        android:padding="0dp"
+        android:text="変更内容確認" />
 
 
 </RelativeLayout>

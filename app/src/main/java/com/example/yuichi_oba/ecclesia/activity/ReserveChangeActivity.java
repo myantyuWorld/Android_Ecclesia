@@ -91,7 +91,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             public void onClick(View v){
 //                setReserveInfo();
                 Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
-                intent.putExtra("Check", reserveInfo);  // Reserveにimplement Selialize
+                intent.putExtra(KEYCHECK, reserveInfo);  // Reserveにimplement Selialize
                 startActivity(intent);
             }
         });
@@ -109,22 +109,12 @@ public class ReserveChangeActivity extends AppCompatActivity
     }
 
     private void init() {
-        editBtn = (Button) findViewById(R.id.cre_editbtn);
-        overview = (EditText) findViewById(R.id.cre_overview);
-        purpose = (Spinner) findViewById(R.id.cre_purpose);
-        startDay = (TextView) findViewById(R.id.cre_startDay);
-        endDay = (TextView) findViewById(R.id.cre_endDay);
-        startTime = (TextView) findViewById(R.id.cre_startTime);
-        endTime = (TextView) findViewById(R.id.cre_endTime);
-        startDayBtn = (Button) findViewById(R.id.cre_startDayBtn);
-        endDayBtn = (Button) findViewById(R.id.cre_endDayBtn);
-        startTimeBtn = (Button) findViewById(R.id.cre_startTimeBtn);
-        endTimeBtn = (Button) findViewById(R.id.cre_endTimeBtn);
-        applicant = (TextView) findViewById(R.id.cre_applicant);
-        inout = (Switch) findViewById(R.id.cre_inoutsw);
-        room = (Spinner) findViewById(R.id.cre_room);
-        fixtrues = (EditText) findViewById(R.id.cre_fixtrues);
-        remarks = (EditText) findViewById(R.id.cre_remarks);
+        startDayBtn = (Button) findViewById(R.id.bt_cre_sDay);
+        startTimeBtn = (Button) findViewById(R.id.bt_cre_sTime);
+        endDayBtn = (Button) findViewById(R.id.bt_cre_eDay);
+        endTimeBtn = (Button) findViewById(R.id.bt_cre_eTime);
+        editBtn = (Button) findViewById(R.id.changebtn);
+        inout = (Switch) findViewById(R.id.switch3_c);
 
 //        reserveInfo = (Reserve) getIntent().getSerializableExtra(KEYCHANGE);
     }
