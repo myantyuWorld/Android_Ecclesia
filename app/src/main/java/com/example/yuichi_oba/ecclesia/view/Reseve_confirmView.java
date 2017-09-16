@@ -99,16 +99,20 @@ public class Reseve_confirmView extends View {
         float y_remark = 1270;
 
         c.drawText(reserve.getRe_name(), 500, y_name, p_text);
+        // DO: 2017/09/16 会議目的カラムを、DBのテーブルに追加する
+        c.drawText(reserve.getRe_purpose_name(), 500, y_purpose, p_text);
         c.drawText(reserve.getRe_startDay() + " " + reserve.getRe_startTime(), 500, y_start, p_text);
         c.drawText(reserve.getRe_endDay() + " " + reserve.getRe_endTime(), 500, y_end, p_text);
         // TODO: 2017/09/16 申請者カラムを、DBのテーブルに追加する
         c.drawText("", 500, y_applicant, p_text);
-        // TODO: 2017/09/16 参加者を検索するロジックの実装
+        // DO: 2017/09/16 参加者を検索するロジックの実装
+        // TODO: 2017/09/16 折り畳み式ビュー検討：ExpandableListView
         c.drawText("", 500, y_member, p_text);
-        // TODO: 2017/09/16 0 =>社内 1=> 社外と表示する
-        c.drawText(reserve.getRe_switch(), 500, y_switch, p_text);
-        // TODO: 2017/09/16 会社名の表記をすること
-        c.drawText("", 500, y_company, p_text);
+        // DO: 2017/09/16 0 =>社内 1=> 社外と表示する
+        c.drawText(reserve.getRe_switch().contains("0") ? "社内" : "社外", 500, y_switch, p_text);
+        // TODO: 2017/09/16 社外者がいない場合、nullでアプリが落ちるため、対処を考える
+//        c.drawText(reserve.getRe_company(), 500, y_company, p_text);
+        c.drawText("", 500, y_company, p_text); //*** 現状これで対処します  ***//
         c.drawText(reserve.getRe_room_name(), 500, y_room, p_text);
         c.drawText(reserve.getRe_fixtures(), 500, y_fixture, p_text);
         c.drawText(reserve.getRe_remarks(), 500, y_remark, p_text);

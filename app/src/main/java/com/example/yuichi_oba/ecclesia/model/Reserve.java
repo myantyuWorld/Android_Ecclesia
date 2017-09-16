@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Yuichi-Oba on 2017/09/15.
  */
@@ -24,6 +27,7 @@ public class Reserve {
     private String re_fixtures;
     private String re_remarks;
     private String re_switch;
+    private String re_company;
     private Integer re_mem_priority;
     private String re_purpose_id;
     private String re_purpose_name;
@@ -31,6 +35,7 @@ public class Reserve {
     private String re_applicant;
     private String re_room_id;
     private String re_room_name;
+    private List<String> re_member;
     private float[] coop;
 
     public Reserve() {
@@ -131,6 +136,18 @@ public class Reserve {
     public void setCoop(float[] coop) {
         this.coop = coop;
     }
+    public List<String> getRe_member() {
+        return re_member;
+    }
+    public void setRe_member(List<String> re_member) {
+        this.re_member = re_member;
+    }
+    public String getRe_company() {
+        return re_company;
+    }
+    public void setRe_company(String re_company) {
+        this.re_company = re_company;
+    }
     //*** SelfMadeMethod ***//
 
     //*** 参加者優先度を計算するメソッド ***//
@@ -164,6 +181,7 @@ public class Reserve {
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = db.rawQuery("select * from v_reserve_member x inner join m_room y on x.room_id = y.room_id where re_id = ?",
                 new String[]{re_id});
+        List<String> list = new ArrayList<>();
         while (c.moveToNext()) {
             //*** 予約の共通部分 ***//
             reserve.setRe_name(c.getString(1));
@@ -174,10 +192,22 @@ public class Reserve {
             reserve.setRe_switch(c.getString(6));
             reserve.setRe_fixtures(c.getString(7));
             reserve.setRe_remarks(c.getString(8));
-            reserve.setRe_room_name(c.getString(20));
+            reserve.setRe_purpose_id(c.getString(18));
+            reserve.setRe_purpose_name(c.getString(19));
+            reserve.setRe_room_name(c.getString(22));
+            list.add("社内" + " : " + c.getString(12)); //*** 参加者の 「社内：名前」のadd ***//
+        }
+        c.close();
+        //*** 社外者の参加者追加 ***//
+        c = db.rawQuery("select * from v_reserve_out_member where re_id = ?", new String[]{re_id});
+        while (c.moveToNext()) {
+            // 18 company
+            reserve.setRe_company(c.getString(18));
+            list.add(c.getString(18) + " : " + c.getString(11)); //*** 社外者の 「会社名 ： 名前」のadd ***//
         }
         c.close();
 
+        reserve.setRe_member(list);
         return  reserve;
     }
 }
