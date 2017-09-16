@@ -39,7 +39,7 @@ public class ReserveActivity extends AppCompatActivity
     private Spinner sp_member;
 //    private ReserveInfo reserveInfo;
     static List<String> member = new ArrayList<>();
-
+    //*** onCreate ***//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,15 +79,13 @@ public class ReserveActivity extends AppCompatActivity
 
 
     }
-
     //*** 各ウィジェットの初期化処理メソッド ***//
     private void init() {
 
 //        reserveInfo = new ReserveInfo();
 
+        //*** 参加者スピナー ***//
         sp_member = (Spinner) findViewById(R.id.sp_re_member);
-        sp_purpose = (Spinner) findViewById(R.id.sp_re_purpose);
-
         ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, member);
         sp_member.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -100,8 +98,10 @@ public class ReserveActivity extends AppCompatActivity
 
             }
         });
+        sp_member.setAdapter(adapter_member);
 
-        //*** 会議目的を検索して、目的スピナーに登録する ***//
+        //*** 会議目的スピナー ***//
+        sp_purpose = (Spinner) findViewById(R.id.sp_re_purpose);
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
         List<String> purpose = new ArrayList<>();
@@ -122,8 +122,9 @@ public class ReserveActivity extends AppCompatActivity
 
             }
         });
+        sp_purpose.setAdapter(adapter_purpose);
     }
-
+    //*** 戻るボタン押下時の処理 ***//
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -133,12 +134,7 @@ public class ReserveActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    // _/_/
-    // _/_/ ナビを選択したときの処理
-    // _/_/
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+    //*** ナビを選択したときの処理 ***//
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

@@ -83,7 +83,6 @@ public class Reseve_confirmView extends View {
         //*** 予約情報の描画 ***//
         onDrawReserveInfo(canvas);
     }
-
     //*** 予約情報の描画メソッド ***//
     private void onDrawReserveInfo(Canvas c) {
         float y_name = 70;
