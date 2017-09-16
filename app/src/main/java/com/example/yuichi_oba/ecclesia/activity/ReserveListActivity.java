@@ -310,12 +310,12 @@ public class ReserveListActivity extends AppCompatActivity
                 //*** 新規予約登録画面への遷移 ***//
                 if (re_id.equals(NONE)) {
                     Log.d("call", "新規予約登録画面への遷移");
-//                    Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
-//                    startActivity(intent);
+                    Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
+                    startActivity(intent);
                 } else {
                     Log.d("call", "予約確認画面への遷移");
-//                    Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-//                    startActivity(intent);
+                    Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+                    startActivity(intent);
                 }
 //                ReserveInfo reserveInfo = new ReserveInfo();
                 // TODO: 2017/09/15  //*** 考えるので、いったんコメアウト ***//

@@ -35,7 +35,7 @@ public class ReserveView extends View {
     }
 
     // *** ペイントの初期化処理メソッド *** //
-    private void init(){
+    private void init() {
         p = new Paint();
         p.setColor(Color.BLACK);
         p.setStyle(Paint.Style.STROKE);
@@ -60,17 +60,17 @@ public class ReserveView extends View {
         // l t r b
 
         // 外枠の描画
-        c.drawRect(0,0,1080, 1700, p);
+        c.drawRect(0, 0, 1080, 1700, p);
         float y = 200;
-        for (int i = 0; i < 11; i++){
-            c.drawLine(0,i * y,1080,i * y, p);
+        for (int i = 0; i < 11; i++) {
+            c.drawLine(0, i * y, 1080, i * y, p);
         }
         // 各項目を交互に、色違いにするロジック
         float padding = 3;
-        for (int i = 1; i < 13; i+=2) {
-            c.drawRect(0 + padding,i * y + padding - y,1080 - padding,i * y - padding, p2);
+        for (int i = 1; i < 13; i += 2) {
+            c.drawRect(0 + padding, i * y + padding - y, 1080 - padding, i * y - padding, p2);
         }
-        c.drawLine(200,0,200,2200,p);
+        c.drawLine(200, 0, 200, 2200, p);
 
         float y_txt = 100;
         float x_koumoku = 5;
