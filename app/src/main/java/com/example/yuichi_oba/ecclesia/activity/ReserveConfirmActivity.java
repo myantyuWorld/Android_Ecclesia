@@ -29,9 +29,7 @@ import com.example.yuichi_oba.ecclesia.tools.DB;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity.reserveInfo;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -232,8 +230,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 break;
             // 「予約変更」が選択された
             case R.id.option_reserveChange:
-                intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-//                intent.putExtra(KEYCHANGE, reserveInfo);
+                intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
+                intent.putExtra(KEYCHANGE, re_id);
                 startActivity(intent);
 //                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
                 // 予約情報インスタンスを次の画面にオブジェクト渡しする
@@ -344,7 +342,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
         // 予約情報クラスのインスタンスから、予約情報詳細をＤＢ検索して、画面にマッピングする
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor c = db.rawQuery("select * from v_reserve_member where re_id = ?", new String[]{reserveInfo.getRe_id()});
+        Cursor c = db.rawQuery("select * from v_reserve_member where re_id = ?", new String[]{re_id});
         List<String> list = new ArrayList<>();
         // 検索結果が存在する
         if (c.moveToNext()) {

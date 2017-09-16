@@ -41,7 +41,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
 
     Button button;
 
-    static Reserve reserveInfo;     // 予約情報クラスの変数
+    Reserve reserveInfo;     // 予約情報クラスの変数
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,12 +79,13 @@ implements NavigationView.OnNavigationItemSelectedListener{
 
         reserveInfo = (Reserve) getIntent().getSerializableExtra(KEYCHECK);
 
-        txt_overview.setText(reserveInfo.getRe_name());
-        txt_purpose.setText(reserveInfo.getRe_purpose_name());
-        txt_startDay.setText(reserveInfo.getRe_startDay());
-        txt_endday.setText(reserveInfo.getRe_endDay());
-        txt_startTime.setText(reserveInfo.getRe_startTime());
-        txt_endTime.setText(reserveInfo.getRe_endTime());
+//        txt_overview.setText(reserveInfo.getRe_name());
+//        txt_purpose.setText(reserveInfo.getRe_purpose_name());
+//        txt_startDay.setText(reserveInfo.getRe_startDay());
+//        txt_endday.setText(reserveInfo.getRe_endDay());
+//        txt_startTime.setText(reserveInfo.getRe_startTime());
+//        txt_endTime.setText(reserveInfo.getRe_endTime());
+
 //        txt_applicant.setText(reserveInfo.get);
 //        if (reserveInfo.getRe_ == ZERO) {
 //            txt_inOutHouse.setText(IN);
@@ -97,7 +98,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reserveChange();
+//                reserveChange();
                 Intent intent = new Intent(getApplicationContext(), ReserveListActivity.class);
                 startActivity(intent);
             }

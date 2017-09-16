@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.transition.ChangeBounds;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -32,6 +33,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 public class ReserveChangeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    String re_id;
     Reserve reserveInfo ;
     Button editBtn;
 
@@ -55,6 +57,9 @@ public class ReserveChangeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reserve_change);
+
+        Intent intent = getIntent();
+        re_id = intent.getStringExtra(KEYCHANGE);
 
         init();
 
@@ -84,9 +89,9 @@ public class ReserveChangeActivity extends AppCompatActivity
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                setReserveInfo();
+//                setReserveInfo();
                 Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
-//                intent.putExtra("Check", reserveInfo);  // Reserveにimplement Selialize
+                intent.putExtra("Check", reserveInfo);  // Reserveにimplement Selialize
                 startActivity(intent);
             }
         });
@@ -121,7 +126,7 @@ public class ReserveChangeActivity extends AppCompatActivity
         fixtrues = (EditText) findViewById(R.id.cre_fixtrues);
         remarks = (EditText) findViewById(R.id.cre_remarks);
 
-        reserveInfo = (Reserve) getIntent().getSerializableExtra(KEYCHANGE);
+//        reserveInfo = (Reserve) getIntent().getSerializableExtra(KEYCHANGE);
     }
 
     @Override
@@ -179,7 +184,6 @@ public class ReserveChangeActivity extends AppCompatActivity
         reserveInfo.setRe_startTime(startTime.getText().toString());
         reserveInfo.setRe_endDay(endDay.getText().toString());
         reserveInfo.setRe_endTime(endTime.getText().toString());
-        // 今Reserveに会議室がない
         reserveInfo.setRe_room_name(room.getSelectedItem().toString());
         reserveInfo.setRe_purpose_name(purpose.getSelectedItem().toString());
         reserveInfo.setRe_fixtures(fixtrues.getText().toString());
