@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
@@ -42,29 +41,12 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
 public class ReserveConfirmActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    //***  ***//
+//    public static Reserve reserve;
+    public static String re_id;
+
     // デバッグ用
     private static final String TAG = ReserveConfirmActivity.class.getSimpleName();
-
-    TextView txt_overview;              // 概要
-    TextView txt_purpose;               // 会議目的
-    TextView txt_startDay;              // 開始日
-    TextView txt_endday;                // 終了日
-    TextView txt_startTime;             // 開始時刻
-    TextView txt_endTime;               // -終了時刻
-    TextView txt_applicant;             // 予約者
-    TextView txt_inOutHouse;            // 社外社内区分
-    TextView txt_conferenceRoom;        // 使用会議室
-    TextView txt_fixtures;              // 備品？
-    TextView txt_remarks;               // 備考
-    TextView txt_member;                // 会議参加者を表示するスピナー // DO: 2017/07/26 これは、ダイアログでいい？？
-
-//    static ReserveInfo reserveInfo;     // 予約情報クラスの変数
-
-    /***
-     *  実験用
-     ***/
-    private String id = "";
-    private String pass = "";
 
     //*** 会議参加者をリスト形式で出す、ダイアログフラグメントクラス ***//
     public static class MemberConfirmDialog extends DialogFragment {
@@ -137,11 +119,53 @@ public class ReserveConfirmActivity extends AppCompatActivity
         }
 
     }
+    //*** 延長オプション選択時の ダイアログフラグメントクラス ***//
+    public static class ExtentionDialog extends DialogFragment{
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final LinearLayout layout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.extention_dialog, null);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            return builder.setTitle(EX)
+                    .setView(layout)
+                    .setPositiveButton(EX, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+//                            ContentValues con = new ContentValues();
+//                            con.put("ex_endtime", reserveInfo.getRe_endTime());
+//                            SQLiteOpenHelper helper = new DB(getApplicationContext());
+//                            SQLiteDatabase db = helper.getWritableDatabase();
+//                            if (db.update("t_extension", con, "re_id = " + reserveInfo.getRe_id(), null) > ZERO) {
+//
+//                            }
+                        }
+                    }).setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).create();
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+
+            dismiss();
+        }
+
+    }
 
     //*** onCreate ***//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "ReserveConfirmActivity->onCreate()");
+
+        //*** 前画面からの引数を受け取る（re_id） ***//
+        Intent intent = getIntent();
+        re_id = intent.getStringExtra("re_id");
+        Log.d("call", re_id);
+
         /***
          * レイアウト情報をマッピングする
          */
@@ -163,19 +187,18 @@ public class ReserveConfirmActivity extends AppCompatActivity
          * ここまで
          */
 
-        // 各ウィジェットの初期化処理メソッド
-//        init();
-        // 予約一覧（ReserveListActivity）から特定した会議予約IDを受け取る
-//        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra("reserve_info");
-        Log.d("call", reserveInfo.getRe_id());
+
+
+
+
         // 予約詳細をDB検索して、画面にマッピングするメソッド
-        dbSearchReserveConfirm();
+//        dbSearchReserveConfirm();
     }
     //*** アクティビティのライフサイクルとして、別の画面にいってまた帰ってきたとき、コールされる ***//
     @Override
     protected void onStart() {
         super.onStart();
-        dbSearchReserveConfirm();
+//        dbSearchReserveConfirm();
     }
     //*** 戻るボタン押下時の処理 ***//
     @Override
@@ -338,40 +361,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //        reserveInfo.setRe_member(list);
     }
 
-    public static class ExtentionDialog extends DialogFragment{
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final LinearLayout layout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.extention_dialog, null);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            return builder.setTitle(EX)
-                    .setView(layout)
-                    .setPositiveButton(EX, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-//                            ContentValues con = new ContentValues();
-//                            con.put("ex_endtime", reserveInfo.getRe_endTime());
-//                            SQLiteOpenHelper helper = new DB(getApplicationContext());
-//                            SQLiteDatabase db = helper.getWritableDatabase();
-//                            if (db.update("t_extension", con, "re_id = " + reserveInfo.getRe_id(), null) > ZERO) {
-//
-//                            }
-                        }
-                    }).setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    }).create();
-        }
-
-        @Override
-        public void onPause() {
-            super.onPause();
-
-            dismiss();
-        }
-
-    }
 
 }

@@ -164,7 +164,7 @@ public class ReserveListActivity extends AppCompatActivity
     private int thCnt = 0;
     public static ReserveListActivity instance = null;
 
-//    public static List<ReserveInfo> reserveInfo;    // 予約情報記録クラスの変数   非同期エラーが起きるため使用禁止する！
+//    public static List<Reserve> reserveInfo;    // 予約情報記録クラスの変数   非同期エラーが起きるため使用禁止する！
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     @Override
@@ -244,7 +244,6 @@ public class ReserveListActivity extends AppCompatActivity
 
 
     }
-
     //*** 戻るボタン押下時の処理 ***//
     @Override
     public void onBackPressed() {
@@ -255,7 +254,6 @@ public class ReserveListActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
     //*** ナビを選択したときの処理 ***//
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -315,6 +313,7 @@ public class ReserveListActivity extends AppCompatActivity
                 } else {
                     Log.d("call", "予約確認画面への遷移");
                     Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+                    intent.putExtra("re_id", re_id);
                     startActivity(intent);
                 }
 //                ReserveInfo reserveInfo = new ReserveInfo();
@@ -337,10 +336,7 @@ public class ReserveListActivity extends AppCompatActivity
         thread.start();
 
     }
-
-
     //*** SelfMadeMethod ***//
-
     //*** ウィジェットの初期化処理メソッド ***//
     private void init() {
         Log.d(TAG, "init()");
@@ -355,8 +351,6 @@ public class ReserveListActivity extends AppCompatActivity
             Log.d("call", employee.toString());
         }
     }
-
-
     //*** この画面のインスタンスを返すメソッド（非アクティビティクラスで、DB検索する際に使用する） ***//
     public static ReserveListActivity getInstance() {
         return instance;

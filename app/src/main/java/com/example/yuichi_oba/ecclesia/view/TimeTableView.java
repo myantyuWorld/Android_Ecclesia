@@ -126,7 +126,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     //*** 会議を角丸で描画するメソッド ***//
     private void onDrawConference(Canvas c) {
         int cnt = 0;
-        for (Reserve r : this.reserveInfo) {
+        for (Reserve r : reserveInfo) {
             String sTime = r.getRe_startTime();
             String eTime = r.getRe_endTime();
             String room_id = r.getRe_room_id();
@@ -339,7 +339,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
                 }
                 // re_id と y座標を基に、どの会議がタップされたかを返す
                 int cnt = 0;
-                for (Reserve r : this.reserveInfo) {
+                for (Reserve r : reserveInfo) {
                     if (r.getCoop() != null && r.getCoop()[1] < y && r.getCoop()[3] > y) {
                         // 特定した
                         if (re_id.equals(r.getRe_room_id())) {

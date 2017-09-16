@@ -1,5 +1,13 @@
 package com.example.yuichi_oba.ecclesia.model;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
+import com.example.yuichi_oba.ecclesia.tools.DB;
+
 /**
  * Created by Yuichi-Oba on 2017/09/15.
  */
@@ -146,4 +154,30 @@ public class Reserve {
     //*** 通知をするメソッド ***//
 
     //*** 追い出しを行うメソッド ***//
+
+    //*** 予約内容をDB検索するメソッド ***//
+    public static Reserve retReserveConfirm(String re_id) {
+        Reserve reserve = new Reserve();
+
+        Context context = ReserveListActivity.getInstance();
+        SQLiteOpenHelper helper = new DB(context);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from v_reserve_member x inner join m_room y on x.room_id = y.room_id where re_id = ?",
+                new String[]{re_id});
+        while (c.moveToNext()) {
+            //*** 予約の共通部分 ***//
+            reserve.setRe_name(c.getString(1));
+            reserve.setRe_startDay(c.getString(2));
+            reserve.setRe_endDay(c.getString(3));
+            reserve.setRe_startTime(c.getString(4));
+            reserve.setRe_endTime(c.getString(5));
+            reserve.setRe_switch(c.getString(6));
+            reserve.setRe_fixtures(c.getString(7));
+            reserve.setRe_remarks(c.getString(8));
+            reserve.setRe_room_name(c.getString(20));
+        }
+        c.close();
+
+        return  reserve;
+    }
 }
