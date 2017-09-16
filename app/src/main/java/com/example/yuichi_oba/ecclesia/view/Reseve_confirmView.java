@@ -103,10 +103,11 @@ public class Reseve_confirmView extends View {
         c.drawText(reserve.getRe_endDay() + " " + reserve.getRe_endTime(), 500, y_end, p_text);
         // TODO: 2017/09/16 申請者カラムを、DBのテーブルに追加する
         c.drawText("", 500, y_applicant, p_text);
-        // TODO: 2017/09/16 参加者を検索するロジックの実装
+        // DO: 2017/09/16 参加者を検索するロジックの実装
+        // TODO: 2017/09/16 折り畳み式ビュー検討：ExpandableListView
         c.drawText("", 500, y_member, p_text);
         // TODO: 2017/09/16 0 =>社内 1=> 社外と表示する
-        c.drawText(reserve.getRe_switch(), 500, y_switch, p_text);
+        c.drawText(reserve.getRe_switch().contains("0") ? "社内" : "社外", 500, y_switch, p_text);
         // TODO: 2017/09/16 会社名の表記をすること
         c.drawText("", 500, y_company, p_text);
         c.drawText(reserve.getRe_room_name(), 500, y_room, p_text);
