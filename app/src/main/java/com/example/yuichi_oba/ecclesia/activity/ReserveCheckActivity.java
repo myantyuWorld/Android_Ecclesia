@@ -98,7 +98,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                reserveChange();
+                reserveChange();
                 Intent intent = new Intent(getApplicationContext(), ReserveListActivity.class);
                 startActivity(intent);
             }

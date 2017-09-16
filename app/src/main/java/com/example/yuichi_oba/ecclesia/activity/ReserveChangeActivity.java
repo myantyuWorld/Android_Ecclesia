@@ -109,6 +109,9 @@ public class ReserveChangeActivity extends AppCompatActivity
     }
 
     private void init() {
+        overview = (EditText) findViewById(R.id.ed_c_gaiyou);
+        fixtrues = (EditText) findViewById(R.id.edi_fixture_c);
+        remarks = (EditText) findViewById(R.id.edi_remark_c);
         startDayBtn = (Button) findViewById(R.id.bt_cre_sDay);
         startTimeBtn = (Button) findViewById(R.id.bt_cre_sTime);
         endDayBtn = (Button) findViewById(R.id.bt_cre_eDay);
@@ -116,7 +119,7 @@ public class ReserveChangeActivity extends AppCompatActivity
         editBtn = (Button) findViewById(R.id.changebtn);
         inout = (Switch) findViewById(R.id.switch3_c);
 
-//        reserveInfo = (Reserve) getIntent().getSerializableExtra(KEYCHANGE);
+        reserveInfo = (Reserve) getIntent().getSerializableExtra(KEYCHANGE);
     }
 
     @Override
