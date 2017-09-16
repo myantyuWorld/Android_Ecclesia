@@ -16,9 +16,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.example.yuichi_oba.ecclesia.R;
-import com.example.yuichi_oba.ecclesia.model.Member;
 import com.example.yuichi_oba.ecclesia.tools.DB;
-import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +54,7 @@ public class AddMemberActivity extends AppCompatActivity
     Spinner sp_position;
     Spinner sp_depart;
     // 会議に参加したことのあるメンバー情報を格納するメンバークラスのリスト
-    List<Member> members = new ArrayList<>();
+//    List<Member> members = new ArrayList<>();
     private String emp_id;
 
     @Override
@@ -164,17 +162,17 @@ public class AddMemberActivity extends AppCompatActivity
                 String name = spinner.getSelectedItem().toString().split(":")[0];
 //                Toast.makeText(AddMemberActivity.this, name, Toast.LENGTH_SHORT).show();
 
-                for (Member member : members) {
-                    if (name.equals(member.getEmp_name())) {
-                        // 履歴から選択された人間の情報を下の項目群にマッピングする
-                        ed_company.setText(member.getCom_name());
-                        ed_name.setText(member.getEmp_name());
-                        ed_email.setText(member.getEmp_mailaddr());
-                        ed_tel.setText(member.getEmp_tel());
-                        sp_position.setSelection(Util.setSelection(sp_position, member.getPo_name()));
-                        sp_depart.setSelection(Util.setSelection(sp_depart, member.getDep_name()));
-                    }
-                }
+//                for (Member member : members) {
+//                    if (name.equals(member.getEmp_name())) {
+//                        // 履歴から選択された人間の情報を下の項目群にマッピングする
+//                        ed_company.setText(member.getCom_name());
+//                        ed_name.setText(member.getEmp_name());
+//                        ed_email.setText(member.getEmp_mailaddr());
+//                        ed_tel.setText(member.getEmp_tel());
+//                        sp_position.setSelection(Util.setSelection(sp_position, member.getPo_name()));
+//                        sp_depart.setSelection(Util.setSelection(sp_depart, member.getDep_name()));
+//                    }
+//                }
             }
 
             @Override
@@ -218,34 +216,34 @@ public class AddMemberActivity extends AppCompatActivity
         List<String> list = new ArrayList<>();
         while (c.moveToNext()) {
             // 参加者クラスのインスタンスを生成
-            Member m = new Member();
-            m.setEmp_id(c.getString(EMP_ID));
-            m.setEmp_name(c.getString(EMP_NAME));
-            m.setEmp_tel(c.getString(EMP_TEL));
-            m.setEmp_mailaddr(c.getString(EMP_MAILADDR));
-            m.setCom_name("社内");
-            m.setDep_name(c.getString(EMP_DEP_NAME));
-            m.setPo_name(c.getString(EMP_POS_NAME));
-            // list add
-            members.add(m);
-            list.add(m.getCom_name() + ":" + m.getEmp_name());
+//            Member m = new Member();
+//            m.setEmp_id(c.getString(EMP_ID));
+//            m.setEmp_name(c.getString(EMP_NAME));
+//            m.setEmp_tel(c.getString(EMP_TEL));
+//            m.setEmp_mailaddr(c.getString(EMP_MAILADDR));
+//            m.setCom_name("社内");
+//            m.setDep_name(c.getString(EMP_DEP_NAME));
+//            m.setPo_name(c.getString(EMP_POS_NAME));
+//            // list add
+//            members.add(m);
+//            list.add(m.getCom_name() + ":" + m.getEmp_name());
         }
         c.close();
         // 自分が参加した会議に参加したことのある人間を検索(社外)
         c = db.rawQuery("select * from v_reserve_out_member where re_id in (select re_id from t_member where mem_id = ?)", new String[]{emp_id});
         while (c.moveToNext()) {
             // 参加者クラスのインスタンスを生成
-            Member m = new Member();
-            m.setEmp_id(c.getString(OUTEMP_ID));
-            m.setEmp_name(c.getString(OUTEMP_NAME));
-            m.setEmp_tel(c.getString(OUTEMP_TEL));
-            m.setEmp_mailaddr(c.getString(OUTEMP_MAILADDR));
-            m.setCom_name(c.getString(OUTEMP_COM_NAME));
-            m.setDep_name(c.getString(OUTEMP_DEP_NAME));
-            m.setPo_name(c.getString(OUTEMP_POS_NAME));
-            // list add
-            members.add(m);
-            list.add(m.getCom_name() + ":" + m.getEmp_name());
+//            Member m = new Member();
+//            m.setEmp_id(c.getString(OUTEMP_ID));
+//            m.setEmp_name(c.getString(OUTEMP_NAME));
+//            m.setEmp_tel(c.getString(OUTEMP_TEL));
+//            m.setEmp_mailaddr(c.getString(OUTEMP_MAILADDR));
+//            m.setCom_name(c.getString(OUTEMP_COM_NAME));
+//            m.setDep_name(c.getString(OUTEMP_DEP_NAME));
+//            m.setPo_name(c.getString(OUTEMP_POS_NAME));
+//            // list add
+//            members.add(m);
+//            list.add(m.getCom_name() + ":" + m.getEmp_name());
         }
         // スピナーに設定する
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, list);

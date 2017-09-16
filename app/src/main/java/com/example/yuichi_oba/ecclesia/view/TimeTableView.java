@@ -12,10 +12,11 @@ import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
+import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.NameConst;
 
@@ -33,10 +34,11 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
  * Created by Yuichi-Oba on 2017/08/28.
  */
 
-public class TimeTableView extends View {
+public class TimeTableView extends View implements GestureDetector.OnGestureListener{
 
     public static final int Y_HEIGHT = 40;
     public static final int X_WIGDH = 216;
+
     public static final int RE_ID = 0;
     public static final int RE_OVERVIEW = 1;
     public static final int RE_START_DAY = 2;
@@ -45,6 +47,8 @@ public class TimeTableView extends View {
     public static final int RE_END_TIME = 5;
     public static final int RE_SWITCH = 6;
     public static final int RE_ROOM_ID = 10;
+
+    //*** Field ***//
     private Paint p;
     private Paint p2;
     private Paint room;
@@ -59,8 +63,9 @@ public class TimeTableView extends View {
 
     private float[] timeFloats;
     public boolean thread_flg;
-    private List<ReserveInfo> reserveInfo;
+    private List<Reserve> reserveInfo;
 
+    //*** Constractor ***//
     public TimeTableView(Context context) {
         super(context);
         init();
@@ -76,10 +81,8 @@ public class TimeTableView extends View {
         init();
     }
 
-    /***
-     * 描画するメソッド
-     * @param c
-     */
+
+    //*** 描画するメソッド ***//
     @Override
     protected void onDraw(Canvas c) {
         Log.d("call", "TimeTableView->onDraw()");
@@ -120,12 +123,13 @@ public class TimeTableView extends View {
 
     }
 
+    //*** 会議を角丸で描画するメソッド ***//
     private void onDrawConference(Canvas c) {
         int cnt = 0;
-        for (ReserveInfo r : this.reserveInfo) {
+        for (Reserve r : this.reserveInfo) {
             String sTime = r.getRe_startTime();
             String eTime = r.getRe_endTime();
-            String room_id = r.getRe_roomId();
+            String room_id = r.getRe_room_id();
 
             RectF rectF = retRectCooperation(sTime, eTime, room_id);
             // 予約会議の座標情報を記録する
@@ -150,12 +154,7 @@ public class TimeTableView extends View {
         }
     }
 
-    /***
-     * 開始終了時刻・会議室を基に、描画すべき座標を返すメソッド
-     * @param sTime
-     * @param eTime
-     * @param room_id
-     */
+    //*** 開始終了時刻・会議室を基に、描画すべき座標を返すメソッド ***//
     private RectF retRectCooperation(String sTime, String eTime, String room_id) {
         float sX = 0, eX = 0, sY = 0, eY = 0;
         float x = 216;
@@ -192,10 +191,7 @@ public class TimeTableView extends View {
         return new RectF(sX, sY, eX, eY);
     }
 
-    /***
-     * 時間割の枠の描画
-     * @param canvas
-     */
+    //*** 時間割の枠の描画 ***//
     private void onDrawTimeTable(Canvas canvas) {
         float x = 216;
         float y_timetable = 100;
@@ -213,11 +209,10 @@ public class TimeTableView extends View {
         canvas.drawRect(ZERO, y_timetable, MAX_WIDTH, y_timetable + 48 * y, p);
     }
 
-    /***
-     * Paintクラスの初期化処理メソッド
-     */
+    //*** Paintクラスの初期化処理メソッド ***//
     private void init() {
         Log.d("call", "call TimeTableView->init()");
+
         reserveInfo = new ArrayList<>();
 
         // 枠線用
@@ -267,26 +262,26 @@ public class TimeTableView extends View {
         p_txtConference.setColor(Color.BLACK);
     }
 
+    //*** 画面タッチ時のイベント ***//
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        Log.d("call", "TimeTableView->onTouchEvent()");
         switch (e.getAction()) {
             case MotionEvent.ACTION_UP:
+                Log.d("call", "TimeTableView->onTouchEvent()");
                 // タップした座標を取得する
                 x = e.getX();
                 y = e.getY();
                 Log.d("call", e.getX() + " : " + e.getY());
+                Log.d("call", String.valueOf(x) + " : " + String.valueOf(y));
                 break;
         }
 
         return true;
     }
 
-    /***
-     *  再描画メソッド
-     * @param emp_id
-     * @param date
-     */
+
+
+    //*** 再描画を行うメソッド ***//
     public void reView(String emp_id, String date) {
         // DO: 2017/09/06 review()コールで、引数の日付をデータベース検索をかけたのち、自身のreserveInfoに格納する-> invalidate() で描画する
         Log.d("call", "TimeTableView->reView()");
@@ -295,17 +290,22 @@ public class TimeTableView extends View {
         Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?", new String[]{emp_id, date});
         reserveInfo.clear();
         while (c.moveToNext()) {
-            // 予約情報のインスタンス生成 :: 暫定的に下記引数です
-            ReserveInfo r = new ReserveInfo(
-                    c.getString(RE_ID),
-                    c.getString(RE_OVERVIEW),
-                    c.getString(RE_START_DAY),
-                    c.getString(RE_END_DAY),
-                    c.getString(RE_START_TIME),
-                    c.getString(RE_END_TIME),
-                    c.getString(RE_SWITCH),
-                    c.getString(RE_ROOM_ID)
-            );
+            // 予約情報のインスタンス生成
+            // TODO: 2017/09/15 ここで、検索結果のすべてを記録する
+            Reserve r = new Reserve();
+            r.setRe_id(c.getString(RE_ID));
+            r.setRe_name(c.getString(1));
+            r.setRe_startDay(c.getString(2));
+            r.setRe_endDay(c.getString(3));
+            r.setRe_startTime(c.getString(4));
+            r.setRe_endTime(c.getString(5));
+            r.setRe_switch(c.getString(6));
+            r.setRe_fixtures(c.getString(7));
+            r.setRe_remarks(c.getString(8));
+            r.setRe_room_id(c.getString(10));
+            r.setRe_pur_priority(c.getString(18));
+
+
             reserveInfo.add(r);
             Log.d("call", c.getString(2) + " : " + c.getString(3));
         }
@@ -313,14 +313,13 @@ public class TimeTableView extends View {
         invalidate();
     }
 
-    /***
-     * タップした会議の予約ＩＤを返すメソッド
-     * @return 会議予約ＩＤ
-     */
+    //*** タップした会議の予約ＩＤを返すメソッド ***//
     public String getSelectedReserve() {
         Log.d("call", "TimeTableView->getSelectedReserve()");
         //
         String re_id = "";
+        Log.d("call", String.valueOf(thread_flg));
+//        thread_flg = true;
         while (thread_flg) {
             float wX = 216;
             // タッチされたか
@@ -340,43 +339,73 @@ public class TimeTableView extends View {
                 }
                 // re_id と y座標を基に、どの会議がタップされたかを返す
                 int cnt = 0;
-                for (ReserveInfo r : this.reserveInfo) {
+                for (Reserve r : this.reserveInfo) {
                     if (r.getCoop() != null && r.getCoop()[1] < y && r.getCoop()[3] > y) {
                         // 特定した
-                        if (re_id.equals(r.getRe_roomId())) {
-                            Log.d("call", "会議を特定した！  " + r.getRe_roomId());
+                        if (re_id.equals(r.getRe_room_id())) {
+                            Log.d("call", "会議を特定した！  " + r.getRe_room_id());
                             re_id = r.getRe_id();
                             thread_flg = false;
+                            return re_id;
                         }
                         cnt++;
                     }
                 }
                 Log.d("call", "cnt :: " + String.valueOf(cnt));
+                Log.d("call", re_id);
                 // TODO: 2017/09/06 該当する会議がないー→ 新規会議の予約画面に移行するロジックの実装
                 if (cnt > 0) {
                     Log.d("call", "新規会議の登録ロジック開始！");
                     return NameConst.NONE;
                 }
-                x = 0;
-                y = 0;
+//                x = 0;
+//                y = 0;
+            } else {
+//                Log.d("call", "no Touch");
             }
         }
         Log.d("call", "Re_id : " + re_id);
         return re_id;
     }
 
-    /***
-     * 予約情報リストのディープコピーを行うメソッド
-     * @param reserveInfo_timetable
-     */
-    private void deepCopyReserveInfo(List<ReserveInfo> reserveInfo_timetable) {
-        // 予約情報を保持するリストのディープコピー
-    }
 
+
+    //*** x y の値を基に、ユーザがタッチしたのか否かを返すメソッド ***//
     public boolean isTouched() {
+//        Log.d("call", "call TimeTableView->isTouched()");
         if (x != 0 && y != 0) {
             return true;
         }
+        return false;
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+        Log.d("call", "LongTouch");
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         return false;
     }
 }

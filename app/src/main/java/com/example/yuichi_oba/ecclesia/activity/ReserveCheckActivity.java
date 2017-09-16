@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,7 +19,7 @@ import android.widget.TextView;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
-import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
+import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
@@ -43,7 +41,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
 
     Button button;
 
-    static ReserveInfo reserveInfo;     // 予約情報クラスの変数
+    static Reserve reserveInfo;     // 予約情報クラスの変数
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,22 +77,22 @@ implements NavigationView.OnNavigationItemSelectedListener{
         txt_member = (TextView) findViewById(R.id.check_member);
         button = (Button) findViewById(R.id.check_btn);
 
-        reserveInfo = (ReserveInfo) getIntent().getSerializableExtra(KEYCHECK);
+        reserveInfo = (Reserve) getIntent().getSerializableExtra(KEYCHECK);
 
-        txt_overview.setText(reserveInfo.getRe_overview());
-        txt_purpose.setText(reserveInfo.getRe_purpose());
+        txt_overview.setText(reserveInfo.getRe_name());
+        txt_purpose.setText(reserveInfo.getRe_purpose_name());
         txt_startDay.setText(reserveInfo.getRe_startDay());
         txt_endday.setText(reserveInfo.getRe_endDay());
         txt_startTime.setText(reserveInfo.getRe_startTime());
         txt_endTime.setText(reserveInfo.getRe_endTime());
 //        txt_applicant.setText(reserveInfo.get);
-        if (reserveInfo.getRe_flg() == ZERO) {
-            txt_inOutHouse.setText(IN);
-        } else {
-            txt_inOutHouse.setText(OUT);
-        }
-        txt_conferenceRoom.setText(reserveInfo.getRe_roomId());
-        txt_remarks.setText(reserveInfo.getRe_marks());
+//        if (reserveInfo.getRe_ == ZERO) {
+//            txt_inOutHouse.setText(IN);
+//        } else {
+//            txt_inOutHouse.setText(OUT);
+//        }
+//        txt_conferenceRoom.setText(reserveInfo.getRe_roomId());
+//        txt_remarks.setText(reserveInfo.getRe_marks());
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,13 +133,13 @@ implements NavigationView.OnNavigationItemSelectedListener{
 
     public void reserveChange(){
         ContentValues con = new ContentValues();
-        con.put("re_overview", reserveInfo.getRe_overview());
+        con.put("re_overview", reserveInfo.getRe_name());
         con.put("re_startday", reserveInfo.getRe_startDay());
         con.put("re_endday", reserveInfo.getRe_endDay());
         con.put("re_starttime", reserveInfo.getRe_startTime());
         con.put("re_endtime", reserveInfo.getRe_endTime());
-        con.put("re_switch", reserveInfo.getRe_flg());
-        con.put("re_fixtrue", reserveInfo.getFixtrues());
+        con.put("re_switch", reserveInfo.getRe_switch());
+        con.put("re_fixtrue", reserveInfo.getRe_fixtures());
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getWritableDatabase();
         if (db.update("t_reserve", con, null, null) > ZERO) {

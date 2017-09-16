@@ -20,7 +20,6 @@ import android.widget.Spinner;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
-import com.example.yuichi_oba.ecclesia.model.ReserveInfo;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class ReserveActivity extends AppCompatActivity
 
     private Spinner sp_purpose;
     private Spinner sp_member;
-    private ReserveInfo reserveInfo;
+//    private ReserveInfo reserveInfo;
     static List<String> member = new ArrayList<>();
 
     @Override
@@ -70,7 +69,7 @@ public class ReserveActivity extends AppCompatActivity
                 // ここで、参加者
 //                Toast.makeText(ReserveActivity.this, "Floting Button Push!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplication(), AddMemberActivity.class);
-                intent.putExtra("emp_id", ReserveListActivity.employee.getEmp_id());
+//                intent.putExtra("emp_id", ReserveListActivity.employee.getEmp_id());
                 startActivity(intent);
             }
         });
@@ -84,7 +83,7 @@ public class ReserveActivity extends AppCompatActivity
     //*** 各ウィジェットの初期化処理メソッド ***//
     private void init() {
 
-        reserveInfo = new ReserveInfo();
+//        reserveInfo = new ReserveInfo();
 
         sp_member = (Spinner) findViewById(R.id.sp_re_member);
         sp_purpose = (Spinner) findViewById(R.id.sp_re_purpose);
