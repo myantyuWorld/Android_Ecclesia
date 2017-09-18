@@ -5,26 +5,27 @@
     android:id="@+id/content_reserve_edit"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="1dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.yuichi_oba.ecclesia.activity.ReserveChangeActivity"
     tools:showIn="@layout/app_bar_reserve_edit">
 
 
     <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/change_confirm">
 
-        android:layout_width="395dp"
-        android:layout_height="587dp"
-        android:fillViewport="true">
-        <!--w368
-            h495-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical" >
 
             <view
                 class="com.example.yuichi_oba.ecclesia.view.ReserveView"
-                id="@+id/view3"
+                id="@+id/changeview"
                 layout_width="match_parent"
                 android:layout_width="wrap_content"
                 android:layout_height="730dp"
@@ -32,73 +33,71 @@
                 android:layout_alignParentTop="true" />
 
             <TextView
-                android:id="@+id/txt_cre_shinseisya"
+                android:id="@+id/change_sinseisya"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/bt_cre_eTime"
-                android:layout_alignStart="@+id/bt_cre_eDay"
-                android:layout_below="@+id/bt_cre_eTime"
+                android:layout_alignEnd="@+id/change_eTimebtn"
+                android:layout_alignStart="@+id/change_eDaybtn"
+                android:layout_below="@+id/change_eTimebtn"
                 android:layout_marginEnd="7dp"
                 android:layout_marginTop="28dp"
-                android:text="aaa"
                 android:textAlignment="center"
                 android:textSize="24sp"
                 android:textStyle="bold|italic" />
 
             <Button
-                android:id="@+id/bt_cre_sDay"
+                android:id="@+id/change_sDaybtn"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/sp_cre_purpose"
-                android:layout_below="@+id/sp_cre_purpose"
+                android:layout_alignStart="@+id/change_sppurpose"
+                android:layout_below="@+id/change_sppurpose"
                 android:layout_marginTop="15dp"
                 android:text="開始日時" />
 
             <Button
-                android:id="@+id/bt_cre_eDay"
+                android:id="@+id/change_eDaybtn"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/bt_cre_sDay"
-                android:layout_below="@+id/bt_cre_sDay"
+                android:layout_alignStart="@+id/change_sDaybtn"
+                android:layout_below="@+id/change_sDaybtn"
                 android:layout_marginTop="22dp"
                 android:text="終了日時" />
 
             <Button
-                android:id="@+id/bt_cre_sTime"
+                android:id="@+id/change_sTimebtn"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/sp_cre_purpose"
-                android:layout_alignTop="@+id/bt_cre_sDay"
+                android:layout_alignEnd="@+id/change_sppurpose"
+                android:layout_alignTop="@+id/change_sDaybtn"
                 android:text="開始時刻" />
 
             <Button
-                android:id="@+id/bt_cre_eTime"
+                android:id="@+id/change_eTimebtn"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/bt_cre_eDay"
-                android:layout_alignEnd="@+id/bt_cre_sTime"
+                android:layout_alignBottom="@+id/change_eDaybtn"
+                android:layout_alignEnd="@+id/change_sTimebtn"
                 android:text="終了時刻" />
 
             <Spinner
-                android:id="@+id/sp_cre_purpose"
+                android:id="@+id/change_sppurpose"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/ed_c_gaiyou"
-                android:layout_alignStart="@+id/ed_c_gaiyou"
-                android:layout_below="@+id/ed_c_gaiyou"
+                android:layout_alignEnd="@+id/change_gaiyou"
+                android:layout_alignStart="@+id/change_gaiyou"
+                android:layout_below="@+id/change_gaiyou"
                 android:layout_marginTop="0dp" />
 
             <Spinner
-                android:id="@+id/sp_cre_member"
+                android:id="@+id/change_spmember"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/bt_cre_eTime"
-                android:layout_alignStart="@+id/txt_cre_shinseisya"
-                android:layout_below="@+id/txt_cre_shinseisya"
-                android:layout_marginTop="41dp" />
+                android:layout_marginBottom="169dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true" />
 
             <EditText
-                android:id="@+id/ed_c_gaiyou"
+                android:id="@+id/change_gaiyou"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -109,66 +108,65 @@
                 android:inputType="textPersonName" />
 
             <Switch
-                android:id="@+id/switch3_c"
+                android:id="@+id/change_inout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/txt_cre_shinseisya"
-                android:layout_below="@+id/sp_cre_member"
+                android:layout_alignEnd="@+id/change_sinseisya"
+                android:layout_below="@+id/change_spmember"
                 android:layout_marginEnd="84dp"
                 android:layout_marginTop="37dp" />
 
             <TextView
-                android:id="@+id/textView12_c"
+                android:id="@+id/change_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/sp_cre_member"
-                android:layout_alignStart="@+id/sp_cre_member"
-                android:layout_below="@+id/switch3_c"
+                android:layout_alignEnd="@+id/change_spmember"
+                android:layout_alignStart="@+id/change_spmember"
+                android:layout_below="@+id/change_inout"
                 android:layout_marginTop="43dp"
                 android:textSize="24sp"
                 android:textStyle="bold|italic" />
 
             <EditText
-                android:id="@+id/edi_fixture_c"
+                android:id="@+id/change_fix"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/sp_room_c"
-                android:layout_below="@+id/sp_room_c"
+                android:layout_alignStart="@+id/change_room"
+                android:layout_below="@+id/change_room"
                 android:layout_marginTop="10dp"
                 android:ems="10"
                 android:inputType="textPersonName" />
 
             <EditText
-                android:id="@+id/edi_remark_c"
+                android:id="@+id/change_remark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/edi_fixture_c"
-                android:layout_below="@+id/edi_fixture_c"
+                android:layout_alignStart="@+id/change_fix"
+                android:layout_below="@+id/change_fix"
                 android:layout_marginTop="28dp"
                 android:ems="10"
                 android:inputType="textPersonName" />
 
             <Spinner
-                android:id="@+id/sp_room_c"
+                android:id="@+id/change_room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/textView12"
-                android:layout_alignStart="@+id/sp_cre_member"
-                android:layout_below="@+id/textView12"
+                android:layout_alignEnd="@+id/change_textview"
+                android:layout_alignStart="@+id/change_spmember"
+                android:layout_below="@+id/change_textview"
                 android:layout_marginTop="10dp" />
 
         </RelativeLayout>
     </ScrollView>
 
     <Button
-        android:id="@+id/changebtn"
+        android:id="@+id/change_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
         android:padding="0dp"
-        android:text="変更内容確認" />
-
+        android:text="内容確認" />
 
 </RelativeLayout>

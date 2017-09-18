@@ -39,7 +39,6 @@
         app:backgroundTint="?android:attr/textColorLinkInverse"
         app:elevation="7dp"
         app:fabSize="normal"
-        android:layout_marginBottom="183dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         app:srcCompat="@android:drawable/ic_menu_zoom" />

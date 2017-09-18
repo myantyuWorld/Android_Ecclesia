@@ -91,7 +91,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             public void onClick(View v){
 //                setReserveInfo();
                 Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
-                intent.putExtra(KEYCHECK, reserveInfo);  // Reserveにimplement Selialize
+                intent.putExtra(KEYCHECK, reserveInfo);
                 startActivity(intent);
             }
         });
@@ -109,17 +109,23 @@ public class ReserveChangeActivity extends AppCompatActivity
     }
 
     private void init() {
-        overview = (EditText) findViewById(R.id.ed_c_gaiyou);
-        fixtrues = (EditText) findViewById(R.id.edi_fixture_c);
-        remarks = (EditText) findViewById(R.id.edi_remark_c);
-        startDayBtn = (Button) findViewById(R.id.bt_cre_sDay);
-        startTimeBtn = (Button) findViewById(R.id.bt_cre_sTime);
-        endDayBtn = (Button) findViewById(R.id.bt_cre_eDay);
-        endTimeBtn = (Button) findViewById(R.id.bt_cre_eTime);
-        editBtn = (Button) findViewById(R.id.changebtn);
-        inout = (Switch) findViewById(R.id.switch3_c);
+        overview = (EditText) findViewById(R.id.change_gaiyou);
+        fixtrues = (EditText) findViewById(R.id.change_fix);
+        remarks = (EditText) findViewById(R.id.change_remark);
+        startDayBtn = (Button) findViewById(R.id.change_sDaybtn);
+        startTimeBtn = (Button) findViewById(R.id.change_sTimebtn);
+        endDayBtn = (Button) findViewById(R.id.change_eDaybtn);
+        endTimeBtn = (Button) findViewById(R.id.change_eTimebtn);
 
-        reserveInfo = (Reserve) getIntent().getSerializableExtra(KEYCHANGE);
+        editBtn = (Button) findViewById(R.id.change_confirm);
+        inout = (Switch) findViewById(R.id.change_inout);
+
+        reserveInfo = Reserve.retReserveConfirm(re_id);
+
+        overview.setText(reserveInfo.getRe_name());
+        fixtrues.setText(reserveInfo.getRe_fixtures());
+        remarks.setText(reserveInfo.getRe_remarks());
+
     }
 
     @Override
