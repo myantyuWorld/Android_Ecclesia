@@ -61,6 +61,7 @@ public class ReserveChangeActivity extends AppCompatActivity
     EditText fixtrues;
     EditText remarks;
     TextView sinseisya;
+    TextView comp;
 
     List<String> member = new ArrayList<>();
 
@@ -131,6 +132,7 @@ public class ReserveChangeActivity extends AppCompatActivity
         sinseisya = (TextView) findViewById(R.id.change_sinseisya);
         members = (Spinner) findViewById(R.id.change_spmember);
         room = (Spinner) findViewById(R.id.change_room);
+        comp = (TextView) findViewById(R.id.change_company);
 
         editBtn = (Button) findViewById(R.id.change_confirm);
         inout = (Switch) findViewById(R.id.change_inout);
@@ -211,20 +213,17 @@ public class ReserveChangeActivity extends AppCompatActivity
         return true;
     }
 
-    // いずれ削除するテスト用メソッド
-    public void imitationEdit(){
-
-    }
 
     public void setReserveInfo() {
         reserveInfo.setRe_name(overview.getText().toString());
-        reserveInfo.setRe_startDay(startDay.getText().toString());
-        reserveInfo.setRe_startTime(startTime.getText().toString());
-        reserveInfo.setRe_endDay(endDay.getText().toString());
-        reserveInfo.setRe_endTime(endTime.getText().toString());
+        reserveInfo.setRe_startDay(startDayBtn.getText().toString());
+        reserveInfo.setRe_startTime(startTimeBtn.getText().toString());
+        reserveInfo.setRe_endDay(endDayBtn.getText().toString());
+        reserveInfo.setRe_endTime(endTimeBtn.getText().toString());
         reserveInfo.setRe_room_name(room.getSelectedItem().toString());
         reserveInfo.setRe_purpose_name(sp_purpose.getSelectedItem().toString());
         reserveInfo.setRe_fixtures(fixtrues.getText().toString());
         reserveInfo.setRe_remarks(remarks.getText().toString());
+        reserveInfo.setRe_company(comp.getText().toString());
     }
 }

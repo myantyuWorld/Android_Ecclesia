@@ -9,13 +9,11 @@
     tools:context="com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity"
     tools:showIn="@layout/app_bar_reserve_check">
 
-    <view
-        android:id="@+id/viewcheck"
-        class="com.example.yuichi_oba.ecclesia.view.Reseve_confirmView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
-    </view>
+    <view
+        class="com.example.yuichi_oba.ecclesia.view.ReserveCheckView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/correct"

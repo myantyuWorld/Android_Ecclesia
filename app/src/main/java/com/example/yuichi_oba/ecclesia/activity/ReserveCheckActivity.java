@@ -41,7 +41,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
 
     Button button;
 
-    Reserve reserveInfo;     // 予約情報クラスの変数
+    public static Reserve changeRes;     // 予約情報クラスの変数
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
 //        txt_member = (TextView) findViewById(R.id.check_member);
         button = (Button) findViewById(R.id.correct);
 
-        reserveInfo = (Reserve) getIntent().getSerializableExtra(KEYCHECK);
+        changeRes = (Reserve) getIntent().getSerializableExtra(KEYCHECK);
 
 //        txt_overview.setText(reserveInfo.getRe_name());
 //        txt_purpose.setText(reserveInfo.getRe_purpose_name());
@@ -98,7 +98,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reserveChange();
+//                reserveChange();
                 Intent intent = new Intent(getApplicationContext(), ReserveListActivity.class);
                 startActivity(intent);
             }
@@ -134,13 +134,13 @@ implements NavigationView.OnNavigationItemSelectedListener{
 
     public void reserveChange(){
         ContentValues con = new ContentValues();
-        con.put("re_overview", reserveInfo.getRe_name());
-        con.put("re_startday", reserveInfo.getRe_startDay());
-        con.put("re_endday", reserveInfo.getRe_endDay());
-        con.put("re_starttime", reserveInfo.getRe_startTime());
-        con.put("re_endtime", reserveInfo.getRe_endTime());
-        con.put("re_switch", reserveInfo.getRe_switch());
-        con.put("re_fixtrue", reserveInfo.getRe_fixtures());
+        con.put("re_overview", changeRes.getRe_name());
+        con.put("re_startday", changeRes.getRe_startDay());
+        con.put("re_endday", changeRes.getRe_endDay());
+        con.put("re_starttime", changeRes.getRe_startTime());
+        con.put("re_endtime", changeRes.getRe_endTime());
+        con.put("re_switch", changeRes.getRe_switch());
+        con.put("re_fixtrue", changeRes.getRe_fixtures());
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getWritableDatabase();
         if (db.update("t_reserve", con, null, null) > ZERO) {
