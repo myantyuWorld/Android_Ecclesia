@@ -92,9 +92,10 @@
                 android:id="@+id/change_spmember"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="169dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignEnd="@+id/change_sinseisya"
+                android:layout_alignStart="@+id/change_sinseisya"
+                android:layout_below="@+id/change_sinseisya"
+                android:layout_marginTop="41dp" />
 
             <EditText
                 android:id="@+id/change_gaiyou"
@@ -111,17 +112,17 @@
                 android:id="@+id/change_inout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/change_sinseisya"
+                android:layout_alignStart="@+id/change_sinseisya"
                 android:layout_below="@+id/change_spmember"
                 android:layout_marginEnd="84dp"
                 android:layout_marginTop="37dp" />
 
             <TextView
-                android:id="@+id/change_textview"
+                android:id="@+id/change_company"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/change_spmember"
-                android:layout_alignStart="@+id/change_spmember"
+                android:layout_alignEnd="@+id/change_sinseisya"
+                android:layout_alignStart="@+id/change_sinseisya"
                 android:layout_below="@+id/change_inout"
                 android:layout_marginTop="43dp"
                 android:textSize="24sp"
@@ -151,9 +152,9 @@
                 android:id="@+id/change_room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/change_textview"
+                android:layout_alignEnd="@+id/change_company"
                 android:layout_alignStart="@+id/change_spmember"
-                android:layout_below="@+id/change_textview"
+                android:layout_below="@+id/change_company"
                 android:layout_marginTop="10dp" />
 
         </RelativeLayout>

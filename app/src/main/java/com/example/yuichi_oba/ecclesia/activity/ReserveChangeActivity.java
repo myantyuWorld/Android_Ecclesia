@@ -1,6 +1,9 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -22,6 +26,10 @@ import android.widget.TextView;
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
+import com.example.yuichi_oba.ecclesia.tools.DB;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
@@ -38,7 +46,7 @@ public class ReserveChangeActivity extends AppCompatActivity
     Button editBtn;
 
     EditText overview;
-    Spinner purpose;
+    Spinner sp_purpose;
     TextView startDay;
     TextView endDay;
     TextView startTime;
@@ -47,11 +55,14 @@ public class ReserveChangeActivity extends AppCompatActivity
     Button endDayBtn;
     Button startTimeBtn;
     Button endTimeBtn;
-    TextView applicant;
     Switch inout;
     Spinner room;
+    Spinner members;
     EditText fixtrues;
     EditText remarks;
+    TextView sinseisya;
+
+    List<String> member = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,16 +127,44 @@ public class ReserveChangeActivity extends AppCompatActivity
         startTimeBtn = (Button) findViewById(R.id.change_sTimebtn);
         endDayBtn = (Button) findViewById(R.id.change_eDaybtn);
         endTimeBtn = (Button) findViewById(R.id.change_eTimebtn);
+        sp_purpose = (Spinner) findViewById(R.id.change_sppurpose);
+        sinseisya = (TextView) findViewById(R.id.change_sinseisya);
+        members = (Spinner) findViewById(R.id.change_spmember);
+        room = (Spinner) findViewById(R.id.change_room);
 
         editBtn = (Button) findViewById(R.id.change_confirm);
         inout = (Switch) findViewById(R.id.change_inout);
+
+        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        List<String> purpose = new ArrayList<>();
+        Cursor c = db.rawQuery("select * from m_purpose", null);
+        while (c.moveToNext()) {
+            purpose.add(c.getString(ZERO) + ":" + c.getString(ONE));
+        }
+        c.close();
+        ArrayAdapter<String> adapter_purpose = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, purpose);
+        sp_purpose.setAdapter(adapter_purpose);
+
+        ArrayAdapter<String> memberdap = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, member);
+        members.setAdapter(memberdap);
+
+        c = db.rawQuery("select * from m_room", null);
+        List<String> rooms = new ArrayList<>();
+        while (c.moveToNext()) {
+            rooms.add(c.getString(0) + " : " + c.getString(1));
+        }
+        c.close();
+        ArrayAdapter<String> roomadapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, rooms);
+        room.setAdapter(roomadapter);
 
         reserveInfo = Reserve.retReserveConfirm(re_id);
 
         overview.setText(reserveInfo.getRe_name());
         fixtrues.setText(reserveInfo.getRe_fixtures());
         remarks.setText(reserveInfo.getRe_remarks());
-
+        sinseisya.setText(reserveInfo.getRe_applicant());
+        startDayBtn.setText(reserveInfo.getRe_startDay());
     }
 
     @Override
@@ -184,7 +223,7 @@ public class ReserveChangeActivity extends AppCompatActivity
         reserveInfo.setRe_endDay(endDay.getText().toString());
         reserveInfo.setRe_endTime(endTime.getText().toString());
         reserveInfo.setRe_room_name(room.getSelectedItem().toString());
-        reserveInfo.setRe_purpose_name(purpose.getSelectedItem().toString());
+        reserveInfo.setRe_purpose_name(sp_purpose.getSelectedItem().toString());
         reserveInfo.setRe_fixtures(fixtrues.getText().toString());
         reserveInfo.setRe_remarks(remarks.getText().toString());
     }
