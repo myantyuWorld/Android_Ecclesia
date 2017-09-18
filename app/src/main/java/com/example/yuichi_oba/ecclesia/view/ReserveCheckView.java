@@ -25,16 +25,25 @@ public class ReserveCheckView extends View {
 
     public ReserveCheckView(Context context) {
         super(context);
+        if (isInEditMode()){
+            return;
+        }
         initialize();
     }
 
     public ReserveCheckView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        if (isInEditMode()){
+            return;
+        }
         initialize();
     }
 
     public ReserveCheckView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        if (isInEditMode()){
+            return;
+        }
         initialize();
     }
 
