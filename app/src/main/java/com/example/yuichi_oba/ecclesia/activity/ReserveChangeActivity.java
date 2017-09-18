@@ -13,6 +13,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -42,8 +45,10 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 public class ReserveChangeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     String re_id;
-    Reserve reserveInfo ;
+    Reserve changeRes ;
     Button editBtn;
+
+    public static String[] changes ;
 
     EditText overview;
     Spinner sp_purpose;
@@ -72,6 +77,11 @@ public class ReserveChangeActivity extends AppCompatActivity
 
         Intent intent = getIntent();
         re_id = intent.getStringExtra(KEYCHANGE);
+
+        // {"概要", "目的", "開始時間", "終了時間", "申請者", "参加者", "社内/社外", "会社名", "希望会議室", "備品", "その他"};
+        changes = new String[]{"", "", "", "", "", "", "", "", "", "", ""};
+
+        changeRes = new Reserve();
 
         init();
 
@@ -103,7 +113,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             public void onClick(View v){
 //                setReserveInfo();
                 Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
-                intent.putExtra(KEYCHECK, reserveInfo);
+                intent.putExtra(KEYCHECK, changeRes);
                 startActivity(intent);
             }
         });
@@ -112,9 +122,9 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    reserveInfo.setRe_switch(String.valueOf(ONE));
+                    changeRes.setRe_switch(String.valueOf(ONE));
                 } else {
-                    reserveInfo.setRe_switch(String.valueOf(ZERO));
+                    changeRes.setRe_switch(String.valueOf(ZERO));
                 }
             }
         });
@@ -160,13 +170,97 @@ public class ReserveChangeActivity extends AppCompatActivity
         ArrayAdapter<String> roomadapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, rooms);
         room.setAdapter(roomadapter);
 
-        reserveInfo = Reserve.retReserveConfirm(re_id);
+        changeRes = Reserve.retReserveConfirm(re_id);
 
-        overview.setText(reserveInfo.getRe_name());
-        fixtrues.setText(reserveInfo.getRe_fixtures());
-        remarks.setText(reserveInfo.getRe_remarks());
-        sinseisya.setText(reserveInfo.getRe_applicant());
-        startDayBtn.setText(reserveInfo.getRe_startDay());
+        overview.setText(changeRes.getRe_name());
+        fixtrues.setText(changeRes.getRe_fixtures());
+        remarks.setText(changeRes.getRe_remarks());
+        sinseisya.setText(changeRes.getRe_applicant());
+        startDayBtn.setText(changeRes.getRe_startDay());
+        endDayBtn.setText(changeRes.getRe_endDay());
+        startTimeBtn.setText(changeRes.getRe_startTime());
+        endTimeBtn.setText(changeRes.getRe_endTime());
+
+        // テキストが変わったとき　http://gupuru.hatenablog.jp/entry/2014/04/07/202334
+        overview.addTextChangedListener(new TextWatcher() {
+            // テキスト変更前
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            // テキスト変更中
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            // テキスト変更後
+            @Override
+            public void afterTextChanged(Editable s) {
+                changeRes.setRe_name(s.toString());
+            }
+        });
+
+        fixtrues.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                changeRes.setRe_fixtures(s.toString());
+            }
+        });
+
+        remarks.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                changeRes.setRe_remarks(s.toString());
+            }
+        });
+
+        startDayBtn.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                changeRes.setRe_startDay(s.toString());
+            }
+        });
+
+        startTimeBtn.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                changeRes.setRe_startTime(s.toString());
+            }
+        });
+
+        endDayBtn.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                changeRes.setRe_endDay(s.toString());
+            }
+        });
+
+        endTimeBtn.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                changeRes.setRe_endTime(s.toString());
+            }
+        });
     }
 
     @Override
@@ -215,15 +309,15 @@ public class ReserveChangeActivity extends AppCompatActivity
 
 
     public void setReserveInfo() {
-        reserveInfo.setRe_name(overview.getText().toString());
-        reserveInfo.setRe_startDay(startDayBtn.getText().toString());
-        reserveInfo.setRe_startTime(startTimeBtn.getText().toString());
-        reserveInfo.setRe_endDay(endDayBtn.getText().toString());
-        reserveInfo.setRe_endTime(endTimeBtn.getText().toString());
-        reserveInfo.setRe_room_name(room.getSelectedItem().toString());
-        reserveInfo.setRe_purpose_name(sp_purpose.getSelectedItem().toString());
-        reserveInfo.setRe_fixtures(fixtrues.getText().toString());
-        reserveInfo.setRe_remarks(remarks.getText().toString());
-        reserveInfo.setRe_company(comp.getText().toString());
+//        reserveInfo.setRe_name(overview.getText().toString());
+//        reserveInfo.setRe_startDay(startDayBtn.getText().toString());
+//        reserveInfo.setRe_startTime(startTimeBtn.getText().toString());
+//        reserveInfo.setRe_endDay(endDayBtn.getText().toString());
+//        reserveInfo.setRe_endTime(endTimeBtn.getText().toString());
+//        reserveInfo.setRe_room_name(room.getSelectedItem().toString());
+//        reserveInfo.setRe_purpose_name(sp_purpose.getSelectedItem().toString());
+//        reserveInfo.setRe_fixtures(fixtrues.getText().toString());
+//        reserveInfo.setRe_remarks(remarks.getText().toString());
+//        reserveInfo.setRe_company(comp.getText().toString());
     }
 }

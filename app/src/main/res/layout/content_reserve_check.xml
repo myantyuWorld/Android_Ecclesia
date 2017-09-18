@@ -12,6 +12,7 @@
 
     <view
         class="com.example.yuichi_oba.ecclesia.view.ReserveCheckView"
+        id="@+id/view2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

@@ -39,8 +39,10 @@
             android:name=".activity.ExtentionActivity"
             android:label="延長" />
         <activity android:name=".activity.TestActivity"></activity>
-        <activity android:name=".activity.ReserveChangeActivity"></activity>
-        <activity android:name=".activity.ReserveCheckActivity"></activity>
+        <activity android:name=".activity.ReserveChangeActivity"
+                    android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".activity.ReserveCheckActivity"
+                    android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

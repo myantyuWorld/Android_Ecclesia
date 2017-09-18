@@ -7,9 +7,12 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
-import static com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity.changeRes;
+import com.example.yuichi_oba.ecclesia.model.Reserve;
+
+import static com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity.re_id;
 
 public class ReserveCheckView extends View {
     private Paint p_line;
@@ -18,19 +21,21 @@ public class ReserveCheckView extends View {
     private Paint p_rect;
     private String[] name = {"概要", "目的", "開始時間", "終了時間", "申請者", "参加者", "社内/社外", "会社名", "希望会議室", "備品", "その他"};
 
+    Reserve reserve;
+
     public ReserveCheckView(Context context) {
         super(context);
-        init();
+        initialize();
     }
 
     public ReserveCheckView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
+        initialize();
     }
 
     public ReserveCheckView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        initialize();
     }
 
     @Override
@@ -40,7 +45,10 @@ public class ReserveCheckView extends View {
         onDrawReserveInfo(canvas);
     }
 
-    private void init() {
+    private void initialize() {
+        reserve = new Reserve();
+        reserve = Reserve.retReserveConfirm(re_id);
+
         p_line = new Paint();
         p_line.setColor(Color.DKGRAY);
         p_line.setStyle(Paint.Style.STROKE);
@@ -96,24 +104,44 @@ public class ReserveCheckView extends View {
         float y_room = 1030;
         float y_fixture = 1150;
         float y_remark = 1270;
+//
+//        canvas.drawText(changes[0], 500, y_name, p_text);
+//        // DO: 2017/09/16 会議目的カラムを、DBのテーブルに追加する
+//        canvas.drawText(changes[1], 500, y_purpose, p_text);
+//        canvas.drawText(changes[2], 500, y_start, p_text);
+//        canvas.drawText(changes[3], 500, y_end, p_text);
+//        // TODO: 2017/09/16 申請者カラムを、DBのテーブルに追加する
+//        canvas.drawText("", 500, y_applicant, p_text);
+//        // DO: 2017/09/16 参加者を検索するロジックの実装
+//        // TODO: 2017/09/16 折り畳み式ビュー検討：ExpandableListView
+//        canvas.drawText("", 500, y_member, p_text);
+//        // DO: 2017/09/16 0 =>社内 1=> 社外と表示する
+//        canvas.drawText(changes[6].equals("0") ? "社内" : "社外", 500, y_switch, p_text);
+//        // TODO: 2017/09/16 社外者がいない場合、nullでアプリが落ちるため、対処を考える
+////        c.drawText(reserve.getRe_company(), 500, y_company, p_text);
+//        canvas.drawText("", 500, y_company, p_text); //*** 現状これで対処します  ***//
+//        canvas.drawText(changes[8], 500, y_room, p_text);
+//        canvas.drawText(changes[9], 500, y_fixture, p_text);
+//        canvas.drawText(changes[10], 500, y_remark, p_text);
 
-        canvas.drawText(changeRes.getRe_name(), 500, y_name, p_text);
+        canvas.drawText(reserve.getRe_name(), 500, y_name, p_text);
         // DO: 2017/09/16 会議目的カラムを、DBのテーブルに追加する
-        canvas.drawText(changeRes.getRe_purpose_name(), 500, y_purpose, p_text);
-        canvas.drawText(changeRes.getRe_startDay() + " " + changeRes.getRe_startTime(), 500, y_start, p_text);
-        canvas.drawText(changeRes.getRe_endDay() + " " + changeRes.getRe_endTime(), 500, y_end, p_text);
+        canvas.drawText(reserve.getRe_purpose_name(), 500, y_purpose, p_text);
+        canvas.drawText(reserve.getRe_startDay() + " " + reserve.getRe_startTime(), 500, y_start, p_text);
+        canvas.drawText(reserve.getRe_endDay() + " " + reserve.getRe_endTime(), 500, y_end, p_text);
         // TODO: 2017/09/16 申請者カラムを、DBのテーブルに追加する
         canvas.drawText("", 500, y_applicant, p_text);
         // DO: 2017/09/16 参加者を検索するロジックの実装
         // TODO: 2017/09/16 折り畳み式ビュー検討：ExpandableListView
         canvas.drawText("", 500, y_member, p_text);
         // DO: 2017/09/16 0 =>社内 1=> 社外と表示する
-        canvas.drawText(changeRes.getRe_switch().contains("0") ? "社内" : "社外", 500, y_switch, p_text);
+        canvas.drawText(reserve.getRe_switch().contains("0") ? "社内" : "社外", 500, y_switch, p_text);
         // TODO: 2017/09/16 社外者がいない場合、nullでアプリが落ちるため、対処を考える
 //        c.drawText(reserve.getRe_company(), 500, y_company, p_text);
         canvas.drawText("", 500, y_company, p_text); //*** 現状これで対処します  ***//
-        canvas.drawText(changeRes.getRe_room_name(), 500, y_room, p_text);
-        canvas.drawText(changeRes.getRe_fixtures(), 500, y_fixture, p_text);
-        canvas.drawText(changeRes.getRe_remarks(), 500, y_remark, p_text);
+        canvas.drawText(reserve.getRe_room_name(), 500, y_room, p_text);
+        canvas.drawText(reserve.getRe_fixtures(), 500, y_fixture, p_text);
+        canvas.drawText(reserve.getRe_remarks(), 500, y_remark, p_text);
+
     }
 }
