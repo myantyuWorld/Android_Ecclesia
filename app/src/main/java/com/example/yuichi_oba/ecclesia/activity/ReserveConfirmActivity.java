@@ -107,19 +107,20 @@ public class ReserveConfirmActivity extends AppCompatActivity
             dismiss();
         }
 
-        public static class ExtentResultDialog extends DialogFragment {
-            @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
-                return new AlertDialog.Builder(getActivity()).setTitle("延長完了")
-                        .setMessage("延長が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
 
-                            }
-                        }).create();
-            }
+
+    }
+    public static class ExtentResultDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity()).setTitle("延長完了")
+                    .setMessage("延長が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).create();
         }
-
     }
     //*** 延長オプション選択時の ダイアログフラグメントクラス ***//
     public static class ExtentionDialog extends DialogFragment{
