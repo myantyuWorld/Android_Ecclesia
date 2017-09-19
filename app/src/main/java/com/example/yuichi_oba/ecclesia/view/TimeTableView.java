@@ -1,6 +1,10 @@
 package com.example.yuichi_oba.ecclesia.view;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -9,13 +13,16 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
+import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.NameConst;
@@ -34,7 +41,38 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
  * Created by Yuichi-Oba on 2017/08/28.
  */
 
-public class TimeTableView extends View implements GestureDetector.OnGestureListener{
+public class TimeTableView extends View implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+
+    //*** 早期退出」オプション選択時の ダイアログフラグメントクラス ***//
+    public static class EarlyOutDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle("早期退出")
+                    .setMessage("早期退出しますか？")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(getActivity(), "早期退出", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    })
+                    .create();
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            dismiss();
+        }
+
+
+
+    }
 
     public static final int Y_HEIGHT = 40;
     public static final int X_WIGDH = 216;
@@ -58,8 +96,10 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     private Paint roomC;
     private Paint p_txtTime;
     private Paint p_txtConference;
-    public float x = 0;    // タップしたｘ座標
-    public float y = 0;    // タップしたｙ座標
+    public static float x = 0;    // タップしたｘ座標
+    public static float y = 0;    // タップしたｙ座標
+
+    GestureDetector detector;
 
     private float[] timeFloats;
     public boolean thread_flg;
@@ -215,6 +255,8 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
         reserveInfo = new ArrayList<>();
 
+        detector = new GestureDetector(ReserveListActivity.getInstance(), this);
+
         // 枠線用
         p = new Paint();
         p.setColor(Color.DKGRAY);
@@ -267,6 +309,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     public boolean onTouchEvent(MotionEvent e) {
         switch (e.getAction()) {
             case MotionEvent.ACTION_UP:
+//            case MotionEvent.ACTION_DOWN:
                 Log.d("call", "TimeTableView->onTouchEvent()");
                 // タップした座標を取得する
                 x = e.getX();
@@ -275,10 +318,10 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
                 Log.d("call", String.valueOf(x) + " : " + String.valueOf(y));
                 break;
         }
+        if (detector.onTouchEvent(e)) return true;
 
         return true;
     }
-
 
 
     //*** 再描画を行うメソッド ***//
@@ -369,7 +412,6 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     }
 
 
-
     //*** x y の値を基に、ユーザがタッチしたのか否かを返すメソッド ***//
     public boolean isTouched() {
 //        Log.d("call", "call TimeTableView->isTouched()");
@@ -381,7 +423,8 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
     @Override
     public boolean onDown(MotionEvent e) {
-        return false;
+        Log.d("call", "onDown");
+        return true;
     }
 
     @Override
@@ -391,7 +434,8 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-        return false;
+        Log.d("call", "onSingleTapUp!");
+        return true;
     }
 
     @Override
@@ -401,11 +445,32 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
     @Override
     public void onLongPress(MotionEvent e) {
+        Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
         Log.d("call", "LongTouch");
     }
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        Log.d("call", "onFling");
+        return false;
+    }
+
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
+        Log.d("call", "onSingleTapConfirmed");
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        Log.d("call", "onDoubleTap");
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent e) {
+        Log.d("call", "onDoubleTapEvent");
         return false;
     }
 }

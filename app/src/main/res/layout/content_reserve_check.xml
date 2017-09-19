@@ -11,9 +11,10 @@
 
 
     <view
-        class="com.example.yuichi_oba.ecclesia.view.ReseveCheckView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        class="com.example.yuichi_oba.ecclesia.activity.ReserveChangeActivity$CheckView"
+        id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/correct"
