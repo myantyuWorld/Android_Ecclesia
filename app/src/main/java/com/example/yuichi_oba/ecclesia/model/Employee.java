@@ -32,6 +32,7 @@ public class Employee implements Serializable{
     private String name;
     private String tel;
     private String mailaddr;
+    private String com_name;
     private String dep_name;
     private String pos_name;
     private String pos_priority;
@@ -78,6 +79,12 @@ public class Employee implements Serializable{
     }
     public void setPos_priority(String pos_priority) {
         this.pos_priority = pos_priority;
+    }
+    public String getCom_name() {
+        return com_name;
+    }
+    public void setCom_name(String com_name) {
+        this.com_name = com_name;
     }
 
     //*** Self Made Method ***//

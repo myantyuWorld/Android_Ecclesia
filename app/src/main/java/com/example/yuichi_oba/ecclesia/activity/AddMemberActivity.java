@@ -16,6 +16,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.MyInterface;
 
@@ -60,12 +61,13 @@ public class AddMemberActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("call", "AddMemberActivity->onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_member);
 
         Intent in = getIntent();
         emp_id = in.getStringExtra("emp_id");
-        Log.d("call", emp_id);
+        Log.d("call", "emp_id " + emp_id);
         /***
          * 各種Widgetの初期化処理
          */
@@ -221,40 +223,40 @@ public class AddMemberActivity extends AppCompatActivity
         SQLiteDatabase db = helper.getReadableDatabase();
 //        Cursor cursor = db.rawQuery("select * from v_member", new String[]{});
         // 自分が参加した会議に参加したことのある人間を検索(社内)
-        Cursor c = db.rawQuery("select * from v_reserve_member where re_id in (select re_id from t_member where mem_id = ?);", new String[]{emp_id});
+        Cursor c = db.rawQuery("select *, count(*) as cnt from v_reserve_member where re_id in (select re_id from t_member where mem_id = ?) " +
+                " group by mem_id order by cnt desc limit 10", new String[]{emp_id});
         // メンバークラスのインスタンス生成
         List<String> list = new ArrayList<>();
         while (c.moveToNext()) {
-            // 参加者クラスのインスタンスを生成
-//            Member m = new Member();
-//            m.setEmp_id(c.getString(EMP_ID));
-//            m.setEmp_name(c.getString(EMP_NAME));
-//            m.setEmp_tel(c.getString(EMP_TEL));
-//            m.setEmp_mailaddr(c.getString(EMP_MAILADDR));
-//            m.setCom_name("社内");
-//            m.setDep_name(c.getString(EMP_DEP_NAME));
-//            m.setPo_name(c.getString(EMP_POS_NAME));
+            //*** 社員？（人間）クラスのインスタンスを生成 ***//
+            Employee e = new Employee();
+            e.setId(c.getString(11));           // ID
+            e.setName(c.getString(12));         // 氏名
+            e.setTel(c.getString(13));          // 電話番号
+            e.setMailaddr(c.getString(14));     // メールアドレス
+            e.setCom_name("社内");
+            e.setDep_name(c.getString(15));     // 部署名
+            e.setPos_name(c.getString(16));     // 役職名
+            e.setPos_priority(c.getString(17)); // 役職の優先度
 
-//            // list add
-//            members.add(m);
-//            list.add(m.getCom_name() + ":" + m.getEmp_name());
+            list.add(e.getCom_name() + " : " + e.getName());
         }
         c.close();
         // 自分が参加した会議に参加したことのある人間を検索(社外)
         c = db.rawQuery("select * from v_reserve_out_member where re_id in (select re_id from t_member where mem_id = ?)", new String[]{emp_id});
         while (c.moveToNext()) {
-            // 参加者クラスのインスタンスを生成
-//            Member m = new Member();
-//            m.setEmp_id(c.getString(OUTEMP_ID));
-//            m.setEmp_name(c.getString(OUTEMP_NAME));
-//            m.setEmp_tel(c.getString(OUTEMP_TEL));
-//            m.setEmp_mailaddr(c.getString(OUTEMP_MAILADDR));
-//            m.setCom_name(c.getString(OUTEMP_COM_NAME));
-//            m.setDep_name(c.getString(OUTEMP_DEP_NAME));
-//            m.setPo_name(c.getString(OUTEMP_POS_NAME));
-//            // list add
-//            members.add(m);
-//            list.add(m.getCom_name() + ":" + m.getEmp_name());
+            //*** 社員(社外者）クラスのインスタンスを生成 ***//
+            Employee e = new Employee();
+            e.setId(c.getString(10));           // ID
+            e.setName(c.getString(11));         // 氏名
+            e.setTel(c.getString(12));          // 電話番号
+            e.setMailaddr(c.getString(13));     // メールアドレス
+            e.setDep_name(c.getString(14));     // 部署名
+            e.setPos_name(c.getString(15));     // 役職名
+            e.setPos_priority(c.getString(16)); // 役職の優先度
+            e.setCom_name(c.getString(18));     // 会社名
+
+            list.add(e.getCom_name() + " : " + e.getName());
         }
         // スピナーに設定する
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, list);
