@@ -59,7 +59,7 @@ public class ReserveActivity extends AppCompatActivity
     private static Button btStartTime;
     private static Button btEndTime;
     //    private ReserveInfo reserveInfo;
-    public static List<String> member = new ArrayList<>();
+    public static List<Employee> member = new ArrayList<>();
 
     //***  ***//
     public static class MyDateDialog extends DialogFragment {
@@ -88,7 +88,6 @@ public class ReserveActivity extends AppCompatActivity
             );
         }
     }
-
     //***  ***//
     public static class MyTimeDialog extends DialogFragment {
         @Override
@@ -158,7 +157,6 @@ public class ReserveActivity extends AppCompatActivity
 
 
     }
-
     //*** 各ウィジェットの初期化処理メソッド ***//
     private void init() {
 
@@ -169,7 +167,11 @@ public class ReserveActivity extends AppCompatActivity
 
         //*** 参加者スピナー ***//
         sp_member = (Spinner) findViewById(R.id.sp_re_member);
-        ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, member);
+        final List<String> list = new ArrayList<>();
+        for (Employee employee : member) {
+            list.add(employee.getCom_name() + " : " + employee.getName());
+        }
+        ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
         sp_member.setAdapter(adapter_member);
         //*** 会議目的スピナー ***//
         sp_purpose = (Spinner) findViewById(R.id.sp_re_purpose);
@@ -203,7 +205,6 @@ public class ReserveActivity extends AppCompatActivity
         //***  ***//
         setWidgetListener();
     }
-
     //*** 各種ウィジェットのリスナーを登録するメソッド ***//
     private void setWidgetListener() {
         sp_member.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -283,7 +284,6 @@ public class ReserveActivity extends AppCompatActivity
             }
         });
     }
-
     //*** 戻るボタン押下時の処理 ***//
     @Override
     public void onBackPressed() {
@@ -294,7 +294,6 @@ public class ReserveActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
     //*** ナビを選択したときの処理 ***//
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
