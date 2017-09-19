@@ -19,7 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
@@ -29,13 +29,17 @@ import com.example.yuichi_oba.ecclesia.tools.DB;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
 // _/_/ 予約の詳細・確認を行うアクティビティ
 // _/_/
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+// DO: 2017/09/19 延長ダイアログの正常動作の実装
+// TODO: 2017/09/19 延長ダイアログのレイアウト調整およびデザインの考察 
 public class ReserveConfirmActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -121,7 +125,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     public static class ExtentionDialog extends DialogFragment{
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final LinearLayout layout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.extention_dialog, null);
+            final RelativeLayout layout = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.extention_dialog, null);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             return builder.setTitle(EX)

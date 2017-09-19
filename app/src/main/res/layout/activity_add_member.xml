@@ -36,6 +36,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="9dp"
             android:layout_weight="1"
+            android:checked="true"
             android:text="履歴検索" />
 
         <RadioButton
@@ -45,7 +46,6 @@
             android:layout_alignStart="@+id/rbt_history"
             android:layout_below="@+id/rbt_history"
             android:layout_marginTop="63dp"
-            android:layout_weight="1"
             android:text="新規登録" />
     </RadioGroup>
 
@@ -73,7 +73,6 @@
         android:layout_marginTop="11dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
         android:layout_below="@+id/radioGroup"
         android:layout_alignParentEnd="true" />
 
@@ -95,32 +94,31 @@
         android:layout_alignEnd="@+id/sp_add_depart" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/ed_add_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="34dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
         android:layout_below="@+id/sp_add_position"
         android:layout_alignStart="@+id/sp_add_position" />
 
     <EditText
-        android:id="@+id/editText5"
+        android:id="@+id/ed_add_mailaddr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/editText4"
-        android:layout_below="@+id/editText4"
+        android:layout_alignEnd="@+id/ed_add_name"
+        android:layout_below="@+id/ed_add_name"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:inputType="textEmailAddress" />
 
     <EditText
-        android:id="@+id/editText6"
+        android:id="@+id/ed_add_tel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/editText5"
-        android:layout_below="@+id/editText5"
+        android:layout_alignStart="@+id/ed_add_mailaddr"
+        android:layout_below="@+id/ed_add_mailaddr"
         android:layout_marginTop="19dp"
         android:ems="10"
         android:inputType="phone" />

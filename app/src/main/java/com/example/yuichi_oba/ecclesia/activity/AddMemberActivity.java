@@ -75,11 +75,7 @@ public class AddMemberActivity extends AppCompatActivity
         setWidgetListener();
 
     }
-
-    /***
-     * 各ボタン押下時の処理
-     * @param view
-     */
+    //*** ラジオボタンでどちらか選択したときの処理を決めるメソッド ***//
     @Override
     public void onClick(View view) {
         int id = view.getId();
@@ -100,15 +96,7 @@ public class AddMemberActivity extends AppCompatActivity
 //                break;
         }
     }
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    // _/
-    // _/           自作メソッド
-    // _/
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-
-    /***
-     * 新規登録を再度選択したとき、再度編集可能にするためのメソッド
-     */
+    //*** 新規登録ラジオボタンを再度選択したとき、再度編集可能にするメソッド ***//
     private void setAgainEditable() {
         // 全Edittextに対して、再編集可能にする
         ed_company.setFocusable(true);
@@ -130,10 +118,7 @@ public class AddMemberActivity extends AppCompatActivity
         ed_email.setEnabled(true);
         ed_email.setFocusableInTouchMode(true);
     }
-
-    /***
-     * 各種Widgetの初期化処理メソッド
-     */
+    //*** 各ウィジェットの初期化処理メソッド ***//
     public void init() {
         bt_cancel = (Button) findViewById(R.id.bt_add_cancel);       //  キャンセルボタン
         bt_regist = (Button) findViewById(R.id.bt_add_regist);       //  登録（追加？）ボタン
@@ -152,14 +137,16 @@ public class AddMemberActivity extends AppCompatActivity
          * 履歴スピナーの各種設定
          */
         // DB 検索して、予約した人の「会社名 ： 参加者苗字」で出す
-        // TODO: 2017/09/09 参加回数を求めて、上位１０人ずつを出すSQLの実装
+        // DO: 2017/09/09 参加回数を求めて、上位１０人ずつを出すSQLの実装
         setSpinnerHistory();
         // リスナー登録
         sp_history.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Spinner spinner = (Spinner) adapterView;
-                String name = spinner.getSelectedItem().toString().split(":")[0];
+                String name = spinner.getSelectedItem().toString().split(":")[1];
+                Log.d("call", name);
+
 //                Toast.makeText(AddMemberActivity.this, name, Toast.LENGTH_SHORT).show();
 
 //                for (Member member : members) {
@@ -186,19 +173,28 @@ public class AddMemberActivity extends AppCompatActivity
 
 
     }
-
+    //*** 各ウィジェットのリスナー登録メソッド ***//
     @Override
     public void setWidgetListener() {
+        // TODO: 2017/09/19  登録ボタン押下で、参加者リストを追加するロジックの実装
         bt_regist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("call", "add regist");
-                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+//                startActivity(intent);
+
+            }
+        });
+
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("call", "AddMemberActivity->finish()");
+                finish();
             }
         });
     }
-
     //*** 部署スピナーの項目を動的設定するメソッド ***//
     private void setSpinnerDepart() {
         // ＤＢ検索
@@ -215,7 +211,6 @@ public class AddMemberActivity extends AppCompatActivity
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, list);
         sp_depart.setAdapter(adapter);
     }
-
     //*** 履歴スピナーの項目を動的設定するメソッド ***//
     private void setSpinnerHistory() {
         // DB 検索

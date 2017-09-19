@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.transition.ChangeBounds;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -34,7 +32,10 @@ import com.example.yuichi_oba.ecclesia.tools.DB;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ONE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
@@ -42,6 +43,8 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 // _/_/ 予約変更を行うアクティビティ
 // _/_/
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+// TODO: 2017/09/19 予約の内容を変更した箇所を、色変える処理の実装
+// TODO: 2017/09/19 参加者をさらに追加しようとした際のロジックの実装
 public class ReserveChangeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     String re_id;
