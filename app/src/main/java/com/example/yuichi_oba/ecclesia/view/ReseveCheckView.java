@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 
+import static com.example.yuichi_oba.ecclesia.activity.ReserveChangeActivity.changes;
 import static com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity.re_id;
 
 public class ReseveCheckView extends View {
@@ -19,8 +20,10 @@ public class ReseveCheckView extends View {
     private Paint p_out_line;
     private Paint p_text;
     private Paint p_rect;
+    private Paint p_change;
 
     private String[] name = {"概要", "目的", "開始時間", "終了時間", "申請者", "参加者", "社内/社外", "会社名", "希望会議室", "備品", "その他"};
+    private String[] before;
 
     Reserve reserve;
 
@@ -62,6 +65,10 @@ public class ReseveCheckView extends View {
         p_rect.setColor(Color.LTGRAY);
         p_rect.setStyle(Paint.Style.FILL);
 
+        p_change = new Paint();
+        p_change.setColor(Color.RED);
+        p_change.setStyle(Paint.Style.FILL);
+
         reserve = new Reserve();
     }
     //*** 描画メソッド ***//
@@ -72,6 +79,8 @@ public class ReseveCheckView extends View {
         onDrawBasic(canvas);
         //*** 予約情報のDB検索 ***//
         reserve = Reserve.retReserveConfirm(re_id);
+        before = new String[]{reserve.getRe_name(), reserve.getRe_purpose_name(), reserve.getRe_startDay() + " " + reserve.getRe_startTime(), reserve.getRe_endDay() + " " + reserve.getRe_endTime(),
+                reserve.getRe_switch(), reserve.getRe_room_name(), reserve.getRe_fixtures(), reserve.getRe_remarks()};
         //*** 予約情報の描画 ***//
         onDrawReserveInfo(canvas);
     }
@@ -116,6 +125,9 @@ public class ReseveCheckView extends View {
         }
 
         for (int i = 1; i <= 11; i++) {
+//            if (changes[i - 1].equals(before[i - 1])){
+//
+//            }
             c.drawLine(0, room * i, 1080, room * i, p_out_line);
             c.drawText(name[i - 1], 100, room_y, p_text);
             room_y += room;
