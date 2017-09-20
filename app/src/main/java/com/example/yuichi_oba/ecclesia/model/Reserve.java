@@ -36,7 +36,7 @@ public class Reserve implements Serializable{
     private String re_applicant;
     private String re_room_id;
     private String re_room_name;
-    private List<String> re_member;
+    private List<Employee> re_member;
     private float[] coop;
 
     public Reserve() {
@@ -137,17 +137,17 @@ public class Reserve implements Serializable{
     public void setCoop(float[] coop) {
         this.coop = coop;
     }
-    public List<String> getRe_member() {
-        return re_member;
-    }
-    public void setRe_member(List<String> re_member) {
-        this.re_member = re_member;
-    }
     public String getRe_company() {
         return re_company;
     }
     public void setRe_company(String re_company) {
         this.re_company = re_company;
+    }
+    public List<Employee> getRe_member() {
+        return re_member;
+    }
+    public void setRe_member(List<Employee> re_member) {
+        this.re_member = re_member;
     }
     //*** SelfMadeMethod ***//
 
@@ -182,7 +182,8 @@ public class Reserve implements Serializable{
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = db.rawQuery("select * from v_reserve_member x inner join m_room y on x.room_id = y.room_id where re_id = ?",
                 new String[]{re_id});
-        List<String> list = new ArrayList<>();
+//        List<String> list = new ArrayList<>();
+        List<Employee> list = new ArrayList<>();
         while (c.moveToNext()) {
             //*** 予約の共通部分 ***//
             reserve.setRe_name(c.getString(1));
@@ -196,15 +197,41 @@ public class Reserve implements Serializable{
             reserve.setRe_purpose_id(c.getString(18));
             reserve.setRe_purpose_name(c.getString(19));
             reserve.setRe_room_name(c.getString(22));
-            list.add("社内" + " : " + c.getString(12)); //*** 参加者の 「社内：名前」のadd ***//
+//            list.add("社内" + " : " + c.getString(12)); //*** 参加者の 「社内：名前」のadd ***//
+
+            //*** 社員？（人間）クラスのインスタンスを生成 ***//
+            Employee e = new Employee();
+            e.setId(c.getString(11));           // ID
+            e.setName(c.getString(12));         // 氏名
+            e.setTel(c.getString(13));          // 電話番号
+            e.setMailaddr(c.getString(14));     // メールアドレス
+            e.setCom_name("社内");
+            e.setDep_name(c.getString(15));     // 部署名
+            e.setPos_name(c.getString(16));     // 役職名
+            e.setPos_priority(c.getString(17)); // 役職の優先度
+
+            list.add(e);
         }
+
         c.close();
         //*** 社外者の参加者追加 ***//
         c = db.rawQuery("select * from v_reserve_out_member where re_id = ?", new String[]{re_id});
         while (c.moveToNext()) {
             // 18 company
             reserve.setRe_company(c.getString(18));
-            list.add(c.getString(18) + " : " + c.getString(11)); //*** 社外者の 「会社名 ： 名前」のadd ***//
+
+            //*** 社員(社外者）クラスのインスタンスを生成 ***//
+            Employee e = new Employee();
+            e.setId(c.getString(10));           // ID
+            e.setName(c.getString(11));         // 氏名
+            e.setTel(c.getString(12));          // 電話番号
+            e.setMailaddr(c.getString(13));     // メールアドレス
+            e.setDep_name(c.getString(14));     // 部署名
+            e.setPos_name(c.getString(15));     // 役職名
+            e.setPos_priority(c.getString(16)); // 役職の優先度
+            e.setCom_name(c.getString(18));     // 会社名
+//            list.add(c.getString(18) + " : " + c.getString(11)); //*** 社外者の 「会社名 ： 名前」のadd ***//
+            list.add(e);
         }
         c.close();
 

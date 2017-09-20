@@ -44,6 +44,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
 // _/_/ 予約状況(リストで視覚的にわかりやすい）を表示するアクティビティ
 // _/_/
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+// TODO: 2017/09/19  長押し対応は無理か？ 一覧での、タップは反応するが、長押しには反応しない・・・
 public class ReserveListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -191,6 +192,10 @@ public class ReserveListActivity extends AppCompatActivity
         txtDate = (TextView) findViewById(R.id.txtDate);
         final Calendar c = Calendar.getInstance();
         txtDate.setText(String.format(Locale.JAPAN, "%04d/%02d/%02d", c.get(Calendar.YEAR) + 1, 1, 17));
+
+        //*** コンテキストメニューの発生元ビューを取得 ***//
+        registerForContextMenu(findViewById(R.id.content_main));
+
         /*** ここまで ***/
 
 
@@ -244,6 +249,19 @@ public class ReserveListActivity extends AppCompatActivity
 
 
     }
+
+//    @Override
+//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+//        super.onCreateContextMenu(menu, v, menuInfo);
+//        getMenuInflater().inflate(R.menu.menu, menu);
+//    }
+//
+//    @Override
+//    public boolean onContextItemSelected(MenuItem item) {
+//        Toast.makeText(getApplicationContext(), "ContextMenu click!", Toast.LENGTH_SHORT).show();
+//        return true;
+//    }
+
     //*** 戻るボタン押下時の処理 ***//
     @Override
     public void onBackPressed() {
@@ -357,7 +375,7 @@ public class ReserveListActivity extends AppCompatActivity
         return instance;
     }
 
-//    /***
+    //    /***
 //     * アプリを立ち上げた社員の端末ＩＭＥＩを返すメソッド
 //     * @return 端末ＩＭＥＩ
 //     */

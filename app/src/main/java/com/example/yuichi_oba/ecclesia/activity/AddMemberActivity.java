@@ -16,6 +16,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.MyInterface;
 
@@ -60,12 +61,13 @@ public class AddMemberActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("call", "AddMemberActivity->onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_member);
 
         Intent in = getIntent();
         emp_id = in.getStringExtra("emp_id");
-        Log.d("call", emp_id);
+        Log.d("call", "emp_id " + emp_id);
         /***
          * 各種Widgetの初期化処理
          */
@@ -73,11 +75,7 @@ public class AddMemberActivity extends AppCompatActivity
         setWidgetListener();
 
     }
-
-    /***
-     * 各ボタン押下時の処理
-     * @param view
-     */
+    //*** ラジオボタンでどちらか選択したときの処理を決めるメソッド ***//
     @Override
     public void onClick(View view) {
         int id = view.getId();
@@ -98,15 +96,7 @@ public class AddMemberActivity extends AppCompatActivity
 //                break;
         }
     }
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-    // _/
-    // _/           自作メソッド
-    // _/
-    // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-
-    /***
-     * 新規登録を再度選択したとき、再度編集可能にするためのメソッド
-     */
+    //*** 新規登録ラジオボタンを再度選択したとき、再度編集可能にするメソッド ***//
     private void setAgainEditable() {
         // 全Edittextに対して、再編集可能にする
         ed_company.setFocusable(true);
@@ -128,10 +118,7 @@ public class AddMemberActivity extends AppCompatActivity
         ed_email.setEnabled(true);
         ed_email.setFocusableInTouchMode(true);
     }
-
-    /***
-     * 各種Widgetの初期化処理メソッド
-     */
+    //*** 各ウィジェットの初期化処理メソッド ***//
     public void init() {
         bt_cancel = (Button) findViewById(R.id.bt_add_cancel);       //  キャンセルボタン
         bt_regist = (Button) findViewById(R.id.bt_add_regist);       //  登録（追加？）ボタン
@@ -150,14 +137,16 @@ public class AddMemberActivity extends AppCompatActivity
          * 履歴スピナーの各種設定
          */
         // DB 検索して、予約した人の「会社名 ： 参加者苗字」で出す
-        // TODO: 2017/09/09 参加回数を求めて、上位１０人ずつを出すSQLの実装
+        // DO: 2017/09/09 参加回数を求めて、上位１０人ずつを出すSQLの実装
         setSpinnerHistory();
         // リスナー登録
         sp_history.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Spinner spinner = (Spinner) adapterView;
-                String name = spinner.getSelectedItem().toString().split(":")[0];
+                String name = spinner.getSelectedItem().toString().split(":")[1];
+                Log.d("call", name);
+
 //                Toast.makeText(AddMemberActivity.this, name, Toast.LENGTH_SHORT).show();
 
 //                for (Member member : members) {
@@ -184,19 +173,28 @@ public class AddMemberActivity extends AppCompatActivity
 
 
     }
-
+    //*** 各ウィジェットのリスナー登録メソッド ***//
     @Override
     public void setWidgetListener() {
+        // TODO: 2017/09/19  登録ボタン押下で、参加者リストを追加するロジックの実装
         bt_regist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("call", "add regist");
-                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+//                startActivity(intent);
+
+            }
+        });
+
+        bt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("call", "AddMemberActivity->finish()");
+                finish();
             }
         });
     }
-
     //*** 部署スピナーの項目を動的設定するメソッド ***//
     private void setSpinnerDepart() {
         // ＤＢ検索
@@ -213,7 +211,6 @@ public class AddMemberActivity extends AppCompatActivity
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, list);
         sp_depart.setAdapter(adapter);
     }
-
     //*** 履歴スピナーの項目を動的設定するメソッド ***//
     private void setSpinnerHistory() {
         // DB 検索
@@ -221,40 +218,40 @@ public class AddMemberActivity extends AppCompatActivity
         SQLiteDatabase db = helper.getReadableDatabase();
 //        Cursor cursor = db.rawQuery("select * from v_member", new String[]{});
         // 自分が参加した会議に参加したことのある人間を検索(社内)
-        Cursor c = db.rawQuery("select * from v_reserve_member where re_id in (select re_id from t_member where mem_id = ?);", new String[]{emp_id});
+        Cursor c = db.rawQuery("select *, count(*) as cnt from v_reserve_member where re_id in (select re_id from t_member where mem_id = ?) " +
+                " group by mem_id order by cnt desc limit 10", new String[]{emp_id});
         // メンバークラスのインスタンス生成
         List<String> list = new ArrayList<>();
         while (c.moveToNext()) {
-            // 参加者クラスのインスタンスを生成
-//            Member m = new Member();
-//            m.setEmp_id(c.getString(EMP_ID));
-//            m.setEmp_name(c.getString(EMP_NAME));
-//            m.setEmp_tel(c.getString(EMP_TEL));
-//            m.setEmp_mailaddr(c.getString(EMP_MAILADDR));
-//            m.setCom_name("社内");
-//            m.setDep_name(c.getString(EMP_DEP_NAME));
-//            m.setPo_name(c.getString(EMP_POS_NAME));
+            //*** 社員？（人間）クラスのインスタンスを生成 ***//
+            Employee e = new Employee();
+            e.setId(c.getString(11));           // ID
+            e.setName(c.getString(12));         // 氏名
+            e.setTel(c.getString(13));          // 電話番号
+            e.setMailaddr(c.getString(14));     // メールアドレス
+            e.setCom_name("社内");
+            e.setDep_name(c.getString(15));     // 部署名
+            e.setPos_name(c.getString(16));     // 役職名
+            e.setPos_priority(c.getString(17)); // 役職の優先度
 
-//            // list add
-//            members.add(m);
-//            list.add(m.getCom_name() + ":" + m.getEmp_name());
+            list.add(e.getCom_name() + " : " + e.getName());
         }
         c.close();
         // 自分が参加した会議に参加したことのある人間を検索(社外)
         c = db.rawQuery("select * from v_reserve_out_member where re_id in (select re_id from t_member where mem_id = ?)", new String[]{emp_id});
         while (c.moveToNext()) {
-            // 参加者クラスのインスタンスを生成
-//            Member m = new Member();
-//            m.setEmp_id(c.getString(OUTEMP_ID));
-//            m.setEmp_name(c.getString(OUTEMP_NAME));
-//            m.setEmp_tel(c.getString(OUTEMP_TEL));
-//            m.setEmp_mailaddr(c.getString(OUTEMP_MAILADDR));
-//            m.setCom_name(c.getString(OUTEMP_COM_NAME));
-//            m.setDep_name(c.getString(OUTEMP_DEP_NAME));
-//            m.setPo_name(c.getString(OUTEMP_POS_NAME));
-//            // list add
-//            members.add(m);
-//            list.add(m.getCom_name() + ":" + m.getEmp_name());
+            //*** 社員(社外者）クラスのインスタンスを生成 ***//
+            Employee e = new Employee();
+            e.setId(c.getString(10));           // ID
+            e.setName(c.getString(11));         // 氏名
+            e.setTel(c.getString(12));          // 電話番号
+            e.setMailaddr(c.getString(13));     // メールアドレス
+            e.setDep_name(c.getString(14));     // 部署名
+            e.setPos_name(c.getString(15));     // 役職名
+            e.setPos_priority(c.getString(16)); // 役職の優先度
+            e.setCom_name(c.getString(18));     // 会社名
+
+            list.add(e.getCom_name() + " : " + e.getName());
         }
         // スピナーに設定する
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, list);
