@@ -96,6 +96,10 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     private Paint roomC;
     private Paint p_txtTime;
     private Paint p_txtConference;
+    private Paint p_myConference;           //*** 自分の会議用 ***//
+    private Paint p_myConference_waku;
+    private Paint p_otherConference;        //*** 他人の会議用 ***//
+
     public static float x = 0;    // タップしたｘ座標
     public static float y = 0;    // タップしたｙ座標
 
@@ -103,19 +107,18 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
     private float[] timeFloats;
     public boolean thread_flg;
-    private List<Reserve> reserveInfo;
+    private List<Reserve> reserveInfo;      //*** 自分の会議記録用リスト ***//
+    private List<Reserve> reserveOther;     //*** 他人の会議記録用リスト ***//
 
     //*** Constractor ***//
     public TimeTableView(Context context) {
         super(context);
         init();
     }
-
     public TimeTableView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
-
     public TimeTableView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
@@ -127,19 +130,32 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     protected void onDraw(Canvas c) {
         Log.d("call", "TimeTableView->onDraw()");
 
+        //*** 特別ABC列の色の描画 ***//
+        // l t r b
+
+        c.drawRect(216, 3, 432, 2000, tokubetsu );
+        c.drawRect(432, 3, 648, 2000, roomA);
+        c.drawRect(648, 3, 864, 2000, roomB);
+        c.drawRect(864, 3, 1078, 2000, roomC);
+
+
+
         timeFloats = new float[24];
         for (int i = 0, j = 100; i < timeFloats.length; i++) {
             timeFloats[i] = j;
             j += Y_HEIGHT * 2;
         }
         // 特別会議室 Ａ Ｂ Ｃ 列の描画
-        float x = X_WIGDH;
+        float x = X_WIGDH; // 216
         float room_y = 100;
         c.drawRect(ZERO, 0, MAX_WIDTH, room_y, p);
         c.drawLine(ZERO, 0, ZERO, room_y, p);   // sx sy ex ey
         for (int i = 1; i <= 4; i++) {
             c.drawLine(i * x, 0, i * x, room_y, p);
         }
+
+
+
 
         // 会議室名の描画
         float y_conference = 60;
@@ -162,10 +178,25 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
 
     }
-
     //*** 会議を角丸で描画するメソッド ***//
     private void onDrawConference(Canvas c) {
         int cnt = 0;
+        //*** 他人の参加会議に対する処理 ***//
+        for (Reserve r : reserveOther) {
+            String sTime = r.getRe_startTime();
+            String eTime = r.getRe_endTime();
+            String room_id = r.getRe_room_id();
+
+            RectF rectF = retRectCooperation(sTime, eTime, room_id);
+            // 予約会議のざ行情報を記録する
+            reserveOther.get(cnt).setCoop(new float[]{rectF.left, rectF.top, rectF.right, rectF.bottom});
+
+            c.drawRoundRect(rectF, 30, 30, p_otherConference);
+            c.drawRoundRect(rectF, 30, 30, p_myConference_waku);
+            cnt++;
+        }
+        cnt = 0;
+        //*** 自分の参加会議に対する処理 ***//
         for (Reserve r : reserveInfo) {
             String sTime = r.getRe_startTime();
             String eTime = r.getRe_endTime();
@@ -174,63 +205,65 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             RectF rectF = retRectCooperation(sTime, eTime, room_id);
             // 予約会議の座標情報を記録する
             reserveInfo.get(cnt).setCoop(new float[]{rectF.left, rectF.top, rectF.right, rectF.bottom});
-            switch (room_id) {
-                case "0001":
-                    room = tokubetsu;
-                    break;
-                case "0002":
-                    room = roomA;
-                    break;
-                case "0003":
-                    room = roomB;
-                    break;
-                case "0004":
-                    room = roomC;
-                    break;
-            }
+//            switch (room_id) {
+//                case "0001":
+//                    room = tokubetsu;
+//                    break;
+//                case "0002":
+//                    room = roomA;
+//                    break;
+//                case "0003":
+//                    room = roomB;
+//                    break;
+//                case "0004":
+//                    room = roomC;
+//                    break;
+//            }
             // 予約会議の描画
-            c.drawRoundRect(rectF, 30, 30, room);
+            c.drawRoundRect(rectF, 30, 30, p_myConference);
+            c.drawRoundRect(rectF, 30, 30, p_myConference_waku);
             cnt++;
         }
-    }
 
+    }
     //*** 開始終了時刻・会議室を基に、描画すべき座標を返すメソッド ***//
     private RectF retRectCooperation(String sTime, String eTime, String room_id) {
         float sX = 0, eX = 0, sY = 0, eY = 0;
         float x = 216;
+        float padding = 2;
+
         switch (room_id) {
             case TOKUBETSU:
-                sX = x;
-                eX = 2 * x;
+                sX = x + padding;
+                eX = 2 * x - padding;
                 break;
             case ROOM_A:
-                sX = 2 * x;
-                eX = 3 * x;
+                sX = 2 * x + padding;
+                eX = 3 * x - padding;
                 break;
             case ROOM_B:
-                sX = 3 * x;
-                eX = 4 * x;
+                sX = 3 * x + padding;
+                eX = 4 * x - padding;
                 break;
             case ROOM_C:
-                sX = 4 * x;
-                eX = 5 * x;
+                sX = 4 * x + padding;
+                eX = 5 * x - padding;
                 break;
         }
         int s = Integer.parseInt(sTime.split("：")[0]); // 08:00 -> 8 => 8 - 8 = 0
-        sY = timeFloats[s];
+        sY = timeFloats[s] + padding;
         if (Integer.parseInt(sTime.split("：")[1]) >= 30) {
-            sY += Y_HEIGHT;
+            sY += Y_HEIGHT + padding;
         }
 
         int e = Integer.parseInt(eTime.split("：")[0]); // 10:30 -> 10 - 8 = 2
-        eY = timeFloats[e];
+        eY = timeFloats[e] - padding;
         if (Integer.parseInt(eTime.split("：")[1]) >= 30) { // 30 >= 30
-            eY += Y_HEIGHT;
+            eY += Y_HEIGHT - padding;
         }
 
         return new RectF(sX, sY, eX, eY);
     }
-
     //*** 時間割の枠の描画 ***//
     private void onDrawTimeTable(Canvas canvas) {
         float x = 216;
@@ -248,12 +281,13 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         }
         canvas.drawRect(ZERO, y_timetable, MAX_WIDTH, y_timetable + 48 * y, p);
     }
-
     //*** Paintクラスの初期化処理メソッド ***//
     private void init() {
         Log.d("call", "call TimeTableView->init()");
 
-        reserveInfo = new ArrayList<>();
+
+        reserveInfo = new ArrayList<>();    //***  ***//
+        reserveOther = new ArrayList<>();   //***  ***//
 
         detector = new GestureDetector(ReserveListActivity.getInstance(), this);
 
@@ -268,25 +302,25 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
         // 特別会議室用
         tokubetsu = new Paint();
-        tokubetsu.setColor(Color.parseColor("#E91E63"));
+        tokubetsu.setColor(Color.parseColor("#ffb6c1"));
         tokubetsu.setStyle(Paint.Style.FILL);
         tokubetsu.setStrokeWidth(10);
 
         // 会議室Ａ用
         roomA = new Paint();
-        roomA.setColor(Color.parseColor("#536DFE"));
+        roomA.setColor(Color.parseColor("#add8e6"));
         roomA.setStyle(Paint.Style.FILL);
         roomA.setStrokeWidth(10);
 
         // 会議室Ｂ用
         roomB = new Paint();
-        roomB.setColor(Color.parseColor("#4CAF50"));
+        roomB.setColor(Color.parseColor("#98fb98"));
         roomB.setStyle(Paint.Style.FILL);
         roomB.setStrokeWidth(10);
 
         // 会議室Ｃ用
         roomC = new Paint();
-        roomC.setColor(Color.parseColor("#FFC107"));
+        roomC.setColor(Color.parseColor("#fffacd"));
         roomC.setStyle(Paint.Style.FILL);
         roomC.setStrokeWidth(10);
 
@@ -302,8 +336,24 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         p_txtConference.setTextSize(60);
         p_txtConference.setTextAlign(Paint.Align.CENTER);
         p_txtConference.setColor(Color.BLACK);
-    }
 
+        //*** 自分の会議の描画用 ***//
+        p_myConference = new Paint();
+        p_myConference.setColor(Color.parseColor("#ff6347"));       //*** 再考の余地あり ***//
+        p_myConference.setStyle(Paint.Style.FILL);
+        p_myConference.setStrokeWidth(10);
+
+        p_myConference_waku = new Paint();
+        p_myConference_waku.setColor(Color.parseColor("#000000"));
+        p_myConference_waku.setStyle(Paint.Style.STROKE);
+        p_myConference_waku.setStrokeWidth(3);
+
+        //*** 他人の会議の描画用 ***//
+        p_otherConference = new Paint();
+        p_otherConference.setColor(Color.parseColor("#f5f5f5"));    //*** 再考の余地あり ***//
+        p_otherConference.setStyle(Paint.Style.FILL);
+        p_otherConference.setStrokeWidth(10);
+    }
     //*** 画面タッチ時のイベント ***//
     @Override
     public boolean onTouchEvent(MotionEvent e) {
@@ -322,14 +372,13 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
         return true;
     }
-
-
     //*** 再描画を行うメソッド ***//
     public void reView(String emp_id, String date) {
         // DO: 2017/09/06 review()コールで、引数の日付をデータベース検索をかけたのち、自身のreserveInfoに格納する-> invalidate() で描画する
         Log.d("call", "TimeTableView->reView()");
         SQLiteOpenHelper helper = new DB(getContext());
         SQLiteDatabase db = helper.getReadableDatabase();
+        //*** 自分の参加会議の検索 ***//
         Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?", new String[]{emp_id, date});
         reserveInfo.clear();
         while (c.moveToNext()) {
@@ -352,10 +401,29 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             reserveInfo.add(r);
             Log.d("call", c.getString(2) + " : " + c.getString(3));
         }
+        c.close();
 
+        //*** 他人の参加会議の検索 ***//
+        c = db.rawQuery("select * from v_reserve_member where mem_id <> ? and re_startday = ?", new String[]{emp_id, date});
+        while (c.moveToNext()) {
+            Reserve r = new Reserve();
+            r.setRe_id(c.getString(RE_ID));
+            r.setRe_name(c.getString(1));
+            r.setRe_startDay(c.getString(2));
+            r.setRe_endDay(c.getString(3));
+            r.setRe_startTime(c.getString(4));
+            r.setRe_endTime(c.getString(5));
+            r.setRe_switch(c.getString(6));
+            r.setRe_fixtures(c.getString(7));
+            r.setRe_remarks(c.getString(8));
+            r.setRe_room_id(c.getString(10));
+            r.setRe_pur_priority(c.getString(18));
+
+            reserveOther.add(r);
+        }
+        c.close();
         invalidate();
     }
-
     //*** タップした会議の予約ＩＤを返すメソッド ***//
     public String getSelectedReserve() {
         Log.d("call", "TimeTableView->getSelectedReserve()");
@@ -410,8 +478,6 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         Log.d("call", "Re_id : " + re_id);
         return re_id;
     }
-
-
     //*** x y の値を基に、ユーザがタッチしたのか否かを返すメソッド ***//
     public boolean isTouched() {
 //        Log.d("call", "call TimeTableView->isTouched()");
@@ -426,48 +492,39 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         Log.d("call", "onDown");
         return true;
     }
-
     @Override
     public void onShowPress(MotionEvent e) {
 
     }
-
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
         Log.d("call", "onSingleTapUp!");
         return true;
     }
-
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         return false;
     }
-
     @Override
     public void onLongPress(MotionEvent e) {
         Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
         Log.d("call", "LongTouch");
     }
-
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         Log.d("call", "onFling");
         return false;
     }
-
-
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
         Log.d("call", "onSingleTapConfirmed");
         return false;
     }
-
     @Override
     public boolean onDoubleTap(MotionEvent e) {
         Log.d("call", "onDoubleTap");
         return false;
     }
-
     @Override
     public boolean onDoubleTapEvent(MotionEvent e) {
         Log.d("call", "onDoubleTapEvent");
