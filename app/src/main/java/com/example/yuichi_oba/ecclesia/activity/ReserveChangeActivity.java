@@ -20,12 +20,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-<<<<<<< HEAD
-=======
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
->>>>>>> syama/master
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
