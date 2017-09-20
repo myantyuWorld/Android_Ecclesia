@@ -103,7 +103,7 @@ public class Reseve_confirmView extends View {
         c.drawText(reserve.getRe_startDay() + " " + reserve.getRe_startTime(), 500, y_start, p_text);
         c.drawText(reserve.getRe_endDay() + " " + reserve.getRe_endTime(), 500, y_end, p_text);
         // TODO: 2017/09/16 申請者カラムを、DBのテーブルに追加する
-        c.drawText("", 500, y_applicant, p_text);
+        c.drawText(reserve.getRe_applicant(), 500, y_applicant, p_text);
         // DO: 2017/09/16 参加者を検索するロジックの実装
         // TODO: 2017/09/16 折り畳み式ビュー検討：ExpandableListView
         c.drawText("", 500, y_member, p_text);
