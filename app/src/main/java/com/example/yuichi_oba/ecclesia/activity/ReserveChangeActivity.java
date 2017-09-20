@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -129,7 +130,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             public void onClick(View v){
 //                setReserveInfo();
                 changes = new String[]{changeRes.getRe_name(), changeRes.getRe_purpose_name(), changeRes.getRe_startDay() + " " + changeRes.getRe_startTime(), changeRes.getRe_endDay() + " " + changeRes.getRe_endTime(),
-                       "", "", changeRes.getRe_switch(), changeRes.getRe_room_name(), "", changeRes.getRe_fixtures(), changeRes.getRe_remarks()};
+                       appEmp.getName(), "", changeRes.getRe_switch(), changeRes.getRe_room_name(), "", changeRes.getRe_fixtures(), changeRes.getRe_remarks()};
 
                 Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
                 intent.putExtra(KEYCHECK, changeRes);
@@ -183,7 +184,7 @@ public class ReserveChangeActivity extends AppCompatActivity
         c = db.rawQuery("select * from m_room", null);
         List<String> rooms = new ArrayList<>();
         while (c.moveToNext()) {
-            rooms.add(c.getString(0) + " : " + c.getString(1));
+            rooms.add(c.getString(1));
         }
         c.close();
         ArrayAdapter<String> roomadapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, rooms);
@@ -277,9 +278,16 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
-            public void afterTextChanged(Editable s) {
-                changeRes.setRe_endTime(s.toString());
+            public void afterTextChanged(Editable s) { changeRes.setRe_endTime(s.toString()); }
+        });
+
+        room.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                changeRes.setRe_room_name(room.getSelectedItem().toString());
             }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
         });
     }
 
@@ -402,14 +410,16 @@ public class ReserveChangeActivity extends AppCompatActivity
             p_rect.setColor(Color.LTGRAY);
             p_rect.setStyle(Paint.Style.FILL);
 
+            // 変更箇所の色
             p_change = new Paint();
             p_change.setColor(Color.parseColor("#87cefa"));
             p_change.setStyle(Paint.Style.FILL);
 
             reserve = new Reserve();
             reserve = Reserve.retReserveConfirm(ReserveConfirmActivity.re_id);
+            Log.d("room", reserve.getRe_room_name());
             before = new String[]{reserve.getRe_name(), reserve.getRe_purpose_name(), reserve.getRe_startDay() + " " + reserve.getRe_startTime(), reserve.getRe_endDay() + " " + reserve.getRe_endTime(),
-                   "", "", reserve.getRe_switch(), "", reserve.getRe_room_name(), reserve.getRe_fixtures(), reserve.getRe_remarks()};
+                   appEmp.getName(), "", reserve.getRe_switch(), "", reserve.getRe_room_name(), reserve.getRe_fixtures(), reserve.getRe_remarks()};
         }
 
         //*** 描画メソッド ***//
@@ -436,16 +446,28 @@ public class ReserveChangeActivity extends AppCompatActivity
             float y_fixture = 1150;
             float y_remark = 1270;
 
-            c.drawText(reserve.getRe_name(), 500, y_name, p_text);
-            c.drawText(reserve.getRe_purpose_name(), 500, y_purpose, p_text);
-            c.drawText(reserve.getRe_startDay() + " " + reserve.getRe_startTime(), 500, y_start, p_text);
-            c.drawText(reserve.getRe_endDay() + " " + reserve.getRe_endTime(), 500, y_end, p_text);
-            c.drawText(appEmp.getName(), 500, y_applicant, p_text);
-            c.drawText("", 500, y_member, p_text);
-            c.drawText(reserve.getRe_switch().contains("0") ? "社内" : "社外", 500, y_switch, p_text);
-            c.drawText(reserve.getRe_room_name(), 500, y_room, p_text);
-            c.drawText(reserve.getRe_fixtures(), 500, y_fixture, p_text);
-            c.drawText(reserve.getRe_remarks(), 500, y_remark, p_text);
+//            c.drawText(reserve.getRe_name(), 500, y_name, p_text);
+//            c.drawText(reserve.getRe_purpose_name(), 500, y_purpose, p_text);
+//            c.drawText(reserve.getRe_startDay() + " " + reserve.getRe_startTime(), 500, y_start, p_text);
+//            c.drawText(reserve.getRe_endDay() + " " + reserve.getRe_endTime(), 500, y_end, p_text);
+//            c.drawText(appEmp.getName(), 500, y_applicant, p_text);
+//            c.drawText("", 500, y_member, p_text);
+//            c.drawText(reserve.getRe_switch().contains("0") ? "社内" : "社外", 500, y_switch, p_text);
+//            c.drawText(reserve.getRe_room_name(), 500, y_room, p_text);
+//            c.drawText(reserve.getRe_fixtures(), 500, y_fixture, p_text);
+//            c.drawText(reserve.getRe_remarks(), 500, y_remark, p_text);
+
+            c.drawText(changes[ZERO], 500, y_name, p_text);
+            c.drawText(changes[ONE], 500, y_purpose, p_text);
+            c.drawText(changes[TWO], 500, y_start, p_text);
+            c.drawText(changes[THREE], 500, y_end, p_text);
+            c.drawText(changes[FOUR], 500, y_applicant, p_text);
+            c.drawText(changes[FIVE], 500, y_member, p_text);
+            c.drawText(changes[SIX].contains("0") ? "社内" : "社外", 500, y_switch, p_text);
+//            c.drawText(changes[SEVEN], 500, y_company, p_text);
+            c.drawText(changes[EIGHT], 500, y_room, p_text);
+            c.drawText(changes[NINE], 500, y_fixture, p_text);
+            c.drawText(changes[TEN], 500, y_remark, p_text);
 
         }
 
