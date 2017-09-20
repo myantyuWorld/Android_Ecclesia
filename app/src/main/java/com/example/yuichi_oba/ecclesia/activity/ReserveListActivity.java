@@ -314,6 +314,7 @@ public class ReserveListActivity extends AppCompatActivity
                     Log.d("call", "予約確認画面への遷移");
                     Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
                     intent.putExtra("re_id", re_id);
+                    intent.putExtra("emp", employee);
                     startActivity(intent);
                 }
 //                ReserveInfo reserveInfo = new ReserveInfo();

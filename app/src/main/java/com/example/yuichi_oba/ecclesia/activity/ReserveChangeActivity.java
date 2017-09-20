@@ -22,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +36,7 @@ import android.widget.TextView;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
@@ -57,6 +59,7 @@ public class ReserveChangeActivity extends AppCompatActivity
     Button editBtn;
 
     public static String[] changes ;
+    public static Employee appEmp;
 
     EditText overview;
     Spinner sp_purpose;
@@ -85,6 +88,8 @@ public class ReserveChangeActivity extends AppCompatActivity
 
         Intent intent = getIntent();
         re_id = intent.getStringExtra(KEYCHANGE);
+        appEmp = (Employee) intent.getSerializableExtra("emp");
+        Log.d("1111", appEmp.getName());
 
         changeRes = new Reserve();
 
@@ -184,6 +189,7 @@ public class ReserveChangeActivity extends AppCompatActivity
         fixtrues.setText(changeRes.getRe_fixtures());
         remarks.setText(changeRes.getRe_remarks());
         sinseisya.setText(changeRes.getRe_applicant());
+        sinseisya.setText(appEmp.getName());
         startDayBtn.setText(changeRes.getRe_startDay());
         endDayBtn.setText(changeRes.getRe_endDay());
         startTimeBtn.setText(changeRes.getRe_startTime());
@@ -336,6 +342,8 @@ public class ReserveChangeActivity extends AppCompatActivity
         private Paint p_rect;
         private Paint p_change;
 
+
+
         private String[] name = {"概要", "目的", "開始時間", "終了時間", "申請者", "参加者", "社内/社外", "会社名", "希望会議室", "備品", "その他"};
         private String[] before;
 
@@ -389,7 +397,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             p_rect.setStyle(Paint.Style.FILL);
 
             p_change = new Paint();
-            p_change.setColor(Color.RED);
+            p_change.setColor(Color.parseColor("#87cefa"));
             p_change.setStyle(Paint.Style.FILL);
 
             reserve = new Reserve();
@@ -426,7 +434,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             c.drawText(reserve.getRe_purpose_name(), 500, y_purpose, p_text);
             c.drawText(reserve.getRe_startDay() + " " + reserve.getRe_startTime(), 500, y_start, p_text);
             c.drawText(reserve.getRe_endDay() + " " + reserve.getRe_endTime(), 500, y_end, p_text);
-            c.drawText("", 500, y_applicant, p_text);
+            c.drawText(appEmp.getName(), 500, y_applicant, p_text);
             c.drawText("", 500, y_member, p_text);
             c.drawText(reserve.getRe_switch().contains("0") ? "社内" : "社外", 500, y_switch, p_text);
             c.drawText(reserve.getRe_room_name(), 500, y_room, p_text);
