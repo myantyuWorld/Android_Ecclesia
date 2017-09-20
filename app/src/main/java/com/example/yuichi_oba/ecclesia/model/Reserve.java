@@ -143,7 +143,7 @@ public class Reserve implements Serializable{
     public void setRe_company(String re_company) {
         this.re_company = re_company;
     }
-    public List<Employee> getRe_member() {
+    public List<Employee> getRe_memxber() {
         return re_member;
     }
     public void setRe_member(List<Employee> re_member) {
@@ -180,7 +180,9 @@ public class Reserve implements Serializable{
         Context context = ReserveListActivity.getInstance();
         SQLiteOpenHelper helper = new DB(context);
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor c = db.rawQuery("select * from v_reserve_member x inner join m_room y on x.room_id = y.room_id where re_id = ?",
+        Cursor c = db.rawQuery("select * from v_reserve_member x \n" +
+                        " inner join m_room y on x.room_id = y.room_id\n" +
+                        " inner join t_emp as z on x.re_applicant = z.emp_id where re_id = ?",
                 new String[]{re_id});
 //        List<String> list = new ArrayList<>();
         List<Employee> list = new ArrayList<>();
@@ -196,6 +198,7 @@ public class Reserve implements Serializable{
             reserve.setRe_remarks(c.getString(8));
             reserve.setRe_purpose_id(c.getString(18));
             reserve.setRe_purpose_name(c.getString(19));
+            reserve.setRe_applicant(c.getString(26));
             reserve.setRe_room_name(c.getString(22));
 //            list.add("社内" + " : " + c.getString(12)); //*** 参加者の 「社内：名前」のadd ***//
 

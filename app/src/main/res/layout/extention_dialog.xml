@@ -33,7 +33,7 @@
         android:layout_below="@+id/textView"
         android:layout_marginTop="22dp"
         android:gravity="center"
-        android:text="終了予定時間が入るザマス"
+        android:text="終了予定時間が入る"
         android:textAllCaps="false"
         android:textSize="30sp" />
 
