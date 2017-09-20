@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     //***  ***//
 //    public static Reserve reserve;
+    private Employee employee;
     public static String re_id;
 
     // デバッグ用
@@ -169,6 +171,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
         re_id = intent.getStringExtra("re_id");
         Log.d("call", re_id);
 
+        employee = (Employee) intent.getSerializableExtra("emp");
+
+
+
         /***
          * レイアウト情報をマッピングする
          */
@@ -237,6 +243,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
             case R.id.option_reserveChange:
                 intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
                 intent.putExtra(KEYCHANGE, re_id);
+                intent.putExtra("emp", employee);
                 startActivity(intent);
 //                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
                 // 予約情報インスタンスを次の画面にオブジェクト渡しする

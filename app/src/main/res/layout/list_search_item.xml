@@ -12,6 +12,7 @@
             android:id="@+id/purpose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:textSize="14sp" />
 
@@ -19,6 +20,7 @@
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:gravity="right"
             android:textAlignment="textEnd"
@@ -34,7 +36,9 @@
             android:id="@+id/gaiyou"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:gravity="center_horizontal"
+            android:textAlignment="viewStart"
             android:textSize="24sp" />
     </LinearLayout>
 
@@ -47,6 +51,7 @@
             android:id="@+id/company"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:textAlignment="viewStart"
             android:textSize="18sp" />
@@ -55,6 +60,7 @@
             android:id="@+id/companyMember"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:gravity="right"
             android:textAlignment="textEnd"
