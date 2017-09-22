@@ -58,10 +58,11 @@ public class ReserveActivity extends AppCompatActivity
     private static Button btEndDay;
     private static Button btStartTime;
     private static Button btEndTime;
+    private Button btReConfirm;
     //    private ReserveInfo reserveInfo;
     public static List<Employee> member = new ArrayList<>();
 
-    //***  ***//
+    //*** 日付ダイアログ ***//
     public static class MyDateDialog extends DialogFragment {
 
         @Override
@@ -88,7 +89,7 @@ public class ReserveActivity extends AppCompatActivity
             );
         }
     }
-    //***  ***//
+    //*** 時刻ダイアログ ***//
     public static class MyTimeDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -173,6 +174,7 @@ public class ReserveActivity extends AppCompatActivity
         }
         ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
         sp_member.setAdapter(adapter_member);
+
         //*** 会議目的スピナー ***//
         sp_purpose = (Spinner) findViewById(R.id.sp_re_purpose);
         SQLiteOpenHelper helper = new DB(getApplicationContext());
@@ -185,6 +187,7 @@ public class ReserveActivity extends AppCompatActivity
         c.close();
         ArrayAdapter<String> adapter_purpose = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, purpose);
         sp_purpose.setAdapter(adapter_purpose);
+
         //*** 会議室スピナー ***//
         sp_room = (Spinner) findViewById(R.id.sp_room);
         c = db.rawQuery("select * from m_room", null);
@@ -201,6 +204,9 @@ public class ReserveActivity extends AppCompatActivity
         btStartTime = (Button) findViewById(R.id.bt_re_sTime);
         btEndDay = (Button) findViewById(R.id.bt_re_eDay);
         btEndTime = (Button) findViewById(R.id.bt_re_eTime);
+
+        btReConfirm = (Button) findViewById(R.id.bt_re_confirm);
+        
 
         //***  ***//
         setWidgetListener();
@@ -281,6 +287,15 @@ public class ReserveActivity extends AppCompatActivity
                 myTimeDialog.setArguments(args);
 
                 myTimeDialog.show(getFragmentManager(), "eTime");
+            }
+        });
+        //*** 内容確認ボタン押下時の処理 ***//
+        btReConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("call", "内容確認ボタン押下");
+
+
             }
         });
     }

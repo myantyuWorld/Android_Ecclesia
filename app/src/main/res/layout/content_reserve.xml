@@ -162,7 +162,7 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/br_re_confirm"
+        android:id="@+id/bt_re_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

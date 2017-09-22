@@ -23,6 +23,8 @@ import com.example.yuichi_oba.ecclesia.tools.MyInterface;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.yuichi_oba.ecclesia.activity.ReserveActivity.member;
+
 public class AddMemberActivity extends AppCompatActivity
         implements View.OnClickListener, MyInterface {
 
@@ -123,12 +125,10 @@ public class AddMemberActivity extends AppCompatActivity
         bt_cancel = (Button) findViewById(R.id.bt_add_cancel);       //  キャンセルボタン
         bt_regist = (Button) findViewById(R.id.bt_add_regist);       //  登録（追加？）ボタン
 
-//        ed_company = (EditText) findViewById(R.id.ed_add_company);      //  会社入力項目
-//        ed_name = (EditText) findViewById(R.id.ed_add_name);            //  氏名入力項目
-////        ed_depart = (EditText) findViewById(R.id.ed_add_depart);
-////        ed_position = (EditText) findViewById(R.id.ed_add_position);
-//        ed_email = (EditText) findViewById(R.id.ed_add_email);          //  Email入力項目
-//        ed_tel = (EditText) findViewById(R.id.ed_add_tel);              //  電話入力項目
+        ed_company = (EditText) findViewById(R.id.ed_company);      //  会社入力項目
+        ed_name = (EditText) findViewById(R.id.ed_add_name);            //  氏名入力項目
+        ed_email = (EditText) findViewById(R.id.ed_add_mailaddr);          //  Email入力項目
+        ed_tel = (EditText) findViewById(R.id.ed_add_tel);              //  電話入力項目
 //        rbn_group = (RadioGroup) findViewById(R.id.rbngroup_addmember); //  ラジオボタングループ
         sp_history = (Spinner) findViewById(R.id.sp_add_history);       //  会社履歴スピナー
         sp_position = (Spinner) findViewById(R.id.sp_add_position);     //  役職スピナー
@@ -177,16 +177,27 @@ public class AddMemberActivity extends AppCompatActivity
     @Override
     public void setWidgetListener() {
         // TODO: 2017/09/19  登録ボタン押下で、参加者リストを追加するロジックの実装
+        //*** 登録ボタン押下時の処理 ***//
         bt_regist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("call", "add regist");
-//                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
-//                startActivity(intent);
+                //*** 各ウィジェットの情報を基に、参加者のインスタンスを生成 ***//
+                Employee e = new Employee();
+                e.setId("11111");   // TODO: 2017/09/22 AddMemberのIDをどうするか・・・
+                e.setName(ed_name.getText().toString());
+                e.setMailaddr(ed_email.getText().toString());
+                e.setCom_name(ed_company.getText().toString());
+                e.setDep_name(sp_depart.getSelectedItem().toString());
+                e.setPos_name(sp_position.getSelectedItem().toString());
+                // TODO: 2017/09/22 役職の優先度をどうするのか
 
+                //*** ReserveActivityの参加者リスト(member)にaddする ***//
+                member.add(e);
             }
         });
 
+        //*** キャンセルボタン押下時の処理 ***//
         bt_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

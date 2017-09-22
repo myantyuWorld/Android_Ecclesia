@@ -75,8 +75,8 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
             return new AlertDialog.Builder(getActivity())
-                    .setTitle("title")
-                    .setMessage("message")
+                    .setTitle("予約のキャンセル")
+                    .setMessage("本当にこの予約をキャンセルしますか？")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
