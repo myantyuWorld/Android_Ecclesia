@@ -44,35 +44,60 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 public class TimeTableView extends View implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     //*** 早期退出」オプション選択時の ダイアログフラグメントクラス ***//
-    public static class EarlyOutDialog extends DialogFragment {
+//    public static class EarlyOutDialog extends DialogFragment {
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            return new AlertDialog.Builder(getActivity())
+//                    .setTitle("早期退出")
+//                    .setMessage("早期退出しますか？")
+//                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                            Toast.makeText(getActivity(), "早期退出", Toast.LENGTH_SHORT).show();
+//                        }
+//                    })
+//                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                        }
+//                    })
+//                    .create();
+//        }
+//
+//        @Override
+//        public void onPause() {
+//            super.onPause();
+//            dismiss();
+//        }
+//    }
+
+    public static class CancelDialog extends DialogFragment {
         @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
+        public Dialog onCreateDialog(final Bundle savedInstanceState) {
             return new AlertDialog.Builder(getActivity())
-                    .setTitle("早期退出")
-                    .setMessage("早期退出しますか？")
+                    .setTitle("title")
+                    .setMessage("message")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Toast.makeText(getActivity(), "早期退出", Toast.LENGTH_SHORT).show();
+                        public void onClick(DialogInterface dialog, int which) {
+                            //*** Bundle で渡された引数を取得する ***//
+                            String re_id = savedInstanceState.getString("re_id");
+                            Log.d("call", "引数で渡された予約ID : " + re_id);
+
+                            //*** 予約のキャンセル処理を行う ***//
+                            SQLiteOpenHelper helper = new DB(getContext());
+                            SQLiteDatabase db = helper.getWritableDatabase();
+
+                            //*** 予約レコードの削除を行うSQL実行 ***//
+                            int result = db.delete("t_reserve", "re_id = ?", new String[]{re_id});
+                            Log.d("call", "処理件数 : " + result);
                         }
                     })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                        }
-                    })
-                    .create();
+                    .setNegativeButton("Cancel", null)
+                    .show();
         }
-
-        @Override
-        public void onPause() {
-            super.onPause();
-            dismiss();
-        }
-
-
-
     }
+
 
     public static final int Y_HEIGHT = 40;
     public static final int X_WIGDH = 216;
@@ -509,6 +534,15 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     public void onLongPress(MotionEvent e) {
         Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
         Log.d("call", "LongTouch");
+
+        //*** タップした会議の予約IDを求めて代入する ***//
+        String re_id = getSelectedReserve();
+
+        //*** キャンセルダイアログの生成 ***//
+        CancelDialog cancelDialog = new CancelDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString("re_id", re_id);       //*** Bundle に予約IDを渡す ***//
+        cancelDialog.show(ReserveListActivity.getInstance().getFragmentManager(), "cancel");
     }
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
