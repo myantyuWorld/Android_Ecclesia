@@ -85,6 +85,7 @@ public class ReserveChangeActivity extends AppCompatActivity
     EditText remarks;
     TextView sinseisya;
     TextView comp;
+    FloatingActionButton fbn;
 
     List<String> member = new ArrayList<>();
 
@@ -101,6 +102,7 @@ public class ReserveChangeActivity extends AppCompatActivity
         changeRes = new Reserve();
 
         init();
+        setListener();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -114,43 +116,12 @@ public class ReserveChangeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        FloatingActionButton fbn = (FloatingActionButton) findViewById(R.id.fbn_addMember);
-        fbn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // ここで、参加者
-                Intent intent = new Intent(getApplication(), AddMemberActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-//                setReserveInfo();
-                changes = new String[]{changeRes.getRe_name(), changeRes.getRe_purpose_name(), changeRes.getRe_startDay() + " " + changeRes.getRe_startTime(), changeRes.getRe_endDay() + " " + changeRes.getRe_endTime(),
-                       appEmp.getName(), "", changeRes.getRe_switch(), changeRes.getRe_room_name(), "", changeRes.getRe_fixtures(), changeRes.getRe_remarks()};
-
-                Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
-                intent.putExtra(KEYCHECK, changeRes);
-                startActivity(intent);
-            }
-        });
-
-        inout.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    changeRes.setRe_switch(String.valueOf(ONE));
-                } else {
-                    changeRes.setRe_switch(String.valueOf(ZERO));
-                }
-            }
-        });
     }
 
+
+
     private void init() {
+        fbn = (FloatingActionButton) findViewById(R.id.fbn_addMember);
         overview = (EditText) findViewById(R.id.change_gaiyou);
         fixtrues = (EditText) findViewById(R.id.change_fix);
         remarks = (EditText) findViewById(R.id.change_remark);
@@ -201,6 +172,17 @@ public class ReserveChangeActivity extends AppCompatActivity
         endDayBtn.setText(changeRes.getRe_endDay());
         startTimeBtn.setText(changeRes.getRe_startTime());
         endTimeBtn.setText(changeRes.getRe_endTime());
+    }
+
+    private void setListener() {
+        fbn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // ここで、参加者
+                Intent intent = new Intent(getApplication(), AddMemberActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // テキストが変わったとき　http://gupuru.hatenablog.jp/entry/2014/04/07/202334
         overview.addTextChangedListener(new TextWatcher() {
@@ -289,6 +271,30 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { }
         });
+
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+//                setReserveInfo();
+                changes = new String[]{changeRes.getRe_name(), changeRes.getRe_purpose_name(), changeRes.getRe_startDay() + " " + changeRes.getRe_startTime(), changeRes.getRe_endDay() + " " + changeRes.getRe_endTime(),
+                        appEmp.getName(), "", changeRes.getRe_switch(), changeRes.getRe_room_name(), "", changeRes.getRe_fixtures(), changeRes.getRe_remarks()};
+
+                Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
+                intent.putExtra(KEYCHECK, changeRes);
+                startActivity(intent);
+            }
+        });
+
+        inout.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    changeRes.setRe_switch(String.valueOf(ONE));
+                } else {
+                    changeRes.setRe_switch(String.valueOf(ZERO));
+                }
+            }
+        });
     }
 
     @Override
@@ -348,6 +354,8 @@ public class ReserveChangeActivity extends AppCompatActivity
 //        reserveInfo.setRe_remarks(remarks.getText().toString());
 //        reserveInfo.setRe_company(comp.getText().toString());
     }
+
+
 
     public static class CheckView extends View {
         private Paint p_line;
