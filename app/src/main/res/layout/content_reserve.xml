@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/br_re_confirm">
+        android:layout_above="@+id/bt_re_confirm">
 
         <RelativeLayout
             android:layout_width="match_parent"

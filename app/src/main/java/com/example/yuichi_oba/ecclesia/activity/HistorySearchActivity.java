@@ -1,6 +1,5 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +21,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
@@ -147,16 +147,27 @@ public class HistorySearchActivity extends AppCompatActivity
     }
 
     private class MyListAdapter extends BaseAdapter{
-        private Context context = null;
+        private Context context;
         private ArrayList<ListItem> data = null;
         private int resource = 0;
+        private LayoutInflater inflater = null;
 
-        public MyListAdapter(Context context, ArrayList<ListItem> listdata, int resource) {
+//        public MyListAdapter(Context context, ArrayList<ListItem> listdata, int resource) {
+//            this.context = context;
+//            this.data = listdata;
+//            this.resource = resource;
+//            this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        }
+
+
+        public MyListAdapter(Context context) {
             this.context = context;
-            this.data = listdata;
-            this.resource = resource;
+            this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
+        public void setItemList(ArrayList<ListItem> data) {
+            this.data = data;
+        }
         //データの個数を取得
         @Override
         public int getCount() {
@@ -177,18 +188,21 @@ public class HistorySearchActivity extends AppCompatActivity
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            Activity activity = (Activity) context;
-            ListItem item = (ListItem) getItem(position);
-            //初回かどうか確認
-            if (convertView == null) {
-                //Layoutを取得
-                convertView = activity.getLayoutInflater().inflate(resource, null);
-            }
-            ((TextView) convertView.findViewById(R.id.purpose)).setText(item.getPurpose());
-            ((TextView) convertView.findViewById(R.id.date)).setText(item.getDate());
-            ((TextView) convertView.findViewById(R.id.gaiyou)).setText(item.getGaiyou());
-            ((TextView) convertView.findViewById(R.id.company)).setText(item.getCompany());
-            ((TextView) convertView.findViewById(R.id.companyMember)).setText(item.getCompanyMember());
+            convertView = inflater.inflate(R.layout.list_search_item, parent, false);
+
+            ((RelativeLayout)convertView).findViewById(R.id.customview).invalidate();
+//            Activity activity = (Activity) context;
+//            ListItem item = (ListItem) getItem(position);
+//            //初回かどうか確認
+//            if (convertView == null) {
+//                //Layoutを取得
+//                convertView = activity.getLayoutInflater().inflate(resource, null);
+//            }
+//            ((TextView) convertView.findViewById(R.id.purpose)).setText(item.getPurpose());
+//            ((TextView) convertView.findViewById(R.id.date)).setText(item.getDate());
+//            ((TextView) convertView.findViewById(R.id.gaiyou)).setText(item.getGaiyou());
+//            ((TextView) convertView.findViewById(R.id.company)).setText(item.getCompany());
+//            ((TextView) convertView.findViewById(R.id.companyMember)).setText(item.getCompanyMember());
             return convertView;
         }
 
@@ -367,8 +381,9 @@ public class HistorySearchActivity extends AppCompatActivity
         });
 
         //ListItemとレイアウトとを関連付け
-        MyListAdapter adapter1 = new MyListAdapter(this, listItems,R.layout.list_search_item);
+        MyListAdapter adapter1 = new MyListAdapter(this);
         listView = (ListView) findViewById(R.id.list_history);
+        adapter1.setItemList(listItems);
         listView.setAdapter(adapter1);
 
         //フィルタ機能を有効化
