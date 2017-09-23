@@ -333,6 +333,8 @@ public class ReserveListActivity extends AppCompatActivity
                     Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
                     intent.putExtra("re_id", re_id);
                     intent.putExtra("emp", employee);
+                    intent.putExtra("gamen", "1");
+
                     startActivity(intent);
                 }
 //                ReserveInfo reserveInfo = new ReserveInfo();

@@ -41,6 +41,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //    public static Reserve reserve;
     private Employee employee;
     public static String re_id;
+    public static String gamen;
 
     // デバッグ用
     private static final String TAG = ReserveConfirmActivity.class.getSimpleName();
@@ -161,12 +162,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
         //*** 前画面からの引数を受け取る（re_id） ***//
         Intent intent = getIntent();
-        re_id = intent.getStringExtra("re_id");
+        gamen = intent.getStringExtra("gamen").contains("0")? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***//
+        Log.d("call", "画面遷移元　" + gamen);
         Log.d("call", re_id);
+        re_id = intent.getStringExtra("re_id");
 
         employee = (Employee) intent.getSerializableExtra("emp");
-
-
 
         /***
          * レイアウト情報をマッピングする

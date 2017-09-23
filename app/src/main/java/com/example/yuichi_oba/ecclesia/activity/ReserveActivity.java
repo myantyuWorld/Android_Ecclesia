@@ -49,7 +49,7 @@ import java.util.List;
 public class ReserveActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    //***  ***//
+    //*** Filed ***//
     private Employee employee;
     private Spinner sp_room;
     private Spinner sp_purpose;
@@ -294,7 +294,10 @@ public class ReserveActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Log.d("call", "内容確認ボタン押下");
+                Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+                intent.putExtra("gamen", "0");  // 新規予約
 
+                startActivity(intent);
 
             }
         });
