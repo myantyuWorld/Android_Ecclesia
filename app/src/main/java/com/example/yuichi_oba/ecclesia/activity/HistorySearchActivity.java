@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
@@ -190,19 +191,19 @@ public class HistorySearchActivity extends AppCompatActivity
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = inflater.inflate(R.layout.list_search_item, parent, false);
 
-            ((RelativeLayout)convertView).findViewById(R.id.customview).invalidate();
 //            Activity activity = (Activity) context;
-//            ListItem item = (ListItem) getItem(position);
+            ListItem item = (ListItem) getItem(position);
 //            //初回かどうか確認
 //            if (convertView == null) {
 //                //Layoutを取得
 //                convertView = activity.getLayoutInflater().inflate(resource, null);
 //            }
-//            ((TextView) convertView.findViewById(R.id.purpose)).setText(item.getPurpose());
-//            ((TextView) convertView.findViewById(R.id.date)).setText(item.getDate());
-//            ((TextView) convertView.findViewById(R.id.gaiyou)).setText(item.getGaiyou());
-//            ((TextView) convertView.findViewById(R.id.company)).setText(item.getCompany());
-//            ((TextView) convertView.findViewById(R.id.companyMember)).setText(item.getCompanyMember());
+            ((RelativeLayout)convertView).findViewById(R.id.customview).invalidate();
+            ((TextView) convertView.findViewById(R.id.txt_purpose)).setText(item.getPurpose());
+            ((TextView) convertView.findViewById(R.id.txt_date)).setText(item.getDate());
+            ((TextView) convertView.findViewById(R.id.txt_overview)).setText(item.getGaiyou());
+            ((TextView) convertView.findViewById(R.id.txt_company)).setText(item.getCompany());
+            ((TextView) convertView.findViewById(R.id.txt_member)).setText(item.getCompanyMember());
             return convertView;
         }
 

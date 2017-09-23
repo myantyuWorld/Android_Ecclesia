@@ -4,74 +4,67 @@
     android:layout_height="100dp"
     android:id="@+id/listItem">
 
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal">-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/purpose"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="5dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:textSize="14sp" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/date"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="5dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:gravity="right"-->
-            <!--android:textAlignment="textEnd"-->
-            <!--android:textSize="14sp" />-->
-    <!--</LinearLayout>-->
-
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="vertical">-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/gaiyou"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="5dp"-->
-            <!--android:gravity="center_horizontal"-->
-            <!--android:textAlignment="viewStart"-->
-            <!--android:textSize="24sp" />-->
-    <!--</LinearLayout>-->
-
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal">-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/company"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="5dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:textAlignment="viewStart"-->
-            <!--android:textSize="18sp" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/companyMember"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="5dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:gravity="right"-->
-            <!--android:textAlignment="textEnd"-->
-            <!--android:textSize="18sp" />-->
-    <!--</LinearLayout>-->
-
     <view
         android:id="@+id/customview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        class="com.example.yuichi_oba.ecclesia.view.HistorySearch" />
+        class="com.example.yuichi_oba.ecclesia.view.ListItemView" />
+
+    <TextView
+        android:id="@+id/txt_purpose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="3dp"
+        android:text="aaa"
+        android:textAlignment="center"
+        android:typeface="monospace" />
+
+    <TextView
+        android:id="@+id/txt_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="aaa"
+        android:textAlignment="textEnd"
+        android:typeface="monospace"
+        android:layout_marginEnd="16dp"
+        android:layout_alignBaseline="@+id/txt_purpose"
+        android:layout_alignBottom="@+id/txt_purpose"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/txt_overview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/txt_date"
+        android:layout_alignStart="@+id/txt_purpose"
+        android:layout_centerVertical="true"
+        android:textAlignment="viewStart"
+        android:textSize="24sp"
+        android:typeface="monospace" />
+
+    <TextView
+        android:id="@+id/txt_company"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/txt_overview"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="0dp"
+        android:text="aaa"
+        android:typeface="monospace" />
+
+    <TextView
+        android:id="@+id/txt_member"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txt_company"
+        android:layout_alignBottom="@+id/txt_company"
+        android:layout_alignEnd="@+id/txt_overview"
+        android:text="aaa"
+        android:textAlignment="textEnd"
+        android:typeface="monospace" />
 
 </RelativeLayout>
