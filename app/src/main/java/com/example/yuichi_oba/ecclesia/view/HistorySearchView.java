@@ -15,28 +15,26 @@ import android.view.View;
 
 public class HistorySearchView extends View {
 
+    //*** Field ***//
     private Paint p_outline;
     private Paint p_text;
     private Paint p_title;
     private Paint p_title2;
-
+    //*** Constractor ***//
     public HistorySearchView(Context context) {
         super(context);
         init();
     }
-
-
     public HistorySearchView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
-
     public HistorySearchView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    //***  ***//
+    //*** Paintクラスの初期化処理メソッド ***//
     private void init() {
         p_outline = new Paint();
         p_outline.setStrokeWidth(5);
@@ -57,7 +55,7 @@ public class HistorySearchView extends View {
         p_title2.setColor(Color.parseColor("#4169e1"));
 
     }
-
+    //*** 描画メソッド ***//
     @Override
     protected void onDraw(Canvas c) {
         super.onDraw(c);

@@ -12,28 +12,26 @@ import android.view.View;
 /**
  * Created by Yuichi-Oba on 2017/09/22.
  */
-
+//*** リストビューの子要素のCanvas描画クラス ***//
 public class ListItemView extends View {
-
+    //***  ***//
     private Paint p_outline;
     private Paint p_text;
     private Paint p_title;
-
+    //***  ***//
     public ListItemView(Context context) {
         super(context);
         init();
     }
-
     public ListItemView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
-
     public ListItemView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
-
+    //*** 描画メソッド ***//
     @Override
     protected void onDraw(Canvas c) {
         super.onDraw(c);
@@ -46,7 +44,7 @@ public class ListItemView extends View {
 
 
     }
-    //***  ***//
+    //*** テキストの描画メソッド ***//
     private void onDrawText(Canvas c) {
         String[] strings = {"目的", "日付", "概要", "会社名", "参加者"};
         c.drawText(strings[0], 20, 50, p_text);
@@ -55,8 +53,7 @@ public class ListItemView extends View {
         c.drawText(strings[3], 10, 275, p_text);
         c.drawText(strings[4], 550, 275, p_text);
     }
-
-    //***  ***//
+    //*** 枠の描画メソッド ***//
     private void onDrawBasic(Canvas c) {
         float padding = 3;
         float p2 = 6;
@@ -81,8 +78,7 @@ public class ListItemView extends View {
         c.drawLine(540 + x, 0 + padding, 540 + x, 70, p_outline);
         c.drawLine(540 + x, 230 + padding, 540 + x, 300, p_outline);
     }
-
-    //***  ***//
+    //*** 初期化処理メソッド ***//
     private void init() {
         p_outline = new Paint();
         p_outline.setStrokeWidth(5);
