@@ -35,9 +35,6 @@
         <activity
             android:name=".activity.AddMemberActivity"
             android:label="参加者登録" />
-        <activity
-            android:name=".activity.ExtentionActivity"
-            android:label="延長" />
         <activity android:name=".activity.TestActivity"></activity>
         <activity android:name=".activity.ReserveChangeActivity"
                     android:theme="@style/AppTheme.NoActionBar"/>

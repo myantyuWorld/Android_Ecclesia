@@ -3,8 +3,10 @@ package com.example.yuichi_oba.ecclesia.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,11 +19,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
+import com.example.yuichi_oba.ecclesia.tools.DB;
 
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
@@ -36,6 +40,8 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
 // TODO: 2017/09/19 延長ダイアログのレイアウト調整およびデザインの考察 
 public class ReserveConfirmActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    Spinner time = (Spinner) findViewById(R.id.extentionDia_time);
+    public static String exTime = "";
 
     //***  ***//
 //    public static Reserve reserve;
@@ -120,9 +126,11 @@ public class ReserveConfirmActivity extends AppCompatActivity
     }
     //*** 延長オプション選択時の ダイアログフラグメントクラス ***//
     public static class ExtentionDialog extends DialogFragment{
+
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final RelativeLayout layout = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.extention_dialog, null);
+
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             return builder.setTitle(EX)
@@ -130,8 +138,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     .setPositiveButton(EX, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-//                            ContentValues con = new ContentValues();
-//                            con.put("ex_endtime", reserveInfo.getRe_endTime());
+                            ContentValues con = new ContentValues();
+                            con.put("ex_endtime", exTime);
+                            // getApplicationContext()はNG（No Static）
 //                            SQLiteOpenHelper helper = new DB(getApplicationContext());
 //                            SQLiteDatabase db = helper.getWritableDatabase();
 //                            if (db.update("t_extension", con, "re_id = " + reserveInfo.getRe_id(), null) > ZERO) {
@@ -186,6 +195,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        exTime = time.getSelectedItem().toString();
         /***
          * ここまで
          */
@@ -244,10 +255,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 break;
             // 「延長」が選択された
             case R.id.option_extention:
-//                intent = new Intent(getApplicationContext(), ExtentionActivity.class);
-//                intent.putExtra(KEYEX, reserveInfo);
-//                startActivity(intent);
-
                 ExtentionDialog extentionDialog = new ExtentionDialog();
                 extentionDialog.show(getFragmentManager(), KEYEX);
                 break;
