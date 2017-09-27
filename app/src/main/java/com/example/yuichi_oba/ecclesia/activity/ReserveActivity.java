@@ -169,18 +169,18 @@ public class ReserveActivity extends AppCompatActivity
             case (1):
                 if (resultCode == RESULT_OK) {
                     //*** OKボタン押下で、戻ってきたときの処理 ***//
-                    Intent intent = getIntent();
-                    Employee e = (Employee) intent.getSerializableExtra("member");
+                    Employee e = (Employee) data.getSerializableExtra("member");
+                    Log.d("call", String.format("追加した社員情報 : %s %s", e.getId(), e.getName()));
 
                     //*** 参加者を追加する ***//
                     member.add(e);
                     //*** 参加者スピナーに反映する ***//
-//                    final List<String> list = new ArrayList<>();
-//                    for (Employee employee : member) {
-//                        list.add(employee.getCom_name() + " : " + employee.getName());
-//                    }
-//                    ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
-//                    sp_member.setAdapter(adapter_member);
+                    final List<String> list = new ArrayList<>();
+                    for (Employee employee : member) {
+                        list.add(employee.getCom_name() + " : " + employee.getName());
+                    }
+                    ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
+                    sp_member.setAdapter(adapter_member);
                     for (Employee E : member) {
                         Log.d("call", E.toString());
                     }

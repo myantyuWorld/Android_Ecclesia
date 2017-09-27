@@ -211,6 +211,7 @@ public class AddMemberActivity extends AppCompatActivity
                     //*** 社員リストの中から、検索して社員IDを検索する ***//
                     for (Employee emp : members) {
                         if (emp.getName().contains(e.getName())) {
+                            Log.d("call", String.format("検索した社員ID : %s", emp.getId()));
                             e.setId(emp.getId());
                         }
                     }
