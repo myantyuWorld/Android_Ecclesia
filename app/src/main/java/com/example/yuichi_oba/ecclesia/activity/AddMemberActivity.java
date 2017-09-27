@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
@@ -20,14 +22,16 @@ import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.MyInterface;
 import com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import com.example.yuichi_oba.ecclesia.tools.Util;
 
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.activity.ReserveActivity.member;
 
 public class AddMemberActivity extends AppCompatActivity
-        implements View.OnClickListener, MyInterface {
+        implements MyInterface {
 
     public static final String SELECT_ADD_HISTORY = "";
     //*** NameConst には、移動しないこと！ ***//
@@ -60,7 +64,7 @@ public class AddMemberActivity extends AppCompatActivity
     Spinner sp_position;
     Spinner sp_depart;
     // 会議に参加したことのあるメンバー情報を格納するメンバークラスのリスト
-//    List<Member> members = new ArrayList<>();
+    List<Employee> members = new ArrayList<>();
     private String emp_id;
 
     @Override
@@ -80,26 +84,26 @@ public class AddMemberActivity extends AppCompatActivity
 
     }
     //*** ラジオボタンでどちらか選択したときの処理を決めるメソッド ***//
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-
-        switch (id) {
-//            case R.id.bt_addmem_cancel:
-//                finish();
-//                break;
-//            case R.id.bt_addmem_regist:
-//                // 選択した参加者をResurveActivityにもっていく
-//                Toast.makeText(this, "参加者登録", Toast.LENGTH_SHORT).show();
-//                /***
-//                 * ここで、新規登録ならば、社外者ファイルへの登録を行う
-//                 */
-//                // ラジオボタンをみて、新規登録ラジオボタンなら、入力された情報の重複チェックを行う
+//    @Override
+//    public void onClick(View view) {
+//        int id = view.getId();
 //
-//                // 社外者ファイルへのインサートを行う
-//                break;
-        }
-    }
+//        switch (id) {
+////            case R.id.bt_addmem_cancel:
+////                finish();
+////                break;
+////            case R.id.bt_addmem_regist:
+////                // 選択した参加者をResurveActivityにもっていく
+////                Toast.makeText(this, "参加者登録", Toast.LENGTH_SHORT).show();
+////                /***
+////                 * ここで、新規登録ならば、社外者ファイルへの登録を行う
+////                 */
+////                // ラジオボタンをみて、新規登録ラジオボタンなら、入力された情報の重複チェックを行う
+////
+////                // 社外者ファイルへのインサートを行う
+////                break;
+//        }
+//    }
     //*** 新規登録ラジオボタンを再度選択したとき、再度編集可能にするメソッド ***//
     private void setAgainEditable() {
         // 全Edittextに対して、再編集可能にする
@@ -130,7 +134,7 @@ public class AddMemberActivity extends AppCompatActivity
         ed_name = (EditText) findViewById(R.id.ed_add_name);            //  氏名入力項目
         ed_email = (EditText) findViewById(R.id.ed_add_mailaddr);       //  Email入力項目
         ed_tel = (EditText) findViewById(R.id.ed_add_tel);              //  電話入力項目
-//        rbn_group = (RadioGroup) findViewById(R.id.rbngroup_addmember); //  ラジオボタングループ
+        rbn_group = (RadioGroup) findViewById(R.id.rbngroup_addmember); //  ラジオボタングループ
         sp_history = (Spinner) findViewById(R.id.sp_add_history);       //  会社履歴スピナー
         sp_position = (Spinner) findViewById(R.id.sp_add_position);     //  役職スピナー
         sp_depart = (Spinner) findViewById(R.id.sp_add_depart);         //  部署スピナー
@@ -146,25 +150,25 @@ public class AddMemberActivity extends AppCompatActivity
     public void setWidgetListener() {
         //*** 履歴スピナーのリスナー ***//
         sp_history.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            //*** 履歴スピナー選択時の処理 ***//
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Spinner spinner = (Spinner) adapterView;
-                String name = spinner.getSelectedItem().toString().split(":")[1];
+                String name = spinner.getSelectedItem().toString().split(" : ")[1];
                 Log.d("call", name);
 
-//                Toast.makeText(AddMemberActivity.this, name, Toast.LENGTH_SHORT).show();
-
-//                for (Member member : members) {
-//                    if (name.equals(member.getEmp_name())) {
-//                        // 履歴から選択された人間の情報を下の項目群にマッピングする
-//                        ed_company.setText(member.getCom_name());
-//                        ed_name.setText(member.getEmp_name());
-//                        ed_email.setText(member.getEmp_mailaddr());
-//                        ed_tel.setText(member.getEmp_tel());
-//                        sp_position.setSelection(Util.setSelection(sp_position, member.getPo_name()));
-//                        sp_depart.setSelection(Util.setSelection(sp_depart, member.getDep_name()));
-//                    }
-//                }
+                //*** 選択した人間の情報を、各ウィジェットにマッピングする ***//
+                for (Employee e : members) {
+                    if (name.equals(e.getName())) {
+                        // 履歴から選択された人間の情報を下の項目群にマッピングする
+                        ed_company.setText(e.getCom_name());
+                        ed_name.setText(e.getName());
+                        ed_email.setText(e.getMailaddr());
+                        ed_tel.setText(e.getTel());
+                        sp_position.setSelection(Util.setSelection(sp_position, e.getPos_name()));
+                        sp_depart.setSelection(Util.setSelection(sp_depart, e.getDep_name()));
+                    }
+                }
             }
 
             @Override
@@ -198,13 +202,28 @@ public class AddMemberActivity extends AppCompatActivity
                 finish();
             }
         });
-
         //*** キャンセルボタン押下時の処理 ***//
         bt_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("call", "AddMemberActivity->finish()");
                 finish();
+            }
+        });
+        //*** ラジオボタングループのリスナー ***//
+        rbn_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                RadioButton radioButton = (RadioButton) findViewById(checkedId);
+                switch (radioButton.getId()) {
+                    // 履歴検索
+                    case R.id.rbt_history:
+
+                        break;
+                    // 新規登録
+                    case R.id.rbt_new_regist:
+                        break;
+                }
             }
         });
     }
@@ -262,6 +281,7 @@ public class AddMemberActivity extends AppCompatActivity
             e.setPos_name(c.getString(16));     // 役職名
             e.setPos_priority(c.getString(17)); // 役職の優先度
 
+            members.add(e);
             list.add(e.getCom_name() + " : " + e.getName());
         }
         c.close();
@@ -279,10 +299,13 @@ public class AddMemberActivity extends AppCompatActivity
             e.setPos_priority(c.getString(16)); // 役職の優先度
             e.setCom_name(c.getString(18));     // 会社名
 
+            members.add(e);
             list.add(e.getCom_name() + " : " + e.getName());
         }
         // スピナーに設定する
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, list);
         sp_history.setAdapter(adapter);
     }
+
+
 }

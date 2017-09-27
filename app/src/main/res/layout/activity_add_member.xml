@@ -18,15 +18,15 @@
         android:id="@+id/sp_add_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/radioGroup"
-        android:layout_marginBottom="51dp"
-        android:layout_alignStart="@+id/ed_company"
-        android:layout_alignEnd="@+id/ed_company" />
+        android:layout_marginBottom="50dp"
+        android:layout_alignBottom="@+id/rbngroup_addmember"
+        android:layout_alignEnd="@+id/ed_company"
+        android:layout_alignStart="@+id/ed_company" />
 
     <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/radioGroup">
+        android:id="@+id/rbngroup_addmember">
 
         <RadioButton
             android:id="@+id/rbt_history"
@@ -47,6 +47,7 @@
             android:layout_below="@+id/rbt_history"
             android:layout_marginTop="63dp"
             android:text="新規登録" />
+
     </RadioGroup>
 
     <Button
@@ -55,7 +56,7 @@
         android:layout_height="wrap_content"
         android:text="キャンセル"
         android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/radioGroup" />
+        android:layout_alignEnd="@+id/rbngroup_addmember" />
 
     <Button
         android:id="@+id/bt_add_regist"
@@ -69,21 +70,21 @@
         android:id="@+id/ed_company"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="19dp"
-        android:layout_marginTop="11dp"
+        android:layout_below="@+id/sp_add_history"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/rbngroup_addmember"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:layout_below="@+id/radioGroup"
-        android:layout_alignParentEnd="true" />
+        android:inputType="textPersonName" />
 
     <Spinner
         android:id="@+id/sp_add_depart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ed_company"
-        android:layout_marginTop="31dp"
-        android:layout_alignStart="@+id/ed_company"
-        android:layout_alignEnd="@+id/ed_company" />
+        android:layout_above="@+id/sp_add_position"
+        android:layout_alignEnd="@+id/ed_company"
+        android:layout_alignStart="@+id/sp_add_history"
+        android:layout_marginBottom="10dp" />
 
     <Spinner
         android:id="@+id/sp_add_position"
@@ -91,17 +92,17 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignStart="@+id/sp_add_depart"
-        android:layout_alignEnd="@+id/sp_add_depart" />
+        android:layout_alignEnd="@+id/ed_company" />
 
     <EditText
         android:id="@+id/ed_add_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="34dp"
-        android:ems="10"
-        android:inputType="textPersonName"
+        android:layout_alignStart="@+id/sp_add_position"
         android:layout_below="@+id/sp_add_position"
-        android:layout_alignStart="@+id/sp_add_position" />
+        android:layout_marginTop="25dp"
+        android:ems="10"
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/ed_add_mailaddr"
@@ -109,7 +110,7 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/ed_add_name"
         android:layout_below="@+id/ed_add_name"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:ems="10"
         android:inputType="textEmailAddress" />
 
@@ -119,7 +120,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/ed_add_mailaddr"
         android:layout_below="@+id/ed_add_mailaddr"
-        android:layout_marginTop="19dp"
+        android:layout_marginTop="15dp"
         android:ems="10"
         android:inputType="phone" />
 
