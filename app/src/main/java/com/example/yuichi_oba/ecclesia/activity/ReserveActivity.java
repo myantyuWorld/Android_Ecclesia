@@ -37,7 +37,9 @@ import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //import android.app.Dialog;
 
@@ -61,6 +63,9 @@ public class ReserveActivity extends AppCompatActivity
     private static Button btStartTime;
     private static Button btEndTime;
     private Button btReConfirm;
+    private Map<String, String> mapPurpose; //*** 会議目的の 会議目的ID ： 会議目的名 をもつMap ***//
+    private Map<String, String> mapRoom;    //*** 会議室の 会議室ID ： 会議室名 をもつMap ***//
+
     //    private ReserveInfo reserveInfo;
     public static List<Employee> member = new ArrayList<>();
 
@@ -197,6 +202,8 @@ public class ReserveActivity extends AppCompatActivity
 
     //*** 各ウィジェットの初期化処理メソッド ***//
     private void init() {
+        mapPurpose = new HashMap<>();
+        mapRoom = new HashMap<>();
 
 //        reserveInfo = new ReserveInfo();
         //*** 申請者の設定 ***//
@@ -219,7 +226,10 @@ public class ReserveActivity extends AppCompatActivity
         List<String> purpose = new ArrayList<>();
         Cursor c = db.rawQuery("select * from m_purpose", null);
         while (c.moveToNext()) {
-            purpose.add(c.getString(0) + ":" + c.getString(1));
+            //*** mapPurpose に記録する ***//
+            mapPurpose.put(c.getString(0), c.getString(1));
+//            purpose.add(c.getString(0) + ":" + c.getString(1));
+            purpose.add(c.getString(1));
         }
         c.close();
         ArrayAdapter<String> adapter_purpose = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, purpose);
@@ -230,7 +240,9 @@ public class ReserveActivity extends AppCompatActivity
         c = db.rawQuery("select * from m_room", null);
         List<String> listRoom = new ArrayList<>();
         while (c.moveToNext()) {
-            listRoom.add(c.getString(0) + " : " + c.getString(1));
+            //*** mapRoom に記録する ***//
+            mapRoom.put(c.getString(0), c.getString(1));
+            listRoom.add(c.getString(1));
         }
         c.close();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, listRoom);
