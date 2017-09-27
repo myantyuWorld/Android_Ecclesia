@@ -124,24 +124,27 @@ public class AddMemberActivity extends AppCompatActivity
     }
     //*** 各ウィジェットの初期化処理メソッド ***//
     public void init() {
-        bt_cancel = (Button) findViewById(R.id.bt_add_cancel);       //  キャンセルボタン
-        bt_regist = (Button) findViewById(R.id.bt_add_regist);       //  登録（追加？）ボタン
-
-        ed_company = (EditText) findViewById(R.id.ed_company);      //  会社入力項目
+        bt_cancel = (Button) findViewById(R.id.bt_add_cancel);          //  キャンセルボタン
+        bt_regist = (Button) findViewById(R.id.bt_add_regist);          //  登録（追加？）ボタン
+        ed_company = (EditText) findViewById(R.id.ed_company);          //  会社入力項目
         ed_name = (EditText) findViewById(R.id.ed_add_name);            //  氏名入力項目
-        ed_email = (EditText) findViewById(R.id.ed_add_mailaddr);          //  Email入力項目
+        ed_email = (EditText) findViewById(R.id.ed_add_mailaddr);       //  Email入力項目
         ed_tel = (EditText) findViewById(R.id.ed_add_tel);              //  電話入力項目
 //        rbn_group = (RadioGroup) findViewById(R.id.rbngroup_addmember); //  ラジオボタングループ
         sp_history = (Spinner) findViewById(R.id.sp_add_history);       //  会社履歴スピナー
         sp_position = (Spinner) findViewById(R.id.sp_add_position);     //  役職スピナー
         sp_depart = (Spinner) findViewById(R.id.sp_add_depart);         //  部署スピナー
-        /***
-         * 履歴スピナーの各種設定
-         */
-        // DB 検索して、予約した人の「会社名 ： 参加者苗字」で出す
-        // DO: 2017/09/09 参加回数を求めて、上位１０人ずつを出すSQLの実装
+         //*** 履歴スピナーの各種設定 ***//
         setSpinnerHistory();
-        // リスナー登録
+         //*** 部署スピナーの各種設定 ***//
+        setSpinnerDepart();
+        //*** 役職スピナーの各種設定 ***//
+        setSpinnerPosition();
+    }
+    //*** 各ウィジェットのリスナー登録メソッド ***//
+    @Override
+    public void setWidgetListener() {
+        //*** 履歴スピナーのリスナー ***//
         sp_history.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -168,16 +171,6 @@ public class AddMemberActivity extends AppCompatActivity
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-        /***
-         * 部署スピナーの各種設定
-         */
-        setSpinnerDepart();
-
-
-    }
-    //*** 各ウィジェットのリスナー登録メソッド ***//
-    @Override
-    public void setWidgetListener() {
         // TODO: 2017/09/19  登録ボタン押下で、参加者リストを追加するロジックの実装
 
         //*** 登録ボタン押下時の処理 ***//
@@ -198,6 +191,7 @@ public class AddMemberActivity extends AppCompatActivity
                 //*** ReserveActivityの参加者リスト(member)にaddする ***//
 //                member.add(e);
 
+                //*** 選んだ（もしくは入力した）参加者を追加する ***//
                 Intent intent = new Intent();
                 intent.putExtra("member", e);
                 setResult(RESULT_OK, intent);
@@ -214,7 +208,7 @@ public class AddMemberActivity extends AppCompatActivity
             }
         });
     }
-    //*** 部署スピナーの項目を動的設定するメソッド ***//
+    //*** 部署スピナーの項目をDB検索して設定するメソッド ***//
     private void setSpinnerDepart() {
         // ＤＢ検索
         SQLiteOpenHelper helper = new DB(getApplicationContext());
@@ -229,6 +223,21 @@ public class AddMemberActivity extends AppCompatActivity
         //  スピナーに設定する
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, list);
         sp_depart.setAdapter(adapter);
+    }
+    //*** 役職スピナーの項目をDB検索して設定するメソッド ***//
+    private void setSpinnerPosition() {
+        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery("select * from m_position", null);
+
+        List<String> list = new ArrayList<>();
+        while (c.moveToNext()) {
+            list.add(c.getString(1));
+        }
+        c.close();
+        // スピナーに設定する
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, list);
+        sp_position.setAdapter(adapter);
     }
     //*** 履歴スピナーの項目を動的設定するメソッド ***//
     private void setSpinnerHistory() {

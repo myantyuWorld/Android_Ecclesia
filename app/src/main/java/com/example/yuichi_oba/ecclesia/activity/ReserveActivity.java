@@ -158,7 +158,7 @@ public class ReserveActivity extends AppCompatActivity
 
         init();
     }
-
+    //*** 開いたアクティビティ(AddMemberActivity)から何かしらの情報を受け取る ***//
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -172,6 +172,16 @@ public class ReserveActivity extends AppCompatActivity
 
                     //*** 参加者を追加する ***//
                     member.add(e);
+                    //*** 参加者スピナーに反映する ***//
+//                    final List<String> list = new ArrayList<>();
+//                    for (Employee employee : member) {
+//                        list.add(employee.getCom_name() + " : " + employee.getName());
+//                    }
+//                    ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
+//                    sp_member.setAdapter(adapter_member);
+                    for (Employee E : member) {
+                        Log.d("call", E.toString());
+                    }
 
                 } else if (resultCode == RESULT_CANCELED) {
                     //*** キャンセルボタン押下で、戻ってきたときの処理 ***//
