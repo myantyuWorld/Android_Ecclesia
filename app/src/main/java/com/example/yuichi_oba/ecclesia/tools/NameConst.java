@@ -22,6 +22,8 @@ public class NameConst {
     public static final int EREVEN = 11;
     public static final String NONE = "0";
 
+    public static final int REQUEST_CODE = 1;
+
 
     public static final String EX = "延長";
     public static final String CONF = "確認";

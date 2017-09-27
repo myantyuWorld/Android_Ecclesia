@@ -32,6 +32,7 @@ import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -150,14 +151,38 @@ public class ReserveActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent intent = new Intent(getApplication(), AddMemberActivity.class);
                 intent.putExtra("emp_id", employee.getId());
-                startActivity(intent);
+//                startActivity(intent);
+                startActivityForResult(intent, 1);  // 結果をもらう画面遷移を行う
             }
         });
 
         init();
-
-
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case (1):
+                if (resultCode == RESULT_OK) {
+                    //*** OKボタン押下で、戻ってきたときの処理 ***//
+                    Intent intent = getIntent();
+                    Employee e = (Employee) intent.getSerializableExtra("member");
+
+                    //*** 参加者を追加する ***//
+                    member.add(e);
+
+                } else if (resultCode == RESULT_CANCELED) {
+                    //*** キャンセルボタン押下で、戻ってきたときの処理 ***//
+
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
     //*** 各ウィジェットの初期化処理メソッド ***//
     private void init() {
 

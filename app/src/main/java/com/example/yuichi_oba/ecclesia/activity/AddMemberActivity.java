@@ -19,6 +19,7 @@ import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.MyInterface;
+import com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,7 @@ public class AddMemberActivity extends AppCompatActivity
     public static final int EMP_MAILADDR = 14;
     public static final int EMP_DEP_NAME = 15;
     public static final int EMP_POS_NAME = 16;
+
     //*** ここまで ***//
 
     //    EditText ed_depart;
@@ -177,6 +179,7 @@ public class AddMemberActivity extends AppCompatActivity
     @Override
     public void setWidgetListener() {
         // TODO: 2017/09/19  登録ボタン押下で、参加者リストを追加するロジックの実装
+
         //*** 登録ボタン押下時の処理 ***//
         bt_regist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,7 +196,12 @@ public class AddMemberActivity extends AppCompatActivity
                 // TODO: 2017/09/22 役職の優先度をどうするのか
 
                 //*** ReserveActivityの参加者リスト(member)にaddする ***//
-                member.add(e);
+//                member.add(e);
+
+                Intent intent = new Intent();
+                intent.putExtra("member", e);
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
 
