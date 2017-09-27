@@ -29,8 +29,8 @@
                 layout_width="match_parent"
                 android:layout_width="wrap_content"
                 android:layout_height="730dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true" />
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
 
             <TextView
                 android:id="@+id/txt_re_shinseisya"
@@ -94,9 +94,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/bt_re_eTime"
+                android:layout_alignStart="@+id/txt_re_shinseisya"
                 android:layout_below="@+id/txt_re_shinseisya"
-                android:layout_marginTop="41dp"
-                android:layout_alignStart="@+id/txt_re_shinseisya" />
+                android:layout_marginTop="25dp" />
 
             <EditText
                 android:id="@+id/ed_gaiyou"
@@ -113,10 +113,10 @@
                 android:id="@+id/switch3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="37dp"
-                android:layout_below="@+id/sp_re_member"
                 android:layout_alignEnd="@+id/txt_re_shinseisya"
-                android:layout_marginEnd="84dp" />
+                android:layout_below="@+id/sp_re_member"
+                android:layout_marginEnd="84dp"
+                android:layout_marginTop="50dp" />
 
             <TextView
                 android:id="@+id/textView12"
@@ -135,7 +135,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/sp_room"
                 android:layout_below="@+id/sp_room"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:ems="10"
                 android:inputType="textPersonName" />
 
@@ -145,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/edi_fixture"
                 android:layout_below="@+id/edi_fixture"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="20dp"
                 android:ems="10"
                 android:inputType="textPersonName" />
 
