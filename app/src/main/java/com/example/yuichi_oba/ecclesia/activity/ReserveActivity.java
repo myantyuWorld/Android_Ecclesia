@@ -342,11 +342,27 @@ public class ReserveActivity extends AppCompatActivity
         btReConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //*** 各ウィジェットの情報を取得して、予約インスタンス生成 ***//
+
+
+                //*** 新規OR予約一覧 の内容確認かはっきりさせる ***//
                 Log.d("call", "内容確認ボタン押下");
                 Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
                 intent.putExtra("gamen", "0");  // 新規予約
 
                 startActivity(intent);
+
+                //*** ReserveConfirm->onCreate() の冒頭 ***//
+                /***
+                    *** 前画面からの引数を受け取る（re_id） ***
+                    Intent intent = getIntent();
+                    gamen = intent.getStringExtra("gamen").contains("0")? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***
+                    Log.d("call", "画面遷移元　" + gamen);
+                    Log.d("call", re_id);
+                    re_id = intent.getStringExtra("re_id");
+                    employee = (Employee) intent.getSerializableExtra("emp");
+
+                 ***/
 
             }
         });
