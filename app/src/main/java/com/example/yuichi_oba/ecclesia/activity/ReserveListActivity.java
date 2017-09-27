@@ -30,6 +30,7 @@ import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.Util;
 import com.example.yuichi_oba.ecclesia.view.TimeTableView;
 
 import java.util.Calendar;
@@ -171,7 +172,7 @@ public class ReserveListActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         instance = this;
-        Log.d(TAG, "ReserveListActivity->onCreate()");
+        Util.easyLog("ReserveListActivity->onCreate() 予約一覧画面");
         /*** 各ウィジェットの初期化処理 && 社員情報の取得 ***/
         init();
 

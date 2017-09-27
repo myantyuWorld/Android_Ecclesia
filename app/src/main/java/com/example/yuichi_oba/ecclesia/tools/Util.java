@@ -1,5 +1,6 @@
 package com.example.yuichi_oba.ecclesia.tools;
 
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -29,5 +30,11 @@ public class Util {
         // なければ０を返す
         return 0;
     }
-
+    public static void easyLog(String args) {
+        Log.d("call", "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/");
+        Log.d("call", "_/");
+        Log.d("call", "_/                   " + args);
+        Log.d("call", "_/");
+        Log.d("call", "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/");
+    }
 }

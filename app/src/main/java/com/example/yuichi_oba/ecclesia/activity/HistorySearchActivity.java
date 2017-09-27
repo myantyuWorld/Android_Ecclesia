@@ -278,9 +278,9 @@ public class HistorySearchActivity extends AppCompatActivity
             li.setGaiyou(c_list.getString(GAIYOU));
             li.setDate(c_list.getString(DAY));
 //            li.setCompanyMember(c_list.getString(COM_MEMBER));
-            li.setCompanyMember(c_list.getString(17));
-            li.setCompany(c_list.getString(25));
-            li.setPurpose(c_list.getString(27));
+            li.setCompanyMember(c_list.getString(18));
+            li.setCompany(c_list.getString(26));
+            li.setPurpose(c_list.getString(28));
             // addするメソッドを書く
             listItems.add(li);
         }

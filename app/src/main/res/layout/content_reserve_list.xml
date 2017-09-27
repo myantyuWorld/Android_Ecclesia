@@ -34,7 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Search!" />
+            android:text="検索"
+            android:textSize="18sp" />
 
     </LinearLayout>
 

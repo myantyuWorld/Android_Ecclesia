@@ -32,10 +32,14 @@ import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //import android.app.Dialog;
 
@@ -59,6 +63,9 @@ public class ReserveActivity extends AppCompatActivity
     private static Button btStartTime;
     private static Button btEndTime;
     private Button btReConfirm;
+    private Map<String, String> mapPurpose; //*** 会議目的の 会議目的ID ： 会議目的名 をもつMap ***//
+    private Map<String, String> mapRoom;    //*** 会議室の 会議室ID ： 会議室名 をもつMap ***//
+
     //    private ReserveInfo reserveInfo;
     public static List<Employee> member = new ArrayList<>();
 
@@ -118,6 +125,7 @@ public class ReserveActivity extends AppCompatActivity
     //*** onCreate ***//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Util.easyLog("ReserveActivity->onCreate() 予約画面");
 
         //*** 前画面からのオブジェクトをもらう（Employeeクラスのインスタンス） ***//
         Intent intent = getIntent();
@@ -150,16 +158,52 @@ public class ReserveActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent intent = new Intent(getApplication(), AddMemberActivity.class);
                 intent.putExtra("emp_id", employee.getId());
-                startActivity(intent);
+//                startActivity(intent);
+                startActivityForResult(intent, 1);  // 結果をもらう画面遷移を行う
             }
         });
 
         init();
-
-
     }
+    //*** 開いたアクティビティ(AddMemberActivity)から何かしらの情報を受け取る ***//
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case (1):
+                if (resultCode == RESULT_OK) {
+                    //*** OKボタン押下で、戻ってきたときの処理 ***//
+                    Employee e = (Employee) data.getSerializableExtra("member");
+                    Log.d("call", String.format("追加した社員情報 : %s %s", e.getId(), e.getName()));
+
+                    //*** 参加者を追加する ***//
+                    member.add(e);
+                    //*** 参加者スピナーに反映する ***//
+                    final List<String> list = new ArrayList<>();
+                    for (Employee employee : member) {
+                        list.add(employee.getCom_name() + " : " + employee.getName());
+                    }
+                    ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
+                    sp_member.setAdapter(adapter_member);
+                    for (Employee E : member) {
+                        Log.d("call", E.toString());
+                    }
+
+                } else if (resultCode == RESULT_CANCELED) {
+                    //*** キャンセルボタン押下で、戻ってきたときの処理 ***//
+
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
     //*** 各ウィジェットの初期化処理メソッド ***//
     private void init() {
+        mapPurpose = new HashMap<>();
+        mapRoom = new HashMap<>();
 
 //        reserveInfo = new ReserveInfo();
         //*** 申請者の設定 ***//
@@ -182,7 +226,10 @@ public class ReserveActivity extends AppCompatActivity
         List<String> purpose = new ArrayList<>();
         Cursor c = db.rawQuery("select * from m_purpose", null);
         while (c.moveToNext()) {
-            purpose.add(c.getString(0) + ":" + c.getString(1));
+            //*** mapPurpose に記録する ***//
+            mapPurpose.put(c.getString(0), c.getString(1));
+//            purpose.add(c.getString(0) + ":" + c.getString(1));
+            purpose.add(c.getString(1));
         }
         c.close();
         ArrayAdapter<String> adapter_purpose = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, purpose);
@@ -193,7 +240,9 @@ public class ReserveActivity extends AppCompatActivity
         c = db.rawQuery("select * from m_room", null);
         List<String> listRoom = new ArrayList<>();
         while (c.moveToNext()) {
-            listRoom.add(c.getString(0) + " : " + c.getString(1));
+            //*** mapRoom に記録する ***//
+            mapRoom.put(c.getString(0), c.getString(1));
+            listRoom.add(c.getString(1));
         }
         c.close();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, listRoom);
@@ -293,11 +342,27 @@ public class ReserveActivity extends AppCompatActivity
         btReConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //*** 各ウィジェットの情報を取得して、予約インスタンス生成 ***//
+
+
+                //*** 新規OR予約一覧 の内容確認かはっきりさせる ***//
                 Log.d("call", "内容確認ボタン押下");
                 Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
                 intent.putExtra("gamen", "0");  // 新規予約
 
                 startActivity(intent);
+
+                //*** ReserveConfirm->onCreate() の冒頭 ***//
+                /***
+                    *** 前画面からの引数を受け取る（re_id） ***
+                    Intent intent = getIntent();
+                    gamen = intent.getStringExtra("gamen").contains("0")? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***
+                    Log.d("call", "画面遷移元　" + gamen);
+                    Log.d("call", re_id);
+                    re_id = intent.getStringExtra("re_id");
+                    employee = (Employee) intent.getSerializableExtra("emp");
+
+                 ***/
 
             }
         });
