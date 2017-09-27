@@ -168,6 +168,6 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
         android:padding="0dp"
-        android:text="内容確認" />
+        android:text="変更内容確認" />
 
 </RelativeLayout>

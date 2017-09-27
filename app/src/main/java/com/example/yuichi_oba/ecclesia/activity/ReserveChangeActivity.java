@@ -1,5 +1,8 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -29,6 +32,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -41,6 +45,7 @@ import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
@@ -74,10 +79,10 @@ public class ReserveChangeActivity extends AppCompatActivity
     TextView endDay;
     TextView startTime;
     TextView endTime;
-    Button startDayBtn;
-    Button endDayBtn;
-    Button startTimeBtn;
-    Button endTimeBtn;
+    private static Button startDayBtn;
+    private static Button endDayBtn;
+    private static Button startTimeBtn;
+    private static Button endTimeBtn;
     Switch inout;
     Spinner room;
     Spinner members;
@@ -192,7 +197,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             // テキスト変更中
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            // テキスト変更後
+            // テキスト変更後(普通はここに書けばいい)
             @Override
             public void afterTextChanged(Editable s) {
                 changeRes.setRe_name(s.toString());
@@ -295,6 +300,50 @@ public class ReserveChangeActivity extends AppCompatActivity
                 }
             }
         });
+
+        startDayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChangeDateDialog changeDateDialog = new ChangeDateDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString("date", "startDay");
+                changeDateDialog.setArguments(bundle);
+                changeDateDialog.show(getFragmentManager(), "startDay");
+            }
+        });
+
+        startTimeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChangeTimeDialog changeTimeDialog = new ChangeTimeDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString("time", "startTime");
+                changeTimeDialog.setArguments(bundle);
+                changeTimeDialog.show(getFragmentManager(), "startTime");
+            }
+        });
+
+        endDayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChangeDateDialog changeDateDialog = new ChangeDateDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString("date", "endDay");
+                changeDateDialog.setArguments(bundle);
+                changeDateDialog.show(getFragmentManager(), "endDay");
+            }
+        });
+
+        endTimeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChangeTimeDialog changeTimeDialog = new ChangeTimeDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString("time", "endTime");
+                changeTimeDialog.setArguments(bundle);
+                changeTimeDialog.show(getFragmentManager(), "endTime");
+            }
+        });
     }
 
     @Override
@@ -341,30 +390,12 @@ public class ReserveChangeActivity extends AppCompatActivity
         return true;
     }
 
-
-    public void setReserveInfo() {
-//        reserveInfo.setRe_name(overview.getText().toString());
-//        reserveInfo.setRe_startDay(startDayBtn.getText().toString());
-//        reserveInfo.setRe_startTime(startTimeBtn.getText().toString());
-//        reserveInfo.setRe_endDay(endDayBtn.getText().toString());
-//        reserveInfo.setRe_endTime(endTimeBtn.getText().toString());
-//        reserveInfo.setRe_room_name(room.getSelectedItem().toString());
-//        reserveInfo.setRe_purpose_name(sp_purpose.getSelectedItem().toString());
-//        reserveInfo.setRe_fixtures(fixtrues.getText().toString());
-//        reserveInfo.setRe_remarks(remarks.getText().toString());
-//        reserveInfo.setRe_company(comp.getText().toString());
-    }
-
-
-
     public static class CheckView extends View {
         private Paint p_line;
         private Paint p_out_line;
         private Paint p_text;
         private Paint p_rect;
         private Paint p_change;
-
-
 
         private String[] name = {"概要", "目的", "開始時間", "終了時間", "申請者", "参加者", "社内/社外", "会社名", "希望会議室", "備品", "その他"};
         private String[] before;
@@ -454,17 +485,6 @@ public class ReserveChangeActivity extends AppCompatActivity
             float y_fixture = 1150;
             float y_remark = 1270;
 
-//            c.drawText(reserve.getRe_name(), 500, y_name, p_text);
-//            c.drawText(reserve.getRe_purpose_name(), 500, y_purpose, p_text);
-//            c.drawText(reserve.getRe_startDay() + " " + reserve.getRe_startTime(), 500, y_start, p_text);
-//            c.drawText(reserve.getRe_endDay() + " " + reserve.getRe_endTime(), 500, y_end, p_text);
-//            c.drawText(appEmp.getName(), 500, y_applicant, p_text);
-//            c.drawText("", 500, y_member, p_text);
-//            c.drawText(reserve.getRe_switch().contains("0") ? "社内" : "社外", 500, y_switch, p_text);
-//            c.drawText(reserve.getRe_room_name(), 500, y_room, p_text);
-//            c.drawText(reserve.getRe_fixtures(), 500, y_fixture, p_text);
-//            c.drawText(reserve.getRe_remarks(), 500, y_remark, p_text);
-
             c.drawText(changes[ZERO], 500, y_name, p_text);
             c.drawText(changes[ONE], 500, y_purpose, p_text);
             c.drawText(changes[TWO], 500, y_start, p_text);
@@ -500,6 +520,52 @@ public class ReserveChangeActivity extends AppCompatActivity
                 c.drawText(name[i - 1], 100, room_y, p_text);
                 room_y += room;
             }
+        }
+    }
+
+    public static class ChangeDateDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Calendar calendar = Calendar.getInstance();
+            return new DatePickerDialog(getActivity(),
+                    new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                            String date = getArguments().getString("date");
+                            if (date.contains("startDay")) {
+                                startDayBtn.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+                            } else {
+                                endDayBtn.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+                            }
+                        }
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+            );
+        }
+    }
+
+    public static class ChangeTimeDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Calendar calendar = Calendar.getInstance();
+            return new DatePickerDialog(getActivity(),
+                    new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                            String date = getArguments().getString("time");
+                            if (date.contains("startTime")) {
+                                startTimeBtn.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+                            } else {
+                                endTimeBtn.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+                            }
+                        }
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+            );
         }
     }
 }

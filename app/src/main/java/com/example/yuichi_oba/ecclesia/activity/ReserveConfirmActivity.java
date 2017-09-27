@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -30,6 +31,7 @@ import com.example.yuichi_oba.ecclesia.tools.DB;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -40,7 +42,6 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
 // TODO: 2017/09/19 延長ダイアログのレイアウト調整およびデザインの考察 
 public class ReserveConfirmActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    Spinner time = (Spinner) findViewById(R.id.extentionDia_time);
     public static String exTime = "";
 
     //***  ***//
@@ -48,6 +49,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
     private Employee employee;
     public static String re_id;
     public static String gamen;
+
+    // 内部クラスからgetApplicationContextするためのやつ(普通にやるとno-staticで怒られる)
+    private static ReserveConfirmActivity instance = null;
 
     // デバッグ用
     private static final String TAG = ReserveConfirmActivity.class.getSimpleName();
@@ -108,30 +112,29 @@ public class ReserveConfirmActivity extends AppCompatActivity
             super.onPause();
             dismiss();
         }
-
-
-
     }
+
     public static class ExtentResultDialog extends DialogFragment {
         @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
+         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new AlertDialog.Builder(getActivity()).setTitle("延長完了")
                     .setMessage("延長が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
+                        public void onClick(DialogInterface dialog, int which) { }
                     }).create();
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            dismiss();
         }
     }
     //*** 延長オプション選択時の ダイアログフラグメントクラス ***//
     public static class ExtentionDialog extends DialogFragment{
-
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final RelativeLayout layout = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.extention_dialog, null);
-
-
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             return builder.setTitle(EX)
                     .setView(layout)
@@ -140,28 +143,27 @@ public class ReserveConfirmActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialogInterface, int i) {
                             ContentValues con = new ContentValues();
                             con.put("ex_endtime", exTime);
-                            // getApplicationContext()はNG（No Static）
-//                            SQLiteOpenHelper helper = new DB(getApplicationContext());
-//                            SQLiteDatabase db = helper.getWritableDatabase();
-//                            if (db.update("t_extension", con, "re_id = " + reserveInfo.getRe_id(), null) > ZERO) {
-//
-//                            }
+                            SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
+                            SQLiteDatabase db = helper.getWritableDatabase();
+                            if (db.update("t_extension", con, "re_id = " + re_id, null) > ZERO) {
+//                                Toast.makeText(getActivity(), "延長しました", Toast.LENGTH_SHORT).show();
+                                ExtentResultDialog extentResultDialog = new ExtentResultDialog();
+                                extentResultDialog.show(getFragmentManager(), "exres");
+                            } else {
+                                Toast.makeText(getActivity(), "延長失敗", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }).setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
+                        public void onClick(DialogInterface dialog, int which) { }
                     }).create();
         }
 
         @Override
         public void onPause() {
             super.onPause();
-
             dismiss();
         }
-
     }
 
     //*** onCreate ***//
@@ -173,10 +175,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
         Intent intent = getIntent();
         gamen = intent.getStringExtra("gamen").contains("0")? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***//
         Log.d("call", "画面遷移元　" + gamen);
-        Log.d("call", re_id);
         re_id = intent.getStringExtra("re_id");
+        Log.d("call", re_id);
 
         employee = (Employee) intent.getSerializableExtra("emp");
+
+        instance = this;
 
         /***
          * レイアウト情報をマッピングする
@@ -195,8 +199,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        exTime = time.getSelectedItem().toString();
         /***
          * ここまで
          */
@@ -297,5 +299,11 @@ public class ReserveConfirmActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    // これでどこからでもgetApplicationContextできる
+    // 同一Activityから呼び出す際は不要
+//    public static ReserveConfirmActivity getInstance() {
+//        return instance;
+//    }
 
 }
