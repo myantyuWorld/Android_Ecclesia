@@ -33,6 +33,7 @@ import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -119,6 +120,7 @@ public class ReserveActivity extends AppCompatActivity
     //*** onCreate ***//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Util.easyLog("ReserveActivity->onCreate() 予約画面");
 
         //*** 前画面からのオブジェクトをもらう（Employeeクラスのインスタンス） ***//
         Intent intent = getIntent();

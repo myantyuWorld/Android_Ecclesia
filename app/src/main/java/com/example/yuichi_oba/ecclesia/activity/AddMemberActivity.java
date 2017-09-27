@@ -1,5 +1,6 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -69,7 +70,7 @@ public class AddMemberActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("call", "AddMemberActivity->onCreate()");
+        Util.easyLog("AddMemberActivity->onCreate() 参加者の追加を行う画面");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_member);
 
@@ -83,27 +84,6 @@ public class AddMemberActivity extends AppCompatActivity
         setWidgetListener();
 
     }
-    //*** ラジオボタンでどちらか選択したときの処理を決めるメソッド ***//
-//    @Override
-//    public void onClick(View view) {
-//        int id = view.getId();
-//
-//        switch (id) {
-////            case R.id.bt_addmem_cancel:
-////                finish();
-////                break;
-////            case R.id.bt_addmem_regist:
-////                // 選択した参加者をResurveActivityにもっていく
-////                Toast.makeText(this, "参加者登録", Toast.LENGTH_SHORT).show();
-////                /***
-////                 * ここで、新規登録ならば、社外者ファイルへの登録を行う
-////                 */
-////                // ラジオボタンをみて、新規登録ラジオボタンなら、入力された情報の重複チェックを行う
-////
-////                // 社外者ファイルへのインサートを行う
-////                break;
-//        }
-//    }
     //*** 新規登録ラジオボタンを再度選択したとき、再度編集可能にするメソッド ***//
     private void setAgainEditable() {
         // 全Edittextに対して、再編集可能にする
@@ -181,20 +161,63 @@ public class AddMemberActivity extends AppCompatActivity
         bt_regist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("call", "add regist");
                 //*** 各ウィジェットの情報を基に、参加者のインスタンスを生成 ***//
+                Log.d("call", "add regist");
                 Employee e = new Employee();
-                e.setId("11111");   // TODO: 2017/09/22 AddMemberのIDをどうするか・・・
                 e.setName(ed_name.getText().toString());
                 e.setMailaddr(ed_email.getText().toString());
                 e.setCom_name(ed_company.getText().toString());
                 e.setDep_name(sp_depart.getSelectedItem().toString());
                 e.setPos_name(sp_position.getSelectedItem().toString());
+
+                int checkedRadioId = rbn_group.getCheckedRadioButtonId();
+                if (checkedRadioId == R.id.rbt_new_regist) {        //*** 新規登録 ***//
+                    // DO: 2017/09/27 新規登録なら、社員IDのマックス＋１を参加者インスタンスに設定する
+                    SQLiteOpenHelper helper = new DB(getApplicationContext());
+                    SQLiteDatabase db = helper.getReadableDatabase();
+
+                    //*** 社員IDのマックス＋１を検索するSQL ***//
+                    Cursor c = db.rawQuery("select max(emp_id) + 1 from t_emp", null);
+                    String maxId = "";
+                    while (c.moveToNext()) {
+                        maxId = c.getString(0);
+                    }
+                    c.close();
+                    //***  ***//
+
+                    // 社員の社員IDに、マックス＋１を設定する
+                    e.setId(maxId);
+                    Log.d("call", String.format("%04d", maxId));
+                    // TODO: 2017/09/27  社外者・社員ファイルに新規登録をかける ***//
+                    ContentValues val = new ContentValues();
+                    val.put("emp_id", e.getId());
+                    val.put("emp_name", e.getId());
+                    val.put("emp_tel", e.getId());
+                    val.put("emp_mailaddr", e.getId());
+                    val.put("dep_id", "0001"); //*** 暫定 ***//
+                    val.put("pos_id", "0001"); //*** 暫定 ***//
+
+                    long rs = db.insert("t_emp", null, val);        //*** INSERT SQL 実行 ***//
+                    if (rs == -1) {
+                        //*** INSERT 失敗 ***//
+                        Log.d("call", "insert 失敗");
+                    } else {
+                        //*** INSERT 成功 ***//
+                        Log.d("call", "insert 成功");
+                    }
+                    // TODO: 2017/09/27 社員VERのインサート処理
+                    // TODO: 2017/09/27 社外者VERのインサート処理
+                } else {                                            //*** 履歴検索 ***//
+                    //*** 社員リストの中から、検索して社員IDを検索する ***//
+                    for (Employee emp : members) {
+                        if (emp.getName().contains(e.getName())) {
+                            e.setId(emp.getId());
+                        }
+                    }
+                }
                 // TODO: 2017/09/22 役職の優先度をどうするのか
-
                 //*** ReserveActivityの参加者リスト(member)にaddする ***//
-//                member.add(e);
-
+//                member.add(e);    //==> startActivityForResult()で対応したので、いらない
                 //*** 選んだ（もしくは入力した）参加者を追加する ***//
                 Intent intent = new Intent();
                 intent.putExtra("member", e);
