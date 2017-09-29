@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.DB;
@@ -177,6 +178,9 @@ public class Reserve implements Serializable{
     public static Reserve retReserveConfirm(String re_id) {
         Reserve reserve = new Reserve();
 
+        if (!re_id.contains("0")) { //*** 新規ではない ***//
+            Log.d("call", "新規ではない、予約内容のDB検索");
+        }
         Context context = ReserveListActivity.getInstance();
         SQLiteOpenHelper helper = new DB(context);
         SQLiteDatabase db = helper.getReadableDatabase();

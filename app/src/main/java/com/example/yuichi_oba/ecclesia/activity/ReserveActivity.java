@@ -24,15 +24,17 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
+import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
-import com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import java.util.ArrayList;
@@ -55,16 +57,22 @@ public class ReserveActivity extends AppCompatActivity
 
     //*** Filed ***//
     private Employee employee;
-    private Spinner sp_room;
-    private Spinner sp_purpose;
-    private Spinner sp_member;
-    private static Button btStartDay;
-    private static Button btEndDay;
-    private static Button btStartTime;
-    private static Button btEndTime;
-    private Button btReConfirm;
     private Map<String, String> mapPurpose; //*** 会議目的の 会議目的ID ： 会議目的名 をもつMap ***//
     private Map<String, String> mapRoom;    //*** 会議室の 会議室ID ： 会議室名 をもつMap ***//
+    //*** Widget ***//
+    private EditText edOverView;        //*** 概要エディットテキスト ***//
+    private static Button btStartDay;   //*** 開始日時ボタン ***//
+    private static Button btEndDay;     //*** 終了日時ボタン ***//
+    private static Button btStartTime;  //*** 開始時刻ボタン ***//
+    private static Button btEndTime;    //*** 終了時刻ボタン ***//
+    private TextView txtApplicant;      //*** 申請者 ***//
+    private Switch swSwitch;            //*** 社内/社外区分 ***//
+    private Spinner sp_room;            //*** 会議室スピナー ***//
+    private Spinner sp_purpose;         //*** 目的スピナー ***//
+    private Spinner sp_member;          //*** 参加者スピナー ***//
+    private EditText edFixture;         //*** 備品エディットテキスト ***//
+    private EditText edRemark;          //*** 備考エディットテキスト ***//
+    private Button btReConfirm;         //*** 内容確認ボタン ***//
 
     //    private ReserveInfo reserveInfo;
     public static List<Employee> member = new ArrayList<>();
@@ -205,13 +213,27 @@ public class ReserveActivity extends AppCompatActivity
         mapPurpose = new HashMap<>();
         mapRoom = new HashMap<>();
 
+        edOverView = (EditText) findViewById(R.id.ed_gaiyou);
+        btStartDay = (Button) findViewById(R.id.bt_re_sDay);
+        btStartTime = (Button) findViewById(R.id.bt_re_sTime);
+        btEndDay = (Button) findViewById(R.id.bt_re_eDay);
+        btEndTime = (Button) findViewById(R.id.bt_re_eTime);
+        txtApplicant = (TextView) findViewById(R.id.txt_re_shinseisya);
+        swSwitch = (Switch) findViewById(R.id.switch3);
+        sp_member = (Spinner) findViewById(R.id.sp_re_member);
+        sp_purpose = (Spinner) findViewById(R.id.sp_re_purpose);
+        sp_room = (Spinner) findViewById(R.id.sp_room);
+        edFixture = (EditText) findViewById(R.id.edi_fixture);
+        edRemark = (EditText) findViewById(R.id.edi_remark);
+        btReConfirm = (Button) findViewById(R.id.bt_re_confirm);
+
+
 //        reserveInfo = new ReserveInfo();
         //*** 申請者の設定 ***//
         TextView txtApplicant = (TextView) findViewById(R.id.txt_re_shinseisya);
         txtApplicant.setText(employee.getName());
 
         //*** 参加者スピナー ***//
-        sp_member = (Spinner) findViewById(R.id.sp_re_member);
         final List<String> list = new ArrayList<>();
         for (Employee employee : member) {
             list.add(employee.getCom_name() + " : " + employee.getName());
@@ -220,7 +242,6 @@ public class ReserveActivity extends AppCompatActivity
         sp_member.setAdapter(adapter_member);
 
         //*** 会議目的スピナー ***//
-        sp_purpose = (Spinner) findViewById(R.id.sp_re_purpose);
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
         List<String> purpose = new ArrayList<>();
@@ -236,7 +257,6 @@ public class ReserveActivity extends AppCompatActivity
         sp_purpose.setAdapter(adapter_purpose);
 
         //*** 会議室スピナー ***//
-        sp_room = (Spinner) findViewById(R.id.sp_room);
         c = db.rawQuery("select * from m_room", null);
         List<String> listRoom = new ArrayList<>();
         while (c.moveToNext()) {
@@ -249,12 +269,7 @@ public class ReserveActivity extends AppCompatActivity
         sp_room.setAdapter(adapter);
 
 
-        btStartDay = (Button) findViewById(R.id.bt_re_sDay);
-        btStartTime = (Button) findViewById(R.id.bt_re_sTime);
-        btEndDay = (Button) findViewById(R.id.bt_re_eDay);
-        btEndTime = (Button) findViewById(R.id.bt_re_eTime);
 
-        btReConfirm = (Button) findViewById(R.id.bt_re_confirm);
         
 
         //***  ***//
@@ -343,12 +358,22 @@ public class ReserveActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 //*** 各ウィジェットの情報を取得して、予約インスタンス生成 ***//
-
+                Reserve r = new Reserve();
+                r.setRe_id("");
+                r.setRe_name(edOverView.getText().toString());
+                r.setRe_startDay(btStartDay.getText().toString());
+                r.setRe_endDay(btEndDay.getText().toString());
+                r.setRe_startTime(btStartTime.getText().toString());
+                r.setRe_endTime(btEndTime.getText().toString());
+                r.setRe_applicant(txtApplicant.getText().toString());
+//                r.setRe_switch(swSwitch.get);
 
                 //*** 新規OR予約一覧 の内容確認かはっきりさせる ***//
                 Log.d("call", "内容確認ボタン押下");
                 Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
                 intent.putExtra("gamen", "0");  // 新規予約
+                intent.putExtra("re_id", "0");  // TODO: 2017/09/29 予約のインスタンスを予約確認に投げる
+                intent.putExtra("emp", employee);
 
                 startActivity(intent);
 

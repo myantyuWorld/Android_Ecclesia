@@ -88,4 +88,13 @@ public class Hint {
      canvas.drawPoint(100, 100 + i, mPaint);
      }
      */
+
+    //*** HCP 画面担当一覧 ***//
+     //*** ReserveChangeActivity        しゃま***//
+     //*** ReserveListActivity          オレ***//
+     //*** HistorySearchActivity        ぐちお ***//
+     //*** ReserveCheckActivity         くに***//
+     //*** ReserveConfirmActivity       くに***//
+     //*** AddMemberActivity            ヨッシー ***//
+     //*** ReserveActivity              ヨッシー ***//
 }

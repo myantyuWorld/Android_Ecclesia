@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
@@ -86,8 +85,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
             dismiss();
         }
     }
+
     //*** 早期退出」オプション選択時の ダイアログフラグメントクラス ***//
-    public static class EarlyOutDialog extends DialogFragment{
+    public static class EarlyOutDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new AlertDialog.Builder(getActivity())
@@ -116,11 +116,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     public static class ExtentResultDialog extends DialogFragment {
         @Override
-         public Dialog onCreateDialog(Bundle savedInstanceState) {
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new AlertDialog.Builder(getActivity()).setTitle("延長完了")
                     .setMessage("延長が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) { }
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
                     }).create();
         }
 
@@ -130,8 +131,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
             dismiss();
         }
     }
+
     //*** 延長オプション選択時の ダイアログフラグメントクラス ***//
-    public static class ExtentionDialog extends DialogFragment{
+    public static class ExtentionDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final RelativeLayout layout = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.extention_dialog, null);
@@ -155,7 +157,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
                         }
                     }).setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) { }
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
                     }).create();
         }
 
@@ -171,14 +174,20 @@ public class ReserveConfirmActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "ReserveConfirmActivity->onCreate()");
 
-        //*** 前画面からの引数を受け取る（re_id） ***//
+        //*** 前画面からの引数を受け取る ***//
         Intent intent = getIntent();
-        gamen = intent.getStringExtra("gamen").contains("0")? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***//
+        gamen = intent.getStringExtra("gamen").contains("0") ? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***//
         Log.d("call", "画面遷移元　" + gamen);
         re_id = intent.getStringExtra("re_id");
-        Log.d("call", re_id);
-
         employee = (Employee) intent.getSerializableExtra("emp");
+        //*** 画面遷移元によって、処理を分ける ***//
+
+        if (gamen.contains("新規")) {    //*** 「新規」画面からの画面遷移 ***//
+
+        } else {                         //*** 「一覧」画面からの画面遷移 ***//
+
+            Log.d("call", re_id);
+        }
 
         instance = this;
 
@@ -204,18 +213,17 @@ public class ReserveConfirmActivity extends AppCompatActivity
          */
 
 
-
-
-
         // 予約詳細をDB検索して、画面にマッピングするメソッド
 //        dbSearchReserveConfirm();
     }
+
     //*** アクティビティのライフサイクルとして、別の画面にいってまた帰ってきたとき、コールされる ***//
     @Override
     protected void onStart() {
         super.onStart();
 //        dbSearchReserveConfirm();
     }
+
     //*** 戻るボタン押下時の処理 ***//
     @Override
     public void onBackPressed() {
@@ -226,12 +234,14 @@ public class ReserveConfirmActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
     //*** オプション画面を作成するメソッド ***//
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.reserve_confirm, menu);
         return true;
     }
+
     //*** オプションを選択したときの処理 ***//
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -264,6 +274,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
         // 選択された結果（項目）を返す
         return super.onOptionsItemSelected(item);
     }
+
     //*** ナビを選択したときの処理 ***//
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
