@@ -12,7 +12,7 @@ import com.example.yuichi_oba.ecclesia.tools.DB;
  * Created by Yuichi-Oba on 2017/09/15.
  */
 
-public class Auth {
+public class Admin extends Employee{
 
     //*** Field ***//
     private String adminId;
