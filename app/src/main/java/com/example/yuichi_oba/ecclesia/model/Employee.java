@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 //*** 「社員」クラス ***//
-public class Employee  extends Person implements Serializable{
+public class Employee extends Person implements Serializable {
 
     public static final int RE_ID = 0;
     public static final int RE_NAME = 1;
@@ -38,6 +38,7 @@ public class Employee  extends Person implements Serializable{
     //*** Constractor ***//
     public Employee() {
     }
+
     public Employee(String emp_id, String name, String tel, String mailaddr, String dep_id, String pos_id) {
         super(name, tel, mailaddr); //*** スーパクラスのコンストラクタコール ***//
         this.emp_id = emp_id;       //*** 社員ID ***//
@@ -50,20 +51,39 @@ public class Employee  extends Person implements Serializable{
     public String getEmp_id() {
         return emp_id;
     }
+
     public void setEmp_id(String emp_id) {
         this.emp_id = emp_id;
     }
+
     public String getDep_id() {
         return dep_id;
     }
+
     public void setDep_id(String dep_id) {
-        this.dep_id = dep_id;
+        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        //*** 部署テーブルを検索 ***//
+        Cursor c = db.rawQuery("SELECT * FROM m_depart", null);
+        if (c.moveToNext()) {
+            this.dep_id = c.getString(0); //*** 部署IDの設定 ***//
+        }
+        c.close();
     }
+
     public String getPos_id() {
         return pos_id;
     }
+
     public void setPos_id(String pos_id) {
-        this.pos_id = pos_id;
+        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        //*** 役職テーブルの検索 ***//
+        Cursor c = db.rawQuery("SELECT * FROM m_position", null);
+        if (c.moveToNext()) {
+            this.pos_id = c.getString(0);   //*** 役職IDの設定 ***//
+        }
+        c.close();
     }
 
     public String getPos_name() {
@@ -82,8 +102,7 @@ public class Employee  extends Person implements Serializable{
         this.pos_priority = pos_priority;
     }
 
-    //*** Self Made Method ***//
-    //*** 参加会議を抽出するメソッド ***//
+    //*** --- SELF MADE METHOD --- 参加会議を抽出するメソッド ***//
     public void extractParticipationMeet(String today) {
         Context context = ReserveListActivity.getInstance();
         SQLiteOpenHelper helper = new DB(context);
@@ -110,4 +129,8 @@ public class Employee  extends Person implements Serializable{
         }
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

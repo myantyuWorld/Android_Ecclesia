@@ -58,4 +58,9 @@ public class OutEmployee extends Person implements Serializable {
     public void setCom_name(String com_name) {
         this.com_name = com_name;
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

@@ -46,6 +46,7 @@ public class AddMemberActivity extends AppCompatActivity
     public static final int EMP_MAILADDR = 14;
     public static final int EMP_DEP_NAME = 15;
     public static final int EMP_POS_NAME = 16;
+    public static final String M_OUT_EMP = "m_out_emp"; //*** 社外者テーブル ***//
 
     //*** ここまで ***//
 
@@ -110,6 +111,7 @@ public class AddMemberActivity extends AppCompatActivity
         ed_email.setEnabled(true);
         ed_email.setFocusableInTouchMode(true);
     }
+
     //*** --- SELF MADE METHOD --- 各ウィジェットの初期化処理メソッド ***//
     public void init() {
         bt_cancel = (Button) findViewById(R.id.bt_add_cancel);          //  キャンセルボタン
@@ -129,6 +131,7 @@ public class AddMemberActivity extends AppCompatActivity
         //*** 役職スピナーの各種設定 ***//
         setSpinnerPosition();
     }
+
     //*** --- SELF MADE METHOD --- 各ウィジェットのリスナー登録メソッド ***//
     @Override
     public void setWidgetListener() {
@@ -163,74 +166,74 @@ public class AddMemberActivity extends AppCompatActivity
         // TODO: 2017/09/19  登録ボタン押下で、参加者リストを追加するロジックの実装
 
         //*** 登録ボタン押下時の処理 ***//
-        bt_regist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //*** 各ウィジェットの情報を基に、参加者のインスタンスを生成 ***//
-//                Log.d("call", "add regist");
-//                Employee e = new Employee();
-//                e.setName(ed_name.getText().toString());
-//                e.setMailaddr(ed_email.getText().toString());
-//                e.setCom_name(ed_company.getText().toString());
-//                e.setDep_name(sp_depart.getSelectedItem().toString());
-//                e.setPos_name(sp_position.getSelectedItem().toString());
-//
-//                int checkedRadioId = rbn_group.getCheckedRadioButtonId();
-//                if (checkedRadioId == R.id.rbt_new_regist) {        //*** 新規登録 ***//
-//                    // DO: 2017/09/27 新規登録なら、社員IDのマックス＋１を参加者インスタンスに設定する
-//                    SQLiteOpenHelper helper = new DB(getApplicationContext());
-//                    SQLiteDatabase db = helper.getReadableDatabase();
-//
-//                    //*** 社員IDのマックス＋１を検索するSQL ***//
-//                    Cursor c = db.rawQuery("select max(emp_id) + 1 from t_emp", null);
-//                    String maxId = "";
-//                    while (c.moveToNext()) {
-//                        maxId = c.getString(0);
-//                    }
-//                    c.close();
-//                    //***  ***//
-//
-//                    // 社員の社員IDに、マックス＋１を設定する
-//                    e.setId(maxId);
-//                    Log.d("call", String.format("%04d", maxId));
-//                    // TODO: 2017/09/27  社外者・社員ファイルに新規登録をかける ***//
-//                    ContentValues val = new ContentValues();
-//                    val.put("emp_id", e.getId());
-//                    val.put("emp_name", e.getId());
-//                    val.put("emp_tel", e.getId());
-//                    val.put("emp_mailaddr", e.getId());
-//                    val.put("dep_id", "0001"); //*** 暫定 ***//
-//                    val.put("pos_id", "0001"); //*** 暫定 ***//
-//
-//                    long rs = db.insert("t_emp", null, val);        //*** INSERT SQL 実行 ***//
-//                    if (rs == -1) {
-//                        //*** INSERT 失敗 ***//
-//                        Log.d("call", "insert 失敗");
-//                    } else {
-//                        //*** INSERT 成功 ***//
-//                        Log.d("call", "insert 成功");
-//                    }
-                // TODO: 2017/09/27 社員VERのインサート処理
-                // TODO: 2017/09/27 社外者VERのインサート処理
-//                } else {                                            //*** 履歴検索 ***//
-//                    //*** 社員リストの中から、検索して社員IDを検索する ***//
-//                    for (Employee emp : members) {
-//                        if (emp.getName().contains(e.getName())) {
-//                            Log.d("call", String.format("検索した社員ID : %s", emp.getId()));
-//                            e.setId(emp.getId());
-//                        }
-//                    }
-//                }
-                // TODO: 2017/09/22 役職の優先度をどうするのか
-                //*** ReserveActivityの参加者リスト(member)にaddする ***//
-//                member.add(e);    //==> startActivityForResult()で対応したので、いらない
-                //*** 選んだ（もしくは入力した）参加者を追加する ***//
-//                Intent intent = new Intent();
-//                intent.putExtra("member", e);
-//                setResult(RESULT_OK, intent);
-//                finish();
-            }
-        });
+//        bt_regist.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //*** 各ウィジェットの情報を基に、参加者のインスタンスを生成 ***//
+////                Log.d("call", "add regist");
+////                Employee e = new Employee();
+////                e.setName(ed_name.getText().toString());
+////                e.setMailaddr(ed_email.getText().toString());
+////                e.setCom_name(ed_company.getText().toString());
+////                e.setDep_name(sp_depart.getSelectedItem().toString());
+////                e.setPos_name(sp_position.getSelectedItem().toString());
+////
+////                int checkedRadioId = rbn_group.getCheckedRadioButtonId();
+////                if (checkedRadioId == R.id.rbt_new_regist) {        //*** 新規登録 ***//
+////                    // DO: 2017/09/27 新規登録なら、社員IDのマックス＋１を参加者インスタンスに設定する
+////                    SQLiteOpenHelper helper = new DB(getApplicationContext());
+////                    SQLiteDatabase db = helper.getReadableDatabase();
+////
+////                    //*** 社員IDのマックス＋１を検索するSQL ***//
+////                    Cursor c = db.rawQuery("select max(emp_id) + 1 from t_emp", null);
+////                    String maxId = "";
+////                    while (c.moveToNext()) {
+////                        maxId = c.getString(0);
+////                    }
+////                    c.close();
+////                    //***  ***//
+////
+////                    // 社員の社員IDに、マックス＋１を設定する
+////                    e.setId(maxId);
+////                    Log.d("call", String.format("%04d", maxId));
+////                    // TODO: 2017/09/27  社外者・社員ファイルに新規登録をかける ***//
+////                    ContentValues val = new ContentValues();
+////                    val.put("emp_id", e.getId());
+////                    val.put("emp_name", e.getId());
+////                    val.put("emp_tel", e.getId());
+////                    val.put("emp_mailaddr", e.getId());
+////                    val.put("dep_id", "0001"); //*** 暫定 ***//
+////                    val.put("pos_id", "0001"); //*** 暫定 ***//
+////
+////                    long rs = db.insert("t_emp", null, val);        //*** INSERT SQL 実行 ***//
+////                    if (rs == -1) {
+////                        //*** INSERT 失敗 ***//
+////                        Log.d("call", "insert 失敗");
+////                    } else {
+////                        //*** INSERT 成功 ***//
+////                        Log.d("call", "insert 成功");
+////                    }
+//                // TODO: 2017/09/27 社員VERのインサート処理
+//                // TODO: 2017/09/27 社外者VERのインサート処理
+////                } else {                                            //*** 履歴検索 ***//
+////                    //*** 社員リストの中から、検索して社員IDを検索する ***//
+////                    for (Employee emp : members) {
+////                        if (emp.getName().contains(e.getName())) {
+////                            Log.d("call", String.format("検索した社員ID : %s", emp.getId()));
+////                            e.setId(emp.getId());
+////                        }
+////                    }
+////                }
+//                // TODO: 2017/09/22 役職の優先度をどうするのか
+//                //*** ReserveActivityの参加者リスト(member)にaddする ***//
+////                member.add(e);    //==> startActivityForResult()で対応したので、いらない
+//                //*** 選んだ（もしくは入力した）参加者を追加する ***//
+////                Intent intent = new Intent();
+////                intent.putExtra("member", e);
+////                setResult(RESULT_OK, intent);
+////                finish();
+//            }
+//        });
         //*** キャンセルボタン押下時の処理 ***//
         bt_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,6 +259,7 @@ public class AddMemberActivity extends AppCompatActivity
             }
         });
     }
+
     //*** --- SELF MADE METHOD --- 部署スピナーの項目をDB検索して設定するメソッド ***//
     private void setSpinnerDepart() {
         // ＤＢ検索
@@ -272,6 +276,7 @@ public class AddMemberActivity extends AppCompatActivity
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, list);
         sp_depart.setAdapter(adapter);
     }
+
     //*** --- SELF MADE METHOD --- 役職スピナーの項目をDB検索して設定するメソッド ***//
     private void setSpinnerPosition() {
         SQLiteOpenHelper helper = new DB(getApplicationContext());
@@ -287,6 +292,7 @@ public class AddMemberActivity extends AppCompatActivity
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, list);
         sp_position.setAdapter(adapter);
     }
+
     //*** --- SELF MADE METHOD --- 履歴スピナーの項目を動的設定するメソッド ***//
     private void setSpinnerHistory() {
         // DB 検索
@@ -349,13 +355,69 @@ public class AddMemberActivity extends AppCompatActivity
         sp_history.setAdapter(adapter);
     }
 
-    //*** --- SELF MADE METHOD --- ***//
+    //*** --- SELF MADE METHOD --- 登録ボタン押下時の処理 ***//
     public void onClickRegist(View view) {
         Log.d("call", "call onClickRegist()");
+        //*** ひとつでもエラーが検出されたら、画面遷移させない ***//
+        if (!isBrankSpace()) {
+            Log.d("call", "参加者追加アクティビティ エラー検出！ 登録はしません！");
+            return; //*** 処理を抜ける ***//
+        }
+
+
         //*** 各ウィジェットの情報を基に、参加者のインスタンスを生成 ***//
-        // TODO: 2017/10/02 社員か社外者に応じたインスタンスの生成
-
-
+        if (ed_company.getText().toString().contains("")) {     //*** 社内の場合 ***//
+            Employee e = new Employee(
+                    returnMaxId("t_emp"),                   //*** 社員テーブルのIDの最大値＋１を代入 ***//
+                    ed_name.getText().toString(),           //*** 氏名 ***//
+                    ed_tel.getText().toString(),            //*** 電話番号 ***//
+                    ed_email.getText().toString(),          //*** メールアドレス ***//
+                    "",                                     //*** 部署ID ***//
+                    ""                                      //*** 役職ID ***//
+            );
+            Log.d("call", e.toString());
+            e.setDep_id(sp_depart.getSelectedItem().toString());
+            e.setPos_id(sp_position.getSelectedItem().toString());
+        } else {                                                //*** 社外者の場合 ***//
+            OutEmployee e = new OutEmployee(
+                    returnMaxId(M_OUT_EMP),                     //*** 社外者テーブルのIDの最大値＋１を代入 ***//
+                    ed_name.getText().toString(),               //*** 氏名 ***//
+                    ed_tel.getText().toString(),                //*** 電話番号 ***//
+                    ed_email.getText().toString(),              //*** メールアドレス ***//
+                    sp_depart.getSelectedItem().toString(),     //*** 部署名 ***//
+                    sp_position.getSelectedItem().toString(),   //*** 役職名 ***//
+                    "",                                         //*** 役職優先度 ***//
+                    ed_company.getText().toString()             //*** 会社名 ***//
+            );
+            Log.d("call", e.toString());
+        }
         //*** intent に セットする ***//
+    }
+
+    //*** --- SELF MADE METHOD --- 指定されたテーブルのIDの最大値＋１を返すメソッド ***//
+    private String returnMaxId(String tblName) {
+        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        String maxId = "";
+        Cursor c = db.rawQuery(String.format("SELECT * FROM %s", tblName), null);
+        if (c.moveToNext()) {
+            maxId = c.getString(0);
+        }
+        c.close();
+
+        return maxId;
+    }
+
+    //*** --- SELF MADE METHOD --- ウィジェットに空欄があるかチェックするメソッド ***//
+    private boolean isBrankSpace() {
+        // TODO: 2017/10/02 要相談 
+        //*** 各ウィジェットの空欄を検査 ※ 会社は、空欄の場合は、社内とするので、OKとする（暫定）***//
+        if (ed_email.getText().toString().isEmpty() ||      //*** Email ***//
+                ed_name.getText().toString().isEmpty() ||   //*** 氏名 ***//
+                ed_tel.getText().toString().isEmpty()) {    //*** 電話番号 ***//
+            return false;   //*** 異常を返す ***//
+        }
+        return true;    //*** ブランク無し（正常）を返す ***//
     }
 }
