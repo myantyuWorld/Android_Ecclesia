@@ -34,7 +34,6 @@ import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.Person;
-import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
@@ -79,6 +78,11 @@ public class ReserveActivity extends AppCompatActivity
 //    public static List<Employee> member = new ArrayList<>();
     //*** 社員・社外者の参加者を持つための、ポリモーフィズム使用のための、スーパクラスのリスト ***//
     public static List<Person> member = new ArrayList<>();
+
+    //*** 内容確認ボタン押下時の処理 ***//
+    public void onClickReConfirm(View view) {
+        Log.d("call", "call onClickReConfirm()");
+    }
 
 
     //*** 日付ダイアログ ***//
@@ -358,45 +362,47 @@ public class ReserveActivity extends AppCompatActivity
             }
         });
         //*** 内容確認ボタン押下時の処理 ***//
-        btReConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //*** 各ウィジェットの情報を取得して、予約インスタンス生成 ***//
+//         btReConfirm.setOnClickListener((View.OnClickListener) this);
 
-                // TODO: 2017/10/02 空欄があるかチェックするメソッドの実装
-                Reserve r = new Reserve();
-                r.setRe_id("");
-                r.setRe_name(edOverView.getText().toString());
-                r.setRe_startDay(btStartDay.getText().toString());
-                r.setRe_endDay(btEndDay.getText().toString());
-                r.setRe_startTime(btStartTime.getText().toString());
-                r.setRe_endTime(btEndTime.getText().toString());
-                r.setRe_applicant(txtApplicant.getText().toString());
-//                r.setRe_switch(swSwitch.get);
-
-                //*** 新規OR予約一覧 の内容確認かはっきりさせる ***//
-                Log.d("call", "内容確認ボタン押下");
-                Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-                intent.putExtra("gamen", "0");  // 新規予約
-                intent.putExtra("re_id", "0");  // TODO: 2017/09/29 予約のインスタンスを予約確認に投げる
-                intent.putExtra("emp", employee);
-
-                startActivity(intent);
-
-                //*** ReserveConfirm->onCreate() の冒頭 ***//
-                /***
-                    *** 前画面からの引数を受け取る（re_id） ***
-                    Intent intent = getIntent();
-                    gamen = intent.getStringExtra("gamen").contains("0")? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***
-                    Log.d("call", "画面遷移元　" + gamen);
-                    Log.d("call", re_id);
-                    re_id = intent.getStringExtra("re_id");
-                    employee = (Employee) intent.getSerializableExtra("emp");
-
-                 ***/
-
-            }
-        });
+//        btReConfirm.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //*** 各ウィジェットの情報を取得して、予約インスタンス生成 ***//
+//
+//                // TODO: 2017/10/02 空欄があるかチェックするメソッドの実装
+//                Reserve r = new Reserve();
+//                r.setRe_id("");
+//                r.setRe_name(edOverView.getText().toString());
+//                r.setRe_startDay(btStartDay.getText().toString());
+//                r.setRe_endDay(btEndDay.getText().toString());
+//                r.setRe_startTime(btStartTime.getText().toString());
+//                r.setRe_endTime(btEndTime.getText().toString());
+//                r.setRe_applicant(txtApplicant.getText().toString());
+////                r.setRe_switch(swSwitch.get);
+//
+//                //*** 新規OR予約一覧 の内容確認かはっきりさせる ***//
+//                Log.d("call", "内容確認ボタン押下");
+//                Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+//                intent.putExtra("gamen", "0");  // 新規予約
+//                intent.putExtra("re_id", "0");  // TODO: 2017/09/29 予約のインスタンスを予約確認に投げる
+//                intent.putExtra("emp", employee);
+//
+//                startActivity(intent);
+//
+//                //*** ReserveConfirm->onCreate() の冒頭 ***//
+//                /***
+//                    *** 前画面からの引数を受け取る（re_id） ***
+//                    Intent intent = getIntent();
+//                    gamen = intent.getStringExtra("gamen").contains("0")? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***
+//                    Log.d("call", "画面遷移元　" + gamen);
+//                    Log.d("call", re_id);
+//                    re_id = intent.getStringExtra("re_id");
+//                    employee = (Employee) intent.getSerializableExtra("emp");
+//
+//                 ***/
+//
+//            }
+//        });
     }
     //*** 戻るボタン押下時の処理 ***//
     @Override
