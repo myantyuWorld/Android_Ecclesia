@@ -33,6 +33,7 @@ import android.widget.TimePicker;
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
+import com.example.yuichi_oba.ecclesia.model.Person;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.Util;
@@ -75,7 +76,10 @@ public class ReserveActivity extends AppCompatActivity
     private Button btReConfirm;         //*** 内容確認ボタン ***//
 
     //    private ReserveInfo reserveInfo;
-    public static List<Employee> member = new ArrayList<>();
+//    public static List<Employee> member = new ArrayList<>();
+    //*** 社員・社外者の参加者を持つための、ポリモーフィズム使用のための、スーパクラスのリスト ***//
+    public static List<Person> member = new ArrayList<>();
+
 
     //*** 日付ダイアログ ***//
     public static class MyDateDialog extends DialogFragment {
@@ -165,7 +169,7 @@ public class ReserveActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplication(), AddMemberActivity.class);
-                intent.putExtra("emp_id", employee.getId());
+                intent.putExtra("emp_id", employee.getEmp_id());
 //                startActivity(intent);
                 startActivityForResult(intent, 1);  // 結果をもらう画面遷移を行う
             }
@@ -183,20 +187,20 @@ public class ReserveActivity extends AppCompatActivity
                 if (resultCode == RESULT_OK) {
                     //*** OKボタン押下で、戻ってきたときの処理 ***//
                     Employee e = (Employee) data.getSerializableExtra("member");
-                    Log.d("call", String.format("追加した社員情報 : %s %s", e.getId(), e.getName()));
+                    Log.d("call", String.format("追加した社員情報 : %s %s", e.getEmp_id(), e.getName()));
 
                     //*** 参加者を追加する ***//
                     member.add(e);
                     //*** 参加者スピナーに反映する ***//
                     final List<String> list = new ArrayList<>();
-                    for (Employee employee : member) {
-                        list.add(employee.getCom_name() + " : " + employee.getName());
-                    }
+//                    for (Employee employee : member) {
+//                        list.add(employee.getCom_name() + " : " + employee.getName());
+//                    }
                     ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
                     sp_member.setAdapter(adapter_member);
-                    for (Employee E : member) {
-                        Log.d("call", E.toString());
-                    }
+//                    for (Employee E : member) {
+//                        Log.d("call", E.toString());
+//                    }
 
                 } else if (resultCode == RESULT_CANCELED) {
                     //*** キャンセルボタン押下で、戻ってきたときの処理 ***//
@@ -235,9 +239,9 @@ public class ReserveActivity extends AppCompatActivity
 
         //*** 参加者スピナー ***//
         final List<String> list = new ArrayList<>();
-        for (Employee employee : member) {
-            list.add(employee.getCom_name() + " : " + employee.getName());
-        }
+//        for (Employee employee : member) {
+//            list.add(employee.getCom_name() + " : " + employee.getName());
+//        }
         ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
         sp_member.setAdapter(adapter_member);
 
