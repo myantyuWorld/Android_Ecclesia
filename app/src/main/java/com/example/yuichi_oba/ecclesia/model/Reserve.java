@@ -37,7 +37,9 @@ public class Reserve implements Serializable{
     private String re_applicant;
     private String re_room_id;
     private String re_room_name;
-    private List<Employee> re_member;
+//    private List<Employee> re_member;
+    private List<Person> re_member;
+
     private float[] coop;
 
     public Reserve() {
@@ -144,10 +146,10 @@ public class Reserve implements Serializable{
     public void setRe_company(String re_company) {
         this.re_company = re_company;
     }
-    public List<Employee> getRe_memxber() {
+    public List<Person> getRe_member() {
         return re_member;
     }
-    public void setRe_member(List<Employee> re_member) {
+    public void setRe_member(List<Person> re_member) {
         this.re_member = re_member;
     }
     //*** SelfMadeMethod ***//
@@ -189,7 +191,9 @@ public class Reserve implements Serializable{
                         " inner join t_emp as z on x.re_applicant = z.emp_id where re_id = ?",
                 new String[]{re_id});
 //        List<String> list = new ArrayList<>();
-        List<Employee> list = new ArrayList<>();
+//        List<Employee> list = new ArrayList<>();
+        List<Person> list = new ArrayList<>();
+
         while (c.moveToNext()) {
             //*** 予約の共通部分 ***//
             reserve.setRe_name(c.getString(1));
@@ -204,20 +208,17 @@ public class Reserve implements Serializable{
             reserve.setRe_purpose_name(c.getString(19));
             reserve.setRe_applicant(c.getString(26));
             reserve.setRe_room_name(c.getString(22));
-//            list.add("社内" + " : " + c.getString(12)); //*** 参加者の 「社内：名前」のadd ***//
 
-            //*** 社員？（人間）クラスのインスタンスを生成 ***//
+            //*** [社員]クラスのインスタンスを生成 ***//
             Employee e = new Employee();
-            e.setId(c.getString(11));           // ID
+            e.setEmp_id(c.getString(11));       // ID
             e.setName(c.getString(12));         // 氏名
             e.setTel(c.getString(13));          // 電話番号
             e.setMailaddr(c.getString(14));     // メールアドレス
-            e.setCom_name("社内");
-            e.setDep_name(c.getString(15));     // 部署名
             e.setPos_name(c.getString(16));     // 役職名
             e.setPos_priority(c.getString(17)); // 役職の優先度
 
-            list.add(e);
+            list.add(e);    //*** インスタンスを追加 ***//
         }
 
         c.close();
@@ -228,21 +229,33 @@ public class Reserve implements Serializable{
             reserve.setRe_company(c.getString(18));
 
             //*** 社員(社外者）クラスのインスタンスを生成 ***//
-            Employee e = new Employee();
-            e.setId(c.getString(10));           // ID
-            e.setName(c.getString(11));         // 氏名
-            e.setTel(c.getString(12));          // 電話番号
-            e.setMailaddr(c.getString(13));     // メールアドレス
-            e.setDep_name(c.getString(14));     // 部署名
-            e.setPos_name(c.getString(15));     // 役職名
-            e.setPos_priority(c.getString(16)); // 役職の優先度
-            e.setCom_name(c.getString(18));     // 会社名
-//            list.add(c.getString(18) + " : " + c.getString(11)); //*** 社外者の 「会社名 ： 名前」のadd ***//
-            list.add(e);
+//            Employee e = new Employee();
+//            e.setEmp_id(c.getString(10));           // ID
+//            e.setName(c.getString(11));         // 氏名
+//            e.setTel(c.getString(12));          // 電話番号
+//            e.setMailaddr(c.getString(13));     // メールアドレス
+//            e.setDep_name(c.getString(14));     // 部署名
+//            e.setPos_name(c.getString(15));     // 役職名
+//            e.setPos_priority(c.getString(16)); // 役職の優先度
+//            e.setCom_name(c.getString(18));     // 会社名
+////            list.add(c.getString(18) + " : " + c.getString(11)); //*** 社外者の 「会社名 ： 名前」のadd ***//
+
+            //*** [社外者]クラスのインスタンスを生成 ***//
+            OutEmployee e = new OutEmployee(
+                    c.getString(10),            //*** ID ***//
+                    c.getString(11),            //*** 氏名 ***//
+                    c.getString(12),            //*** 電話番号 ***//
+                    c.getString(13),            //*** メールアドレス ***//
+                    c.getString(14),            //*** 部署名 ***//
+                    c.getString(15),            //*** 役職名 ***//
+                    c.getString(16),            //*** 役職優先度 ***//
+                    c.getString(18)             //*** 会社名 ***//
+            );
+            list.add(e);    //*** インスタンスを追加  ***//
         }
         c.close();
 
-        reserve.setRe_member(list);
-        return  reserve;
+        reserve.setRe_member(list); //*** ポリモーフィズム使用のリストをセット ***//
+        return  reserve;            //*** 予約情報を返す ***//
     }
 }

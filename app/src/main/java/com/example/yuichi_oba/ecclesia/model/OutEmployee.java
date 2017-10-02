@@ -13,7 +13,7 @@ public class OutEmployee extends Person implements Serializable {
     private String dep_name;        //*** 社外部署名 ***//
     private String pos_name;        //*** 社外役職名 ***//
     private String pos_priority;    //*** 社外役職優先度 ***//
-    private String com_name;        //***  ***//
+    private String com_name;        //*** 会社名 ***//
 
     //*** Constractor ***//
     public OutEmployee() {
