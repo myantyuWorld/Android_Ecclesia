@@ -61,6 +61,8 @@ public class ReserveActivity extends AppCompatActivity
     private Map<String, String> mapRoom;    //*** 会議室の 会議室ID ： 会議室名 をもつMap ***//
     //*** Widget ***//
     private EditText edOverView;        //*** 概要エディットテキスト ***//
+    private EditText edFixture;         //*** 備品エディットテキスト ***//
+    private EditText edRemark;          //*** 備考エディットテキスト ***//
     private static Button btStartDay;   //*** 開始日時ボタン ***//
     private static Button btEndDay;     //*** 終了日時ボタン ***//
     private static Button btStartTime;  //*** 開始時刻ボタン ***//
@@ -70,19 +72,12 @@ public class ReserveActivity extends AppCompatActivity
     private Spinner sp_room;            //*** 会議室スピナー ***//
     private Spinner sp_purpose;         //*** 目的スピナー ***//
     private Spinner sp_member;          //*** 参加者スピナー ***//
-    private EditText edFixture;         //*** 備品エディットテキスト ***//
-    private EditText edRemark;          //*** 備考エディットテキスト ***//
     private Button btReConfirm;         //*** 内容確認ボタン ***//
 
     //    private ReserveInfo reserveInfo;
 //    public static List<Employee> member = new ArrayList<>();
     //*** 社員・社外者の参加者を持つための、ポリモーフィズム使用のための、スーパクラスのリスト ***//
     public static List<Person> member = new ArrayList<>();
-
-    //*** 内容確認ボタン押下時の処理 ***//
-    public void onClickReConfirm(View view) {
-        Log.d("call", "call onClickReConfirm()");
-    }
 
 
     //*** 日付ダイアログ ***//
@@ -101,6 +96,7 @@ public class ReserveActivity extends AppCompatActivity
                             Log.d("call", date);
                             if (date.contains("sDay")) {
                                 btStartDay.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+                                // TODO: 2017/10/02 終了日時を開始日時でせっていする 
                             } else {
                                 btEndDay.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
                             }
@@ -112,6 +108,7 @@ public class ReserveActivity extends AppCompatActivity
             );
         }
     }
+
     //*** 時刻ダイアログ ***//
     public static class MyTimeDialog extends DialogFragment {
         @Override
@@ -126,6 +123,7 @@ public class ReserveActivity extends AppCompatActivity
                             Log.d("call", time);
                             if (time.contains("sTime")) {
                                 btStartTime.setText(String.format("%02d : %02d", hourOfDay, minute));
+                                // TODO: 2017/10/02 終了日時を開始日時の３０分後（暫定）で設定する
                             } else {
                                 btEndTime.setText(String.format("%02d : %02d", hourOfDay, minute));
                             }
@@ -181,6 +179,7 @@ public class ReserveActivity extends AppCompatActivity
 
         init();
     }
+
     //*** 開いたアクティビティ(AddMemberActivity)から何かしらの情報を受け取る ***//
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -216,6 +215,52 @@ public class ReserveActivity extends AppCompatActivity
         }
     }
 
+    //*** 戻るボタン押下時の処理 ***//
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    //*** ナビを選択したときの処理 ***//
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        Intent intent = null;
+        switch (id) {
+            case R.id.nav_reserve_list:
+                intent = new Intent(getApplicationContext(), ReserveListActivity.class);
+                break;
+            case R.id.nav_rireki:
+                intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
+                break;
+            case R.id.nav_admin_auth:
+                AuthDialog authDialog = new AuthDialog();
+                authDialog.show(getFragmentManager(), "aaa");
+                break;
+
+        }
+        if (intent != null) {
+            startActivity(intent);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    /***_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+     *
+     *          自作メソッド
+     *
+     * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/*/
     //*** 各ウィジェットの初期化処理メソッド ***//
     private void init() {
         mapPurpose = new HashMap<>();
@@ -277,12 +322,10 @@ public class ReserveActivity extends AppCompatActivity
         sp_room.setAdapter(adapter);
 
 
-
-        
-
         //***  ***//
         setWidgetListener();
     }
+
     //*** 各種ウィジェットのリスナーを登録するメソッド ***//
     private void setWidgetListener() {
         sp_member.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -369,7 +412,7 @@ public class ReserveActivity extends AppCompatActivity
 //            public void onClick(View v) {
 //                //*** 各ウィジェットの情報を取得して、予約インスタンス生成 ***//
 //
-//                // TODO: 2017/10/02 空欄があるかチェックするメソッドの実装
+//
 //                Reserve r = new Reserve();
 //                r.setRe_id("");
 //                r.setRe_name(edOverView.getText().toString());
@@ -404,43 +447,57 @@ public class ReserveActivity extends AppCompatActivity
 //            }
 //        });
     }
-    //*** 戻るボタン押下時の処理 ***//
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+
+    //*** 内容確認ボタン押下時の処理 ***//
+    public void onClickReConfirm(View view) {
+        Log.d("call", "call onClickReConfirm()");
+
+        // TODO: 2017/10/02 空欄があるかチェックするメソッドの実装
+        //*** エディットテキストに空欄があるかチェック ***//
+        if (isBrankSpace()) {
+            Log.d("call", "空欄あり");
         }
+        // TODO: 2017/10/02 開始終了日時・時刻に矛盾がないかチェックする
+        if (checkStartEnd()) {
+            Log.d("call", "開始終了日時・時刻に矛盾なし");
+        }
+
+        Log.d("call", "画面遷移開始");
     }
-    //*** ナビを選択したときの処理 ***//
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        Intent intent = null;
-        switch (id) {
-            case R.id.nav_reserve_list:
-                intent = new Intent(getApplicationContext(), ReserveListActivity.class);
-                break;
-            case R.id.nav_rireki:
-                intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
-                break;
-            case R.id.nav_admin_auth:
-                AuthDialog authDialog = new AuthDialog();
-                authDialog.show(getFragmentManager(), "aaa");
-                break;
-
+    //*** --- SELF MADE METHOD --- 開始終了日時・時刻に矛盾がないかチェックするメソッド ***//
+    private boolean checkStartEnd() {
+        //*** ”開始日時”など、未選択の状態かチェックする ***//
+        if (btStartDay.getText().toString().contains("開始日時") ||
+                btEndDay.getText().toString().contains("終了日時") ||
+                btStartTime.getText().toString().contains("開始時刻") ||
+                btEndTime.getText().toString().contains("終了時刻")) {
+            return false;   //*** 異常 を返す ***//
         }
-        if (intent != null) {
-            startActivity(intent);
+        //*** 開始が終了より遅いかなどの矛盾をチェックする ***//
+        String sDay = btStartDay.getText().toString().split(":")[0] + btStartDay.getText().toString().split(":")[1];
+        String eDay = btEndDay.getText().toString().split(":")[0] + btEndDay.getText().toString().split(":")[1];
+        if (Integer.valueOf(sDay) > Integer.valueOf(eDay)) {    //*** 開始日時のほうが大きい -→ 異常 ***//
+            return false;   //*** 異常 を返す ***//
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        String sTime = btStartTime.getText().toString().split(":")[0] + btStartDay.getText().toString().split(":")[1];
+        String eTime = btEndTime.getText().toString().split(":")[0] + btEndDay.getText().toString().split(":")[1];
+        if (Integer.valueOf(sTime) > Integer.valueOf(eTime)) {  //*** 開始時刻のほうが大きい -→ 異常 ***//
+            return false;   //*** 異常 を返す ***//
+        }
+
+        return true;    //*** 矛盾なしを返す ***//
     }
+
+    //*** --- SELF MADE METHOD --- ウィジェットに空欄があるかチェックするメソッド ***//
+    public boolean isBrankSpace() {
+        if (edOverView.getText().toString().isEmpty() ||        //*** 概要欄 ***//
+                edRemark.getText().toString().isEmpty() ||          //*** 備品 ***//
+                edFixture.getText().toString().isEmpty()) {         //*** 備考 ***//
+            return false;
+        }
+        return true;    //*** ブランク無し（正常）を返す ***//
+    }
+
 }
