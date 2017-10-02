@@ -55,6 +55,8 @@ import java.util.Map;
 public class ReserveActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String REGEX = ":";
+    public static final String REGEX_1 = "/";
     //*** Filed ***//
     private Employee employee;
     private Map<String, String> mapPurpose; //*** 会議目的の 会議目的ID ： 会議目的名 をもつMap ***//
@@ -96,7 +98,8 @@ public class ReserveActivity extends AppCompatActivity
                             Log.d("call", date);
                             if (date.contains("sDay")) {
                                 btStartDay.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
-                                // TODO: 2017/10/02 終了日時を開始日時でせっていする 
+                                // TODO: 2017/10/02 終了日時を開始日時でせっていする
+                                btEndDay.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
                             } else {
                                 btEndDay.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
                             }
@@ -122,10 +125,11 @@ public class ReserveActivity extends AppCompatActivity
                             String time = getArguments().getString("time");
                             Log.d("call", time);
                             if (time.contains("sTime")) {
-                                btStartTime.setText(String.format("%02d : %02d", hourOfDay, minute));
-                                // TODO: 2017/10/02 終了日時を開始日時の３０分後（暫定）で設定する
+                                btStartTime.setText(String.format("%02d:%02d", hourOfDay, minute));
+                                // TODO: 2017/10/02 終了日時を開始日時の60分後（暫定）で設定する
+                                btEndTime.setText(String.format("%02d:%02d", hourOfDay + 1, minute));
                             } else {
-                                btEndTime.setText(String.format("%02d : %02d", hourOfDay, minute));
+                                btEndTime.setText(String.format("%02d:%02d", hourOfDay, minute));
                             }
                         }
                     },
@@ -455,7 +459,7 @@ public class ReserveActivity extends AppCompatActivity
         // TODO: 2017/10/02 空欄があるかチェックするメソッドの実装
         //*** エディットテキストに空欄があるかチェック ***//
         if (isBrankSpace()) {
-            Log.d("call", "空欄あり");
+            Log.d("call", "空欄なし");
         }
         // TODO: 2017/10/02 開始終了日時・時刻に矛盾がないかチェックする
         if (checkStartEnd()) {
@@ -475,15 +479,19 @@ public class ReserveActivity extends AppCompatActivity
             return false;   //*** 異常 を返す ***//
         }
         //*** 開始が終了より遅いかなどの矛盾をチェックする ***//
-        String sDay = btStartDay.getText().toString().split(":")[0] + btStartDay.getText().toString().split(":")[1];
-        String eDay = btEndDay.getText().toString().split(":")[0] + btEndDay.getText().toString().split(":")[1];
+        String sDay = btStartDay.getText().toString().split(REGEX_1)[1] + btStartDay.getText().toString().split(REGEX_1)[2];
+        String eDay = btEndDay.getText().toString().split(REGEX_1)[1] + btEndDay.getText().toString().split(REGEX_1)[2];
+        Log.d("call", String.format("日時検査 --- %s : %s", sDay, eDay));
         if (Integer.valueOf(sDay) > Integer.valueOf(eDay)) {    //*** 開始日時のほうが大きい -→ 異常 ***//
+            Log.d("call", "開始日時のほうが大きい矛盾発生");
             return false;   //*** 異常 を返す ***//
         }
 
-        String sTime = btStartTime.getText().toString().split(":")[0] + btStartDay.getText().toString().split(":")[1];
-        String eTime = btEndTime.getText().toString().split(":")[0] + btEndDay.getText().toString().split(":")[1];
+        String sTime = btStartTime.getText().toString().split(REGEX)[0] + btStartTime.getText().toString().split(REGEX)[1];
+        String eTime = btEndTime.getText().toString().split(REGEX)[0] + btEndTime.getText().toString().split(REGEX)[1];
+        Log.d("call", String.format("時刻検査 --- %s : %s", sTime, eTime));
         if (Integer.valueOf(sTime) > Integer.valueOf(eTime)) {  //*** 開始時刻のほうが大きい -→ 異常 ***//
+            Log.d("call", "開始時刻のほうが大きい矛盾発生");
             return false;   //*** 異常 を返す ***//
         }
 
@@ -495,6 +503,7 @@ public class ReserveActivity extends AppCompatActivity
         if (edOverView.getText().toString().isEmpty() ||        //*** 概要欄 ***//
                 edRemark.getText().toString().isEmpty() ||          //*** 備品 ***//
                 edFixture.getText().toString().isEmpty()) {         //*** 備考 ***//
+            Log.d("call", "空欄あり");
             return false;
         }
         return true;    //*** ブランク無し（正常）を返す ***//
