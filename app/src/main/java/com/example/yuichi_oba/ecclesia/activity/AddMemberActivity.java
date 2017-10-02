@@ -36,16 +36,26 @@ public class AddMemberActivity extends AppCompatActivity
         implements MyInterface {
 
     public static class CautionDialog extends DialogFragment {
+        String[] str = new String[]{"氏名", "Email", "電話番号"};
+
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+            StringBuilder sb = new StringBuilder();
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("警告！")
+
+            if (ed_name.getText().toString().isEmpty()) sb.append(str[0]);
+            if (ed_tel.getText().toString().isEmpty()) sb.append(" " + str[1]);
+            if (ed_email.getText().toString().isEmpty()) sb.append(" " + str[2]);
+
+            builder.setTitle("警告！").
+                    setMessage(String.format("[%s] が 空欄です", sb.toString()))
                     .setPositiveButton("はい", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // FIRE ZE MISSILES!
                             Log.d("call", "CautionDialog onclick!");
                         }
                     });
+
             // Create the AlertDialog object and return it
             return builder.create();
         }
@@ -72,12 +82,12 @@ public class AddMemberActivity extends AppCompatActivity
 
     //    EditText ed_depart;
     //    EditText ed_position;
-    EditText ed_name;
+    static EditText ed_name;
+    static EditText ed_company;
+    static EditText ed_email;
+    static EditText ed_tel;
     Button bt_cancel;
     Button bt_regist;
-    EditText ed_company;
-    EditText ed_email;
-    EditText ed_tel;
     RadioGroup rbn_group;
     Spinner sp_history;
     Spinner sp_position;
