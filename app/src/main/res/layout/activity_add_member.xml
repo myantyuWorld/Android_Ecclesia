@@ -119,6 +119,7 @@
         android:ems="10"
         android:hint="必須"
         android:inputType="textEmailAddress"
+        android:text="test@test.com"
         android:textAlignment="center" />
 
     <EditText
@@ -131,6 +132,7 @@
         android:ems="10"
         android:hint="必須"
         android:inputType="phone"
+        android:text="0823747474"
         android:textAlignment="center" />
 
 </RelativeLayout>

@@ -1,5 +1,9 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -30,6 +34,22 @@ import java.util.List;
 
 public class AddMemberActivity extends AppCompatActivity
         implements MyInterface {
+
+    public static class CautionDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("警告！")
+                    .setPositiveButton("はい", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // FIRE ZE MISSILES!
+                            Log.d("call", "CautionDialog onclick!");
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            return builder.create();
+        }
+    }
 
     public static final String SELECT_ADD_HISTORY = "";
     //*** NameConst には、移動しないこと！ ***//
@@ -361,6 +381,8 @@ public class AddMemberActivity extends AppCompatActivity
         //*** ひとつでもエラーが検出されたら、画面遷移させない ***//
         if (!isBrankSpace()) {
             Log.d("call", "参加者追加アクティビティ エラー検出！ 登録はしません！");
+            CautionDialog cautionDialog = new CautionDialog();
+            cautionDialog.show(getFragmentManager(), "aaaaa");
             return; //*** 処理を抜ける ***//
         }
 
