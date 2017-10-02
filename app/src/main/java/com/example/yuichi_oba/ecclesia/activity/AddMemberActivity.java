@@ -1,6 +1,5 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -20,16 +19,14 @@ import android.widget.Spinner;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.model.Employee;
+import com.example.yuichi_oba.ecclesia.model.OutEmployee;
+import com.example.yuichi_oba.ecclesia.model.Person;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.MyInterface;
-import com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.yuichi_oba.ecclesia.activity.ReserveActivity.member;
 
 public class AddMemberActivity extends AppCompatActivity
         implements MyInterface {
@@ -65,7 +62,8 @@ public class AddMemberActivity extends AppCompatActivity
     Spinner sp_position;
     Spinner sp_depart;
     // 会議に参加したことのあるメンバー情報を格納するメンバークラスのリスト
-    List<Employee> members = new ArrayList<>();
+    //*** ポリモーフィズム使用 ***//
+    List<Person> members = new ArrayList<>();
     private String emp_id;
 
     @Override
@@ -84,6 +82,7 @@ public class AddMemberActivity extends AppCompatActivity
         setWidgetListener();
 
     }
+
     //*** 新規登録ラジオボタンを再度選択したとき、再度編集可能にするメソッド ***//
     private void setAgainEditable() {
         // 全Edittextに対して、再編集可能にする
@@ -106,6 +105,7 @@ public class AddMemberActivity extends AppCompatActivity
         ed_email.setEnabled(true);
         ed_email.setFocusableInTouchMode(true);
     }
+
     //*** 各ウィジェットの初期化処理メソッド ***//
     public void init() {
         bt_cancel = (Button) findViewById(R.id.bt_add_cancel);          //  キャンセルボタン
@@ -118,13 +118,14 @@ public class AddMemberActivity extends AppCompatActivity
         sp_history = (Spinner) findViewById(R.id.sp_add_history);       //  会社履歴スピナー
         sp_position = (Spinner) findViewById(R.id.sp_add_position);     //  役職スピナー
         sp_depart = (Spinner) findViewById(R.id.sp_add_depart);         //  部署スピナー
-         //*** 履歴スピナーの各種設定 ***//
+        //*** 履歴スピナーの各種設定 ***//
         setSpinnerHistory();
-         //*** 部署スピナーの各種設定 ***//
+        //*** 部署スピナーの各種設定 ***//
         setSpinnerDepart();
         //*** 役職スピナーの各種設定 ***//
         setSpinnerPosition();
     }
+
     //*** 各ウィジェットのリスナー登録メソッド ***//
     @Override
     public void setWidgetListener() {
@@ -138,17 +139,18 @@ public class AddMemberActivity extends AppCompatActivity
                 Log.d("call", name);
 
                 //*** 選択した人間の情報を、各ウィジェットにマッピングする ***//
-                for (Employee e : members) {
-                    if (name.equals(e.getName())) {
-                        // 履歴から選択された人間の情報を下の項目群にマッピングする
-                        ed_company.setText(e.getCom_name());
-                        ed_name.setText(e.getName());
-                        ed_email.setText(e.getMailaddr());
-                        ed_tel.setText(e.getTel());
-                        sp_position.setSelection(Util.setSelection(sp_position, e.getPos_name()));
-                        sp_depart.setSelection(Util.setSelection(sp_depart, e.getDep_name()));
-                    }
-                }
+                // TODO: 2017/10/02 ポリモーフィズム使用に変更
+//                for (Employee e : members) {
+//                    if (name.equals(e.getName())) {
+//                        // 履歴から選択された人間の情報を下の項目群にマッピングする
+//                        ed_company.setText(e.getCom_name());
+//                        ed_name.setText(e.getName());
+//                        ed_email.setText(e.getMailaddr());
+//                        ed_tel.setText(e.getTel());
+//                        sp_position.setSelection(Util.setSelection(sp_position, e.getPos_name()));
+//                        sp_depart.setSelection(Util.setSelection(sp_depart, e.getDep_name()));
+//                    }
+//                }
             }
 
             @Override
@@ -162,68 +164,68 @@ public class AddMemberActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 //*** 各ウィジェットの情報を基に、参加者のインスタンスを生成 ***//
-                Log.d("call", "add regist");
-                Employee e = new Employee();
-                e.setName(ed_name.getText().toString());
-                e.setMailaddr(ed_email.getText().toString());
-                e.setCom_name(ed_company.getText().toString());
-                e.setDep_name(sp_depart.getSelectedItem().toString());
-                e.setPos_name(sp_position.getSelectedItem().toString());
-
-                int checkedRadioId = rbn_group.getCheckedRadioButtonId();
-                if (checkedRadioId == R.id.rbt_new_regist) {        //*** 新規登録 ***//
-                    // DO: 2017/09/27 新規登録なら、社員IDのマックス＋１を参加者インスタンスに設定する
-                    SQLiteOpenHelper helper = new DB(getApplicationContext());
-                    SQLiteDatabase db = helper.getReadableDatabase();
-
-                    //*** 社員IDのマックス＋１を検索するSQL ***//
-                    Cursor c = db.rawQuery("select max(emp_id) + 1 from t_emp", null);
-                    String maxId = "";
-                    while (c.moveToNext()) {
-                        maxId = c.getString(0);
-                    }
-                    c.close();
-                    //***  ***//
-
-                    // 社員の社員IDに、マックス＋１を設定する
-                    e.setId(maxId);
-                    Log.d("call", String.format("%04d", maxId));
-                    // TODO: 2017/09/27  社外者・社員ファイルに新規登録をかける ***//
-                    ContentValues val = new ContentValues();
-                    val.put("emp_id", e.getId());
-                    val.put("emp_name", e.getId());
-                    val.put("emp_tel", e.getId());
-                    val.put("emp_mailaddr", e.getId());
-                    val.put("dep_id", "0001"); //*** 暫定 ***//
-                    val.put("pos_id", "0001"); //*** 暫定 ***//
-
-                    long rs = db.insert("t_emp", null, val);        //*** INSERT SQL 実行 ***//
-                    if (rs == -1) {
-                        //*** INSERT 失敗 ***//
-                        Log.d("call", "insert 失敗");
-                    } else {
-                        //*** INSERT 成功 ***//
-                        Log.d("call", "insert 成功");
-                    }
-                    // TODO: 2017/09/27 社員VERのインサート処理
-                    // TODO: 2017/09/27 社外者VERのインサート処理
-                } else {                                            //*** 履歴検索 ***//
-                    //*** 社員リストの中から、検索して社員IDを検索する ***//
-                    for (Employee emp : members) {
-                        if (emp.getName().contains(e.getName())) {
-                            Log.d("call", String.format("検索した社員ID : %s", emp.getId()));
-                            e.setId(emp.getId());
-                        }
-                    }
-                }
+//                Log.d("call", "add regist");
+//                Employee e = new Employee();
+//                e.setName(ed_name.getText().toString());
+//                e.setMailaddr(ed_email.getText().toString());
+//                e.setCom_name(ed_company.getText().toString());
+//                e.setDep_name(sp_depart.getSelectedItem().toString());
+//                e.setPos_name(sp_position.getSelectedItem().toString());
+//
+//                int checkedRadioId = rbn_group.getCheckedRadioButtonId();
+//                if (checkedRadioId == R.id.rbt_new_regist) {        //*** 新規登録 ***//
+//                    // DO: 2017/09/27 新規登録なら、社員IDのマックス＋１を参加者インスタンスに設定する
+//                    SQLiteOpenHelper helper = new DB(getApplicationContext());
+//                    SQLiteDatabase db = helper.getReadableDatabase();
+//
+//                    //*** 社員IDのマックス＋１を検索するSQL ***//
+//                    Cursor c = db.rawQuery("select max(emp_id) + 1 from t_emp", null);
+//                    String maxId = "";
+//                    while (c.moveToNext()) {
+//                        maxId = c.getString(0);
+//                    }
+//                    c.close();
+//                    //***  ***//
+//
+//                    // 社員の社員IDに、マックス＋１を設定する
+//                    e.setId(maxId);
+//                    Log.d("call", String.format("%04d", maxId));
+//                    // TODO: 2017/09/27  社外者・社員ファイルに新規登録をかける ***//
+//                    ContentValues val = new ContentValues();
+//                    val.put("emp_id", e.getId());
+//                    val.put("emp_name", e.getId());
+//                    val.put("emp_tel", e.getId());
+//                    val.put("emp_mailaddr", e.getId());
+//                    val.put("dep_id", "0001"); //*** 暫定 ***//
+//                    val.put("pos_id", "0001"); //*** 暫定 ***//
+//
+//                    long rs = db.insert("t_emp", null, val);        //*** INSERT SQL 実行 ***//
+//                    if (rs == -1) {
+//                        //*** INSERT 失敗 ***//
+//                        Log.d("call", "insert 失敗");
+//                    } else {
+//                        //*** INSERT 成功 ***//
+//                        Log.d("call", "insert 成功");
+//                    }
+                // TODO: 2017/09/27 社員VERのインサート処理
+                // TODO: 2017/09/27 社外者VERのインサート処理
+//                } else {                                            //*** 履歴検索 ***//
+//                    //*** 社員リストの中から、検索して社員IDを検索する ***//
+//                    for (Employee emp : members) {
+//                        if (emp.getName().contains(e.getName())) {
+//                            Log.d("call", String.format("検索した社員ID : %s", emp.getId()));
+//                            e.setId(emp.getId());
+//                        }
+//                    }
+//                }
                 // TODO: 2017/09/22 役職の優先度をどうするのか
                 //*** ReserveActivityの参加者リスト(member)にaddする ***//
 //                member.add(e);    //==> startActivityForResult()で対応したので、いらない
                 //*** 選んだ（もしくは入力した）参加者を追加する ***//
-                Intent intent = new Intent();
-                intent.putExtra("member", e);
-                setResult(RESULT_OK, intent);
-                finish();
+//                Intent intent = new Intent();
+//                intent.putExtra("member", e);
+//                setResult(RESULT_OK, intent);
+//                finish();
             }
         });
         //*** キャンセルボタン押下時の処理 ***//
@@ -251,6 +253,7 @@ public class AddMemberActivity extends AppCompatActivity
             }
         });
     }
+
     //*** 部署スピナーの項目をDB検索して設定するメソッド ***//
     private void setSpinnerDepart() {
         // ＤＢ検索
@@ -267,6 +270,7 @@ public class AddMemberActivity extends AppCompatActivity
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, list);
         sp_depart.setAdapter(adapter);
     }
+
     //*** 役職スピナーの項目をDB検索して設定するメソッド ***//
     private void setSpinnerPosition() {
         SQLiteOpenHelper helper = new DB(getApplicationContext());
@@ -282,6 +286,7 @@ public class AddMemberActivity extends AppCompatActivity
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, list);
         sp_position.setAdapter(adapter);
     }
+
     //*** 履歴スピナーの項目を動的設定するメソッド ***//
     private void setSpinnerHistory() {
         // DB 検索
@@ -294,34 +299,47 @@ public class AddMemberActivity extends AppCompatActivity
         // メンバークラスのインスタンス生成
         List<String> list = new ArrayList<>();
         while (c.moveToNext()) {
-            //*** 社員？（人間）クラスのインスタンスを生成 ***//
+            //*** [社員]クラスのインスタンスを生成 ***//
             Employee e = new Employee();
-            e.setId(c.getString(11));           // ID
+            e.setEmp_id(c.getString(11));           // ID
             e.setName(c.getString(12));         // 氏名
             e.setTel(c.getString(13));          // 電話番号
             e.setMailaddr(c.getString(14));     // メールアドレス
-            e.setCom_name("社内");
-            e.setDep_name(c.getString(15));     // 部署名
+//            e.setCom_name("社内");
+//            e.setDep_name(c.getString(15));     // 部署名
             e.setPos_name(c.getString(16));     // 役職名
             e.setPos_priority(c.getString(17)); // 役職の優先度
 
             members.add(e);
-            list.add(e.getCom_name() + " : " + e.getName());
+//            list.add(e.getCom_name() + " : " + e.getName());
+            list.add("社内" + " : " + e.getName());
+
         }
         c.close();
         // 自分が参加した会議に参加したことのある人間を検索(社外)
         c = db.rawQuery("select * from v_reserve_out_member where re_id in (select re_id from t_member where mem_id = ?)", new String[]{emp_id});
         while (c.moveToNext()) {
-            //*** 社員(社外者）クラスのインスタンスを生成 ***//
-            Employee e = new Employee();
-            e.setId(c.getString(10));           // ID
-            e.setName(c.getString(11));         // 氏名
-            e.setTel(c.getString(12));          // 電話番号
-            e.setMailaddr(c.getString(13));     // メールアドレス
-            e.setDep_name(c.getString(14));     // 部署名
-            e.setPos_name(c.getString(15));     // 役職名
-            e.setPos_priority(c.getString(16)); // 役職の優先度
-            e.setCom_name(c.getString(18));     // 会社名
+//            Employee e = new Employee();
+//            e.setId(c.getString(10));           // ID
+//            e.setName(c.getString(11));         // 氏名
+//            e.setTel(c.getString(12));          // 電話番号
+//            e.setMailaddr(c.getString(13));     // メールアドレス
+//            e.setDep_name(c.getString(14));     // 部署名
+//            e.setPos_name(c.getString(15));     // 役職名
+//            e.setPos_priority(c.getString(16)); // 役職の優先度
+//            e.setCom_name(c.getString(18));     // 会社名
+
+            //*** [社外者]クラスのインスタンスを生成 ***//
+            OutEmployee e = new OutEmployee(
+                    c.getString(10),            //*** ID ***//
+                    c.getString(11),            //*** 氏名 ***//
+                    c.getString(12),            //*** 電話番号 ***//
+                    c.getString(13),            //*** メールアドレス ***//
+                    c.getString(14),            //*** 部署名 ***//
+                    c.getString(15),            //*** 役職名 ***//
+                    c.getString(16),            //*** 役職優先度 ***//
+                    c.getString(18)             //*** 会社名 ***//
+            );
 
             members.add(e);
             list.add(e.getCom_name() + " : " + e.getName());

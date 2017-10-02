@@ -29,9 +29,11 @@ public class Employee  extends Person implements Serializable{
     public static final int RE_REMARKS = 12;
     public static final int RE_SWITCH = 3;
     //*** Field ***//
-    private String emp_id;      //*** 社員ID ***//
-    private String dep_id;      //*** 部署ID ***//
-    private String pos_id;      //*** 役職ID ***//
+    private String emp_id;          //*** 社員ID ***//
+    private String dep_id;          //*** 部署ID ***//
+    private String pos_id;          //*** 役職ID ***//
+    private String pos_name;        //*** 役職名 ***//
+    private String pos_priority;    //*** 役職優先度 ***//
 
     //*** Constractor ***//
     public Employee() {
@@ -62,6 +64,22 @@ public class Employee  extends Person implements Serializable{
     }
     public void setPos_id(String pos_id) {
         this.pos_id = pos_id;
+    }
+
+    public String getPos_name() {
+        return pos_name;
+    }
+
+    public void setPos_name(String pos_name) {
+        this.pos_name = pos_name;
+    }
+
+    public String getPos_priority() {
+        return pos_priority;
+    }
+
+    public void setPos_priority(String pos_priority) {
+        this.pos_priority = pos_priority;
     }
 
     //*** Self Made Method ***//

@@ -13,9 +13,18 @@ public class OutEmployee extends Person implements Serializable {
     private String dep_name;        //*** 社外部署名 ***//
     private String pos_name;        //*** 社外役職名 ***//
     private String pos_priority;    //*** 社外役職優先度 ***//
+    private String com_name;        //***  ***//
 
     //*** Constractor ***//
     public OutEmployee() {
+    }
+    public OutEmployee(String id, String name, String tel, String mailaddr, String dep_name, String pos_name, String pos_priority, String com_name) {
+        super(name, tel, mailaddr);         //*** スーパクラスのコンストラクタコール ***//
+        this.out_id = id;                   //*** 社外者ID ***//
+        this.dep_name = dep_name;           //*** 部署名 ***//
+        this.pos_name = pos_name;           //*** 役職名 ***//
+        this.pos_priority = pos_priority;   //*** 役職優先度 ***//
+        this.com_name = com_name;           //*** 会社名 ***//
     }
 
     //*** GetterSetter ***//
@@ -43,6 +52,10 @@ public class OutEmployee extends Person implements Serializable {
     public void setPos_priority(String pos_priority) {
         this.pos_priority = pos_priority;
     }
-
-
+    public String getCom_name() {
+        return com_name;
+    }
+    public void setCom_name(String com_name) {
+        this.com_name = com_name;
+    }
 }
