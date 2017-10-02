@@ -362,6 +362,8 @@ public class ReserveActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 //*** 各ウィジェットの情報を取得して、予約インスタンス生成 ***//
+
+                // TODO: 2017/10/02 空欄があるかチェックするメソッドの実装
                 Reserve r = new Reserve();
                 r.setRe_id("");
                 r.setRe_name(edOverView.getText().toString());
