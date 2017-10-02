@@ -398,6 +398,7 @@ public class AddMemberActivity extends AppCompatActivity
 
 
         //*** 各ウィジェットの情報を基に、参加者のインスタンスを生成 ***//
+        Intent intent = new Intent();
         if (ed_company.getText().toString().contains("")) {     //*** 社内の場合 ***//
             Employee e = new Employee(
                     returnMaxId("t_emp"),                   //*** 社員テーブルのIDの最大値＋１を代入 ***//
@@ -410,6 +411,8 @@ public class AddMemberActivity extends AppCompatActivity
             Log.d("call", e.toString());
             e.setDep_id(sp_depart.getSelectedItem().toString());
             e.setPos_id(sp_position.getSelectedItem().toString());
+
+            intent.putExtra("member", e);   //*** intent に セットする ***//
         } else {                                                //*** 社外者の場合 ***//
             OutEmployee e = new OutEmployee(
                     returnMaxId(M_OUT_EMP),                     //*** 社外者テーブルのIDの最大値＋１を代入 ***//
@@ -422,8 +425,11 @@ public class AddMemberActivity extends AppCompatActivity
                     ed_company.getText().toString()             //*** 会社名 ***//
             );
             Log.d("call", e.toString());
+
+            intent.putExtra("member", e);   //*** intent に セットする ***//
         }
-        //*** intent に セットする ***//
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     //*** --- SELF MADE METHOD --- 指定されたテーブルのIDの最大値＋１を返すメソッド ***//

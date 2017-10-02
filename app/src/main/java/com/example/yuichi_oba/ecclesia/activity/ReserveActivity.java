@@ -33,6 +33,7 @@ import android.widget.TimePicker;
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
+import com.example.yuichi_oba.ecclesia.model.OutEmployee;
 import com.example.yuichi_oba.ecclesia.model.Person;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.Util;
@@ -190,19 +191,30 @@ public class ReserveActivity extends AppCompatActivity
     //*** 開いたアクティビティ(AddMemberActivity)から何かしらの情報を受け取る ***//
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("call", "call ReserveActivity->onActivityResult()");
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
             case (1):
                 //*** OKボタン押下で、戻ってきたときの処理 ***//
                 if (resultCode == RESULT_OK) {
-                    Employee e = (Employee) data.getSerializableExtra("member");
-                    Log.d("call", String.format("追加した社員情報 : %s %s", e.getEmp_id(), e.getName()));
+                    Object o = data.getSerializableExtra("member");
+                    if (o instanceof Employee) {    //*** インスタンスが、Employeeクラスのインスタンス ***//
+                        Employee e = (Employee) o;
+                        Log.d("call", e.toString());
+                        member.add(e);      //*** 参加者を追加する ***//
+                    } else {                        //*** インスタンスが、OutEmployeeクラスのインスタンス ***//
+                        OutEmployee e = (OutEmployee) o;
+                        Log.d("call", e.toString());
+                        member.add(e);      //*** 参加者を追加する ***//
+                    }
 
-                    //*** 参加者を追加する ***//
-                    member.add(e);
                     //*** 参加者スピナーに反映する ***//
                     final List<String> list = new ArrayList<>();
+                    for (Person p : member) {
+                        list.add(p.getName());
+                    }
+
                     ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
                     sp_member.setAdapter(adapter_member);
 
