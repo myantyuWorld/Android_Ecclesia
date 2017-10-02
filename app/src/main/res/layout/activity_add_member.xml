@@ -64,6 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:onClick="onClickRegist"
         android:text="登録" />
 
     <EditText
@@ -75,7 +76,9 @@
         android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/rbngroup_addmember"
         android:ems="10"
-        android:inputType="textPersonName" />
+        android:hint="社内の場合は、空欄"
+        android:inputType="textPersonName"
+        android:textAlignment="center" />
 
     <Spinner
         android:id="@+id/sp_add_depart"
@@ -102,7 +105,9 @@
         android:layout_below="@+id/sp_add_position"
         android:layout_marginTop="25dp"
         android:ems="10"
-        android:inputType="textPersonName" />
+        android:hint="必須"
+        android:inputType="textPersonName"
+        android:textAlignment="center" />
 
     <EditText
         android:id="@+id/ed_add_mailaddr"
@@ -112,7 +117,9 @@
         android:layout_below="@+id/ed_add_name"
         android:layout_marginTop="15dp"
         android:ems="10"
-        android:inputType="textEmailAddress" />
+        android:hint="必須"
+        android:inputType="textEmailAddress"
+        android:textAlignment="center" />
 
     <EditText
         android:id="@+id/ed_add_tel"
@@ -122,6 +129,8 @@
         android:layout_below="@+id/ed_add_mailaddr"
         android:layout_marginTop="15dp"
         android:ems="10"
-        android:inputType="phone" />
+        android:hint="必須"
+        android:inputType="phone"
+        android:textAlignment="center" />
 
 </RelativeLayout>

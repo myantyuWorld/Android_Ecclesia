@@ -83,7 +83,12 @@ public class AddMemberActivity extends AppCompatActivity
 
     }
 
-    //*** 新規登録ラジオボタンを再度選択したとき、再度編集可能にするメソッド ***//
+    /***_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+     *
+     *          自作メソッド
+     *
+     * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/*/
+    //*** --- SELF MADE METHOD --- 新規登録ラジオボタンを再度選択したとき、再度編集可能にするメソッド ***//
     private void setAgainEditable() {
         // 全Edittextに対して、再編集可能にする
         ed_company.setFocusable(true);
@@ -105,8 +110,7 @@ public class AddMemberActivity extends AppCompatActivity
         ed_email.setEnabled(true);
         ed_email.setFocusableInTouchMode(true);
     }
-
-    //*** 各ウィジェットの初期化処理メソッド ***//
+    //*** --- SELF MADE METHOD --- 各ウィジェットの初期化処理メソッド ***//
     public void init() {
         bt_cancel = (Button) findViewById(R.id.bt_add_cancel);          //  キャンセルボタン
         bt_regist = (Button) findViewById(R.id.bt_add_regist);          //  登録（追加？）ボタン
@@ -125,8 +129,7 @@ public class AddMemberActivity extends AppCompatActivity
         //*** 役職スピナーの各種設定 ***//
         setSpinnerPosition();
     }
-
-    //*** 各ウィジェットのリスナー登録メソッド ***//
+    //*** --- SELF MADE METHOD --- 各ウィジェットのリスナー登録メソッド ***//
     @Override
     public void setWidgetListener() {
         //*** 履歴スピナーのリスナー ***//
@@ -253,8 +256,7 @@ public class AddMemberActivity extends AppCompatActivity
             }
         });
     }
-
-    //*** 部署スピナーの項目をDB検索して設定するメソッド ***//
+    //*** --- SELF MADE METHOD --- 部署スピナーの項目をDB検索して設定するメソッド ***//
     private void setSpinnerDepart() {
         // ＤＢ検索
         SQLiteOpenHelper helper = new DB(getApplicationContext());
@@ -270,8 +272,7 @@ public class AddMemberActivity extends AppCompatActivity
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, list);
         sp_depart.setAdapter(adapter);
     }
-
-    //*** 役職スピナーの項目をDB検索して設定するメソッド ***//
+    //*** --- SELF MADE METHOD --- 役職スピナーの項目をDB検索して設定するメソッド ***//
     private void setSpinnerPosition() {
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -286,8 +287,7 @@ public class AddMemberActivity extends AppCompatActivity
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, list);
         sp_position.setAdapter(adapter);
     }
-
-    //*** 履歴スピナーの項目を動的設定するメソッド ***//
+    //*** --- SELF MADE METHOD --- 履歴スピナーの項目を動的設定するメソッド ***//
     private void setSpinnerHistory() {
         // DB 検索
         SQLiteOpenHelper helper = new DB(getApplicationContext());
@@ -349,5 +349,13 @@ public class AddMemberActivity extends AppCompatActivity
         sp_history.setAdapter(adapter);
     }
 
+    //*** --- SELF MADE METHOD --- ***//
+    public void onClickRegist(View view) {
+        Log.d("call", "call onClickRegist()");
+        //*** 各ウィジェットの情報を基に、参加者のインスタンスを生成 ***//
+        // TODO: 2017/10/02 社員か社外者に応じたインスタンスの生成
 
+
+        //*** intent に セットする ***//
+    }
 }

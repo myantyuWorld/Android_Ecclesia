@@ -85,6 +85,8 @@ public class ReserveActivity extends AppCompatActivity
     //*** 日付ダイアログ ***//
     public static class MyDateDialog extends DialogFragment {
 
+        public static final String FORMAT_DATE = "%04d/%02d/%02d";
+
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final Calendar cal = Calendar.getInstance();
@@ -97,11 +99,10 @@ public class ReserveActivity extends AppCompatActivity
                             String date = getArguments().getString("date");
                             Log.d("call", date);
                             if (date.contains("sDay")) {
-                                btStartDay.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
-                                // TODO: 2017/10/02 終了日時を開始日時でせっていする
-                                btEndDay.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+                                btStartDay.setText(String.format(FORMAT_DATE, year, month + 1, day));
+                                btEndDay.setText(String.format(FORMAT_DATE, year, month + 1, day));    //*** 終了日時を開始日時でせっていする ***//
                             } else {
-                                btEndDay.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+                                btEndDay.setText(String.format(FORMAT_DATE, year, month + 1, day));
                             }
                         }
                     },
@@ -114,6 +115,9 @@ public class ReserveActivity extends AppCompatActivity
 
     //*** 時刻ダイアログ ***//
     public static class MyTimeDialog extends DialogFragment {
+
+        public static final String FORMAT_TIME = "%02d:%02d";
+
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final Calendar cal = Calendar.getInstance();
@@ -125,11 +129,10 @@ public class ReserveActivity extends AppCompatActivity
                             String time = getArguments().getString("time");
                             Log.d("call", time);
                             if (time.contains("sTime")) {
-                                btStartTime.setText(String.format("%02d:%02d", hourOfDay, minute));
-                                // TODO: 2017/10/02 終了日時を開始日時の60分後（暫定）で設定する
-                                btEndTime.setText(String.format("%02d:%02d", hourOfDay + 1, minute));
+                                btStartTime.setText(String.format(FORMAT_TIME, hourOfDay, minute));
+                                btEndTime.setText(String.format(FORMAT_TIME, hourOfDay + 1, minute)); //*** 終了日時を開始日時の60分後（暫定）で設定する ***//
                             } else {
-                                btEndTime.setText(String.format("%02d:%02d", hourOfDay, minute));
+                                btEndTime.setText(String.format(FORMAT_TIME, hourOfDay, minute));
                             }
                         }
                     },
@@ -191,8 +194,8 @@ public class ReserveActivity extends AppCompatActivity
 
         switch (requestCode) {
             case (1):
+                //*** OKボタン押下で、戻ってきたときの処理 ***//
                 if (resultCode == RESULT_OK) {
-                    //*** OKボタン押下で、戻ってきたときの処理 ***//
                     Employee e = (Employee) data.getSerializableExtra("member");
                     Log.d("call", String.format("追加した社員情報 : %s %s", e.getEmp_id(), e.getName()));
 
@@ -200,18 +203,11 @@ public class ReserveActivity extends AppCompatActivity
                     member.add(e);
                     //*** 参加者スピナーに反映する ***//
                     final List<String> list = new ArrayList<>();
-//                    for (Employee employee : member) {
-//                        list.add(employee.getCom_name() + " : " + employee.getName());
-//                    }
                     ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
                     sp_member.setAdapter(adapter_member);
-//                    for (Employee E : member) {
-//                        Log.d("call", E.toString());
-//                    }
 
                 } else if (resultCode == RESULT_CANCELED) {
                     //*** キャンセルボタン押下で、戻ってきたときの処理 ***//
-
                 }
                 break;
             default:
@@ -265,7 +261,7 @@ public class ReserveActivity extends AppCompatActivity
      *          自作メソッド
      *
      * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/*/
-    //*** 各ウィジェットの初期化処理メソッド ***//
+    //*** --- SELF MADE METHOD --- 各ウィジェットの初期化処理メソッド ***//
     private void init() {
         mapPurpose = new HashMap<>();
         mapRoom = new HashMap<>();
@@ -330,7 +326,7 @@ public class ReserveActivity extends AppCompatActivity
         setWidgetListener();
     }
 
-    //*** 各種ウィジェットのリスナーを登録するメソッド ***//
+    //*** --- SELF MADE METHOD --- 各種ウィジェットのリスナーを登録するメソッド ***//
     private void setWidgetListener() {
         sp_member.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -452,20 +448,17 @@ public class ReserveActivity extends AppCompatActivity
 //        });
     }
 
-    //*** 内容確認ボタン押下時の処理 ***//
+    //*** --- SELF MADE METHOD --- 内容確認ボタン押下時の処理 ***//
     public void onClickReConfirm(View view) {
         Log.d("call", "call onClickReConfirm()");
-
-        // TODO: 2017/10/02 空欄があるかチェックするメソッドの実装
-        //*** エディットテキストに空欄があるかチェック ***//
-        if (isBrankSpace()) {
-            Log.d("call", "空欄なし");
-        }
-        // TODO: 2017/10/02 開始終了日時・時刻に矛盾がないかチェックする
-        if (checkStartEnd()) {
-            Log.d("call", "開始終了日時・時刻に矛盾なし");
+        //*** ひとつでもエラーが検出されたら、画面遷移させない ***//
+        if (!isBrankSpace() || !checkStartEnd()) {       //*** エディットテキストに空欄があるかチェック 開始終了日時・時刻に矛盾がないかチェック ***//
+            Log.d("call", "予約アクティビティ エラー検出！ 画面遷移不可能");
+            // TODO: 2017/10/02 Toastあるいは、ダイアログにて、エラーの内容をユーザに知らせる
+            return;     //*** 処理を抜ける ***//
         }
 
+        //*** エラー未検出ならば画面遷移処理を行う ***//
         Log.d("call", "画面遷移開始");
     }
 
@@ -500,7 +493,7 @@ public class ReserveActivity extends AppCompatActivity
 
     //*** --- SELF MADE METHOD --- ウィジェットに空欄があるかチェックするメソッド ***//
     public boolean isBrankSpace() {
-        if (edOverView.getText().toString().isEmpty() ||        //*** 概要欄 ***//
+        if (edOverView.getText().toString().isEmpty() ||            //*** 概要欄 ***//
                 edRemark.getText().toString().isEmpty() ||          //*** 備品 ***//
                 edFixture.getText().toString().isEmpty()) {         //*** 備考 ***//
             Log.d("call", "空欄あり");
