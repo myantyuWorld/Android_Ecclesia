@@ -47,7 +47,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // TODO: 2017/09/19  長押し対応は無理か？ 一覧での、タップは反応するが、長押しには反応しない・・・
 public class ReserveListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final int EMP_NAME = 1;
     public static final int EMP_TEL = 2;
@@ -67,12 +67,15 @@ public class ReserveListActivity extends AppCompatActivity
         public String getId() {
             return id;
         }
+
         public void setId(String id) {
             this.id = id;
         }
+
         public String getImeiNumber() {
             return imeiNumber;
         }
+
         public void setImeiNumber(String imeiNumber) {
             this.imeiNumber = imeiNumber;
         }
@@ -114,16 +117,26 @@ public class ReserveListActivity extends AppCompatActivity
                         new String[]{emp_id});
                 if (c.moveToNext()) {
                     // 社員ＩＤから社員情報を検索して、設定する
-                    Employee e = new Employee();
-                    e.setId(emp_id);
-                    e.setName(c.getString(EMP_NAME));
-                    e.setTel(c.getString(EMP_TEL));
-                    e.setMailaddr(c.getString(EMP_MAIL_ADDR));
-                    e.setDep_name(c.getString(DEP_NAME));
-                    e.setPos_name(c.getString(POS_NAME));
-                    e.setPos_priority(c.getString(POS_PRIORITY));
+//                    Employee e = new Employee();
+//                    e.setId(emp_id);
+//                    e.setName(c.getString(EMP_NAME));
+//                    e.setTel(c.getString(EMP_TEL));
+//                    e.setMailaddr(c.getString(EMP_MAIL_ADDR));
+//                    e.setDep_name(c.getString(DEP_NAME));
+//                    e.setPos_name(c.getString(POS_NAME));
+//                    e.setPos_priority(c.getString(POS_PRIORITY));
 
-                    return e;
+                    //*** 「社員」クラスのインスタンスを生成 ***//
+                    Employee e = new Employee(
+                            emp_id,                     //*** 社員ID ***//
+                            c.getString(EMP_NAME),      //*** 氏名 ***//
+                            c.getString(EMP_TEL),       //*** 電話番号 ***//
+                            c.getString(EMP_MAIL_ADDR), //*** メールアドレス ***//
+                            c.getString(4),             //*** 部署ID ***//
+                            c.getString(6)              //*** 役職ID ***//
+                    );
+
+                    return e;   //*** インスタンスを返す ***//
                 }
                 c.close();
             }
@@ -207,9 +220,9 @@ public class ReserveListActivity extends AppCompatActivity
 //        }
         /*** 社員ID と アプリ起動時の日付を渡して、描画する ***/
         timeTableView = (TimeTableView) this.findViewById(R.id.timetable);
-        Log.d("call", employee.getId());
+        Log.d("call", employee.getEmp_id());
         Log.d("call", txtDate.getText().toString());
-        timeTableView.reView(employee.getId(), txtDate.getText().toString());
+        timeTableView.reView(employee.getEmp_id(), txtDate.getText().toString());
 
         txtDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,7 +257,7 @@ public class ReserveListActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Toast.makeText(ReserveListActivity.this, txtDate.getText().toString(), Toast.LENGTH_SHORT).show();
-                timeTableView.reView(employee.getId(), txtDate.getText().toString());
+                timeTableView.reView(employee.getEmp_id(), txtDate.getText().toString());
             }
         });
 
@@ -273,6 +286,7 @@ public class ReserveListActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
     //*** ナビを選択したときの処理 ***//
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -304,6 +318,7 @@ public class ReserveListActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     //*** 画面が表示・再表示されたらコールされる (画面遷移はここ！)***//
     @Override
     protected void onResume() {
@@ -358,6 +373,7 @@ public class ReserveListActivity extends AppCompatActivity
         thread.start();
 
     }
+
     //*** SelfMadeMethod ***//
     //*** ウィジェットの初期化処理メソッド ***//
     private void init() {
@@ -373,6 +389,7 @@ public class ReserveListActivity extends AppCompatActivity
             Log.d("call", employee.toString());
         }
     }
+
     //*** この画面のインスタンスを返すメソッド（非アクティビティクラスで、DB検索する際に使用する） ***//
     public static ReserveListActivity getInstance() {
         return instance;

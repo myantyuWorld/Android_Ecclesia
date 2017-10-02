@@ -8,11 +8,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
+import java.io.Serializable;
+
 /**
  * Created by Yuichi-Oba on 2017/09/15.
  */
 
-public class Admin extends Employee{
+public class Admin extends Employee implements Serializable{
 
     //*** Field ***//
     private String adminId;

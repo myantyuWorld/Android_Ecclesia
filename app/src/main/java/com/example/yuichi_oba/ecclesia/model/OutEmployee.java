@@ -43,4 +43,6 @@ public class OutEmployee extends Person implements Serializable {
     public void setPos_priority(String pos_priority) {
         this.pos_priority = pos_priority;
     }
+
+
 }

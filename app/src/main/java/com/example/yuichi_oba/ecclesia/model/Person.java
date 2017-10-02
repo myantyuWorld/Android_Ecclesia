@@ -1,11 +1,13 @@
 package com.example.yuichi_oba.ecclesia.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Yuichi-Oba on 2017/09/30.
  */
 
 //*** 「個人」クラス ※社員・社外者クラスのスーパークラス ***//
-public class Person {
+public class Person implements Serializable{
 
     //*** Field ***//
     private String name;        //*** 氏名 ***//
@@ -13,6 +15,12 @@ public class Person {
     private String mailaddr;    //*** メールアドレス ***//
     //*** Constrator ***//
     public Person() {
+    }
+
+    public Person(String name, String tel, String mailaddr) {
+        this.name = name;
+        this.tel = tel;
+        this.mailaddr = mailaddr;
     }
 
     //*** GetterSetter ***//

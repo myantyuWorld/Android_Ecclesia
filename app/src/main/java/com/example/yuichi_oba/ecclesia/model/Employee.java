@@ -36,6 +36,13 @@ public class Employee  extends Person implements Serializable{
     //*** Constractor ***//
     public Employee() {
     }
+    public Employee(String emp_id, String name, String tel, String mailaddr, String dep_id, String pos_id) {
+        super(name, tel, mailaddr); //*** スーパクラスのコンストラクタコール ***//
+        this.emp_id = emp_id;       //*** 社員ID ***//
+        this.dep_id = dep_id;       //*** 部署ID ***//
+        this.pos_id = pos_id;       //*** 役職ID ***//
+    }
+
 
     //*** GetterSetter ***//
     public String getEmp_id() {
