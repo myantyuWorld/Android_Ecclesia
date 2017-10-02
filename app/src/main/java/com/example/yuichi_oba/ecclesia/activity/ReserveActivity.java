@@ -15,6 +15,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -144,6 +145,20 @@ public class ReserveActivity extends AppCompatActivity
         }
     }
 
+    //*** 予約アクティビティで使用する警告用ダイアログ ***//
+    public static class CautionDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle("警告！")
+                    .setMessage("会議概要が空欄です！")
+                    .setPositiveButton("OK", null)
+                    .create();
+        }
+
+    }
+
+
     //*** onCreate ***//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,20 +216,24 @@ public class ReserveActivity extends AppCompatActivity
                     Object o = data.getSerializableExtra("member");
                     if (o instanceof Employee) {    //*** インスタンスが、Employeeクラスのインスタンス ***//
                         Employee e = (Employee) o;
-                        Log.d("call", e.toString());
+                        Log.d("call", String.format("社内参加者 : %s", e.toString()));
                         member.add(e);      //*** 参加者を追加する ***//
                     } else {                        //*** インスタンスが、OutEmployeeクラスのインスタンス ***//
                         OutEmployee e = (OutEmployee) o;
-                        Log.d("call", e.toString());
+                        Log.d("call", String.format("社外参加者 : %s", e.toString()));
                         member.add(e);      //*** 参加者を追加する ***//
                     }
 
-                    //*** 参加者スピナーに反映する ***//
+                    //*** 参加者を追加する ***//
                     final List<String> list = new ArrayList<>();
                     for (Person p : member) {
-                        list.add(p.getName());
+                        if (p instanceof Employee) {
+                            list.add("社内 : " + p.getName());
+                        } else {
+                            Log.d("call", "-----社外者参加者");
+                        }
                     }
-
+                    //*** 参加者スピナーに反映する ***//
                     ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
                     sp_member.setAdapter(adapter_member);
 
@@ -463,10 +482,10 @@ public class ReserveActivity extends AppCompatActivity
     //*** --- SELF MADE METHOD --- 内容確認ボタン押下時の処理 ***//
     public void onClickReConfirm(View view) {
         Log.d("call", "call onClickReConfirm()");
+        // TODO: 2017/10/02 参加者の人数が、会議室の最大人数以下かどうかチェックするメソッドの実装
         //*** ひとつでもエラーが検出されたら、画面遷移させない ***//
         if (!isBrankSpace() || !checkStartEnd()) {       //*** エディットテキストに空欄があるかチェック 開始終了日時・時刻に矛盾がないかチェック ***//
             Log.d("call", "予約アクティビティ エラー検出！ 画面遷移不可能");
-            // TODO: 2017/10/02 Toastあるいは、ダイアログにて、エラーの内容をユーザに知らせる
             return;     //*** 処理を抜ける ***//
         }
 
@@ -481,6 +500,7 @@ public class ReserveActivity extends AppCompatActivity
                 btEndDay.getText().toString().contains("終了日時") ||
                 btStartTime.getText().toString().contains("開始時刻") ||
                 btEndTime.getText().toString().contains("終了時刻")) {
+            // TODO: 2017/10/02 未選択を警告するダイアログの実装
             return false;   //*** 異常 を返す ***//
         }
         //*** 開始が終了より遅いかなどの矛盾をチェックする ***//
@@ -489,6 +509,7 @@ public class ReserveActivity extends AppCompatActivity
         Log.d("call", String.format("日時検査 --- %s : %s", sDay, eDay));
         if (Integer.valueOf(sDay) > Integer.valueOf(eDay)) {    //*** 開始日時のほうが大きい -→ 異常 ***//
             Log.d("call", "開始日時のほうが大きい矛盾発生");
+            // TODO: 2017/10/02 日時の矛盾発生を警告するダイアログの実装
             return false;   //*** 異常 を返す ***//
         }
 
@@ -497,6 +518,7 @@ public class ReserveActivity extends AppCompatActivity
         Log.d("call", String.format("時刻検査 --- %s : %s", sTime, eTime));
         if (Integer.valueOf(sTime) > Integer.valueOf(eTime)) {  //*** 開始時刻のほうが大きい -→ 異常 ***//
             Log.d("call", "開始時刻のほうが大きい矛盾発生");
+            // TODO: 2017/10/02 時刻の矛盾を警告するダイアログの実装
             return false;   //*** 異常 を返す ***//
         }
 
@@ -505,10 +527,11 @@ public class ReserveActivity extends AppCompatActivity
 
     //*** --- SELF MADE METHOD --- ウィジェットに空欄があるかチェックするメソッド ***//
     public boolean isBrankSpace() {
-        if (edOverView.getText().toString().isEmpty() ||            //*** 概要欄 ***//
-                edRemark.getText().toString().isEmpty() ||          //*** 備品 ***//
-                edFixture.getText().toString().isEmpty()) {         //*** 備考 ***//
+        if (edOverView.getText().toString().isEmpty()) {         //*** 会議概要 ***//
             Log.d("call", "空欄あり");
+            // TODO: 2017/10/02 概要の空欄を知らせるダイアログの実装
+            CautionDialog dialog = new CautionDialog();
+            dialog.show(getFragmentManager(), "a");
             return false;
         }
         return true;    //*** ブランク無し（正常）を返す ***//
