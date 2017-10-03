@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/change_confirm">
+        android:layout_above="@+id/crchange_btn_confirm">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -33,12 +33,12 @@
                 android:layout_alignParentTop="true" />
 
             <TextView
-                android:id="@+id/change_sinseisya"
+                android:id="@+id/crchange_txt_sinseisya"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/change_eTimebtn"
-                android:layout_alignStart="@+id/change_eDaybtn"
-                android:layout_below="@+id/change_eTimebtn"
+                android:layout_alignEnd="@+id/crchange_btn_eTime"
+                android:layout_alignStart="@+id/crchange_btn_eDay"
+                android:layout_below="@+id/crchange_btn_eTime"
                 android:layout_marginEnd="7dp"
                 android:layout_marginTop="28dp"
                 android:textAlignment="center"
@@ -46,59 +46,59 @@
                 android:textStyle="bold|italic" />
 
             <Button
-                android:id="@+id/change_sDaybtn"
+                android:id="@+id/crchange_btn_sDay"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/change_sppurpose"
-                android:layout_below="@+id/change_sppurpose"
+                android:layout_alignStart="@+id/crchange_sp_purpose"
+                android:layout_below="@+id/crchange_sp_purpose"
                 android:layout_marginTop="15dp"
                 android:text="開始日時" />
 
             <Button
-                android:id="@+id/change_eDaybtn"
+                android:id="@+id/crchange_btn_eDay"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/change_sDaybtn"
-                android:layout_below="@+id/change_sDaybtn"
+                android:layout_alignStart="@+id/crchange_btn_sDay"
+                android:layout_below="@+id/crchange_btn_sDay"
                 android:layout_marginTop="22dp"
                 android:text="終了日時" />
 
             <Button
-                android:id="@+id/change_sTimebtn"
+                android:id="@+id/crchange_btn_sTime"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/change_sppurpose"
-                android:layout_alignTop="@+id/change_sDaybtn"
+                android:layout_alignEnd="@+id/crchange_sp_purpose"
+                android:layout_alignTop="@+id/crchange_btn_sDay"
                 android:text="開始時刻" />
 
             <Button
-                android:id="@+id/change_eTimebtn"
+                android:id="@+id/crchange_btn_eTime"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/change_eDaybtn"
-                android:layout_alignEnd="@+id/change_sTimebtn"
+                android:layout_alignBottom="@+id/crchange_btn_eDay"
+                android:layout_alignEnd="@+id/crchange_btn_sTime"
                 android:text="終了時刻" />
 
             <Spinner
-                android:id="@+id/change_sppurpose"
+                android:id="@+id/crchange_sp_purpose"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/change_gaiyou"
-                android:layout_alignStart="@+id/change_gaiyou"
-                android:layout_below="@+id/change_gaiyou"
+                android:layout_alignEnd="@+id/crchange_etxt_gaiyou"
+                android:layout_alignStart="@+id/crchange_etxt_gaiyou"
+                android:layout_below="@+id/crchange_etxt_gaiyou"
                 android:layout_marginTop="0dp" />
 
             <Spinner
-                android:id="@+id/change_spmember"
+                android:id="@+id/crchange_sp_member"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/change_sinseisya"
-                android:layout_alignStart="@+id/change_sinseisya"
-                android:layout_below="@+id/change_sinseisya"
+                android:layout_alignEnd="@+id/crchange_txt_sinseisya"
+                android:layout_alignStart="@+id/crchange_txt_sinseisya"
+                android:layout_below="@+id/crchange_txt_sinseisya"
                 android:layout_marginTop="41dp" />
 
             <EditText
-                android:id="@+id/change_gaiyou"
+                android:id="@+id/crchange_etxt_gaiyou"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -109,59 +109,59 @@
                 android:inputType="textPersonName" />
 
             <Switch
-                android:id="@+id/change_inout"
+                android:id="@+id/crchange_sw_inout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/change_sinseisya"
-                android:layout_below="@+id/change_spmember"
+                android:layout_alignStart="@+id/crchange_txt_sinseisya"
+                android:layout_below="@+id/crchange_sp_member"
                 android:layout_marginEnd="84dp"
                 android:layout_marginTop="37dp" />
 
             <TextView
-                android:id="@+id/change_company"
+                android:id="@+id/crchange_txt_company"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/change_sinseisya"
-                android:layout_alignStart="@+id/change_sinseisya"
-                android:layout_below="@+id/change_inout"
+                android:layout_alignEnd="@+id/crchange_txt_sinseisya"
+                android:layout_alignStart="@+id/crchange_txt_sinseisya"
+                android:layout_below="@+id/crchange_sw_inout"
                 android:layout_marginTop="43dp"
                 android:textSize="24sp"
                 android:textStyle="bold|italic" />
 
             <EditText
-                android:id="@+id/change_fix"
+                android:id="@+id/crchange_txt_fixtures"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/change_room"
-                android:layout_below="@+id/change_room"
+                android:layout_alignStart="@+id/crchange_sp_room"
+                android:layout_below="@+id/crchange_sp_room"
                 android:layout_marginTop="10dp"
                 android:ems="10"
                 android:inputType="textPersonName" />
 
             <EditText
-                android:id="@+id/change_remark"
+                android:id="@+id/crchange_txt_remarks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/change_fix"
-                android:layout_below="@+id/change_fix"
+                android:layout_alignStart="@+id/crchange_txt_fixtures"
+                android:layout_below="@+id/crchange_txt_fixtures"
                 android:layout_marginTop="28dp"
                 android:ems="10"
                 android:inputType="textPersonName" />
 
             <Spinner
-                android:id="@+id/change_room"
+                android:id="@+id/crchange_sp_room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/change_company"
-                android:layout_alignStart="@+id/change_spmember"
-                android:layout_below="@+id/change_company"
+                android:layout_alignEnd="@+id/crchange_txt_company"
+                android:layout_alignStart="@+id/crchange_sp_member"
+                android:layout_below="@+id/crchange_txt_company"
                 android:layout_marginTop="10dp" />
 
         </RelativeLayout>
     </ScrollView>
 
     <Button
-        android:id="@+id/change_confirm"
+        android:id="@+id/crchange_btn_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
