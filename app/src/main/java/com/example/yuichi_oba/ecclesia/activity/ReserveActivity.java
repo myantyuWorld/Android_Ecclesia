@@ -36,6 +36,7 @@ import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.OutEmployee;
 import com.example.yuichi_oba.ecclesia.model.Person;
+import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
@@ -149,16 +150,34 @@ public class ReserveActivity extends AppCompatActivity
     public static class CautionDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+            //*** Bundleから値を取り出し、エラー種別を受け取る ***//
+            String errorMsg = getArguments().getString("error");
+
+            String message = "";
+            switch (errorMsg) {
+                case "no_select":
+                    message = "開始・終了が選択されていません！";
+                    break;
+                case "date":
+                    message = "開始日時が終了日時より大きい";
+                    break;
+                case "day":
+                    message = "開始時刻が終了時刻より大きい";
+                    break;
+                case "brank":
+                    message = "会議概要が空欄です!";
+                    break;
+                case "room":
+                    message = "参加者が、会議室最大人数より大きい";
+            }
+            //*** ダイアログのインスタンスを生成し、返す ***//
             return new AlertDialog.Builder(getActivity())
-                    .setTitle("警告！")
-                    .setMessage("会議概要が空欄です！")
+                    .setTitle("警告")
+                    .setMessage(message)
                     .setPositiveButton("OK", null)
                     .create();
         }
-
     }
-
-
     //*** onCreate ***//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -345,7 +364,7 @@ public class ReserveActivity extends AppCompatActivity
         List<String> listRoom = new ArrayList<>();
         while (c.moveToNext()) {
             //*** mapRoom に記録する ***//
-            mapRoom.put(c.getString(0), c.getString(1));
+            mapRoom.put(c.getString(1), c.getString(2));   //*** Mapで、会議室名 と 最大人数を保持する ***//
             listRoom.add(c.getString(1));
         }
         c.close();
@@ -356,7 +375,6 @@ public class ReserveActivity extends AppCompatActivity
         //***  ***//
         setWidgetListener();
     }
-
     //*** --- SELF MADE METHOD --- 各種ウィジェットのリスナーを登録するメソッド ***//
     private void setWidgetListener() {
         sp_member.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -435,72 +453,81 @@ public class ReserveActivity extends AppCompatActivity
                 myTimeDialog.show(getFragmentManager(), "eTime");
             }
         });
-        //*** 内容確認ボタン押下時の処理 ***//
-//         btReConfirm.setOnClickListener((View.OnClickListener) this);
-
-//        btReConfirm.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //*** 各ウィジェットの情報を取得して、予約インスタンス生成 ***//
-//
-//
-//                Reserve r = new Reserve();
-//                r.setRe_id("");
-//                r.setRe_name(edOverView.getText().toString());
-//                r.setRe_startDay(btStartDay.getText().toString());
-//                r.setRe_endDay(btEndDay.getText().toString());
-//                r.setRe_startTime(btStartTime.getText().toString());
-//                r.setRe_endTime(btEndTime.getText().toString());
-//                r.setRe_applicant(txtApplicant.getText().toString());
-////                r.setRe_switch(swSwitch.get);
-//
-//                //*** 新規OR予約一覧 の内容確認かはっきりさせる ***//
-//                Log.d("call", "内容確認ボタン押下");
-//                Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-//                intent.putExtra("gamen", "0");  // 新規予約
-//                intent.putExtra("re_id", "0");  // TODO: 2017/09/29 予約のインスタンスを予約確認に投げる
-//                intent.putExtra("emp", employee);
-//
-//                startActivity(intent);
-//
-//                //*** ReserveConfirm->onCreate() の冒頭 ***//
-//                /***
-//                    *** 前画面からの引数を受け取る（re_id） ***
-//                    Intent intent = getIntent();
-//                    gamen = intent.getStringExtra("gamen").contains("0")? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***
-//                    Log.d("call", "画面遷移元　" + gamen);
-//                    Log.d("call", re_id);
-//                    re_id = intent.getStringExtra("re_id");
-//                    employee = (Employee) intent.getSerializableExtra("emp");
-//
-//                 ***/
-//
-//            }
-//        });
     }
-
     //*** --- SELF MADE METHOD --- 内容確認ボタン押下時の処理 ***//
     public void onClickReConfirm(View view) {
         Log.d("call", "call onClickReConfirm()");
-        // TODO: 2017/10/02 参加者の人数が、会議室の最大人数以下かどうかチェックするメソッドの実装
-        //*** ひとつでもエラーが検出されたら、画面遷移させない ***//
-        if (!isBrankSpace() || !checkStartEnd()) {       //*** エディットテキストに空欄があるかチェック 開始終了日時・時刻に矛盾がないかチェック ***//
+
+        //*** 参加者の人数が、会議室の最大人数以下かどうかチェックする ***//
+        //*** エディットテキストに空欄があるかチェック ***//
+        //*** 開始終了日時・時刻に矛盾がないかチェック ***//
+        if (!checkMemberCount() || !isBrankSpace() || !checkStartEnd()) {
             Log.d("call", "予約アクティビティ エラー検出！ 画面遷移不可能");
             return;     //*** 処理を抜ける ***//
         }
+        //*** 入力されている情報で、予約情報インスタンスを作る ***//
+        Reserve reserve = new Reserve();
+        reserve.setRe_name(edOverView.getText().toString());        //*** 概要 ***//
+        reserve.setRe_startDay(btStartDay.getText().toString());    //*** 開始日時 ***//
+        reserve.setRe_endDay(btEndDay.getText().toString());        //*** 終了日時 ***//
+        reserve.setRe_startTime(btStartTime.getText().toString());  //*** 開始時刻 ***//
+        reserve.setRe_endTime(btEndTime.getText().toString());      //*** 終了時刻 ***//
+        reserve.setRe_applicant(txtApplicant.getText().toString()); //*** 申請者 ***//
+        reserve.setRe_member(member);                               //*** 会議参加者のリスト ***//
+//        reserve.setRe_switch(swSwitch.);
+        // TODO: 2017/10/03 Switchからの値の取得
+        reserve.setRe_company("");  //*** 現状これで対処 ***//// TODO: 2017/10/03 会社名をどうするべきか考察
+        //*** 選択されている会議室名を取得 ***//
+        reserve.setRe_room_id(Util.returnRoomId((String) sp_room.getSelectedItem()));   //*** 会議室ＩＤ ***//
+        reserve.setRe_fixtures(edFixture.getText().toString());     //*** 備品 ***//
+        reserve.setRe_remarks(edRemark.getText().toString());       //*** 備考 ***//
+
+
 
         //*** エラー未検出ならば画面遷移処理を行う ***//
         Log.d("call", "画面遷移開始");
-    }
+        Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+        intent.putExtra("gamen", "0");          //*** 予約確認画面への、「新規」予約での画面遷移 ***//
+        intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
 
+//        startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
+    }
+    //*** --- SELF MADE METHOD --- 参加者の人数が、会議室の最大人数以下かどうかチェックする ***//
+    private boolean checkMemberCount() {
+        Log.d("call", "call checkMemberCount()");
+
+        Integer memberCount = sp_member.getAdapter().getCount();    //*** 参加者スピナーの長さを取得する ***//
+        String ss = (String) sp_room.getSelectedItem();             //*** 選択されている会議室名を取得 ***//
+
+        //*** 参加者が、選択中の会議室最大人数より大きい-> 異常 ***//
+        if (memberCount > Integer.valueOf(mapRoom.get(ss))) {
+            Bundle bundle = new Bundle();
+            bundle.putString("error", "room");
+
+            CautionDialog dialog = new CautionDialog();
+            dialog.setArguments(bundle);
+            dialog.show(getFragmentManager(), "room");
+            return false;   //*** 異常を返す ***//
+        }
+        return true;        //*** 正常を返す ***//
+    }
     //*** --- SELF MADE METHOD --- 開始終了日時・時刻に矛盾がないかチェックするメソッド ***//
     private boolean checkStartEnd() {
+        Log.d("call", "call checkStartEnd()");
+
+        Bundle bundle = new Bundle();
         //*** ”開始日時”など、未選択の状態かチェックする ***//
         if (btStartDay.getText().toString().contains("開始日時") ||
                 btEndDay.getText().toString().contains("終了日時") ||
                 btStartTime.getText().toString().contains("開始時刻") ||
                 btEndTime.getText().toString().contains("終了時刻")) {
-            // TODO: 2017/10/02 未選択を警告するダイアログの実装
+            //*** ダイアログに、どのエラー種別か渡す ***//
+            bundle.putString("error", "no_select");
+            //*** 警告ダイアログの出力 ***//
+            CautionDialog dialog = new CautionDialog();
+            dialog.setArguments(bundle);
+            dialog.show(getFragmentManager(), "no_select");
+
             return false;   //*** 異常 を返す ***//
         }
         //*** 開始が終了より遅いかなどの矛盾をチェックする ***//
@@ -509,29 +536,47 @@ public class ReserveActivity extends AppCompatActivity
         Log.d("call", String.format("日時検査 --- %s : %s", sDay, eDay));
         if (Integer.valueOf(sDay) > Integer.valueOf(eDay)) {    //*** 開始日時のほうが大きい -→ 異常 ***//
             Log.d("call", "開始日時のほうが大きい矛盾発生");
-            // TODO: 2017/10/02 日時の矛盾発生を警告するダイアログの実装
+
+            //*** ダイアログに、どのエラー種別か渡す ***//
+            bundle.putString("error", "date");
+            //*** 警告ダイアログの出力 ***//
+            CautionDialog dialog = new CautionDialog();
+            dialog.setArguments(bundle);
+            dialog.show(getFragmentManager(), "date");
             return false;   //*** 異常 を返す ***//
         }
 
+        //*** 開始が終了より遅いかなどの矛盾をチェックする ***//
         String sTime = btStartTime.getText().toString().split(REGEX)[0] + btStartTime.getText().toString().split(REGEX)[1];
         String eTime = btEndTime.getText().toString().split(REGEX)[0] + btEndTime.getText().toString().split(REGEX)[1];
         Log.d("call", String.format("時刻検査 --- %s : %s", sTime, eTime));
         if (Integer.valueOf(sTime) > Integer.valueOf(eTime)) {  //*** 開始時刻のほうが大きい -→ 異常 ***//
             Log.d("call", "開始時刻のほうが大きい矛盾発生");
-            // TODO: 2017/10/02 時刻の矛盾を警告するダイアログの実装
+
+            //*** ダイアログに、どのエラー種別か渡す ***//
+            bundle.putString("error", "day");
+            //*** 警告ダイアログの出力 ***//
+            CautionDialog dialog = new CautionDialog();
+            dialog.setArguments(bundle);
+            dialog.show(getFragmentManager(), "day");
             return false;   //*** 異常 を返す ***//
         }
 
         return true;    //*** 矛盾なしを返す ***//
     }
-
     //*** --- SELF MADE METHOD --- ウィジェットに空欄があるかチェックするメソッド ***//
     public boolean isBrankSpace() {
+        Log.d("call", "call isBrankSpace()");
+
         if (edOverView.getText().toString().isEmpty()) {         //*** 会議概要 ***//
             Log.d("call", "空欄あり");
-            // TODO: 2017/10/02 概要の空欄を知らせるダイアログの実装
+            //*** ダイアログに、どのエラー種別か渡す ***//
+            Bundle bundle = new Bundle();
+            bundle.putString("error", "brank");
+            //*** 警告ダイアログの出力 ***//
             CautionDialog dialog = new CautionDialog();
-            dialog.show(getFragmentManager(), "a");
+            dialog.setArguments(bundle);
+            dialog.show(getFragmentManager(), "brank");
             return false;
         }
         return true;    //*** ブランク無し（正常）を返す ***//

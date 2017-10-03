@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
+import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
@@ -48,6 +49,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     private Employee employee;
     public static String re_id;
     public static String gamen;
+    public static Reserve reserve;
 
     // 内部クラスからgetApplicationContextするためのやつ(普通にやるとno-staticで怒られる)
     private static ReserveConfirmActivity instance = null;
@@ -177,16 +179,15 @@ public class ReserveConfirmActivity extends AppCompatActivity
         //*** 前画面からの引数を受け取る ***//
         Intent intent = getIntent();
         gamen = intent.getStringExtra("gamen").contains("0") ? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***//
-        Log.d("call", "画面遷移元　" + gamen);
-        re_id = intent.getStringExtra("re_id");
-        employee = (Employee) intent.getSerializableExtra("emp");
-        //*** 画面遷移元によって、処理を分ける ***//
 
+        // TODO: 2017/10/03 遷移元画面から、Reserveクラスのインスタンスをもらうよう修正する
+        Log.d("call", "画面遷移元　" + gamen);
+        //*** 画面遷移元によって、処理を分ける ***//
         if (gamen.contains("新規")) {    //*** 「新規」画面からの画面遷移 ***//
+            employee = (Employee) intent.getSerializableExtra("emp");   //***  ***//
 
         } else {                         //*** 「一覧」画面からの画面遷移 ***//
-
-            Log.d("call", re_id);
+            reserve = (Reserve) intent.getSerializableExtra("reserve"); //***  ***//
         }
 
         instance = this;

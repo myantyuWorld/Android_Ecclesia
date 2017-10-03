@@ -171,27 +171,21 @@ public class AddMemberActivity extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Spinner spinner = (Spinner) adapterView;
+                //*** 「会社名」:「氏名」を分割して、氏名のみ取得する ***//
                 String name = spinner.getSelectedItem().toString().split(" : ")[1];
                 Log.d("call", name);
 
-                //*** 選択した人間の情報を、各ウィジェットにマッピングする ***//
-                // TODO: 2017/10/02 ポリモーフィズム使用に変更
-//                for (Employee e : members) {
-//                    if (name.equals(e.getName())) {
-//                        // 履歴から選択された人間の情報を下の項目群にマッピングする
-//                        ed_company.setText(e.getCom_name());
-//                        ed_name.setText(e.getName());
-//                        ed_email.setText(e.getMailaddr());
-//                        ed_tel.setText(e.getTel());
-//                        sp_position.setSelection(Util.setSelection(sp_position, e.getPos_name()));
-//                        sp_depart.setSelection(Util.setSelection(sp_depart, e.getDep_name()));
-//                    }
-//                }
+                //*** 履歴リストから、選択された人間と等しいインスタンスを探す ***//
+                for (Person person : members) {
+                    if (person.getName().contains(name)) {  //*** 名前が等しい ***//
+                        //*** 特定したインスタンス情報で、各ウィジェットにマップする ***//
+                        mappingWidget(person);
+                        break; //*** これ以上ループする必要がないので、ループを抜ける ***//
+                    }
+                }
             }
-
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {            }
         });
         // TODO: 2017/09/19  登録ボタン押下で、参加者リストを追加するロジックの実装
 
@@ -288,6 +282,33 @@ public class AddMemberActivity extends AppCompatActivity
                 }
             }
         });
+    }
+    //*** --- SELF MADE METHOD --- 履歴から選択されたインスタンス情報を、各ウィジェットにマップするメソッド ***//
+    private void mappingWidget(Person p) {
+        //*** 引数のクラスの型に応じた処理を行う ***//
+        if (p instanceof Employee) {            //*** 社員クラスのインスタンスの場合 ***//
+            ed_company.setText("社内");         //*** 会社名 ***//
+            ed_name.setText(p.getName());       //*** 氏名 ***//
+            ed_email.setText(p.getMailaddr());  //*** メールアドレス ***//
+            ed_tel.setText(p.getTel());         //*** 電話番号 ***//
+            //*** インスタンスの部署ＩＤから、部署名を解決 ***//
+            //*** ↓ ***//
+            //*** のち、部署名から、スピナーの添え字を解決して、選択する ***//
+            sp_depart.setSelection(Util.setSelection(sp_depart, Util.returnDepart(((Employee) p).getDep_id())));
+            //*** インスタンスの役職ＩＤから、役職名を解決 ***//
+            //*** ↓ ***//
+            //*** のち、役職名から、スピナーの添え字を解決して、選択する ***//
+            sp_position.setSelection(Util.setSelection(sp_position, Util.returnPostion(((Employee) p).getPos_id())));
+        } else if (p instanceof OutEmployee) {  //*** 社外者クラスのインスタンスの場合 ***//
+            ed_company.setText(((OutEmployee) p).getCom_name());    //*** 会社名 ***//
+            ed_name.setText(p.getName());                           //*** 氏名 ***//
+            ed_email.setText(p.getMailaddr());                      //*** メールアドレス ***//
+            ed_tel.setText(p.getTel());                             //*** 電話番号 ***//
+            //*** 部署名から、スピナーの添え字を解決して、選択する ***//
+            sp_depart.setSelection(Util.setSelection(sp_depart, ((OutEmployee) p).getDep_name()));
+            //*** 役職名から、スピナーの添え字を解決して、選択する ***//
+            sp_position.setSelection(Util.setSelection(sp_position, ((OutEmployee) p).getPos_name()));
+        }
     }
 
     //*** --- SELF MADE METHOD --- 部署スピナーの項目をDB検索して設定するメソッド ***//

@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
+import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 import com.example.yuichi_oba.ecclesia.view.TimeTableView;
@@ -343,15 +344,19 @@ public class ReserveListActivity extends AppCompatActivity
                     Log.d("call", "新規予約登録画面への遷移");
                     Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
                     intent.putExtra("emp", employee);
-                    startActivity(intent);
+
+                    startActivity(intent);  //*** 新規予約登録画面 ***//
                 } else {
                     Log.d("call", "予約確認画面への遷移");
                     Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-                    intent.putExtra("re_id", re_id);
-                    intent.putExtra("emp", employee);
-                    intent.putExtra("gamen", "1");
+                    intent.putExtra("re_id", re_id); //*** タップした予約IDを特定している ***//
 
-                    startActivity(intent);
+                    Reserve reserve = Reserve.retReserveConfirm(re_id); //*** 予約IDを基に、予約情報を検索 ***//
+//                    intent.putExtra("emp", employee); //*** 不要？ ***//
+                    intent.putExtra("gamen", "1");          //*** どの画面からの遷移か ***//
+                    intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
+
+                    startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
                 }
 //                ReserveInfo reserveInfo = new ReserveInfo();
                 // TODO: 2017/09/15  //*** 考えるので、いったんコメアウト ***//

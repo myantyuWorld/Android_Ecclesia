@@ -9,9 +9,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
-
-import static com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity.re_id;
 
 /**
  * Created by yuki on 2017/09/08.
@@ -35,12 +34,10 @@ public class Reseve_confirmView extends View {
         super(context);
         init();
     }
-
     public Reseve_confirmView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
-
     public Reseve_confirmView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
@@ -70,7 +67,7 @@ public class Reseve_confirmView extends View {
         p_rect.setColor(Color.LTGRAY);
         p_rect.setStyle(Paint.Style.FILL);
 
-        reserve = new Reserve();
+        reserve = ReserveConfirmActivity.reserve;   //*** 予約確認画面本体で持っている予約情報インスタンスを見る ***//
     }
     //*** 描画メソッド ***//
     @Override
@@ -79,7 +76,8 @@ public class Reseve_confirmView extends View {
         //*** 基本の枠の描画 ***//
         onDrawBasic(canvas);
         //*** 予約情報のDB検索 ***//
-        reserve = Reserve.retReserveConfirm(re_id);
+        // TODO: 2017/10/03 ここでは、ReserveConfirmActivityのReserveインスタンスの情報を、描画するだけにとどめる
+//        reserve = Reserve.retReserveConfirm(re_id); // TODO: 2017/10/03 ここで、ＤＢ検索はやめる
         //*** 予約情報の描画 ***//
         onDrawReserveInfo(canvas);
     }
@@ -105,13 +103,12 @@ public class Reseve_confirmView extends View {
         // TODO: 2017/09/16 申請者カラムを、DBのテーブルに追加する
         c.drawText(reserve.getRe_applicant(), 500, y_applicant, p_text);
         // DO: 2017/09/16 参加者を検索するロジックの実装
-        // TODO: 2017/09/16 折り畳み式ビュー検討：ExpandableListView
         c.drawText("", 500, y_member, p_text);
         // DO: 2017/09/16 0 =>社内 1=> 社外と表示する
         c.drawText(reserve.getRe_switch().contains("0") ? "社内" : "社外", 500, y_switch, p_text);
         // TODO: 2017/09/16 社外者がいない場合、nullでアプリが落ちるため、対処を考える
 //        c.drawText(reserve.getRe_company(), 500, y_company, p_text);
-        c.drawText("", 500, y_company, p_text); //*** 現状これで対処します  ***//
+        c.drawText("", 500, y_company, p_text); //*** 現状これで対処します  ***//// TODO: 2017/10/03 会社名をどうするべきか考察
         c.drawText(reserve.getRe_room_name(), 500, y_room, p_text);
         c.drawText(reserve.getRe_fixtures(), 500, y_fixture, p_text);
         c.drawText(reserve.getRe_remarks(), 500, y_remark, p_text);
