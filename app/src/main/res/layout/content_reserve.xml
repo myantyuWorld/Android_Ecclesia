@@ -24,13 +24,14 @@
             android:orientation="vertical" >
 
             <view
+                android:id="@+id/ar_view_reserve"
                 class="com.example.yuichi_oba.ecclesia.view.ReserveView"
                 id="@+id/ar_view_reserve"
                 layout_width="match_parent"
                 android:layout_width="wrap_content"
                 android:layout_height="730dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true" />
 
             <TextView
                 android:id="@+id/ar_txt_applicant"
