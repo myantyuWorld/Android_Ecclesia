@@ -52,7 +52,7 @@
 
             <view
                 android:id="@+id/arl_view_timetable"
-                class="com.example.yuichi_oba.ecclesia.view.arl_view_timetableView"
+                class="com.example.yuichi_oba.ecclesia.view.TimeTableView"
                 android:layout_width="match_parent"
                 android:layout_height="675dp"
                 android:layout_marginEnd="0dp"
