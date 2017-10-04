@@ -259,6 +259,7 @@ public class ReserveListActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Toast.makeText(ReserveListActivity.this, arl_txt_date.getText().toString(), Toast.LENGTH_SHORT).show();
+                // TODO: 2017/10/04 自分の予約情報をもっているリストを一回クリアしないと、前の情報も描画されてしまう
                 arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
             }
         });
