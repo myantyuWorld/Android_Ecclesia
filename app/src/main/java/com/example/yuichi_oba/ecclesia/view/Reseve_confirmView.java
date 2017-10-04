@@ -27,7 +27,7 @@ public class Reseve_confirmView extends View {
     private String[] name = {"概要", "目的", "開始時間", "終了時間", "申請者", "参加者", "社内/社外", "会社名", "希望会議室", "備品", "その他"};
 //    private String[] content = {"システム開発の組み合わせ", "打合せ", "2017/01/18 09:00", "2017/01/18 11:00", "石山大樹", "大馬祐一 : 管理部", "社内", "株式会社Ostraca", "会議室A", "プロジェクタ", "無し"};
 
-    Reserve reserve;
+//    Reserve reserve;
 
     //*** Constractor ***//
     public Reseve_confirmView(Context context) {
@@ -67,7 +67,7 @@ public class Reseve_confirmView extends View {
         p_rect.setColor(Color.LTGRAY);
         p_rect.setStyle(Paint.Style.FILL);
 
-        reserve = ReserveConfirmActivity.reserve;   //*** 予約確認画面本体で持っている予約情報インスタンスを見る ***//
+//        reserve = ReserveConfirmActivity.reserve;   //*** 予約確認画面本体で持っている予約情報インスタンスを見る ***//
     }
     //*** 描画メソッド ***//
     @Override
@@ -95,23 +95,23 @@ public class Reseve_confirmView extends View {
         float y_fixture = 1150;
         float y_remark = 1270;
 
-        c.drawText(reserve.getRe_name(), 500, y_name, p_text);
+        c.drawText(ReserveConfirmActivity.reserve.getRe_name(), 500, y_name, p_text);
         // DO: 2017/09/16 会議目的カラムを、DBのテーブルに追加する
-        c.drawText(reserve.getRe_purpose_name(), 500, y_purpose, p_text);
-        c.drawText(reserve.getRe_startDay() + " " + reserve.getRe_startTime(), 500, y_start, p_text);
-        c.drawText(reserve.getRe_endDay() + " " + reserve.getRe_endTime(), 500, y_end, p_text);
+        c.drawText(ReserveConfirmActivity.reserve.getRe_purpose_name(), 500, y_purpose, p_text);
+        c.drawText(ReserveConfirmActivity.reserve.getRe_startDay() + " " + ReserveConfirmActivity.reserve.getRe_startTime(), 500, y_start, p_text);
+        c.drawText(ReserveConfirmActivity.reserve.getRe_endDay() + " " + ReserveConfirmActivity.reserve.getRe_endTime(), 500, y_end, p_text);
         // TODO: 2017/09/16 申請者カラムを、DBのテーブルに追加する
-        c.drawText(reserve.getRe_applicant(), 500, y_applicant, p_text);
+        c.drawText(ReserveConfirmActivity.reserve.getRe_applicant(), 500, y_applicant, p_text);
         // DO: 2017/09/16 参加者を検索するロジックの実装
         c.drawText("", 500, y_member, p_text);
         // DO: 2017/09/16 0 =>社内 1=> 社外と表示する
-        c.drawText(reserve.getRe_switch().contains("0") ? "社内" : "社外", 500, y_switch, p_text);
+        c.drawText(ReserveConfirmActivity.reserve.getRe_switch().contains("0") ? "社内" : "社外", 500, y_switch, p_text);
         // TODO: 2017/09/16 社外者がいない場合、nullでアプリが落ちるため、対処を考える
 //        c.drawText(reserve.getRe_company(), 500, y_company, p_text);
         c.drawText("", 500, y_company, p_text); //*** 現状これで対処します  ***//// TODO: 2017/10/03 会社名をどうするべきか考察
-        c.drawText(reserve.getRe_room_name(), 500, y_room, p_text);
-        c.drawText(reserve.getRe_fixtures(), 500, y_fixture, p_text);
-        c.drawText(reserve.getRe_remarks(), 500, y_remark, p_text);
+//        c.drawText(reserve.getRe_room_name(), 500, y_room, p_text);
+        c.drawText(ReserveConfirmActivity.reserve.getRe_fixtures(), 500, y_fixture, p_text);
+        c.drawText(ReserveConfirmActivity.reserve.getRe_remarks(), 500, y_remark, p_text);
 
     }
     //*** 基本の枠の描画メソッド ***//

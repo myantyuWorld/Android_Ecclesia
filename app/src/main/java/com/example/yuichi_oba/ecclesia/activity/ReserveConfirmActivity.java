@@ -184,10 +184,11 @@ public class ReserveConfirmActivity extends AppCompatActivity
         Log.d("call", "画面遷移元　" + gamen);
         //*** 画面遷移元によって、処理を分ける ***//
         if (gamen.contains("新規")) {    //*** 「新規」画面からの画面遷移 ***//
-            employee = (Employee) intent.getSerializableExtra("emp");   //***  ***//
+            employee = (Employee) intent.getSerializableExtra("emp");        //*** 社員情報の取得 ***//
+            reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
 
         } else {                         //*** 「一覧」画面からの画面遷移 ***//
-            reserve = (Reserve) intent.getSerializableExtra("reserve"); //***  ***//
+            reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
         }
 
         instance = this;

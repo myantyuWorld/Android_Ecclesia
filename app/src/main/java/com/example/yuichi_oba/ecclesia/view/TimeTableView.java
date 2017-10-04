@@ -420,7 +420,8 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             r.setRe_fixtures(c.getString(7));
             r.setRe_remarks(c.getString(8));
             r.setRe_room_id(c.getString(10));
-            r.setRe_pur_priority(c.getString(18));
+//            r.setRe_pur_priority(c.getString(18));
+            // TODO: 2017/10/04 会議目的優先度の取得のロジックの実装 
 
 
             reserveInfo.add(r);
@@ -442,7 +443,9 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             r.setRe_fixtures(c.getString(7));
             r.setRe_remarks(c.getString(8));
             r.setRe_room_id(c.getString(10));
-            r.setRe_pur_priority(c.getString(18));
+//            r.setRe_pur_priority(c.getString(18));
+            // TODO: 2017/10/04  会議目的優先度の取得のロジックの実装
+
 
             reserveOther.add(r);
         }
