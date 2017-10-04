@@ -42,6 +42,16 @@ public class Hint {
      *                   このとき、StoreDataは "implements Serializable" する
      *                   Bundle も同じ！
      *
+     *
+     *  //*** StartForActivityResult の 値渡し ***
+     *                   Intent intent = new Intent();
+     //                intent.putExtra("member", e);
+     //                setResult(RESULT_OK, intent);   リクエストコード（任意）, intentのインスタンス
+     //                finish();
+
+          からの
+          呼び出しもとで、onActivityResultをオーバーライドする
+     *
      * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
      * _/_/_/
      * _/_/_/           ダイアログ
@@ -88,4 +98,13 @@ public class Hint {
      canvas.drawPoint(100, 100 + i, mPaint);
      }
      */
+
+    //*** HCP 画面担当一覧 ***//
+     //*** ReserveChangeActivity        しゃま***//
+     //*** ReserveListActivity          オレ***//
+     //*** HistorySearchActivity        ぐちお ***//
+     //*** ReserveCheckActivity         くに***//
+     //*** ReserveConfirmActivity       くに***//
+     //*** AddMemberActivity            ヨッシー ***//
+     //*** ReserveActivity              ヨッシー ***//
 }
