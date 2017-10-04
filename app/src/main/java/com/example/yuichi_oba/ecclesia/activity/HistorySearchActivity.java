@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
 import java.util.ArrayList;
@@ -59,69 +60,77 @@ public class HistorySearchActivity extends AppCompatActivity
     public static final int GAIYOU = 1;
     public static final int ID = 0;
 
-    private class ListItem {
-        private long id;
-        private String purpose;
-        private String date;
-        private String gaiyou;
-        private String company;
-        private String companyMember;
-
-        public long getId() {
-            return id;
-        }
-
-        public String getPurpose() {
-            return purpose;
-        }
-        public String getDate() {
-            return date;
-        }
-        public String getGaiyou() {
-            return gaiyou;
-        }
-        public String getCompany() {
-            return company;
-        }
-        public String getCompanyMember() {
-            return companyMember;
-        }
-
-        public void setId(long id) {
-            this.id = id;
-        }
-        public void setPurpose(String purpose) {
-            this.purpose = purpose;
-        }
-        public void setDate(String date) {
-            this.date = date;
-        }
-        public void setGaiyou(String gaiyou) {
-            this.gaiyou = gaiyou;
-        }
-        public void setCompany(String company) {
-            this.company = company;
-        }
-        public void setCompanyMember(String companyMember) {
-            this.companyMember = companyMember;
-        }
-    }
+    //    private class ListItem {
+//        private long id;
+//        private String purpose;
+//        private String date;
+//        private String gaiyou;
+//        private String company;
+//        private String companyMember;
+//
+//        public long getId() {
+//            return id;
+//        }
+//
+//        public String getPurpose() {
+//            return purpose;
+//        }
+//        public String getDate() {
+//            return date;
+//        }
+//        public String getGaiyou() {
+//            return gaiyou;
+//        }
+//        public String getCompany() {
+//            return company;
+//        }
+//        public String getCompanyMember() {
+//            return companyMember;
+//        }
+//
+//        public void setId(long id) {
+//            this.id = id;
+//        }
+//        public void setPurpose(String purpose) {
+//            this.purpose = purpose;
+//        }
+//        public void setDate(String date) {
+//            this.date = date;
+//        }
+//        public void setGaiyou(String gaiyou) {
+//            this.gaiyou = gaiyou;
+//        }
+//        public void setCompany(String company) {
+//            this.company = company;
+//        }
+//        public void setCompanyMember(String companyMember) {
+//            this.companyMember = companyMember;
+//        }
+//
+//        @Override
+//        public String toString() {
+//            return this.purpose + " " + this.company;
+//        }
+//    }
     private class Purpose {
         private String pur_id;
         private String pur_name;
-
         public String getPur_id() {
             return pur_id;
         }
+
         public void setPur_id(String pur_id) {
             this.pur_id = pur_id;
         }
+
         public String getPur_name() {
             return pur_name;
         }
+
         public void setPur_name(String pur_name) {
             this.pur_name = pur_name;
         }
+
     }
     private class Company {
         private String com_id;
@@ -146,7 +155,7 @@ public class HistorySearchActivity extends AppCompatActivity
 
     private class MyListAdapter extends BaseAdapter{
         private Context context;
-        private ArrayList<ListItem> data = null;
+        private ArrayList<Reserve> data = null;
         private int resource = 0;
         private LayoutInflater inflater = null;
 
@@ -163,7 +172,7 @@ public class HistorySearchActivity extends AppCompatActivity
             this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
-        public void setItemList(ArrayList<ListItem> data) {
+        public void setItemList(ArrayList<Reserve> data) {
             this.data = data;
         }
         //データの個数を取得
@@ -189,18 +198,18 @@ public class HistorySearchActivity extends AppCompatActivity
             convertView = inflater.inflate(R.layout.list_search_item, parent, false);
 
 //            Activity activity = (Activity) context;
-            ListItem item = (ListItem) getItem(position);
+            Reserve item = (Reserve) getItem(position);
 //            //初回かどうか確認
 //            if (convertView == null) {
 //                //Layoutを取得
 //                convertView = activity.getLayoutInflater().inflate(resource, null);
 //            }
-            ((RelativeLayout)convertView).findViewById(R.id.customview).invalidate();
-            ((TextView) convertView.findViewById(R.id.txt_purpose)).setText(item.getPurpose());
-            ((TextView) convertView.findViewById(R.id.txt_date)).setText(item.getDate());
-            ((TextView) convertView.findViewById(R.id.txt_overview)).setText(item.getGaiyou());
-            ((TextView) convertView.findViewById(R.id.txt_company)).setText(item.getCompany());
-            ((TextView) convertView.findViewById(R.id.txt_member)).setText(item.getCompanyMember());
+//            ((RelativeLayout)convertView).findViewById(R.id.customview).invalidate();
+//            ((TextView) convertView.findViewById(R.id.txt_purpose)).setText(item.getRe_purpose_name());
+//            ((TextView) convertView.findViewById(R.id.txt_date)).setText(item.getRe_startDay());
+//            ((TextView) convertView.findViewById(R.id.txt_overview)).setText(item.getRe_remarks());
+//            ((TextView) convertView.findViewById(R.id.txt_company)).setText(item.getRe_company());
+//            ((TextView) convertView.findViewById(R.id.txt_member)).setText((CharSequence) item.getRe_memxber());
             return convertView;
         }
 
@@ -241,7 +250,7 @@ public class HistorySearchActivity extends AppCompatActivity
     ListView listView;
     List<Purpose> purpose;
     List<Company> companiesy;
-    ArrayList<ListItem> listItems;
+    ArrayList<Reserve> listItems;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "HistorySearchActivity->onCreate()");
@@ -267,17 +276,18 @@ public class HistorySearchActivity extends AppCompatActivity
                 " inner join t_member y on x.re_id = y.re_id" +
                 " inner join m_out_emp as a on y.mem_id = a.outemp_id" +
                 " inner join m_company as b on a.com_id = b.com_id" +
-                " inner join m_purpose as p on p.pur_id = x.pur_id", new String[]{});
+                " inner join m_purpose as p on p.pur_id = x.pur_id"+
+                " inner join m_room as c on c.room_id = x.room_id", new String[]{});
         //会社用のデータベース
         while (c_list.moveToNext()) {
-            ListItem li = new ListItem();
+            Reserve li = new Reserve();
             li.setId(c_list.getLong(ID));
-            li.setGaiyou(c_list.getString(GAIYOU));
-            li.setDate(c_list.getString(DAY));
-//            li.setCompanyMember(c_list.getString(COM_MEMBER));
-            li.setCompanyMember(c_list.getString(18));
-            li.setCompany(c_list.getString(26));
-            li.setPurpose(c_list.getString(28));
+            li.setRe_name(c_list.getString(GAIYOU));
+            li.setRe_startDay(c_list.getString(DAY));
+//            li.setRe_company(c_list.getString(COM_MEMBER));
+//            li.setRe_member(.getString(18));
+            li.setRe_company(c_list.getString(26));
+            li.setRe_purpose_name(c_list.getString(28));
             // addするメソッドを書く
             listItems.add(li);
         }
@@ -325,7 +335,7 @@ public class HistorySearchActivity extends AppCompatActivity
         for(String s:strings){
             Log.d("call",s);
         }
-       //スピナーを取得
+        //スピナーを取得
         Spinner sp = (Spinner) findViewById(R.id.spinner_mokuteki);
         //
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
@@ -340,7 +350,7 @@ public class HistorySearchActivity extends AppCompatActivity
 
                 Toast.makeText(HistorySearchActivity.this,String.format("選択目的 : %s",sp.getSelectedItem()),
                         Toast.LENGTH_SHORT).show();
-                        Log.d("call","");
+                Log.d("call","");
             }
             //項目が選択されなかったときの処理(今は空)
             @Override
@@ -379,13 +389,22 @@ public class HistorySearchActivity extends AppCompatActivity
         });
 
         //ListItemとレイアウトとを関連付け
-        MyListAdapter adapter1 = new MyListAdapter(this);
+        final MyListAdapter adapter1 = new MyListAdapter(this);
         listView = (ListView) findViewById(R.id.list_history);
         adapter1.setItemList(listItems);
         listView.setAdapter(adapter1);
 
         //フィルタ機能を有効化
         listView.setTextFilterEnabled(true);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Toast.makeText(HistorySearchActivity.this, adapter1.getItem(position).toString(), Toast.LENGTH_SHORT).show();
+                Log.d("call", adapter1.getItem(position).toString());
+
+
+            }
+        });
 
         //serchviewの検索ボックスに入力された時の処理
         searchView  = (SearchView) findViewById(R.id.search);

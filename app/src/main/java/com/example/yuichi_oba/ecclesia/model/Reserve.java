@@ -20,6 +20,7 @@ import java.util.List;
 public class Reserve implements Serializable{
 
     //*** Field ***//
+    private long  id;
     private String re_id;
     private String re_name;
     private String re_startDay;
@@ -106,6 +107,13 @@ public class Reserve implements Serializable{
     public void setRe_mem_priority(Integer re_mem_priority) {
         this.re_mem_priority = re_mem_priority;
     }
+    public long getId() {
+        return id;
+    }
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getRe_purpose_id() {
         return re_purpose_id;
     }
