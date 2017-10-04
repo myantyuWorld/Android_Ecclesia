@@ -127,21 +127,21 @@ public class ReserveChangeActivity extends AppCompatActivity
 
     private void init() {
         fbn = (FloatingActionButton) findViewById(R.id.fbn_addMember);
-        overview = (EditText) findViewById(R.id.crchange_etxt_gaiyou);
-        fixtrues = (EditText) findViewById(R.id.crchange_txt_fixtures);
-        remarks = (EditText) findViewById(R.id.crchange_txt_remarks);
-        startDayBtn = (Button) findViewById(R.id.crchange_btn_sDay);
-        startTimeBtn = (Button) findViewById(R.id.crchange_btn_sTime);
-        endDayBtn = (Button) findViewById(R.id.crchange_btn_eDay);
-        endTimeBtn = (Button) findViewById(R.id.crchange_btn_eTime);
-        sp_purpose = (Spinner) findViewById(R.id.crchange_sp_purpose);
-        sinseisya = (TextView) findViewById(R.id.crchange_txt_sinseisya);
-        members = (Spinner) findViewById(R.id.crchange_sp_member);
-        room = (Spinner) findViewById(R.id.crchange_sp_room);
-        comp = (TextView) findViewById(R.id.crchange_txt_company);
+        overview = (EditText) findViewById(R.id.acchange_etxt_gaiyou);
+        fixtrues = (EditText) findViewById(R.id.acchange_txt_fixtures);
+        remarks = (EditText) findViewById(R.id.acchange_txt_remarks);
+        startDayBtn = (Button) findViewById(R.id.acchange_btn_sDay);
+        startTimeBtn = (Button) findViewById(R.id.acchange_btn_sTime);
+        endDayBtn = (Button) findViewById(R.id.acchange_btn_eDay);
+        endTimeBtn = (Button) findViewById(R.id.acchange_btn_eTime);
+        sp_purpose = (Spinner) findViewById(R.id.acchange_sp_purpose);
+        sinseisya = (TextView) findViewById(R.id.acchange_txt_sinseisya);
+        members = (Spinner) findViewById(R.id.acchange_sp_member);
+        room = (Spinner) findViewById(R.id.acchange_sp_room);
+        comp = (TextView) findViewById(R.id.acchange_txt_company);
 
-        editBtn = (Button) findViewById(R.id.crchange_btn_confirm);
-        inout = (Switch) findViewById(R.id.crchange_sw_inout);
+        editBtn = (Button) findViewById(R.id.acchange_btn_confirm);
+        inout = (Switch) findViewById(R.id.acchange_sw_inout);
 
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
