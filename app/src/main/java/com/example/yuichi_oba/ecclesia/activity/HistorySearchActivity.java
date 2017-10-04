@@ -287,10 +287,11 @@ public class HistorySearchActivity extends AppCompatActivity
             li.setRe_name(c_list.getString(GAIYOU));
             li.setRe_startDay(c_list.getString(DAY));
 //            li.setRe_company(c_list.getString(COM_MEMBER));
-//            li.setRe_member();
+            //*** 会社のメンバーをセットする***//
+//            li.setRe_member
             li.setRe_company(c_list.getString(26));
             li.setRe_purpose_name(c_list.getString(28));
-            Log.d("call", (c_list.getString(GAIYOU)) + " : " + c_list.getString(DAY) + " : " + c_list.getString(26) + " : " + c_list.getString(28));
+            Log.d("call", (c_list.getString(GAIYOU)) + " : " + c_list.getString(DAY) + " : " + c_list.getString(26) + " : " + c_list.getString(28) + " : " + c_list.getString(COM_MEMBER));
             // addするメソッドを書く
             listItems.add(li);
         }
