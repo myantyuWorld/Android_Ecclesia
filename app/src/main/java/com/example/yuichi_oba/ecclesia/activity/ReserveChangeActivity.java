@@ -127,21 +127,21 @@ public class ReserveChangeActivity extends AppCompatActivity
 
     private void init() {
         fbn = (FloatingActionButton) findViewById(R.id.fbn_addMember);
-        overview = (EditText) findViewById(R.id.change_gaiyou);
-        fixtrues = (EditText) findViewById(R.id.change_fix);
-        remarks = (EditText) findViewById(R.id.change_remark);
-        startDayBtn = (Button) findViewById(R.id.change_sDaybtn);
-        startTimeBtn = (Button) findViewById(R.id.change_sTimebtn);
-        endDayBtn = (Button) findViewById(R.id.change_eDaybtn);
-        endTimeBtn = (Button) findViewById(R.id.change_eTimebtn);
-        sp_purpose = (Spinner) findViewById(R.id.change_sppurpose);
-        sinseisya = (TextView) findViewById(R.id.change_sinseisya);
-        members = (Spinner) findViewById(R.id.change_spmember);
-        room = (Spinner) findViewById(R.id.change_room);
-        comp = (TextView) findViewById(R.id.change_company);
+        overview = (EditText) findViewById(R.id.crchange_etxt_gaiyou);
+        fixtrues = (EditText) findViewById(R.id.crchange_txt_fixtures);
+        remarks = (EditText) findViewById(R.id.crchange_txt_remarks);
+        startDayBtn = (Button) findViewById(R.id.crchange_btn_sDay);
+        startTimeBtn = (Button) findViewById(R.id.crchange_btn_sTime);
+        endDayBtn = (Button) findViewById(R.id.crchange_btn_eDay);
+        endTimeBtn = (Button) findViewById(R.id.crchange_btn_eTime);
+        sp_purpose = (Spinner) findViewById(R.id.crchange_sp_purpose);
+        sinseisya = (TextView) findViewById(R.id.crchange_txt_sinseisya);
+        members = (Spinner) findViewById(R.id.crchange_sp_member);
+        room = (Spinner) findViewById(R.id.crchange_sp_room);
+        comp = (TextView) findViewById(R.id.crchange_txt_company);
 
-        editBtn = (Button) findViewById(R.id.change_confirm);
-        inout = (Switch) findViewById(R.id.change_inout);
+        editBtn = (Button) findViewById(R.id.crchange_btn_confirm);
+        inout = (Switch) findViewById(R.id.crchange_sw_inout);
 
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
