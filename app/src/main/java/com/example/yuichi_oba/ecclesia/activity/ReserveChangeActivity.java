@@ -100,11 +100,8 @@ public class ReserveChangeActivity extends AppCompatActivity
         setContentView(R.layout.activity_reserve_change);
 
         Intent intent = getIntent();
-        re_id = intent.getStringExtra(KEYCHANGE);
+        changeRes = (Reserve) intent.getSerializableExtra(KEYCHANGE);
         appEmp = (Employee) intent.getSerializableExtra("emp");
-        Log.d("1111", appEmp.getName());
-
-        changeRes = new Reserve();
 
         init();
         setListener();
@@ -166,13 +163,13 @@ public class ReserveChangeActivity extends AppCompatActivity
         ArrayAdapter<String> roomadapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, rooms);
         room.setAdapter(roomadapter);
 
-        changeRes = Reserve.retReserveConfirm(re_id);
+//        changeRes = Reserve.retReserveConfirm(re_id);
 
         overview.setText(changeRes.getRe_name());
         fixtrues.setText(changeRes.getRe_fixtures());
         remarks.setText(changeRes.getRe_remarks());
         sinseisya.setText(changeRes.getRe_applicant());
-        sinseisya.setText(appEmp.getName());
+        sinseisya.setText(changeRes.getRe_applicant());
         startDayBtn.setText(changeRes.getRe_startDay());
         endDayBtn.setText(changeRes.getRe_endDay());
         startTimeBtn.setText(changeRes.getRe_startTime());
@@ -282,7 +279,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             public void onClick(View v){
 //                setReserveInfo();
                 changes = new String[]{changeRes.getRe_name(), changeRes.getRe_purpose_name(), changeRes.getRe_startDay() + " " + changeRes.getRe_startTime(), changeRes.getRe_endDay() + " " + changeRes.getRe_endTime(),
-                        appEmp.getName(), "", changeRes.getRe_switch(), changeRes.getRe_room_name(), "", changeRes.getRe_fixtures(), changeRes.getRe_remarks()};
+                        changeRes.getRe_applicant(), "", changeRes.getRe_switch(), changeRes.getRe_room_name(), "", changeRes.getRe_fixtures(), changeRes.getRe_remarks()};
 
                 Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
                 intent.putExtra(KEYCHECK, changeRes);
@@ -458,7 +455,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             reserve = Reserve.retReserveConfirm(ReserveConfirmActivity.re_id);
             Log.d("room", reserve.getRe_room_name());
             before = new String[]{reserve.getRe_name(), reserve.getRe_purpose_name(), reserve.getRe_startDay() + " " + reserve.getRe_startTime(), reserve.getRe_endDay() + " " + reserve.getRe_endTime(),
-                   appEmp.getName(), "", reserve.getRe_switch(), "", reserve.getRe_room_name(), reserve.getRe_fixtures(), reserve.getRe_remarks()};
+                   reserve.getRe_applicant(), "", reserve.getRe_switch(), "", reserve.getRe_room_name(), reserve.getRe_fixtures(), reserve.getRe_remarks()};
         }
 
         //*** 描画メソッド ***//

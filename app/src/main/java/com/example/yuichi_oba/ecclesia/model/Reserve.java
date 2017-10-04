@@ -209,6 +209,8 @@ public class Reserve implements Serializable{
             reserve.setRe_applicant(c.getString(26));
             reserve.setRe_room_name(c.getString(22));
 
+            reserve.setRe_id(re_id);
+
             //*** [社員]クラスのインスタンスを生成 ***//
             Employee e = new Employee();
             e.setEmp_id(c.getString(11));       // ID
