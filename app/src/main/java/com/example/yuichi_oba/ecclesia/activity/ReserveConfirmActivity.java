@@ -19,14 +19,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
+import com.example.yuichi_oba.ecclesia.model.OutEmployee;
+import com.example.yuichi_oba.ecclesia.model.Person;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyInterface;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
@@ -41,7 +49,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 // DO: 2017/09/19 延長ダイアログの正常動作の実装
 // TODO: 2017/09/19 延長ダイアログのレイアウト調整およびデザインの考察 
 public class ReserveConfirmActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MyInterface {
     public static String exTime = "";
 
     //***  ***//
@@ -50,6 +58,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     public static String re_id;
     public static String gamen;
     public static Reserve reserve;
+    private Button btn_confirm;
 
     // 内部クラスからgetApplicationContextするためのやつ(普通にやるとno-staticで怒られる)
     private static ReserveConfirmActivity instance = null;
@@ -57,28 +66,42 @@ public class ReserveConfirmActivity extends AppCompatActivity
     // デバッグ用
     private static final String TAG = ReserveConfirmActivity.class.getSimpleName();
 
+
+
     //*** 会議参加者をリスト形式で出す、ダイアログフラグメントクラス ***//
     public static class MemberConfirmDialog extends DialogFragment {
         // ダイアログを生成するメソッド
-//        @Override
-//        public Dialog onCreateDialog(Bundle savedInstanceState) {
-//            // 会議参加者データ
-//            CharSequence[] items = reserveInfo.getRe_member().toArray(new CharSequence[reserveInfo.getRe_member().size()]);
-//
-//            return new AlertDialog.Builder(getActivity())
-//                    .setTitle("会議参加者一覧")
-//                    .setItems(items, new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
-//                        }
-//                    })
-//                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
-//                        }
-//                    })
-//                    .create();
-//        }
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            Log.d("call", "call MemberConfirmDialog->onCreateDialog()");
+            // 会議参加者データ
+//            CharSequence[] items = reserve.getRe_member().toArray(new CharSequence[reserve.getRe_member().size()]);
+            CharSequence[] items;                       //***  ***//
+            List<String> list = new ArrayList<>();      //***  ***//
+
+            //***  ***//
+            for (Person p : reserve.getRe_member()) {
+                if (p instanceof Employee) {            //***  ***//
+                    list.add(String.format("社内 : %s", p.getName()));                                    //***  ***//
+                } else if (p instanceof OutEmployee) {  //***  ***//
+                    list.add(String.format("%s : %s", ((OutEmployee) p).getCom_name(), p.getName()));     //***  ***//
+                }
+            }
+            items = (CharSequence[]) list.toArray(new CharSequence[list.size()]);    //***  ***//
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle("会議参加者一覧")
+                    .setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    })
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    })
+                    .create();
+        }
 
         // ダイアログを破棄するメソッドーー＞HCP不要
         @Override
@@ -170,6 +193,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
             dismiss();
         }
     }
+
+    //*** 参加者をリスト形式で、表示するためのダイアログフラグメントクラス ***//
 
     //*** onCreate ***//
     @Override
@@ -318,5 +343,31 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //    public static ReserveConfirmActivity getInstance() {
 //        return instance;
 //    }
+
+    //*** --- SELF MADE METHOD --- 各ウィジェットの初期化処理メソッド ***//
+    @Override
+    public void init() {
+        btn_confirm = (Button) findViewById(R.id.arconfirm_btn_mem_confirm);    //*** 参加者確認ボタン ***//
+    }
+    //*** --- SELF MADE METHOD --- 各ウィジェットのリスナー登録メソッド ***//
+    @Override
+    public void setWidgetListener() {
+
+//        btn_confirm.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+    }
+    //*** --- SELF MADE METHOD --- 参加者確認ボタン押下時の処理 ***//
+    public void onClickMemConfirm(View view) {
+        Log.d("call", "btn_confirm_member->onClick()");
+        //*** 参加者一覧ダイアログを表示する ***//
+        MemberConfirmDialog dialog = new MemberConfirmDialog();
+        dialog.show(getFragmentManager(), "confirm_a");
+    }
+
+
 
 }
