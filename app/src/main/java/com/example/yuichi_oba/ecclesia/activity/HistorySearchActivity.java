@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.model.Person;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
@@ -199,16 +200,16 @@ public class HistorySearchActivity extends AppCompatActivity
 
 //            Activity activity = (Activity) context;
             Reserve item = (Reserve) getItem(position);
-//            //初回かどうか確認
+            //初回かどうか確認
 //            if (convertView == null) {
 //                //Layoutを取得
 //                convertView = activity.getLayoutInflater().inflate(resource, null);
 //            }
 //            ((RelativeLayout)convertView).findViewById(R.id.customview).invalidate();
-//            ((TextView) convertView.findViewById(R.id.txt_purpose)).setText(item.getRe_purpose_name());
-//            ((TextView) convertView.findViewById(R.id.txt_date)).setText(item.getRe_startDay());
-//            ((TextView) convertView.findViewById(R.id.txt_overview)).setText(item.getRe_remarks());
-//            ((TextView) convertView.findViewById(R.id.txt_company)).setText(item.getRe_company());
+            ((TextView) convertView.findViewById(R.id.txt_purpose)).setText(item.getRe_purpose_name());
+            ((TextView) convertView.findViewById(R.id.txt_date)).setText(item.getRe_startDay());
+            ((TextView) convertView.findViewById(R.id.txt_overview)).setText(item.getRe_remarks());
+            ((TextView) convertView.findViewById(R.id.txt_company)).setText(item.getRe_company());
 //            ((TextView) convertView.findViewById(R.id.txt_member)).setText((CharSequence) item.getRe_memxber());
             return convertView;
         }
@@ -278,6 +279,7 @@ public class HistorySearchActivity extends AppCompatActivity
                 " inner join m_company as b on a.com_id = b.com_id" +
                 " inner join m_purpose as p on p.pur_id = x.pur_id"+
                 " inner join m_room as c on c.room_id = x.room_id", new String[]{});
+
         //会社用のデータベース
         while (c_list.moveToNext()) {
             Reserve li = new Reserve();
@@ -285,9 +287,10 @@ public class HistorySearchActivity extends AppCompatActivity
             li.setRe_name(c_list.getString(GAIYOU));
             li.setRe_startDay(c_list.getString(DAY));
 //            li.setRe_company(c_list.getString(COM_MEMBER));
-//            li.setRe_member(.getString(18));
+//            li.setRe_member();
             li.setRe_company(c_list.getString(26));
             li.setRe_purpose_name(c_list.getString(28));
+            Log.d("call", (c_list.getString(GAIYOU)) + " : " + c_list.getString(DAY) + " : " + c_list.getString(26) + " : " + c_list.getString(28));
             // addするメソッドを書く
             listItems.add(li);
         }
