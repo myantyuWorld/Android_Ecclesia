@@ -46,7 +46,7 @@
         <item>会議室B</item>
         <item>会議室C</item>
     </string-array>
-    <string-array name="sp_add_history">
+    <string-array name="aam_sp_history">
         <item>item 1</item>
         <item>item 2</item>
         <item>item 3</item>

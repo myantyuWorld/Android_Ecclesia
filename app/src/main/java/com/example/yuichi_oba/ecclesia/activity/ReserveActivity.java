@@ -74,7 +74,7 @@ public class ReserveActivity extends AppCompatActivity
     private static Button btEndTime;    //*** 終了時刻ボタン ***//
     private TextView txtApplicant;      //*** 申請者 ***//
     private Switch swSwitch;            //*** 社内/社外区分 ***//
-    private Spinner sp_room;            //*** 会議室スピナー ***//
+    private Spinner ar_sp_room;            //*** 会議室スピナー ***//
     private Spinner sp_purpose;         //*** 目的スピナー ***//
     private Spinner sp_member;          //*** 参加者スピナー ***//
     private Button btReConfirm;         //*** 内容確認ボタン ***//
@@ -316,24 +316,24 @@ public class ReserveActivity extends AppCompatActivity
         mapPurpose = new HashMap<>();
         mapRoom = new HashMap<>();
 
-        edOverView = (EditText) findViewById(R.id.ed_gaiyou);
-        btStartDay = (Button) findViewById(R.id.bt_re_sDay);
-        btStartTime = (Button) findViewById(R.id.bt_re_sTime);
-        btEndDay = (Button) findViewById(R.id.bt_re_eDay);
-        btEndTime = (Button) findViewById(R.id.bt_re_eTime);
-        txtApplicant = (TextView) findViewById(R.id.txt_re_shinseisya);
-        swSwitch = (Switch) findViewById(R.id.switch3);
-        sp_member = (Spinner) findViewById(R.id.sp_re_member);
-        sp_purpose = (Spinner) findViewById(R.id.sp_re_purpose);
-        sp_room = (Spinner) findViewById(R.id.sp_room);
-        edFixture = (EditText) findViewById(R.id.edi_fixture);
-        edRemark = (EditText) findViewById(R.id.edi_remark);
-        btReConfirm = (Button) findViewById(R.id.bt_re_confirm);
+        edOverView = (EditText) findViewById(R.id.ar_etxt_overview);
+        btStartDay = (Button) findViewById(R.id.ar_btn_start_day);
+        btStartTime = (Button) findViewById(R.id.ar_btn_re_start_time);
+        btEndDay = (Button) findViewById(R.id.ar_btn_end_day);
+        btEndTime = (Button) findViewById(R.id.ar_btn_re_end_time);
+        txtApplicant = (TextView) findViewById(R.id.ar_txt_applicant);
+        swSwitch = (Switch) findViewById(R.id.ar_sw_switch);
+        sp_member = (Spinner) findViewById(R.id.ar_sp_member);
+        sp_purpose = (Spinner) findViewById(R.id.ar_sp_purpose);
+        ar_sp_room = (Spinner) findViewById(R.id.ar_sp_room);
+        edFixture = (EditText) findViewById(R.id.ar_etxt_fixture);
+        edRemark = (EditText) findViewById(R.id.ar_etxt_remark);
+        btReConfirm = (Button) findViewById(R.id.ar_btn_confirm);
 
 
 //        reserveInfo = new ReserveInfo();
         //*** 申請者の設定 ***//
-        TextView txtApplicant = (TextView) findViewById(R.id.txt_re_shinseisya);
+        TextView txtApplicant = (TextView) findViewById(R.id.ar_txt_applicant);
         txtApplicant.setText(employee.getName());
 
         //*** 参加者スピナー ***//
@@ -369,7 +369,7 @@ public class ReserveActivity extends AppCompatActivity
         }
         c.close();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, listRoom);
-        sp_room.setAdapter(adapter);
+        ar_sp_room.setAdapter(adapter);
 
 
         //***  ***//
@@ -399,7 +399,7 @@ public class ReserveActivity extends AppCompatActivity
 
             }
         });
-        sp_room.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        ar_sp_room.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -478,7 +478,7 @@ public class ReserveActivity extends AppCompatActivity
         // TODO: 2017/10/03 Switchからの値の取得
         reserve.setRe_company("");  //*** 現状これで対処 ***//// TODO: 2017/10/03 会社名をどうするべきか考察
         //*** 選択されている会議室名を取得 ***//
-        reserve.setRe_room_id(Util.returnRoomId((String) sp_room.getSelectedItem()));   //*** 会議室ＩＤ ***//
+        reserve.setRe_room_id(Util.returnRoomId((String) ar_sp_room.getSelectedItem()));   //*** 会議室ＩＤ ***//
         reserve.setRe_fixtures(edFixture.getText().toString());     //*** 備品 ***//
         reserve.setRe_remarks(edRemark.getText().toString());       //*** 備考 ***//
 
@@ -497,7 +497,7 @@ public class ReserveActivity extends AppCompatActivity
         Log.d("call", "call checkMemberCount()");
 
         Integer memberCount = sp_member.getAdapter().getCount();    //*** 参加者スピナーの長さを取得する ***//
-        String ss = (String) sp_room.getSelectedItem();             //*** 選択されている会議室名を取得 ***//
+        String ss = (String) ar_sp_room.getSelectedItem();             //*** 選択されている会議室名を取得 ***//
 
         //*** 参加者が、選択中の会議室最大人数より大きい-> 異常 ***//
         if (memberCount > Integer.valueOf(mapRoom.get(ss))) {
