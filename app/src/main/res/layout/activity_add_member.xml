@@ -11,25 +11,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         class="com.example.yuichi_oba.ecclesia.view.AddMemberView"
+        android:id="@+id/aam_view_addmember"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
     <Spinner
-        android:id="@+id/sp_add_history"
+        android:id="@+id/aam_sp_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
-        android:layout_alignBottom="@+id/rbngroup_addmember"
-        android:layout_alignEnd="@+id/ed_company"
-        android:layout_alignStart="@+id/ed_company" />
+        android:layout_alignBottom="@+id/aam_rbg_add_member"
+        android:layout_alignEnd="@+id/aam_etxt_company"
+        android:layout_alignStart="@+id/aam_etxt_company" />
 
     <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/rbngroup_addmember">
+        android:id="@+id/aam_rbg_add_member">
 
         <RadioButton
-            android:id="@+id/rbt_history"
+            android:id="@+id/aam_rbt_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -40,26 +41,26 @@
             android:text="履歴検索" />
 
         <RadioButton
-            android:id="@+id/rbt_new_regist"
+            android:id="@+id/aam_rbt_new_regist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/rbt_history"
-            android:layout_below="@+id/rbt_history"
+            android:layout_alignStart="@+id/aam_rbt_history"
+            android:layout_below="@+id/aam_rbt_history"
             android:layout_marginTop="63dp"
             android:text="新規登録" />
 
     </RadioGroup>
 
     <Button
-        android:id="@+id/bt_add_cancel"
+        android:id="@+id/aam_btn_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="キャンセル"
         android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/rbngroup_addmember" />
+        android:layout_alignEnd="@+id/aam_rbg_add_member" />
 
     <Button
-        android:id="@+id/bt_add_regist"
+        android:id="@+id/aam_btn_regist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -68,41 +69,41 @@
         android:text="登録" />
 
     <EditText
-        android:id="@+id/ed_company"
+        android:id="@+id/aam_etxt_company"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sp_add_history"
+        android:layout_below="@+id/aam_sp_history"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
-        android:layout_toEndOf="@+id/rbngroup_addmember"
+        android:layout_toEndOf="@+id/aam_rbg_add_member"
         android:ems="10"
         android:hint="社内の場合は、空欄"
         android:inputType="textPersonName"
         android:textAlignment="center" />
 
     <Spinner
-        android:id="@+id/sp_add_depart"
+        android:id="@+id/aam_sp_depart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/sp_add_position"
-        android:layout_alignEnd="@+id/ed_company"
-        android:layout_alignStart="@+id/sp_add_history"
+        android:layout_above="@+id/aam_sp_position"
+        android:layout_alignEnd="@+id/aam_etxt_company"
+        android:layout_alignStart="@+id/aam_sp_history"
         android:layout_marginBottom="10dp" />
 
     <Spinner
-        android:id="@+id/sp_add_position"
+        android:id="@+id/aam_sp_position"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_alignStart="@+id/sp_add_depart"
-        android:layout_alignEnd="@+id/ed_company" />
+        android:layout_alignStart="@+id/aam_sp_depart"
+        android:layout_alignEnd="@+id/aam_etxt_company" />
 
     <EditText
-        android:id="@+id/ed_add_name"
+        android:id="@+id/aam_ed_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/sp_add_position"
-        android:layout_below="@+id/sp_add_position"
+        android:layout_alignStart="@+id/aam_sp_position"
+        android:layout_below="@+id/aam_sp_position"
         android:layout_marginTop="25dp"
         android:ems="10"
         android:hint="必須"
@@ -110,11 +111,11 @@
         android:textAlignment="center" />
 
     <EditText
-        android:id="@+id/ed_add_mailaddr"
+        android:id="@+id/aam_ed_mailaddr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/ed_add_name"
-        android:layout_below="@+id/ed_add_name"
+        android:layout_alignEnd="@+id/aam_ed_name"
+        android:layout_below="@+id/aam_ed_name"
         android:layout_marginTop="15dp"
         android:ems="10"
         android:hint="必須"
@@ -123,11 +124,11 @@
         android:textAlignment="center" />
 
     <EditText
-        android:id="@+id/ed_add_tel"
+        android:id="@+id/aam_ed_tel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/ed_add_mailaddr"
-        android:layout_below="@+id/ed_add_mailaddr"
+        android:layout_alignStart="@+id/aam_ed_mailaddr"
+        android:layout_below="@+id/aam_ed_mailaddr"
         android:layout_marginTop="15dp"
         android:ems="10"
         android:hint="必須"

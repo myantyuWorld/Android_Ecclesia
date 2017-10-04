@@ -33,6 +33,7 @@ import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 import com.example.yuichi_oba.ecclesia.view.TimeTableView;
+import com.example.yuichi_oba.ecclesia.view.TimeTableView;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -157,7 +158,7 @@ public class ReserveListActivity extends AppCompatActivity
                         @SuppressLint("DefaultLocale")
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                            txtDate.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+                            arl_txt_date.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
                         }
                     },
                     cal.get(Calendar.YEAR),
@@ -174,8 +175,8 @@ public class ReserveListActivity extends AppCompatActivity
 
 
     @SuppressLint("StaticFieldLeak")
-    static TextView txtDate;
-    static TimeTableView timeTableView;
+    static TextView arl_txt_date;
+    static TimeTableView arl_view_timetableView;
     public static Employee employee;
     private int thCnt = 0;
     public static ReserveListActivity instance = null;
@@ -204,9 +205,9 @@ public class ReserveListActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         // 画面情報の設定
-        txtDate = (TextView) findViewById(R.id.txtDate);
+        arl_txt_date = (TextView) findViewById(R.id.arl_txt_date);
         final Calendar c = Calendar.getInstance();
-        txtDate.setText(String.format(Locale.JAPAN, "%04d/%02d/%02d", c.get(Calendar.YEAR) + 1, 1, 17));
+        arl_txt_date.setText(String.format(Locale.JAPAN, "%04d/%02d/%02d", c.get(Calendar.YEAR) + 1, 1, 17));
 
         //*** コンテキストメニューの発生元ビューを取得 ***//
         registerForContextMenu(findViewById(R.id.content_main));
@@ -220,15 +221,15 @@ public class ReserveListActivity extends AppCompatActivity
 //            Log.d(TAG, r.getRe_id() + " : " + r.getRe_startTime() + "(" + r.getRe_endTime() + ") room_id : " + r.getRe_roomId());
 //        }
         /*** 社員ID と アプリ起動時の日付を渡して、描画する ***/
-        timeTableView = (TimeTableView) this.findViewById(R.id.timetable);
+        arl_view_timetableView = (TimeTableView) this.findViewById(R.id.arl_view_timetable);
         Log.d("call", employee.getEmp_id());
-        Log.d("call", txtDate.getText().toString());
-        timeTableView.reView(employee.getEmp_id(), txtDate.getText().toString());
+        Log.d("call", arl_txt_date.getText().toString());
+        arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
 
-        txtDate.setOnClickListener(new View.OnClickListener() {
+        arl_txt_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "txtDate click!");
+                Log.d(TAG, "arl_txt_date click!");
                 MyDialog d = new MyDialog();
                 d.show(getFragmentManager(), "dateDialog");
             }
@@ -241,7 +242,7 @@ public class ReserveListActivity extends AppCompatActivity
 //            public void onClick(View view) {
 //                Toast.makeText(ReserveListActivity.this, "Prev", Toast.LENGTH_SHORT).show();
 //                getReserveInfo();
-//                timeTableView.reView(reserveInfo);
+//                arl_view_timetableView.reView(reserveInfo);
 //            }
 //        });
 //        Button btNext = (Button) findViewById(R.id.bt_next);
@@ -250,15 +251,15 @@ public class ReserveListActivity extends AppCompatActivity
 //            public void onClick(View view) {
 //                Toast.makeText(ReserveListActivity.this, "Next", Toast.LENGTH_SHORT).show();
 //                getReserveInfo();
-//                timeTableView.reView(reserveInfo);
+//                arl_view_timetableView.reView(reserveInfo);
 //            }
 //        });
-        Button bt_search = (Button) findViewById(R.id.bt_search);
-        bt_search.setOnClickListener(new View.OnClickListener() {
+        Button arl_btn_search = (Button) findViewById(R.id.arl_btn_search);
+        arl_btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ReserveListActivity.this, txtDate.getText().toString(), Toast.LENGTH_SHORT).show();
-                timeTableView.reView(employee.getEmp_id(), txtDate.getText().toString());
+                Toast.makeText(ReserveListActivity.this, arl_txt_date.getText().toString(), Toast.LENGTH_SHORT).show();
+                arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
             }
         });
 
@@ -325,19 +326,19 @@ public class ReserveListActivity extends AppCompatActivity
     protected void onResume() {
         Log.d("call", "ReserveListActivity->onResume()");
         super.onResume();
-        timeTableView.thread_flg = true;
+        arl_view_timetableView.thread_flg = true;
 
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 if (thCnt != 0) {
-                    timeTableView.thread_flg = true;
-                    timeTableView.x = 0;
-                    timeTableView.y = 0;
+                    arl_view_timetableView.thread_flg = true;
+                    arl_view_timetableView.x = 0;
+                    arl_view_timetableView.y = 0;
                     thCnt = 0;
                 }
                 Log.d("call", "Thread");
-                String re_id = timeTableView.getSelectedReserve();
+                String re_id = arl_view_timetableView.getSelectedReserve();
                 Log.d("call", "re_id :: " + re_id);
                 //*** 新規予約登録画面への遷移 ***//
                 if (re_id.equals(NONE)) {
@@ -449,7 +450,7 @@ public class ReserveListActivity extends AppCompatActivity
 //        // 参加者テーブルから、予約ＩＤを取得
 //        SQLiteOpenHelper helper = new DB(getApplicationContext());
 //        SQLiteDatabase db = helper.getReadableDatabase();
-//        String today = txtDate.getText().toString();    // アプリ起動時の日付を取得（作品展用に来年の１月１７日を設定）
+//        String today = arl_txt_date.getText().toString();    // アプリ起動時の日付を取得（作品展用に来年の１月１７日を設定）
 //        Log.d("call", today);
 //
 //        // ***  アプリ起動時の日付で自分の参加会議を検索する *** //

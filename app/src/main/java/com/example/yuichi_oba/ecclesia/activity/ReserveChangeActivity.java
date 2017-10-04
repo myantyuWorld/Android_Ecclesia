@@ -137,7 +137,7 @@ public class ReserveChangeActivity extends AppCompatActivity
         sp_purpose = (Spinner) findViewById(R.id.crchange_sp_purpose);
         sinseisya = (TextView) findViewById(R.id.crchange_txt_sinseisya);
         members = (Spinner) findViewById(R.id.crchange_sp_member);
-        room = (Spinner) findViewById(R.id.crchange_sp_room);
+        room = (Spinner) findViewById(R.id.crchange_ar_sp_room);
         comp = (TextView) findViewById(R.id.crchange_txt_company);
 
         editBtn = (Button) findViewById(R.id.crchange_btn_confirm);

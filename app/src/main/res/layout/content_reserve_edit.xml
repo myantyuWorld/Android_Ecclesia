@@ -132,8 +132,8 @@
                 android:id="@+id/crchange_txt_fixtures"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/crchange_sp_room"
-                android:layout_below="@+id/crchange_sp_room"
+                android:layout_alignStart="@+id/crchange_ar_sp_room"
+                android:layout_below="@+id/crchange_ar_sp_room"
                 android:layout_marginTop="10dp"
                 android:ems="10"
                 android:inputType="textPersonName" />
@@ -149,7 +149,7 @@
                 android:inputType="textPersonName" />
 
             <Spinner
-                android:id="@+id/crchange_sp_room"
+                android:id="@+id/crchange_ar_sp_room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/crchange_txt_company"

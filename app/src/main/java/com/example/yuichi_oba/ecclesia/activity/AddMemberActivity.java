@@ -83,7 +83,7 @@ public class AddMemberActivity extends AppCompatActivity
     //    EditText ed_depart;
     //    EditText ed_position;
     static EditText ed_name;
-    static EditText ed_company;
+    static EditText aam_etxt_company;
     static EditText ed_email;
     static EditText ed_tel;
     Button bt_cancel;
@@ -122,9 +122,9 @@ public class AddMemberActivity extends AppCompatActivity
     //*** --- SELF MADE METHOD --- 新規登録ラジオボタンを再度選択したとき、再度編集可能にするメソッド ***//
     private void setAgainEditable() {
         // 全Edittextに対して、再編集可能にする
-        ed_company.setFocusable(true);
-        ed_company.setEnabled(true);
-        ed_company.setFocusableInTouchMode(true);
+        aam_etxt_company.setFocusable(true);
+        aam_etxt_company.setEnabled(true);
+        aam_etxt_company.setFocusableInTouchMode(true);
         ed_name.setFocusable(true);
         ed_name.setEnabled(true);
         ed_name.setFocusableInTouchMode(true);
@@ -144,16 +144,16 @@ public class AddMemberActivity extends AppCompatActivity
 
     //*** --- SELF MADE METHOD --- 各ウィジェットの初期化処理メソッド ***//
     public void init() {
-        bt_cancel = (Button) findViewById(R.id.bt_add_cancel);          //  キャンセルボタン
-        bt_regist = (Button) findViewById(R.id.bt_add_regist);          //  登録（追加？）ボタン
-        ed_company = (EditText) findViewById(R.id.ed_company);          //  会社入力項目
-        ed_name = (EditText) findViewById(R.id.ed_add_name);            //  氏名入力項目
-        ed_email = (EditText) findViewById(R.id.ed_add_mailaddr);       //  Email入力項目
-        ed_tel = (EditText) findViewById(R.id.ed_add_tel);              //  電話入力項目
-        rbn_group = (RadioGroup) findViewById(R.id.rbngroup_addmember); //  ラジオボタングループ
-        sp_history = (Spinner) findViewById(R.id.sp_add_history);       //  会社履歴スピナー
-        sp_position = (Spinner) findViewById(R.id.sp_add_position);     //  役職スピナー
-        sp_depart = (Spinner) findViewById(R.id.sp_add_depart);         //  部署スピナー
+        bt_cancel = (Button) findViewById(R.id.aam_btn_cancel);          //  キャンセルボタン
+        bt_regist = (Button) findViewById(R.id.aam_btn_regist);          //  登録（追加？）ボタン
+        aam_etxt_company = (EditText) findViewById(R.id.aam_etxt_company);          //  会社入力項目
+        ed_name = (EditText) findViewById(R.id.aam_ed_name);            //  氏名入力項目
+        ed_email = (EditText) findViewById(R.id.aam_ed_mailaddr);       //  Email入力項目
+        ed_tel = (EditText) findViewById(R.id.aam_ed_tel);              //  電話入力項目
+        rbn_group = (RadioGroup) findViewById(R.id.aam_rbg_add_member); //  ラジオボタングループ
+        sp_history = (Spinner) findViewById(R.id.aam_sp_history);       //  会社履歴スピナー
+        sp_position = (Spinner) findViewById(R.id.aam_sp_position);     //  役職スピナー
+        sp_depart = (Spinner) findViewById(R.id.aam_sp_depart);         //  部署スピナー
         //*** 履歴スピナーの各種設定 ***//
         setSpinnerHistory();
         //*** 部署スピナーの各種設定 ***//
@@ -198,12 +198,12 @@ public class AddMemberActivity extends AppCompatActivity
 ////                Employee e = new Employee();
 ////                e.setName(ed_name.getText().toString());
 ////                e.setMailaddr(ed_email.getText().toString());
-////                e.setCom_name(ed_company.getText().toString());
+////                e.setCom_name(aam_etxt_company.getText().toString());
 ////                e.setDep_name(sp_depart.getSelectedItem().toString());
 ////                e.setPos_name(sp_position.getSelectedItem().toString());
 ////
 ////                int checkedRadioId = rbn_group.getCheckedRadioButtonId();
-////                if (checkedRadioId == R.id.rbt_new_regist) {        //*** 新規登録 ***//
+////                if (checkedRadioId == R.id.aam_rbt_new_regist) {        //*** 新規登録 ***//
 ////                    // DO: 2017/09/27 新規登録なら、社員IDのマックス＋１を参加者インスタンスに設定する
 ////                    SQLiteOpenHelper helper = new DB(getApplicationContext());
 ////                    SQLiteDatabase db = helper.getReadableDatabase();
@@ -273,11 +273,11 @@ public class AddMemberActivity extends AppCompatActivity
                 RadioButton radioButton = (RadioButton) findViewById(checkedId);
                 switch (radioButton.getId()) {
                     // 履歴検索
-                    case R.id.rbt_history:
+                    case R.id.aam_rbt_history:
 
                         break;
                     // 新規登録
-                    case R.id.rbt_new_regist:
+                    case R.id.aam_rbt_new_regist:
                         break;
                 }
             }
@@ -287,7 +287,7 @@ public class AddMemberActivity extends AppCompatActivity
     private void mappingWidget(Person p) {
         //*** 引数のクラスの型に応じた処理を行う ***//
         if (p instanceof Employee) {            //*** 社員クラスのインスタンスの場合 ***//
-            ed_company.setText("社内");         //*** 会社名 ***//
+            aam_etxt_company.setText("社内");         //*** 会社名 ***//
             ed_name.setText(p.getName());       //*** 氏名 ***//
             ed_email.setText(p.getMailaddr());  //*** メールアドレス ***//
             ed_tel.setText(p.getTel());         //*** 電話番号 ***//
@@ -300,7 +300,7 @@ public class AddMemberActivity extends AppCompatActivity
             //*** のち、役職名から、スピナーの添え字を解決して、選択する ***//
             sp_position.setSelection(Util.setSelection(sp_position, Util.returnPostion(((Employee) p).getPos_id())));
         } else if (p instanceof OutEmployee) {  //*** 社外者クラスのインスタンスの場合 ***//
-            ed_company.setText(((OutEmployee) p).getCom_name());    //*** 会社名 ***//
+            aam_etxt_company.setText(((OutEmployee) p).getCom_name());    //*** 会社名 ***//
             ed_name.setText(p.getName());                           //*** 氏名 ***//
             ed_email.setText(p.getMailaddr());                      //*** メールアドレス ***//
             ed_tel.setText(p.getTel());                             //*** 電話番号 ***//
@@ -420,7 +420,7 @@ public class AddMemberActivity extends AppCompatActivity
 
         //*** 各ウィジェットの情報を基に、参加者のインスタンスを生成 ***//
         Intent intent = new Intent();
-        if (ed_company.getText().toString().contains("")) {     //*** 社内の場合 ***//
+        if (aam_etxt_company.getText().toString().contains("")) {     //*** 社内の場合 ***//
             Employee e = new Employee(
                     returnMaxId("t_emp"),                   //*** 社員テーブルのIDの最大値＋１を代入 ***//
                     ed_name.getText().toString(),           //*** 氏名 ***//
@@ -443,7 +443,7 @@ public class AddMemberActivity extends AppCompatActivity
                     sp_depart.getSelectedItem().toString(),     //*** 部署名 ***//
                     sp_position.getSelectedItem().toString(),   //*** 役職名 ***//
                     "",                                         //*** 役職優先度 ***//
-                    ed_company.getText().toString()             //*** 会社名 ***//
+                    aam_etxt_company.getText().toString()             //*** 会社名 ***//
             );
             Log.d("call", e.toString());
 

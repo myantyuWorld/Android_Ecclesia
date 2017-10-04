@@ -106,7 +106,7 @@ public class Hint {
      //*** ReserveCheckActivity         くに***//
      //*** ReserveConfirmActivity       くに***//
      //*** AddMemberActivity            ヨッシー ***//
-     //*** ReserveActivity              ヨッシー ***//
+     //*** ReserveActivity              にしかわ ***//
 
      // 今更命名規則
 
@@ -119,4 +119,5 @@ public class Hint {
                // 部品名（基本三文字か二文字に略す）
                // ボタン btn     テキストビュー txt    エディットテキスト etxt      スピナー sp
                // スイッチ sw     リストビュー lis    サーチビュー sea
+               // ラジオボタン rbt  ラジオボタングループ     rbg
 }
