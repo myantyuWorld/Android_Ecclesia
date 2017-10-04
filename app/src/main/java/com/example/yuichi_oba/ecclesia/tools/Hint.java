@@ -114,7 +114,7 @@ public class Hint {
 
                // content_reserve の確定ボタンなら cr_btn_correct みたいな感じ
                // 略して同じになる画面は最後の部分を頭文字ではなくフルで書く
-               // (content_reserve_chack と content_reserve_change は両方crcになるので、crchange と crcheckという具合)
+               // (content_reserve_chack と content_reserve_change は両方crcになるので、acchange と accheckという具合)
 
                // 部品名（基本三文字か二文字に略す）
                // ボタン btn     テキストビュー txt    エディットテキスト etxt      スピナー sp

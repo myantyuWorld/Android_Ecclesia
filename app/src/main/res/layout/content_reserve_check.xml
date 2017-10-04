@@ -11,13 +11,14 @@
 
 
     <view
+        android:id="@+id/archeck_view_check"
         class="com.example.yuichi_oba.ecclesia.activity.ReserveChangeActivity$CheckView"
         id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/crcheck_btn_correct"
+        android:id="@+id/accheck_btn_correct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

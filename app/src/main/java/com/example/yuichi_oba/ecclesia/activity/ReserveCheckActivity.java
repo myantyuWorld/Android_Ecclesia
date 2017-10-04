@@ -59,7 +59,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
 
     private void init() {
 
-        button = (Button) findViewById(R.id.crcheck_btn_correct);
+        button = (Button) findViewById(R.id.accheck_btn_correct);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

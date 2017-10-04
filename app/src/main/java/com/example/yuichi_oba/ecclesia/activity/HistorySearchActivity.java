@@ -326,7 +326,7 @@ public class HistorySearchActivity extends AppCompatActivity
             Log.d("call",s);
         }
        //スピナーを取得
-        Spinner sp = (Spinner) findViewById(R.id.spinner_mokuteki);
+        Spinner sp = (Spinner) findViewById(R.id.ahs_sp_purpose);
         //
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item,strings);
@@ -359,7 +359,7 @@ public class HistorySearchActivity extends AppCompatActivity
         }
 
         //スピナーを取得
-        Spinner sp_company = (Spinner) findViewById(R.id.spinner_company);
+        Spinner sp_company = (Spinner) findViewById(R.id.ahs_sp_company);
         //adapterを宣言
         ArrayAdapter<String> adapter_com = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item,strings1);
@@ -380,7 +380,7 @@ public class HistorySearchActivity extends AppCompatActivity
 
         //ListItemとレイアウトとを関連付け
         MyListAdapter adapter1 = new MyListAdapter(this);
-        listView = (ListView) findViewById(R.id.list_history);
+        listView = (ListView) findViewById(R.id.ahs_lis_history);
         adapter1.setItemList(listItems);
         listView.setAdapter(adapter1);
 
@@ -388,7 +388,7 @@ public class HistorySearchActivity extends AppCompatActivity
         listView.setTextFilterEnabled(true);
 
         //serchviewの検索ボックスに入力された時の処理
-        searchView  = (SearchView) findViewById(R.id.search);
+        searchView  = (SearchView) findViewById(R.id.ahs_sea_freeword);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
