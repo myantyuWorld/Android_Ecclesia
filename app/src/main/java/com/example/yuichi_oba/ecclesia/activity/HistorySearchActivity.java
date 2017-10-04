@@ -109,22 +109,19 @@ public class HistorySearchActivity extends AppCompatActivity
     private class Purpose {
         private String pur_id;
         private String pur_name;
+
         public String getPur_id() {
             return pur_id;
         }
-
         public void setPur_id(String pur_id) {
             this.pur_id = pur_id;
         }
-
         public String getPur_name() {
             return pur_name;
         }
-
         public void setPur_name(String pur_name) {
             this.pur_name = pur_name;
         }
-
     }
     private class Company {
         private String com_id;

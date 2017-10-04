@@ -1,17 +1,21 @@
 package com.example.yuichi_oba.ecclesia.tools;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
-import java.util.List;
+import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 
 /**
  * Created by Yuichi-Oba on 2017/07/24.
  */
 
 public class Util {
+
+    public static final int COLUMN_INDEX = 1;
 
     /***
      * 項目引数に渡すと、その項目のインデックスを返すUtilityメソッド
@@ -36,5 +40,62 @@ public class Util {
         Log.d("call", "_/                   " + args);
         Log.d("call", "_/");
         Log.d("call", "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/");
+    }
+
+    /***
+     * 部署IDから、部署名をDB検索してリターンするメソッド
+     * @param dep_id    部署ID
+     * @return          検索した部署名（ヒットなしは 空文字を返す ）
+     */
+    public static String returnDepart(String dep_id) {
+        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM m_depart", null);
+        String depName = "";
+        if (c.moveToNext()) {
+            depName = c.getString(COLUMN_INDEX); //*** 「部署名」**//
+        }
+        c.close();
+
+        return depName; //*** 部署名を返す ***//
+    }
+
+    /***
+     *  役職IDから、役職名をDB検索してリターンするメソッド
+     * @param pos_id    役職ID
+     * @return          検索した役職名（ヒットなしは 空文字 ヲ返す ）
+     */
+    public static String returnPostion(String pos_id) {
+        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM m_position", null);
+        String posName = "";
+        if (c.moveToNext()) {
+            posName = c.getString(COLUMN_INDEX);//*** 「役職名」 ***//
+        }
+        c.close();
+
+        return posName; //*** 役職名を返す ***//
+    }
+
+    /***
+     * 会議室名から、会議室ＩＤをＤＢ検索してリターンするメソッド
+     * @param roomName  会議室名
+     * @return          検索した会議室ＩＤ（ヒットなしは 空文字を返す ）
+     */
+    public static String returnRoomId(String roomName) {
+        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor c = db.rawQuery("select * from m_room", null);
+        String roomId = "";
+        if (c.moveToNext()) {
+            roomId = c.getString(0);    //*** 会議室ID ***//
+        }
+        c.close();
+
+        return roomId;  //*** 会議室ＩＤを返す ***//
     }
 }

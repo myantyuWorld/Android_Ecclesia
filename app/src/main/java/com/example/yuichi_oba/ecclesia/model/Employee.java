@@ -16,7 +16,8 @@ import java.util.List;
  * Created by Yuichi-Oba on 2017/08/27.
  */
 
-public class Employee implements Serializable{
+//*** 「社員」クラス ***//
+public class Employee extends Person implements Serializable {
 
     public static final int RE_ID = 0;
     public static final int RE_NAME = 1;
@@ -28,73 +29,86 @@ public class Employee implements Serializable{
     public static final int RE_REMARKS = 12;
     public static final int RE_SWITCH = 3;
     //*** Field ***//
-    private String id;
-    private String name;
-    private String tel;
-    private String mailaddr;
-    private String com_name;
-    private String dep_name;
-    private String pos_name;
-    private String pos_priority;
+    private String emp_id;          //*** 社員ID ***//
+    private String dep_id;          //*** 部署ID ***//
+    private String pos_id;          //*** 役職ID ***//
+    private String pos_name;        //*** 役職名 ***//
+    private String pos_priority;    //*** 役職優先度 ***//
+
+    //*** Constractor ***//
+    public Employee() {
+    }
+
+    public Employee(String emp_id, String name, String tel, String mailaddr, String dep_id, String pos_id) {
+        super(name, tel, mailaddr); //*** スーパクラスのコンストラクタコール ***//
+        this.emp_id = emp_id;       //*** 社員ID ***//
+        this.dep_id = dep_id;       //*** 部署ID ***//
+        this.pos_id = pos_id;       //*** 役職ID ***//
+    }
+
 
     //*** GetterSetter ***//
-    public String getId() {
-        return id;
+    public String getEmp_id() {
+        return emp_id;
     }
-    public void setId(String id) {
-        this.id = id;
+
+    public void setEmp_id(String emp_id) {
+        this.emp_id = emp_id;
     }
-    public String getName() {
-        return name;
+
+    public String getDep_id() {
+        return dep_id;
     }
-    public void setName(String name) {
-        this.name = name;
+
+    public void setDep_id(String dep_id) {
+        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        //*** 部署テーブルを検索 ***//
+        Cursor c = db.rawQuery("SELECT * FROM m_depart", null);
+        if (c.moveToNext()) {
+            this.dep_id = c.getString(0); //*** 部署IDの設定 ***//
+        }
+        c.close();
     }
-    public String getTel() {
-        return tel;
+
+    public String getPos_id() {
+        return pos_id;
     }
-    public void setTel(String tel) {
-        this.tel = tel;
+
+    public void setPos_id(String pos_id) {
+        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        //*** 役職テーブルの検索 ***//
+        Cursor c = db.rawQuery("SELECT * FROM m_position", null);
+        if (c.moveToNext()) {
+            this.pos_id = c.getString(0);   //*** 役職IDの設定 ***//
+        }
+        c.close();
     }
-    public String getMailaddr() {
-        return mailaddr;
-    }
-    public void setMailaddr(String mailaddr) {
-        this.mailaddr = mailaddr;
-    }
-    public String getDep_name() {
-        return dep_name;
-    }
-    public void setDep_name(String dep_name) {
-        this.dep_name = dep_name;
-    }
+
     public String getPos_name() {
         return pos_name;
     }
+
     public void setPos_name(String pos_name) {
         this.pos_name = pos_name;
     }
+
     public String getPos_priority() {
         return pos_priority;
     }
+
     public void setPos_priority(String pos_priority) {
         this.pos_priority = pos_priority;
     }
-    public String getCom_name() {
-        return com_name;
-    }
-    public void setCom_name(String com_name) {
-        this.com_name = com_name;
-    }
 
-    //*** Self Made Method ***//
-    //*** 参加会議を抽出するメソッド ***//
+    //*** --- SELF MADE METHOD --- 参加会議を抽出するメソッド ***//
     public void extractParticipationMeet(String today) {
         Context context = ReserveListActivity.getInstance();
         SQLiteOpenHelper helper = new DB(context);
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?",
-                new String[]{this.getId(), today});
+                new String[]{this.getEmp_id(), today});
 
         List<Reserve> reserves = new ArrayList<>();
         while (c.moveToNext()) {
@@ -117,6 +131,6 @@ public class Employee implements Serializable{
 
     @Override
     public String toString() {
-        return this.getId();
+        return super.toString();
     }
 }
