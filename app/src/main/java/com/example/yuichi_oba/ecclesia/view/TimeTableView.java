@@ -247,6 +247,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             // 予約会議の描画
             c.drawRoundRect(rectF, 30, 30, p_myConference);
             c.drawRoundRect(rectF, 30, 30, p_myConference_waku);
+            // TODO: 2017/10/04 社内・社外の文字を、RECT内部に描画するロジックの実装
             cnt++;
         }
 
