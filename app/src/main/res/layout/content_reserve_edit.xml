@@ -24,6 +24,7 @@
             android:orientation="vertical" >
 
             <view
+                android:id="@+id/archange_view_change"
                 class="com.example.yuichi_oba.ecclesia.view.ReserveView"
                 id="@+id/changeview"
                 layout_width="match_parent"

@@ -24,17 +24,17 @@
             android:orientation="horizontal">
 
             <view
-                android:id="@+id/view"
+                android:id="@+id/ahs_view_history"
                 class="com.example.yuichi_oba.ecclesia.view.HistorySearchView"
                 android:layout_width="wrap_content"
                 android:layout_height="200dp" />
 
             <Spinner
-                android:id="@+id/spinner_mokuteki"
+                android:id="@+id/ahs_sp_purpose"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_below="@+id/spinner_company"
+                android:layout_below="@+id/ahs_sp_company"
                 android:layout_marginEnd="22dp"
                 android:layout_marginTop="0dp"
                 android:layout_weight="1"
@@ -42,23 +42,23 @@
                 android:prompt="@string/spnOs_mokuteki" />
 
             <Spinner
-                android:id="@+id/spinner_company"
+                android:id="@+id/ahs_sp_company"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/spinner_mokuteki"
+                android:layout_alignStart="@+id/ahs_sp_purpose"
                 android:layout_marginTop="12dp"
                 android:layout_weight="1"
                 android:entries="@array/company"
                 android:prompt="@string/spnOs_company" />
 
             <SearchView
-                android:id="@+id/search"
+                android:id="@+id/ahs_sea_freeword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/spinner_mokuteki"
-                android:layout_alignStart="@+id/spinner_mokuteki"
-                android:layout_below="@+id/spinner_mokuteki"
+                android:layout_alignEnd="@+id/ahs_sp_purpose"
+                android:layout_alignStart="@+id/ahs_sp_purpose"
+                android:layout_below="@+id/ahs_sp_purpose"
                 android:layout_marginLeft="3dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginTop="0dp"
@@ -75,7 +75,7 @@
             android:orientation="vertical">
 
             <ListView
-                android:id="@+id/list_history"
+                android:id="@+id/ahs_lis_history"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="0dp" />

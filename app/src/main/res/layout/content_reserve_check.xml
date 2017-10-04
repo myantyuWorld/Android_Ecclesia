@@ -11,6 +11,7 @@
 
 
     <view
+        android:id="@+id/archeck_view_check"
         class="com.example.yuichi_oba.ecclesia.activity.ReserveChangeActivity$CheckView"
         id="@+id/view"
         android:layout_width="wrap_content"
