@@ -9,10 +9,6 @@ import android.widget.SpinnerAdapter;
 
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 
-/**
- * Created by Yuichi-Oba on 2017/07/24.
- */
-
 public class Util {
 
     public static final int COLUMN_INDEX = 1;
@@ -33,7 +29,10 @@ public class Util {
         // なければ０を返す
         return 0;
     }
-
+    /***
+     * 簡単・みやすいログの出力メソッド
+     * @param args
+     */
     public static void easyLog(String args) {
         Log.d("call", "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/");
         Log.d("call", "_/");
@@ -41,7 +40,6 @@ public class Util {
         Log.d("call", "_/");
         Log.d("call", "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/");
     }
-
     /***
      * 部署IDから、部署名をDB検索してリターンするメソッド
      * @param dep_id    部署ID
@@ -60,7 +58,6 @@ public class Util {
 
         return depName; //*** 部署名を返す ***//
     }
-
     /***
      *  役職IDから、役職名をDB検索してリターンするメソッド
      * @param pos_id    役職ID
@@ -79,7 +76,6 @@ public class Util {
 
         return posName; //*** 役職名を返す ***//
     }
-
     /***
      * 会議室名から、会議室ＩＤをＤＢ検索してリターンするメソッド
      * @param roomName  会議室名
@@ -98,7 +94,6 @@ public class Util {
 
         return roomId;  //*** 会議室ＩＤを返す ***//
     }
-
     /***
      * 予約テーブルの予約IDの最大値＋１をDB検索して、書式指定して返すメソッド
      * @return
@@ -116,7 +111,6 @@ public class Util {
         c.close();
         return String.format("%04s", maxReserveId); //*** 書式指定付きで、０埋めして返す (ex: 0018) ***//
     }
-
     /***
      * 引数の社員名から、その社員の社員IDをDB検索して値を返すメソッド
      * @param empName
@@ -130,7 +124,6 @@ public class Util {
         }
         return empId;               //***  ***//
     }
-
     /***
      * DB簡単SQL発行メソッド
      * @param args
