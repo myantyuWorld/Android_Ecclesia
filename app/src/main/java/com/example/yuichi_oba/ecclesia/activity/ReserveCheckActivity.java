@@ -32,8 +32,10 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 public class ReserveCheckActivity extends AppCompatActivity
 implements NavigationView.OnNavigationItemSelectedListener{
 
+    //*** 変更情報を入力した後の予約インスタンス ***//
     Reserve checkRes;
 
+    //*** 確定ボタン ***//
     Button button;
 
     @Override
@@ -41,6 +43,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reserve_check);
 
+        //*** 変更箇所入力後の予約インスタンスを受け取る ***//
         checkRes = (Reserve) getIntent().getSerializableExtra(KEYCHECK);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -57,8 +60,9 @@ implements NavigationView.OnNavigationItemSelectedListener{
         init();
     }
 
+    //*** SelfMadeMethod ***//
     private void init() {
-
+        //*** ボタンにID割り当て＆リスナーセット ***//
         button = (Button) findViewById(R.id.accheck_btn_correct);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +75,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        //*** ナビゲーション処理 ***//
         int id = item.getItemId();
 
         Intent intent = null;
@@ -96,8 +101,13 @@ implements NavigationView.OnNavigationItemSelectedListener{
         return true;
     }
 
+    //*** SelfMadeMethod ***//
+    //*** 実際にDBの予約情報を書き換える(現在エラー中) ***//
     public void reserveChange() {
+        //*** DBに変更をかけるためのクラス ***//
         ContentValues con = new ContentValues();
+
+        //*** 書き換えるカラム、書き換える情報の指定 ***//
         con.put("re_overview", checkRes.getRe_name());
         con.put("re_startday", checkRes.getRe_startDay());
         con.put("re_endday", checkRes.getRe_endDay());
@@ -110,18 +120,22 @@ implements NavigationView.OnNavigationItemSelectedListener{
         con.put("emp_id", checkRes.getRe_applicant());
         con.put("por_id", checkRes.getRe_purpose_id());
         con.put("room_id", checkRes.getRe_room_id());
+
+        //*** where句を用意 ***//
+        String where = "re_id = ?";
+        //*** ?に入れるものを指定する ***//
+        String whereArgs[] = new String[ONE];
+        whereArgs[ZERO] = checkRes.getRe_id();
+
+        //*** 必要なインスタンスを用意 ***//
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getWritableDatabase();
-        if (db.update("t_reserve", con, null, null) > ZERO) {
-            ChangeResultDialog changeResultDialog = new ChangeResultDialog();
-            changeResultDialog.show(getFragmentManager(), "changeRes");
-            Intent intent = new Intent(getApplicationContext(), ReserveListActivity.class);
-            startActivity(intent);
-        } else {
-            Toast.makeText(this, "失敗", Toast.LENGTH_SHORT).show();
-        }
+
+        //*** アップデートを掛けに行く ***//
+        db.update("t_extension", con, where, whereArgs);
     }
 
+    //*** 変更成功通知ダイアログ ***//
     public static class ChangeResultDialog extends DialogFragment{
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {

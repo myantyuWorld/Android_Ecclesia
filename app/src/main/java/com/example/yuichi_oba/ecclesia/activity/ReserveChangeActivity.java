@@ -387,18 +387,23 @@ public class ReserveChangeActivity extends AppCompatActivity
         return true;
     }
 
+    //*** 変更情報確認画面で用いるカスタムビュー ***//
     public static class CheckView extends View {
+        //*** 描画情報 ***//
         private Paint p_line;
         private Paint p_out_line;
         private Paint p_text;
         private Paint p_rect;
         private Paint p_change;
 
+        //*** 項目名 ***//
         private String[] name = {"概要", "目的", "開始時間", "終了時間", "申請者", "参加者", "社内/社外", "会社名", "希望会議室", "備品", "その他"};
+        //*** 変更前情報を保持 ***//
         private String[] before;
 
         Reserve reserve;
 
+        //*** コンストラクター ***//
         public CheckView(Context context) {
             super(context);
             if (isInEditMode()){
@@ -423,8 +428,10 @@ public class ReserveChangeActivity extends AppCompatActivity
             init();
         }
 
+        //*** SelfMadeMethod ***//
+        //*** 描画情報セット ***//
         private void init() {
-            // 枠線用
+            //*** 枠線用 ***//
             p_line = new Paint();
             p_line.setColor(Color.DKGRAY);
             p_line.setStyle(Paint.Style.STROKE);
@@ -434,26 +441,29 @@ public class ReserveChangeActivity extends AppCompatActivity
             p_out_line.setStrokeWidth(2.0f);
 
 
-            // テキスト用
+            //*** テキスト用 ***//
             p_text = new Paint();
             p_text.setTypeface(Typeface.MONOSPACE);
             p_text.setTextSize(40);
             p_text.setTextAlign(Paint.Align.CENTER);
             p_text.setColor(Color.BLACK);
 
-            // 色違い用
+            //*** 交互に枠内の色を変えるためのもの ***//
             p_rect = new Paint();
             p_rect.setColor(Color.LTGRAY);
             p_rect.setStyle(Paint.Style.FILL);
 
-            // 変更箇所の色
+            //*** 変更箇所を表示する用の色 ***//
             p_change = new Paint();
             p_change.setColor(Color.parseColor("#87cefa"));
             p_change.setStyle(Paint.Style.FILL);
 
+            //*** 確認画面のstaticな予約インスタンスを引っ張ってくる ***//
             reserve = new Reserve();
             reserve = Reserve.retReserveConfirm(ReserveConfirmActivity.re_id);
             Log.d("room", reserve.getRe_room_name());
+
+            //*** 変更前情報を保持する配列に挿入 ***//
             before = new String[]{reserve.getRe_name(), reserve.getRe_purpose_name(), reserve.getRe_startDay() + " " + reserve.getRe_startTime(), reserve.getRe_endDay() + " " + reserve.getRe_endTime(),
                    reserve.getRe_applicant(), "", reserve.getRe_switch(), "", reserve.getRe_room_name(), reserve.getRe_fixtures(), reserve.getRe_remarks()};
         }
@@ -520,6 +530,7 @@ public class ReserveChangeActivity extends AppCompatActivity
         }
     }
 
+    //*** 日付変更のダイアログ ***//
     public static class ChangeDateDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -543,6 +554,7 @@ public class ReserveChangeActivity extends AppCompatActivity
         }
     }
 
+    //*** 時刻変更のダイアログ ***//
     public static class ChangeTimeDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
