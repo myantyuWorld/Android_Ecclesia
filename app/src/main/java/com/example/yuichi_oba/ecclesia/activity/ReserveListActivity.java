@@ -349,24 +349,15 @@ public class ReserveListActivity extends AppCompatActivity
                     startActivity(intent);  //*** 新規予約登録画面 ***//
                 } else {
                     Log.d("call", "予約確認画面への遷移");
-                    Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-                    intent.putExtra("re_id", re_id); //*** タップした予約IDを特定している ***//
+                    Reserve reserve = Reserve.retReserveConfirm(re_id); //*** 特定した予約IDを基に、予約情報を検索 ***//
 
-                    Reserve reserve = Reserve.retReserveConfirm(re_id); //*** 予約IDを基に、予約情報を検索 ***//
 //                    intent.putExtra("emp", employee); //*** 不要？ ***//
+                    Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
                     intent.putExtra("gamen", "1");          //*** どの画面からの遷移か ***//
                     intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
 
                     startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
                 }
-//                ReserveInfo reserveInfo = new ReserveInfo();
-                // TODO: 2017/09/15  //*** 考えるので、いったんコメアウト ***//
-
-//                Reserve reserveInfo = new Reserve();
-//                reserveInfo.setRe_id(re_id);
-//                Intent in = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-////                in.putExtra("reserve_info", reserveInfo);
-//                startActivity(in);
                 thCnt++;
                 try {
                     Thread.sleep(20);

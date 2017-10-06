@@ -20,27 +20,25 @@ import java.util.List;
 public class Reserve implements Serializable{
 
     //*** Field ***//
-    private String re_id;
-    private String re_name;
-    private String re_startDay;
-    private String re_startTime;
-    private String re_endDay;
-    private String re_endTime;
-    private String re_fixtures;
-    private String re_remarks;
-    private String re_switch;
-    private String re_company;
-    private Integer re_mem_priority;
-    private String re_purpose_id;
-    private String re_purpose_name;
-    private String re_pur_priority;
-    private String re_applicant;
-    private String re_room_id;
-    private String re_room_name;
+    private String re_id;                   //*** 予約ID ***//
+    private String re_name;                 //*** 概要 ***//
+    private String re_startDay;             //*** 開始日時 ***//
+    private String re_startTime;            //*** 開始時刻 ***//
+    private String re_endDay;               //*** 終了日時 ***//
+    private String re_endTime;              //*** 終了時刻 ***//
+    private String re_fixtures;             //*** 備品 ***//
+    private String re_remarks;              //*** 備考 ***//
+    private String re_switch;               //*** 社内/社外区分 0 社内 1 社外***//
+    private String re_company;              //*** 参加する会社名 ***//
+    private Integer re_mem_priority;        //*** 参加者全員の平均の優先度 ***//
+    private String re_purpose_id;           //*** 会議目的ID ***//
+    private String re_purpose_name;         //*** 会議目的名 ***//
+    private String re_applicant;            //*** 申請者 ***//
+    private String re_room_id;              //*** 会議室ID ***//
+    private String re_room_name;            //*** 会議室名 ***//
 //    private List<Employee> re_member;
-    private List<Person> re_member;
-
-    private float[] coop;
+    private List<Person> re_member;         //*** 参加者を保持するための、ポリモー使用のリスト ***//
+    private float[] coop;                   //*** 予約情報の座標情報を保持するfloat型配列 ***//
 
     public Reserve() {
     }
@@ -118,12 +116,6 @@ public class Reserve implements Serializable{
     public void setRe_purpose_name(String re_purpose_name) {
         this.re_purpose_name = re_purpose_name;
     }
-    public String getRe_pur_priority() {
-        return re_pur_priority;
-    }
-    public void setRe_pur_priority(String re_pur_priority) {
-        this.re_pur_priority = re_pur_priority;
-    }
     public String getRe_applicant() {
         return re_applicant;
     }
@@ -132,8 +124,6 @@ public class Reserve implements Serializable{
     }
     public String getRe_room_id() { return re_room_id; }
     public void setRe_room_id(String re_room_id) { this.re_room_id = re_room_id; }
-    public String getRe_room_name() {return re_room_name; }
-    public void setRe_room_name(String re_room_name) { this.re_room_name = re_room_name; }
     public float[] getCoop() {
         return coop;
     }
@@ -152,31 +142,58 @@ public class Reserve implements Serializable{
     public void setRe_member(List<Person> re_member) {
         this.re_member = re_member;
     }
-    //*** SelfMadeMethod ***//
+    public String getRe_room_name() {
+        return re_room_name;
+    }
+    public void setRe_room_name(String re_room_name) {
+        this.re_room_name = re_room_name;
+    }
 
-    //*** 参加者優先度を計算するメソッド ***//
+    //*** --- SELF MADE METHOD --- 参加者優先度を計算するメソッド ***//
+    public int retMemberPriority() {
+        return 1;
+    }
+    //*** --- SELF MADE METHOD --- 会議の時間帯の重複をチェックするメソッド ***//
+    public boolean timeDuplicationCheck() {
+        return true;
+    }
+    //*** --- SELF MADE METHOD --- 優先度をチェックするメソッド ***//
+    public boolean priorityCheck() {
+        return true;
+    }
+    //*** --- SELF MADE METHOD --- 予約を確定するメソッド ***//
+    public int reserveCorrenct() {
+        return 1;
+    }
+    //*** --- SELF MADE METHOD --- 予約をキャンセルするメソッド ***//
+    public void reserveCancel(String re_id) {
 
-    //*** 会議の時間帯の重複をチェックするメソッド ***//
+    }
+    //*** --- SELF MADE METHOD --- 早期退出するメソッド ***//
+    public void earlyExit() {
 
-    //*** 優先度をチェックするメソッド ***//
+    }
+    //*** --- SELF MADE METHOD --- 終了時間を延長するメソッド ***//
+    public void endTimeExtention() {
 
-    //*** 予約を確定するメソッド ***//
+    }
+    //*** --- SELF MADE METHOD --- 予約を変更するメソッド ***//
+    public void reserveEdit() {
 
-    //*** 予約をキャンセルするメソッド ***//
+    }
+    //*** --- SELF MADE METHOD --- 通知メールを送るメソッド ***//
+    public void sentMail() {
 
-    //*** 早期退出するメソッド ***//
+    }
+    //*** --- SELF MADE METHOD --- 通知をするメソッド ***//
+    public void notification(String re_id) {
 
-    //*** 終了時間を延長するメソッド ***//
+    }
+    //*** --- SELF MADE METHOD --- 追い出しを行うメソッド ***//
+    public void eviction(String re_id) {
 
-    //*** 予約を変更するメソッド ***//
-
-    //*** 通知メールを送るメソッド ***//
-
-    //*** 通知をするメソッド ***//
-
-    //*** 追い出しを行うメソッド ***//
-
-    //*** 予約内容をDB検索するメソッド ***//
+    }
+    //*** --- SELF MADE METHOD --- 予約内容をDB検索するメソッド ***//
     public static Reserve retReserveConfirm(String re_id) {
         Reserve reserve = new Reserve();
 
@@ -210,6 +227,7 @@ public class Reserve implements Serializable{
             reserve.setRe_room_name(c.getString(22));
 
             reserve.setRe_id(re_id);
+
 
             //*** [社員]クラスのインスタンスを生成 ***//
             Employee e = new Employee();
@@ -259,5 +277,10 @@ public class Reserve implements Serializable{
 
         reserve.setRe_member(list); //*** ポリモーフィズム使用のリストをセット ***//
         return  reserve;            //*** 予約情報を返す ***//
+    }
+
+    @Override
+    public String toString() {
+        return String.format("予約ID : %s 予約概要 : %s", this.re_id, this.re_name);
     }
 }

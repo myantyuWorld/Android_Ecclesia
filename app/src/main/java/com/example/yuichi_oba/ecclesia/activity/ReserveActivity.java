@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -78,6 +79,8 @@ public class ReserveActivity extends AppCompatActivity
     private Spinner sp_purpose;         //*** 目的スピナー ***//
     private Spinner sp_member;          //*** 参加者スピナー ***//
     private Button btReConfirm;         //*** 内容確認ボタン ***//
+
+    private boolean switchFlg;          //*** 社内社外区分 ***//
 
     //    private ReserveInfo reserveInfo;
 //    public static List<Employee> member = new ArrayList<>();
@@ -169,6 +172,11 @@ public class ReserveActivity extends AppCompatActivity
                     break;
                 case "room":
                     message = "参加者が、会議室最大人数より大きい";
+                    break;
+                case "zero":
+                    message = "参加者が選択されていません！";
+                    break;
+
             }
             //*** ダイアログのインスタンスを生成し、返す ***//
             return new AlertDialog.Builder(getActivity())
@@ -178,6 +186,7 @@ public class ReserveActivity extends AppCompatActivity
                     .create();
         }
     }
+
     //*** onCreate ***//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -375,8 +384,10 @@ public class ReserveActivity extends AppCompatActivity
         //***  ***//
         setWidgetListener();
     }
+
     //*** --- SELF MADE METHOD --- 各種ウィジェットのリスナーを登録するメソッド ***//
     private void setWidgetListener() {
+        //***  ***//
         sp_member.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -388,6 +399,7 @@ public class ReserveActivity extends AppCompatActivity
 
             }
         });
+        //***  ***//
         sp_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -399,6 +411,7 @@ public class ReserveActivity extends AppCompatActivity
 
             }
         });
+        //***  ***//
         ar_sp_room.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -410,6 +423,7 @@ public class ReserveActivity extends AppCompatActivity
 
             }
         });
+        //***  ***//
         btStartDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -420,6 +434,7 @@ public class ReserveActivity extends AppCompatActivity
                 myDateDialog.show(getFragmentManager(), "sDay");
             }
         });
+        //***  ***//
         btStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -431,6 +446,7 @@ public class ReserveActivity extends AppCompatActivity
                 myTimeDialog.show(getFragmentManager(), "sTime");
             }
         });
+        //***  ***//
         btEndDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -442,6 +458,7 @@ public class ReserveActivity extends AppCompatActivity
                 myDateDialog.show(getFragmentManager(), "eDay");
             }
         });
+        //***  ***//
         btEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -453,36 +470,49 @@ public class ReserveActivity extends AppCompatActivity
                 myTimeDialog.show(getFragmentManager(), "eTime");
             }
         });
+        //*** 社内/社外区分 スイッチの値の取得 ***//
+        swSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked) {    //*** チェックされている ーー＞ 社内 ***//
+                    switchFlg = true;   //*** 社内 ***//
+                } else {            //*** チェックされていないーー＞ 社外 ***//
+                    switchFlg = false;  //*** 社外 ***//
+                }
+            }
+        });
     }
+
     //*** --- SELF MADE METHOD --- 内容確認ボタン押下時の処理 ***//
     public void onClickReConfirm(View view) {
         Log.d("call", "call onClickReConfirm()");
 
-        //*** 参加者の人数が、会議室の最大人数以下かどうかチェックする ***//
+        //*** 参加者の人数が、会議室の最大人数以下か 0人ではないかどうかチェックする ***//
         //*** エディットテキストに空欄があるかチェック ***//
         //*** 開始終了日時・時刻に矛盾がないかチェック ***//
         if (!checkMemberCount() || !isBrankSpace() || !checkStartEnd()) {
             Log.d("call", "予約アクティビティ エラー検出！ 画面遷移不可能");
             return;     //*** 処理を抜ける ***//
         }
+        Log.d("call", edOverView.getText().toString());
         //*** 入力されている情報で、予約情報インスタンスを作る ***//
         Reserve reserve = new Reserve();
-        reserve.setRe_name(edOverView.getText().toString());        //*** 概要 ***//
-        reserve.setRe_startDay(btStartDay.getText().toString());    //*** 開始日時 ***//
-        reserve.setRe_endDay(btEndDay.getText().toString());        //*** 終了日時 ***//
-        reserve.setRe_startTime(btStartTime.getText().toString());  //*** 開始時刻 ***//
-        reserve.setRe_endTime(btEndTime.getText().toString());      //*** 終了時刻 ***//
-        reserve.setRe_applicant(txtApplicant.getText().toString()); //*** 申請者 ***//
-        reserve.setRe_member(member);                               //*** 会議参加者のリスト ***//
-//        reserve.setRe_switch(swSwitch.);
-        // TODO: 2017/10/03 Switchからの値の取得
+        reserve.setRe_name(edOverView.getText().toString());                //*** 概要 ***//
+        reserve.setRe_purpose_name((String) sp_purpose.getSelectedItem());  //*** 会議目的名 ***//
+        reserve.setRe_startDay(btStartDay.getText().toString());            //*** 開始日時 ***//
+        reserve.setRe_endDay(btEndDay.getText().toString());                //*** 終了日時 ***//
+        reserve.setRe_startTime(btStartTime.getText().toString());          //*** 開始時刻 ***//
+        reserve.setRe_endTime(btEndTime.getText().toString());              //*** 終了時刻 ***//
+        reserve.setRe_applicant(txtApplicant.getText().toString());         //*** 申請者 ***//
+        reserve.setRe_member(member);                                       //*** 会議参加者のリスト ***//
+        reserve.setRe_switch(switchFlg ? "0" : "1");                        //*** true(社内) : false(社外) ***//
         reserve.setRe_company("");  //*** 現状これで対処 ***//// TODO: 2017/10/03 会社名をどうするべきか考察
         //*** 選択されている会議室名を取得 ***//
         reserve.setRe_room_id(Util.returnRoomId((String) ar_sp_room.getSelectedItem()));   //*** 会議室ＩＤ ***//
-        reserve.setRe_fixtures(edFixture.getText().toString());     //*** 備品 ***//
-        reserve.setRe_remarks(edRemark.getText().toString());       //*** 備考 ***//
-
-
+        reserve.setRe_room_name((String) ar_sp_room.getSelectedItem());     //*** 会議室名 ***//
+        reserve.setRe_fixtures(edFixture.getText().toString());             //*** 備品 ***//
+        reserve.setRe_remarks(edRemark.getText().toString());               //*** 備考 ***//
 
         //*** エラー未検出ならば画面遷移処理を行う ***//
         Log.d("call", "画面遷移開始");
@@ -490,14 +520,25 @@ public class ReserveActivity extends AppCompatActivity
         intent.putExtra("gamen", "0");          //*** 予約確認画面への、「新規」予約での画面遷移 ***//
         intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
 
-//        startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
+        startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
     }
+
     //*** --- SELF MADE METHOD --- 参加者の人数が、会議室の最大人数以下かどうかチェックする ***//
     private boolean checkMemberCount() {
         Log.d("call", "call checkMemberCount()");
 
         Integer memberCount = sp_member.getAdapter().getCount();    //*** 参加者スピナーの長さを取得する ***//
         String ss = (String) ar_sp_room.getSelectedItem();             //*** 選択されている会議室名を取得 ***//
+        if (memberCount == 0) {     //*** 参加者が0人 ***//
+            Bundle bundle = new Bundle();
+            bundle.putString("error", "zero");
+
+            CautionDialog dialog = new CautionDialog();
+            dialog.setArguments(bundle);
+            dialog.show(getFragmentManager(), "zero");
+
+            return false;   //*** 異常を返す ***//
+        }
 
         //*** 参加者が、選択中の会議室最大人数より大きい-> 異常 ***//
         if (memberCount > Integer.valueOf(mapRoom.get(ss))) {
@@ -511,6 +552,7 @@ public class ReserveActivity extends AppCompatActivity
         }
         return true;        //*** 正常を返す ***//
     }
+
     //*** --- SELF MADE METHOD --- 開始終了日時・時刻に矛盾がないかチェックするメソッド ***//
     private boolean checkStartEnd() {
         Log.d("call", "call checkStartEnd()");
@@ -564,6 +606,7 @@ public class ReserveActivity extends AppCompatActivity
 
         return true;    //*** 矛盾なしを返す ***//
     }
+
     //*** --- SELF MADE METHOD --- ウィジェットに空欄があるかチェックするメソッド ***//
     public boolean isBrankSpace() {
         Log.d("call", "call isBrankSpace()");

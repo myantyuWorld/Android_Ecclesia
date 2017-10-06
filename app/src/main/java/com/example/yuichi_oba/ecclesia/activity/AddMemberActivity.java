@@ -410,6 +410,7 @@ public class AddMemberActivity extends AppCompatActivity
     public void onClickRegist(View view) {
         Log.d("call", "call onClickRegist()");
         //*** ひとつでもエラーが検出されたら、画面遷移させない ***//
+        // TODO: 2017/10/04 同じ人間を追加することを防ぐロジックの実装
         if (!isBrankSpace()) {
             Log.d("call", "参加者追加アクティビティ エラー検出！ 登録はしません！");
             CautionDialog cautionDialog = new CautionDialog();
