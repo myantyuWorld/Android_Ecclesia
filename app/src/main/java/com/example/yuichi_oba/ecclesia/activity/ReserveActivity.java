@@ -498,6 +498,7 @@ public class ReserveActivity extends AppCompatActivity
         Log.d("call", edOverView.getText().toString());
         //*** 入力されている情報で、予約情報インスタンスを作る ***//
         Reserve reserve = new Reserve();
+        reserve.setRe_id(Util.returnMaxReserveId());                        //*** 予約ID ***//
         reserve.setRe_name(edOverView.getText().toString());                //*** 概要 ***//
         reserve.setRe_purpose_name((String) sp_purpose.getSelectedItem());  //*** 会議目的名 ***//
         reserve.setRe_startDay(btStartDay.getText().toString());            //*** 開始日時 ***//

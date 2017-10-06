@@ -96,7 +96,6 @@ public class Reseve_confirmView extends View {
         c.drawText(ReserveConfirmActivity.reserve.getRe_purpose_name(), 500, y_purpose, p_text);
         c.drawText(ReserveConfirmActivity.reserve.getRe_startDay() + " " + ReserveConfirmActivity.reserve.getRe_startTime(), 500, y_start, p_text);
         c.drawText(ReserveConfirmActivity.reserve.getRe_endDay() + " " + ReserveConfirmActivity.reserve.getRe_endTime(), 500, y_end, p_text);
-        // TODO: 2017/09/16 申請者カラムを、DBのテーブルに追加する
         c.drawText(ReserveConfirmActivity.reserve.getRe_applicant(), 500, y_applicant, p_text);
         // DO: 2017/09/16 参加者を検索するロジックの実装
         c.drawText("", 500, y_member, p_text);

@@ -53,10 +53,11 @@ public class AuthDialog extends DialogFragment {
                         if (c.moveToNext()) {
                             // ログイン成功
                             Log.d("call", "ログイン成功");
+                            // TODO: 2017/10/04 ログイン成功で、アプリのテーマを変更するロジックの実装  基本は青だから、逆の赤系？
                         }
                         // ログイン失敗
                         else {
-
+                            ;   // TODO: 2017/10/04 ログイン失敗を教える何らかのメッセージ を出力する
                         }
 
                     }

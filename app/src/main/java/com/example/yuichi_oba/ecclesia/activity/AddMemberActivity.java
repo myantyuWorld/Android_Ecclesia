@@ -187,7 +187,6 @@ public class AddMemberActivity extends AppCompatActivity
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {            }
         });
-        // TODO: 2017/09/19  登録ボタン押下で、参加者リストを追加するロジックの実装
 
         //*** 登録ボタン押下時の処理 ***//
 //        bt_regist.setOnClickListener(new View.OnClickListener() {
@@ -471,7 +470,6 @@ public class AddMemberActivity extends AppCompatActivity
 
     //*** --- SELF MADE METHOD --- ウィジェットに空欄があるかチェックするメソッド ***//
     private boolean isBrankSpace() {
-        // TODO: 2017/10/02 要相談 
         //*** 各ウィジェットの空欄を検査 ※ 会社は、空欄の場合は、社内とするので、OKとする（暫定）***//
         if (ed_email.getText().toString().isEmpty() ||      //*** Email ***//
                 ed_name.getText().toString().isEmpty() ||   //*** 氏名 ***//
