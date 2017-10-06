@@ -135,7 +135,7 @@ public class Hint {
     //*** ReserveChangeActivity         しゃま***//　
     //*** ReserveListActivity           オレ***//　                 　OK
      //*** TimeTableView ***//          おれ　                      　
-     //*** RoomView ***//               おれ　
+     //*** RoomView ***//               おれ　                        OK                OK
     //*** HistorySearchActivity         ぐちお ***//　
      //*** HistorySearch ***//          ぐちお　
     //*** ReserveCheckActivity          くに***//　                 　OK
@@ -143,8 +143,8 @@ public class Hint {
      //*** Reserve_confirm ***//        くに       　
      //*** ReserveCheck ***//           くに　
     //*** AddMemberActivity             ヨッシー ***//　              OK
-     //*** AddMember ***//              よっしー　                    OK
-     //*** ReserveView ***//            よっしー　
+     //*** AddMember ***//              よっしー　                    OK                OK
+     //*** ReserveView ***//            よっしー　                    OK                OK
     //*** ReserveActivity               よっしー（にしかわ） ***//　  OK
      // --------------------------------------------------------------------------------------------------
 
