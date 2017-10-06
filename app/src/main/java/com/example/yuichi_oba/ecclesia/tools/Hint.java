@@ -129,14 +129,24 @@ public class Hint {
 //        db.insert("t_reserve",null,c);                    ///*** テーブル名、nullの処理方法、データセット（上記のインスタンス） ***//
 //        db.close();                                       //*** DBを閉じる ***//
 
-    //*** HCP 画面担当一覧 ***//
-    //*** ReserveChangeActivity        しゃま***//
-    //*** ReserveListActivity          オレ***//
-    //*** HistorySearchActivity        ぐちお ***//
-    //*** ReserveCheckActivity         くに***//
-    //*** ReserveConfirmActivity       くに***//
-    //*** AddMemberActivity            ヨッシー ***//
-    //*** ReserveActivity              にしかわ ***//
+     // -------------------------------------------------------------------------------------------------
+    //*** HCP 画面担当一覧 ***//　                                 ひな形完成          HCP完成
+     // -------------------------------------------------------------------------------------------------
+    //*** ReserveChangeActivity         しゃま***//　
+    //*** ReserveListActivity           オレ***//　                 　OK
+     //*** TimeTableView ***//          おれ　                      　
+     //*** RoomView ***//               おれ　
+    //*** HistorySearchActivity         ぐちお ***//　
+     //*** HistorySearch ***//          ぐちお　
+    //*** ReserveCheckActivity          くに***//　                 　OK
+    //*** ReserveConfirmActivity        くに***//　                 　OK
+     //*** Reserve_confirm ***//        くに       　
+     //*** ReserveCheck ***//           くに　
+    //*** AddMemberActivity             ヨッシー ***//　              OK
+     //*** AddMember ***//              よっしー　                    OK
+     //*** ReserveView ***//            よっしー　
+    //*** ReserveActivity               よっしー（にしかわ） ***//　  OK
+     // --------------------------------------------------------------------------------------------------
 
     // 今更命名規則
 

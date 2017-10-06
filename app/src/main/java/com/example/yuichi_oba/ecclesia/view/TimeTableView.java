@@ -124,6 +124,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     private Paint p_myConference;           //*** 自分の会議用 ***//
     private Paint p_myConference_waku;
     private Paint p_otherConference;        //*** 他人の会議用 ***//
+    private Paint p_detail;                 //*** RECT内部の、社内社外・会議目的描画 ***//
 
     public static float x = 0;    // タップしたｘ座標
     public static float y = 0;    // タップしたｙ座標
@@ -248,6 +249,10 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             c.drawRoundRect(rectF, 30, 30, p_myConference);
             c.drawRoundRect(rectF, 30, 30, p_myConference_waku);
             // TODO: 2017/10/04 社内・社外の文字を、RECT内部に描画するロジックの実装
+            float margin = 20;
+            c.drawText(r.getRe_switch().contains("0") ? "社内" : "社外", rectF.centerX(), rectF.centerY() - margin, p_detail);
+            c.drawText(r.getRe_purpose_name(), rectF.centerX(), rectF.centerY() + margin, p_detail);
+
             cnt++;
         }
 
@@ -379,6 +384,12 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         p_otherConference.setColor(Color.parseColor("#f5f5f5"));    //*** 再考の余地あり ***//
         p_otherConference.setStyle(Paint.Style.FILL);
         p_otherConference.setStrokeWidth(10);
+
+        //*** RECT内部の社内社外・会議目的 描画用 ***//
+        p_detail = new Paint();
+        p_detail.setTextSize(20);
+        p_detail.setTypeface(Typeface.MONOSPACE);
+        p_detail.setColor(Color.BLACK);
     }
     //*** 画面タッチ時のイベント ***//
     @Override
