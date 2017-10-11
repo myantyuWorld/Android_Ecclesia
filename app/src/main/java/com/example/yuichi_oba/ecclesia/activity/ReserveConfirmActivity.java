@@ -35,6 +35,7 @@ import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
+import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -170,7 +171,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
             return new AlertDialog.Builder(getActivity()).setTitle("早期退出完了")
                     .setMessage("早期退出が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) { }
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
                     }).create();
         }
     }
@@ -182,7 +184,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
             return new AlertDialog.Builder(getActivity()).setTitle("延長完了")
                     .setMessage("延長が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) { }
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
                     }).create();
         }
 
@@ -303,7 +306,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
     }
 
 
-
     //*** アクティビティのライフサイクルとして、別の画面にいってまた帰ってきたとき、コールされる ***//
     @Override
     protected void onStart() {
@@ -416,6 +418,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     public void init() {
         btn_confirm = (Button) findViewById(R.id.arconfirm_btn_mem_confirm);    //*** 参加者確認ボタン ***//
     }
+
     //*** --- SELF MADE METHOD --- 参加者確認ボタン押下時の処理 ***//
     public void onClickMemConfirm(View view) {
         Log.d("call", "btn_confirm_member->onClick()");
@@ -423,9 +426,14 @@ public class ReserveConfirmActivity extends AppCompatActivity
         MemberConfirmDialog dialog = new MemberConfirmDialog();
         dialog.show(getFragmentManager(), "confirm_a");
     }
+
     //*** --- SELF MADE METHOD --- 確定ボタン押下時の処理 ***//
     public void onClickKakutei(View view) {
         Log.d("call", "call onClickKakutei");
+
+        //*** 申請者の氏名－＞ 社員IDに変換して、予約インスタンスにセットする ***//
+        reserve.setRe_applicant(Util.returnEmpId(reserve.getRe_applicant()));
+
 
         //***  ***//
         float priorityAverage = setReserveDetail();         //***  ***//
@@ -445,18 +453,44 @@ public class ReserveConfirmActivity extends AppCompatActivity
         c.put("emp_id", reserve.getRe_applicant());         //***  ***//
         c.put("room_id", reserve.getRe_room_id());          //***  ***//
         c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
-        c.put("reapplicant", reserve.getRe_applicant());    //***  ***//
+        c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
 
-        SQLiteOpenHelper helper = new DB(getApplicationContext());  //***  ***//
+        SQLiteOpenHelper helper = new DB(getApplicationContext());                     //***  ***//
         SQLiteDatabase db = helper.getWritableDatabase();           //***  ***//
-        db.insert("t_reserve", null, c);                            //***  ***//
+//        long ret = db.insertOrThrow("t_reserve", null, c);               //***  ***//
+
+
+        db.execSQL("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                new Object[]{
+                        reserve.getRe_id(),
+                        reserve.getRe_name(),
+                        reserve.getRe_startDay(),
+                        reserve.getRe_endDay(),
+                        reserve.getRe_startTime(),
+                        reserve.getRe_endTime(),
+                        reserve.getRe_switch(),
+                        reserve.getRe_fixtures(),
+                        reserve.getRe_remarks(),
+                        priorityAverage,
+                        "aa",
+                        reserve.getRe_applicant(),
+                        reserve.getRe_room_id(),
+                        reserve.getRe_purpose_id(),
+                        reserve.getRe_applicant()
+                });
+
+
+        long ret = 0;
+        if (ret == -1) {
+            Log.d("call", "予約情報のインサート処理失敗!");
+        } else {
+            Log.d("call", "予約情報のインサート処理成功！");
+        }
         db.close();
     }
+
     //*** --- SELF MADE METHOD --- 予約インスタンスの情報を、DBに書き込める形にまで設定するメソッド ***//
     private float setReserveDetail() {
-        //*** 申請者の氏名－＞ 社員IDに変換して、予約インスタンスにセットする ***//
-        reserve.setRe_applicant(Util.returnEmpId(reserve.getRe_applicant()));
-
         Integer sumPriority = 0;
         // TODO: 2017/10/06 会議目的優先度をどう処理するか考察
 
