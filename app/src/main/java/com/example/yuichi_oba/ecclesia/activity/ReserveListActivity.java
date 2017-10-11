@@ -263,8 +263,6 @@ public class ReserveListActivity extends AppCompatActivity
                 arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
             }
         });
-
-
     }
 
 //    @Override
@@ -345,7 +343,8 @@ public class ReserveListActivity extends AppCompatActivity
                 if (re_id.equals(NONE)) {
                     Log.d("call", "新規予約登録画面への遷移");
                     Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
-                    intent.putExtra("emp", employee);
+                    intent.putExtra("emp", employee);                           //*** 社員インスタンスをインテント渡し ***//
+                    intent.putExtra("date", arl_txt_date.getText().toString()); //*** 選択されている日付をインテント渡し ***//
 
                     startActivity(intent);  //*** 新規予約登録画面 ***//
                 } else {
