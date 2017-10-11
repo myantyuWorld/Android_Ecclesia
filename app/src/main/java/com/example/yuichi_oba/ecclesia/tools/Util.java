@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
+import com.example.yuichi_oba.ecclesia.activity.AddMemberActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 
 public class Util {
@@ -88,32 +89,39 @@ public class Util {
      * @param pos_id    役職ID
      * @return 検索した役職名（ヒットなしは 空文字 ヲ返す ）
      */
-    public static String returnPostionName(String pos_id) {
+    public static AddMemberActivity.Position returnPostionName(String pos_id) {
         SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
 
         Cursor c = db.rawQuery("SELECT * FROM m_position", null);
         String posName = "";
+        AddMemberActivity.Position p = new AddMemberActivity.Position();
         if (c.moveToNext()) {
             posName = c.getString(COLUMN_INDEX);//*** 「役職名」 ***//
+            p.posId = c.getString(0);
+            p.posName = c.getString(1);
+            p.posPriority = c.getString(2);
         }
         c.close();
 
-        return posName; //*** 役職名を返す ***//
+        return p; //*** 役職情報のインスタンスを返す ***//
     }
 
-    public static String returnPositionId(String posName) {
+    public static AddMemberActivity.Position returnPositionId(String posName) {
         SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
 
-        Cursor c = db.rawQuery("SELECT * FROM m_position", null);
-        String posId = "";
+        Cursor c = db.rawQuery("SELECT * FROM m_position where pos_name = ?",
+                new String[]{posName});
+        AddMemberActivity.Position p = new AddMemberActivity.Position();
         if (c.moveToNext()) {
-            posId = c.getString(0);//*** 「役職名」 ***//
+            p.posId = c.getString(0);
+            p.posName = c.getString(1);
+            p.posPriority = c.getString(2);
         }
         c.close();
 
-        return posId;   //*** 役職ＩＤを返す ***//
+        return p;   //*** 役職情報のインスタンスを返す ***//
     }
 
     /***

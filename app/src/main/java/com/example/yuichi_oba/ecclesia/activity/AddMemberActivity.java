@@ -61,6 +61,13 @@ public class AddMemberActivity extends AppCompatActivity
         }
     }
 
+    //*** あんまやりたくないけど、ＳＱＬ書きまくるのたいぎいので！ ***//
+    public static class Position {
+        public String posId;        //***  ***//
+        public String posName;      //***  ***//
+        public String posPriority;  //***  ***//
+    }
+
     public static final String SELECT_ADD_HISTORY = "";
     //*** NameConst には、移動しないこと！ ***//
     public static final int OUTEMP_ID = 10;
@@ -216,9 +223,9 @@ public class AddMemberActivity extends AppCompatActivity
         sp_depart.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Spinner s = (Spinner) parent;
-                String depId = Util.returnDepartId(s.getSelectedItem().toString());
-                Log.d("call", String.format("部署ＩＤ : %s", depId));
+//                Spinner s = (Spinner) parent;
+//                String depId = Util.returnDepartId(s.getSelectedItem().toString());
+//                Log.d("call", String.format("部署ＩＤ : %s", depId));
             }
 
             @Override
@@ -229,9 +236,9 @@ public class AddMemberActivity extends AppCompatActivity
         sp_position.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Spinner s = (Spinner) parent;
-                String posId = Util.returnPositionId(s.getSelectedItem().toString());
-                Log.d("call", String.format("役職ＩＤ : %s", posId));
+//                Spinner s = (Spinner) parent;
+//                String posId = Util.returnPositionId(s.getSelectedItem().toString());
+//                Log.d("call", String.format("役職ＩＤ : %s", posId));
 
             }
 
@@ -256,7 +263,7 @@ public class AddMemberActivity extends AppCompatActivity
             //*** インスタンスの役職ＩＤから、役職名を解決 ***//
             //*** ↓ ***//
             //*** のち、役職名から、スピナーの添え字を解決して、選択する ***//
-            sp_position.setSelection(Util.setSelection(sp_position, Util.returnPostionName(((Employee) p).getPos_id())));
+            sp_position.setSelection(Util.setSelection(sp_position, Util.returnPostionName(((Employee) p).getPos_id()).posName));
         } else if (p instanceof OutEmployee) {  //*** 社外者クラスのインスタンスの場合 ***//
             aam_etxt_company.setText(((OutEmployee) p).getCom_name());    //*** 会社名 ***//
             ed_name.setText(p.getName());                           //*** 氏名 ***//
@@ -389,7 +396,7 @@ public class AddMemberActivity extends AppCompatActivity
                     ed_tel.getText().toString(),                                        //*** 電話番号 ***//
                     ed_email.getText().toString(),                                      //*** メールアドレス ***//
                     Util.returnDepartId(sp_depart.getSelectedItem().toString()),        //*** 部署ID ***//
-                    Util.returnPositionId(sp_position.getSelectedItem().toString())     //*** 役職ID ***//
+                    Util.returnPositionId(sp_position.getSelectedItem().toString()).posId     //*** 役職ID ***//
             );
 
             Log.d("call", e.toString());

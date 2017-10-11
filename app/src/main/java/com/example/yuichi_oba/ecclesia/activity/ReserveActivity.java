@@ -246,7 +246,8 @@ public class ReserveActivity extends AppCompatActivity
                     Object o = data.getSerializableExtra("member");
                     if (o instanceof Employee) {    //*** インスタンスが、Employeeクラスのインスタンス ***//
                         Employee e = (Employee) o;
-                        Log.d("call", String.format("社内参加者 : %s", e.toString()));
+                        // TODO: 2017/10/11 役職優先度等が、ＮＵＬＬで帰ってきている!
+                        Log.d("call", String.format("社内参加者の役職優先度 : %s", e.getPos_priority()));
                         member.add(e);      //*** 参加者を追加する ***//
                     } else {                        //*** インスタンスが、OutEmployeeクラスのインスタンス ***//
                         OutEmployee e = (OutEmployee) o;
