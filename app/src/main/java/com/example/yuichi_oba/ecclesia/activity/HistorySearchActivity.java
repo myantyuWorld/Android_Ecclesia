@@ -396,8 +396,6 @@ public class HistorySearchActivity extends AppCompatActivity
 
         //*** ListItemとレイアウトとを関連付け ***//
 
-        //ListItemとレイアウトとを関連付け
-
         final MyListAdapter adapter1 = new MyListAdapter(this);
         listView = (ListView) findViewById(R.id.ahs_lis_history);
         adapter1.setItemList(listItems);
@@ -409,11 +407,17 @@ public class HistorySearchActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //*** 中身はまだ考え中 ***//
+                Log.d("call","履歴確認画面への遷移");
 
+        //        Reserve reserve = Reserve.retReserveConfirm(re_id);
+                CharSequence msg = ((TextView) view).getText();
+                Toast.makeText(HistorySearchActivity.this,
+                        String.format("選択したのは%s",msg.toString()),Toast.LENGTH_SHORT).show();
                 //*** 画面遷移のインテント作成中
-                //Intent i = new Intent(this,遷移先画面のクラスを書く);
+                Intent intent = new Intent(getApplicationContext(),ReserveConfirmActivity.class);
+                intent.putExtra("gamen","1");           //*** どの画面からの遷移か(履歴検索)***//
                 //*** アクティビティを起動 ***//
-                //startActivity(i);
+                startActivity(intent);
             }
         });
 
