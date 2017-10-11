@@ -1,5 +1,6 @@
 package com.example.yuichi_oba.ecclesia.tools;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -107,9 +108,13 @@ public class Util {
         Cursor c = db.rawQuery("select max(re_id) + 1 from t_reserve", null);
         if (c.moveToNext()) {
             maxReserveId = c.getString(0);          //*** 検索結果の代入（ここでは、未だ０埋めされていない） ***//
+            Log.d("call", maxReserveId);
         }
         c.close();
-        return String.format("%04s", maxReserveId); //*** 書式指定付きで、０埋めして返す (ex: 0018) ***//
+
+        String newReId = String.format("%04d", Integer.valueOf(maxReserveId));
+        Log.d("call", String.format("新しい予約ＩＤ : %s", newReId));     //***  ***//
+        return newReId;        //*** 書式指定付きで、０埋めして返す (ex: 0018) ***//
     }
     /***
      * 引数の社員名から、その社員の社員IDをDB検索して値を返すメソッド
