@@ -35,7 +35,11 @@ import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
+import java.sql.ResultSet;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import java.util.Calendar;
@@ -63,6 +67,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     public static String gamen;
     public static Reserve reserve;
     private Button btn_confirm;
+    Spinner spTime;
     // 内部クラスからgetApplicationContextするためのやつ(普通にやるとno-staticで怒られる)
     private static ReserveConfirmActivity instance = null;
     // デバッグ用
@@ -124,10 +129,14 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //                            Toast.makeText(getActivity(), "早期退出", Toast.LENGTH_SHORT).show();
                             //*** DBへ更新をかけるために用意 ***//
                             ContentValues con = new ContentValues();
-                            //*** セッターで終了時刻更新 ***//;
-                            reserve.setRe_endTime("早期退出を押した時刻が入ります");
+                            //*** 現在時刻取得 ***//
+                            Date ealDate = new Date();
+                            //*** フォ－マットを用意 ***//
+                            SimpleDateFormat ealFor = new SimpleDateFormat("HH:mm");
+                            //*** 現在時刻をフォーマットにかけてStringへ変換 ***//
+                            String ealTime = ealFor.format(ealDate);
                             //*** 早期退出による終了時刻をセット ***//
-                            con.put("re_endTime", reserve.getRe_endTime());
+                            con.put("re_endTime", ealTime);
                             //*** where句を用意 ***//
                             String where = "re_id = ?";
                             //*** ?に入れるものを指定する ***//
@@ -162,7 +171,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
             return new AlertDialog.Builder(getActivity()).setTitle("早期退出完了")
                     .setMessage("早期退出が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) { }
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
                     }).create();
         }
     }
@@ -174,7 +184,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
             return new AlertDialog.Builder(getActivity()).setTitle("延長完了")
                     .setMessage("延長が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) { }
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
                     }).create();
         }
 
@@ -198,12 +209,27 @@ public class ReserveConfirmActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialogInterface, int i) {
                             //*** 延長情報をDBへ投げるために用意 ***//
                             ContentValues con = new ContentValues();
+                            //*** 延長による終了時刻を計算 ***//
+                            SimpleDateFormat endFor = new SimpleDateFormat("HH:mm");
+                            Calendar excal = Calendar.getInstance();
+                            try {
+                                //*** フォーマットで変換をかけてCalenderにセット ***//
+                                excal.setTime(endFor.parse(reserve.getRe_endTime()));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            //*** セットされたCalenderに延長時間を加算する ***//
+                            excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
+                            //*** CalenderをDateに変換 ***//
+                            Date exDate = excal.getTime();
+                            //*** DateをフォーマットにかけてStringに変換 ***//
+                            exTime = endFor.format(exDate);
                             //*** DBにインサートする延長情報をセット ***//
                             con.put("re_id", reserve.getRe_id());
                             con.put("ex_startDay", reserve.getRe_startDay());
                             con.put("ex_startTime", reserve.getRe_startTime());
                             con.put("ex_endDay", reserve.getRe_endDay());
-                            con.put("ex_endTime", reserve.getRe_endTime());
+//                            con.put("ex_endTime", reserve.getRe_endTime());
                             con.put("ex_endtime", exTime);
                             //*** 必要なインスタンス類を用意 ***//
                             SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
@@ -232,6 +258,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "ReserveConfirmActivity->onCreate()");
+
+//        spTime = (Spinner) findViewById(R.id.extentionDia_time);
 
         //*** 前画面からの引数を受け取る ***//
         Intent intent = getIntent();
@@ -276,7 +304,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
         // 予約詳細をDB検索して、画面にマッピングするメソッド
 //        dbSearchReserveConfirm();
     }
-
 
 
     //*** アクティビティのライフサイクルとして、別の画面にいってまた帰ってきたとき、コールされる ***//
@@ -391,6 +418,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     public void init() {
         btn_confirm = (Button) findViewById(R.id.arconfirm_btn_mem_confirm);    //*** 参加者確認ボタン ***//
     }
+
     //*** --- SELF MADE METHOD --- 参加者確認ボタン押下時の処理 ***//
     public void onClickMemConfirm(View view) {
         Log.d("call", "btn_confirm_member->onClick()");
@@ -398,9 +426,14 @@ public class ReserveConfirmActivity extends AppCompatActivity
         MemberConfirmDialog dialog = new MemberConfirmDialog();
         dialog.show(getFragmentManager(), "confirm_a");
     }
+
     //*** --- SELF MADE METHOD --- 確定ボタン押下時の処理 ***//
     public void onClickKakutei(View view) {
         Log.d("call", "call onClickKakutei");
+
+        //*** 申請者の氏名－＞ 社員IDに変換して、予約インスタンスにセットする ***//
+        reserve.setRe_applicant(Util.returnEmpId(reserve.getRe_applicant()));
+
 
         //***  ***//
         float priorityAverage = setReserveDetail();         //***  ***//
@@ -420,18 +453,44 @@ public class ReserveConfirmActivity extends AppCompatActivity
         c.put("emp_id", reserve.getRe_applicant());         //***  ***//
         c.put("room_id", reserve.getRe_room_id());          //***  ***//
         c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
-        c.put("reapplicant", reserve.getRe_applicant());    //***  ***//
+        c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
 
-        SQLiteOpenHelper helper = new DB(getApplicationContext());  //***  ***//
+        SQLiteOpenHelper helper = new DB(getApplicationContext());                     //***  ***//
         SQLiteDatabase db = helper.getWritableDatabase();           //***  ***//
-        db.insert("t_reserve", null, c);                            //***  ***//
+//        long ret = db.insertOrThrow("t_reserve", null, c);               //***  ***//
+
+
+        db.execSQL("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                new Object[]{
+                        reserve.getRe_id(),
+                        reserve.getRe_name(),
+                        reserve.getRe_startDay(),
+                        reserve.getRe_endDay(),
+                        reserve.getRe_startTime(),
+                        reserve.getRe_endTime(),
+                        reserve.getRe_switch(),
+                        reserve.getRe_fixtures(),
+                        reserve.getRe_remarks(),
+                        priorityAverage,
+                        "aa",
+                        reserve.getRe_applicant(),
+                        reserve.getRe_room_id(),
+                        reserve.getRe_purpose_id(),
+                        reserve.getRe_applicant()
+                });
+
+
+        long ret = 0;
+        if (ret == -1) {
+            Log.d("call", "予約情報のインサート処理失敗!");
+        } else {
+            Log.d("call", "予約情報のインサート処理成功！");
+        }
         db.close();
     }
+
     //*** --- SELF MADE METHOD --- 予約インスタンスの情報を、DBに書き込める形にまで設定するメソッド ***//
     private float setReserveDetail() {
-        //*** 申請者の氏名－＞ 社員IDに変換して、予約インスタンスにセットする ***//
-        reserve.setRe_applicant(Util.returnEmpId(reserve.getRe_applicant()));
-
         Integer sumPriority = 0;
         // TODO: 2017/10/06 会議目的優先度をどう処理するか考察
 

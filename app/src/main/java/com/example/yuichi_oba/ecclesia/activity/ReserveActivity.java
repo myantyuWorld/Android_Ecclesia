@@ -75,7 +75,7 @@ public class ReserveActivity extends AppCompatActivity
     private static Button btEndTime;    //*** 終了時刻ボタン ***//
     private TextView txtApplicant;      //*** 申請者 ***//
     private Switch swSwitch;            //*** 社内/社外区分 ***//
-    private Spinner ar_sp_room;            //*** 会議室スピナー ***//
+    private Spinner ar_sp_room;         //*** 会議室スピナー ***//
     private Spinner sp_purpose;         //*** 目的スピナー ***//
     private Spinner sp_member;          //*** 参加者スピナー ***//
     private Button btReConfirm;         //*** 内容確認ボタン ***//
@@ -246,7 +246,7 @@ public class ReserveActivity extends AppCompatActivity
                     Object o = data.getSerializableExtra("member");
                     if (o instanceof Employee) {    //*** インスタンスが、Employeeクラスのインスタンス ***//
                         Employee e = (Employee) o;
-                        // TODO: 2017/10/11 役職優先度等が、ＮＵＬＬで帰ってきている!
+                        //*** AddMemberActivity->405行目くらいで、その処理があります ***//
                         Log.d("call", String.format("社内参加者の役職優先度 : %s", e.getPos_priority()));
                         member.add(e);      //*** 参加者を追加する ***//
                     } else {                        //*** インスタンスが、OutEmployeeクラスのインスタンス ***//

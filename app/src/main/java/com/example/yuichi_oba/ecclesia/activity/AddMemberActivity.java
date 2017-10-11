@@ -398,6 +398,8 @@ public class AddMemberActivity extends AppCompatActivity
                     Util.returnDepartId(sp_depart.getSelectedItem().toString()),        //*** 部署ID ***//
                     Util.returnPositionId(sp_position.getSelectedItem().toString()).posId     //*** 役職ID ***//
             );
+            //*** 役職優先度のセット ***//
+            e.setPos_priority(Util.returnPositionId(sp_position.getSelectedItem().toString()).posPriority);
 
             Log.d("call", e.toString());
             e.setDep_id(sp_depart.getSelectedItem().toString());
@@ -437,7 +439,6 @@ public class AddMemberActivity extends AppCompatActivity
 
         return maxId;
     }
-
     //*** --- SELF MADE METHOD --- ウィジェットに空欄があるかチェックするメソッド ***//
     private boolean isBrankSpace() {
         //*** 各ウィジェットの空欄を検査 ※ 会社は、空欄の場合は、社内とするので、OKとする（暫定）***//
