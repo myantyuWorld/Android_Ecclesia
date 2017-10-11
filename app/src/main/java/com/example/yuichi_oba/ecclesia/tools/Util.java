@@ -1,5 +1,6 @@
 package com.example.yuichi_oba.ecclesia.tools;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
+import com.example.yuichi_oba.ecclesia.activity.AddMemberActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 
 public class Util {
@@ -45,11 +47,14 @@ public class Util {
      * @param dep_id    部署ID
      * @return 検索した部署名（ヒットなしは 空文字を返す ）
      */
-    public static String returnDepart(String dep_id) {
+    public static String returnDepartName(String dep_id) {
+        Log.d("call", "call returnDepartName()");
+        Log.d("call", dep_id);
         SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
 
-        Cursor c = db.rawQuery("SELECT * FROM m_depart", null);
+        Cursor c = db.rawQuery("SELECT * FROM m_depart where dep_id = ?",
+                new String[]{dep_id});
         String depName = "";
         if (c.moveToNext()) {
             depName = c.getString(COLUMN_INDEX); //*** 「部署名」**//
@@ -58,24 +63,67 @@ public class Util {
 
         return depName; //*** 部署名を返す ***//
     }
+
+    /***
+     *
+     * @param depName
+     * @return
+     */
+    public static String returnDepartId(String depName) {
+        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM m_depart where dep_name = ?",
+                new String[]{depName});
+        String depId = "";
+        if (c.moveToNext()) {
+            depId = c.getString(0); //*** 「部署ID」**//
+        }
+        c.close();
+
+        return depId;   //*** 部署ＩＤを返す ***//
+    }
+
     /***
      *  役職IDから、役職名をDB検索してリターンするメソッド
      * @param pos_id    役職ID
      * @return 検索した役職名（ヒットなしは 空文字 ヲ返す ）
      */
-    public static String returnPostion(String pos_id) {
+    public static AddMemberActivity.Position returnPostionName(String pos_id) {
         SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
 
         Cursor c = db.rawQuery("SELECT * FROM m_position", null);
         String posName = "";
+        AddMemberActivity.Position p = new AddMemberActivity.Position();
         if (c.moveToNext()) {
             posName = c.getString(COLUMN_INDEX);//*** 「役職名」 ***//
+            p.posId = c.getString(0);
+            p.posName = c.getString(1);
+            p.posPriority = c.getString(2);
         }
         c.close();
 
-        return posName; //*** 役職名を返す ***//
+        return p; //*** 役職情報のインスタンスを返す ***//
     }
+
+    public static AddMemberActivity.Position returnPositionId(String posName) {
+        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM m_position where pos_name = ?",
+                new String[]{posName});
+        AddMemberActivity.Position p = new AddMemberActivity.Position();
+        if (c.moveToNext()) {
+            p.posId = c.getString(0);
+            p.posName = c.getString(1);
+            p.posPriority = c.getString(2);
+        }
+        c.close();
+
+        return p;   //*** 役職情報のインスタンスを返す ***//
+    }
+
     /***
      * 会議室名から、会議室ＩＤをＤＢ検索してリターンするメソッド
      * @param roomName  会議室名
@@ -107,9 +155,13 @@ public class Util {
         Cursor c = db.rawQuery("select max(re_id) + 1 from t_reserve", null);
         if (c.moveToNext()) {
             maxReserveId = c.getString(0);          //*** 検索結果の代入（ここでは、未だ０埋めされていない） ***//
+            Log.d("call", maxReserveId);
         }
         c.close();
-        return String.format("%04s", maxReserveId); //*** 書式指定付きで、０埋めして返す (ex: 0018) ***//
+
+        String newReId = String.format("%04d", Integer.valueOf(maxReserveId));
+        Log.d("call", String.format("新しい予約ＩＤ : %s", newReId));     //***  ***//
+        return newReId;        //*** 書式指定付きで、０埋めして返す (ex: 0018) ***//
     }
     /***
      * 引数の社員名から、その社員の社員IDをDB検索して値を返すメソッド
@@ -136,5 +188,6 @@ public class Util {
 
         return db.rawQuery(args, strArray);
     }
+
 
 }

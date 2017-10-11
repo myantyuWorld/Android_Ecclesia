@@ -61,6 +61,13 @@ public class AddMemberActivity extends AppCompatActivity
         }
     }
 
+    //*** あんまやりたくないけど、ＳＱＬ書きまくるのたいぎいので！ ***//
+    public static class Position {
+        public String posId;        //***  ***//
+        public String posName;      //***  ***//
+        public String posPriority;  //***  ***//
+    }
+
     public static final String SELECT_ADD_HISTORY = "";
     //*** NameConst には、移動しないこと！ ***//
     public static final int OUTEMP_ID = 10;
@@ -188,76 +195,7 @@ public class AddMemberActivity extends AppCompatActivity
             public void onNothingSelected(AdapterView<?> adapterView) {            }
         });
 
-        //*** 登録ボタン押下時の処理 ***//
-//        bt_regist.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //*** 各ウィジェットの情報を基に、参加者のインスタンスを生成 ***//
-////                Log.d("call", "add regist");
-////                Employee e = new Employee();
-////                e.setName(ed_name.getText().toString());
-////                e.setMailaddr(ed_email.getText().toString());
-////                e.setCom_name(aam_etxt_company.getText().toString());
-////                e.setDep_name(sp_depart.getSelectedItem().toString());
-////                e.setPos_name(sp_position.getSelectedItem().toString());
-////
-////                int checkedRadioId = rbn_group.getCheckedRadioButtonId();
-////                if (checkedRadioId == R.id.aam_rbt_new_regist) {        //*** 新規登録 ***//
-////                    // DO: 2017/09/27 新規登録なら、社員IDのマックス＋１を参加者インスタンスに設定する
-////                    SQLiteOpenHelper helper = new DB(getApplicationContext());
-////                    SQLiteDatabase db = helper.getReadableDatabase();
-////
-////                    //*** 社員IDのマックス＋１を検索するSQL ***//
-////                    Cursor c = db.rawQuery("select max(emp_id) + 1 from t_emp", null);
-////                    String maxId = "";
-////                    while (c.moveToNext()) {
-////                        maxId = c.getString(0);
-////                    }
-////                    c.close();
-////                    //***  ***//
-////
-////                    // 社員の社員IDに、マックス＋１を設定する
-////                    e.setId(maxId);
-////                    Log.d("call", String.format("%04d", maxId));
-////                    // TODO: 2017/09/27  社外者・社員ファイルに新規登録をかける ***//
-////                    ContentValues val = new ContentValues();
-////                    val.put("emp_id", e.getId());
-////                    val.put("emp_name", e.getId());
-////                    val.put("emp_tel", e.getId());
-////                    val.put("emp_mailaddr", e.getId());
-////                    val.put("dep_id", "0001"); //*** 暫定 ***//
-////                    val.put("pos_id", "0001"); //*** 暫定 ***//
-////
-////                    long rs = db.insert("t_emp", null, val);        //*** INSERT SQL 実行 ***//
-////                    if (rs == -1) {
-////                        //*** INSERT 失敗 ***//
-////                        Log.d("call", "insert 失敗");
-////                    } else {
-////                        //*** INSERT 成功 ***//
-////                        Log.d("call", "insert 成功");
-////                    }
-//                // TODO: 2017/09/27 社員VERのインサート処理
-//                // TODO: 2017/09/27 社外者VERのインサート処理
-////                } else {                                            //*** 履歴検索 ***//
-////                    //*** 社員リストの中から、検索して社員IDを検索する ***//
-////                    for (Employee emp : members) {
-////                        if (emp.getName().contains(e.getName())) {
-////                            Log.d("call", String.format("検索した社員ID : %s", emp.getId()));
-////                            e.setId(emp.getId());
-////                        }
-////                    }
-////                }
-//                // TODO: 2017/09/22 役職の優先度をどうするのか
-//                //*** ReserveActivityの参加者リスト(member)にaddする ***//
-////                member.add(e);    //==> startActivityForResult()で対応したので、いらない
-//                //*** 選んだ（もしくは入力した）参加者を追加する ***//
-////                Intent intent = new Intent();
-////                intent.putExtra("member", e);
-////                setResult(RESULT_OK, intent);
-////                finish();
-//            }
-//        });
-        //*** キャンセルボタン押下時の処理 ***//
+        //*** キャンセルボタン押下時の処
         bt_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -281,11 +219,39 @@ public class AddMemberActivity extends AppCompatActivity
                 }
             }
         });
+        //*** 部署スピナーのリスナー ***//
+        sp_depart.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                Spinner s = (Spinner) parent;
+//                String depId = Util.returnDepartId(s.getSelectedItem().toString());
+//                Log.d("call", String.format("部署ＩＤ : %s", depId));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        //*** 役職スピナーのリスナー ***//
+        sp_position.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                Spinner s = (Spinner) parent;
+//                String posId = Util.returnPositionId(s.getSelectedItem().toString());
+//                Log.d("call", String.format("役職ＩＤ : %s", posId));
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
     //*** --- SELF MADE METHOD --- 履歴から選択されたインスタンス情報を、各ウィジェットにマップするメソッド ***//
     private void mappingWidget(Person p) {
         //*** 引数のクラスの型に応じた処理を行う ***//
         if (p instanceof Employee) {            //*** 社員クラスのインスタンスの場合 ***//
+            Log.d("call", p.toString());
             aam_etxt_company.setText("社内");         //*** 会社名 ***//
             ed_name.setText(p.getName());       //*** 氏名 ***//
             ed_email.setText(p.getMailaddr());  //*** メールアドレス ***//
@@ -293,11 +259,11 @@ public class AddMemberActivity extends AppCompatActivity
             //*** インスタンスの部署ＩＤから、部署名を解決 ***//
             //*** ↓ ***//
             //*** のち、部署名から、スピナーの添え字を解決して、選択する ***//
-            sp_depart.setSelection(Util.setSelection(sp_depart, Util.returnDepart(((Employee) p).getDep_id())));
+            sp_depart.setSelection(Util.setSelection(sp_depart, Util.returnDepartName(((Employee) p).getDep_id())));
             //*** インスタンスの役職ＩＤから、役職名を解決 ***//
             //*** ↓ ***//
             //*** のち、役職名から、スピナーの添え字を解決して、選択する ***//
-            sp_position.setSelection(Util.setSelection(sp_position, Util.returnPostion(((Employee) p).getPos_id())));
+            sp_position.setSelection(Util.setSelection(sp_position, Util.returnPostionName(((Employee) p).getPos_id()).posName));
         } else if (p instanceof OutEmployee) {  //*** 社外者クラスのインスタンスの場合 ***//
             aam_etxt_company.setText(((OutEmployee) p).getCom_name());    //*** 会社名 ***//
             ed_name.setText(p.getName());                           //*** 氏名 ***//
@@ -350,8 +316,10 @@ public class AddMemberActivity extends AppCompatActivity
         SQLiteDatabase db = helper.getReadableDatabase();
 //        Cursor cursor = db.rawQuery("select * from v_member", new String[]{});
         // 自分が参加した会議に参加したことのある人間を検索(社内)
-        Cursor c = db.rawQuery("select *, count(*) as cnt from v_reserve_member where re_id in (select re_id from t_member where mem_id = ?) " +
-                " group by mem_id order by cnt desc limit 10", new String[]{emp_id});
+        String sqlArgs = "select *, count(*) as cnt from v_reserve_member x " +
+                "inner join m_depart y on x.dep_name = y.dep_name " +
+                " where re_id in (select re_id from t_member where mem_id = ?) group by mem_id order by cnt desc limit 10 ";
+        Cursor c = db.rawQuery(sqlArgs, new String[]{emp_id});
         // メンバークラスのインスタンス生成
         List<String> list = new ArrayList<>();
         while (c.moveToNext()) {
@@ -361,10 +329,11 @@ public class AddMemberActivity extends AppCompatActivity
             e.setName(c.getString(12));         // 氏名
             e.setTel(c.getString(13));          // 電話番号
             e.setMailaddr(c.getString(14));     // メールアドレス
-//            e.setCom_name("社内");
-//            e.setDep_name(c.getString(15));     // 部署名
+            e.setDep_id(c.getString(22));       //*** 部署ＩＤ ***//
             e.setPos_name(c.getString(16));     // 役職名
             e.setPos_priority(c.getString(17)); // 役職の優先度
+
+            Log.d("call", String.format("社員情報 : %s", e.toString()));    //***  ***//
 
             members.add(e);
 //            list.add(e.getCom_name() + " : " + e.getName());
@@ -422,13 +391,14 @@ public class AddMemberActivity extends AppCompatActivity
         Intent intent = new Intent();
         if (aam_etxt_company.getText().toString().contains("")) {     //*** 社内の場合 ***//
             Employee e = new Employee(
-                    returnMaxId("t_emp"),                   //*** 社員テーブルのIDの最大値＋１を代入 ***//
-                    ed_name.getText().toString(),           //*** 氏名 ***//
-                    ed_tel.getText().toString(),            //*** 電話番号 ***//
-                    ed_email.getText().toString(),          //*** メールアドレス ***//
-                    "",                                     //*** 部署ID ***//
-                    ""                                      //*** 役職ID ***//
+                    returnMaxId("t_emp"),                                              //*** 社員テーブルのIDの最大値＋１を代入 ***//
+                    ed_name.getText().toString(),                                       //*** 氏名 ***//
+                    ed_tel.getText().toString(),                                        //*** 電話番号 ***//
+                    ed_email.getText().toString(),                                      //*** メールアドレス ***//
+                    Util.returnDepartId(sp_depart.getSelectedItem().toString()),        //*** 部署ID ***//
+                    Util.returnPositionId(sp_position.getSelectedItem().toString()).posId     //*** 役職ID ***//
             );
+
             Log.d("call", e.toString());
             e.setDep_id(sp_depart.getSelectedItem().toString());
             e.setPos_id(sp_position.getSelectedItem().toString());
