@@ -273,12 +273,13 @@ public class HistorySearchActivity extends AppCompatActivity
         listItems = new ArrayList<>();
         SQLiteOpenHelper listdeta = new DB(getApplicationContext());
         SQLiteDatabase db_list = listdeta.getReadableDatabase();
-        Cursor c_list = db_list.rawQuery("select * from t_reserve x" +
+        Cursor c_list = db_list.rawQuery("select * from  t_reserve x" +
                 " inner join t_member y on x.re_id = y.re_id" +
-                " inner join m_out as a on y.mem_id = a.out_id" +
+                " inner join m_out_emp as a on y.mem_id = a.outemp_id" +
                 " inner join m_company as b on a.com_id = b.com_id" +
                 " inner join m_purpose as p on p.pur_id = x.pur_id"+
-                " inner join m_room as c on c.room_id = x.room_id", new String[]{});
+                " inner join m_room as c on c.room_id = x.room_id"+
+                " where x.re_id = ?",new String[]{"0003"});
 
         //会社用のデータベース
         while (c_list.moveToNext()) {
