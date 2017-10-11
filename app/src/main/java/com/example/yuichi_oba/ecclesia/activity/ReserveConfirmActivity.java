@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -66,7 +67,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
     public static String gamen;
     public static Reserve reserve;
     private Button btn_confirm;
-    Spinner spTime;
     // 内部クラスからgetApplicationContextするためのやつ(普通にやるとno-staticで怒られる)
     private static ReserveConfirmActivity instance = null;
     // デバッグ用
@@ -126,26 +126,36 @@ public class ReserveConfirmActivity extends AppCompatActivity
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 //                            Toast.makeText(getActivity(), "早期退出", Toast.LENGTH_SHORT).show();
+                            //*** 必要なインスタンスを用意 ***//
+                            SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
+                            SQLiteDatabase db = helper.getWritableDatabase();
+                            //*** トランザクション開始 ***//
+                            db.beginTransaction();
                             //*** DBへ更新をかけるために用意 ***//
                             ContentValues con = new ContentValues();
                             //*** 現在時刻取得 ***//
                             Date ealDate = new Date();
                             //*** フォ－マットを用意 ***//
-                            SimpleDateFormat ealFor = new SimpleDateFormat("HH:mm");
+                            SimpleDateFormat ealFor = new SimpleDateFormat("HH：mm");
                             //*** 現在時刻をフォーマットにかけてStringへ変換 ***//
                             String ealTime = ealFor.format(ealDate);
                             //*** 早期退出による終了時刻をセット ***//
                             con.put("re_endTime", ealTime);
+                            Log.d("ealTIme", ealTime);
                             //*** where句を用意 ***//
                             String where = "re_id = ?";
                             //*** ?に入れるものを指定する ***//
                             String whereArgs[] = new String[ONE];
                             whereArgs[ZERO] = reserve.getRe_id();
-                            //*** 必要なインスタンスを用意 ***//
-                            SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
-                            SQLiteDatabase db = helper.getWritableDatabase();
                             //*** updateをかける ***//
                             db.update("t_reserve", con, where, whereArgs);
+                            //*** コミットかける ***//
+                            db.setTransactionSuccessful();
+                            //*** トランザクション終了 ***//
+                            db.endTransaction();
+                            //*** 早期退出完了通知ダイアログを表示 ***//
+                            EalryOutResultDialog ealryOutResultDialog = new EalryOutResultDialog();
+                            ealryOutResultDialog.show(getFragmentManager(), "out");
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -204,35 +214,94 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     .setPositiveButton(EX, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            //*** 延長情報をDBへ投げるために用意 ***//
-                            ContentValues con = new ContentValues();
-                            //*** 延長による終了時刻を計算 ***//
-                            SimpleDateFormat endFor = new SimpleDateFormat("HH:mm");
-                            Calendar excal = Calendar.getInstance();
                             try {
+                                //*** スピナーで選択された延長時間を代入 ***//
+                                Spinner spTime = (Spinner) layout.findViewById(R.id.extentionDia_time);
+                                exTime = spTime.getSelectedItem().toString();
+                                //*** 必要なインスタンス類を用意 ***//
+                                SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
+                                SQLiteDatabase db = helper.getWritableDatabase();
+                                //*** トランザクション開始 ***//
+                                db.beginTransaction();
+                                //*** 延長情報をDBへ投げるために用意 ***//
+                                ContentValues con = new ContentValues();
+                                //*** 延長による終了時刻を計算 ***//
+                                SimpleDateFormat endFor = new SimpleDateFormat("HH：mm");
+                                Calendar excal = Calendar.getInstance();
+                                Log.d("nowEnd", reserve.getRe_endTime());
                                 //*** フォーマットで変換をかけてCalenderにセット ***//
                                 excal.setTime(endFor.parse(reserve.getRe_endTime()));
-                            } catch (ParseException e) {
+                                Log.d("changeTime", String.valueOf(endFor.parse(reserve.getRe_endTime())));
+                                //*** セットされたCalenderに延長時間を加算する ***//
+                                excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
+                                //*** CalenderをDateに変換 ***//
+                                Date exDate = excal.getTime();
+                                //*** DateをフォーマットにかけてStringに変換 ***//
+                                exTime = endFor.format(exDate);
+                                Log.d("exTIme", exTime);
+                                //*** DBにインサートする延長情報をセット ***//
+                                con.put("re_id", reserve.getRe_id());
+                                con.put("ex_startDay", reserve.getRe_startDay());
+                                con.put("ex_startTime", reserve.getRe_startTime());
+                                con.put("ex_endDay", reserve.getRe_endDay());
+//                            con.put("ex_endTime", reserve.getRe_endTime());
+                                con.put("ex_endtime", exTime);
+                                //*** 延長テーブルにインサートをかける ***//
+                                db.insert("t_extension", null, con);
+                                //*** コミットみたいな感じ ***//
+                                db.setTransactionSuccessful();
+                                //*** トランザクション終了 ***//
+                                db.endTransaction();
+                                //*** 延長結果ダイアログを表示 ***//
+                                ExtentResultDialog extentResultDialog = new ExtentResultDialog();
+                                extentResultDialog.show(getFragmentManager(), KEYEX);
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            //*** セットされたCalenderに延長時間を加算する ***//
-                            excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
-                            //*** CalenderをDateに変換 ***//
-                            Date exDate = excal.getTime();
-                            //*** DateをフォーマットにかけてStringに変換 ***//
-                            exTime = endFor.format(exDate);
-                            //*** DBにインサートする延長情報をセット ***//
-                            con.put("re_id", reserve.getRe_id());
-                            con.put("ex_startDay", reserve.getRe_startDay());
-                            con.put("ex_startTime", reserve.getRe_startTime());
-                            con.put("ex_endDay", reserve.getRe_endDay());
-//                            con.put("ex_endTime", reserve.getRe_endTime());
-                            con.put("ex_endtime", exTime);
-                            //*** 必要なインスタンス類を用意 ***//
-                            SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
-                            SQLiteDatabase db = helper.getWritableDatabase();
-                            //*** 延長テーブルにインサートをかける ***//
-                            db.insert("t_extension", null, con);
+//                            //*** スピナーで選択された延長時間を代入 ***//
+//                            Spinner spTime = (Spinner) layout.findViewById(R.id.extentionDia_time);
+//                            exTime = spTime.getSelectedItem().toString();
+//                            //*** 必要なインスタンス類を用意 ***//
+//                            SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
+//                            SQLiteDatabase db = helper.getWritableDatabase();
+//                            //*** トラン始まり ***//
+//                            db.beginTransaction();
+//                            //*** 延長情報をDBへ投げるために用意 ***//
+//                            ContentValues con = new ContentValues();
+//                            //*** 延長による終了時刻を計算 ***//
+//                            SimpleDateFormat endFor = new SimpleDateFormat("HH：mm");
+//                            Calendar excal = Calendar.getInstance();
+//                            Log.d("nowEnd", reserve.getRe_endTime());
+//                            try {
+//                                //*** フォーマットで変換をかけてCalenderにセット ***//
+//                                excal.setTime(endFor.parse(reserve.getRe_endTime()));
+//                                Log.d("changeTime", String.valueOf(endFor.parse(reserve.getRe_endTime())));
+//                            } catch (ParseException e) {
+//                                e.printStackTrace();
+//                            }
+//                            //*** セットされたCalenderに延長時間を加算する ***//
+//                            excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
+//                            //*** CalenderをDateに変換 ***//
+//                            Date exDate = excal.getTime();
+//                            //*** DateをフォーマットにかけてStringに変換 ***//
+//                            exTime = endFor.format(exDate);
+//                            Log.d("exTIme", exTime);
+//                            //*** DBにインサートする延長情報をセット ***//
+//                            con.put("re_id", reserve.getRe_id());
+//                            con.put("ex_startDay", reserve.getRe_startDay());
+//                            con.put("ex_startTime", reserve.getRe_startTime());
+//                            con.put("ex_endDay", reserve.getRe_endDay());
+////                            con.put("ex_endTime", reserve.getRe_endTime());
+//                            con.put("ex_endtime", exTime);
+//                            //*** 延長テーブルにインサートをかける ***//
+//                            db.insert("t_extension", null, con);
+//                            //*** コミット ***//
+//                            db.setTransactionSuccessful();
+//                            //*** トラン終わり ***//
+//                            db.endTransaction();
+//                            //*** 延長結果ダイアログを表示 ***//
+//                            ExtentResultDialog extentResultDialog = new ExtentResultDialog();
+//                            extentResultDialog.show(getFragmentManager(), KEYEX);
                         }
                     }).setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
                         @Override
@@ -255,8 +324,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "ReserveConfirmActivity->onCreate()");
-
-//        spTime = (Spinner) findViewById(R.id.extentionDia_time);
 
         //*** 前画面からの引数を受け取る ***//
         Intent intent = getIntent();
@@ -296,7 +363,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
         /***
          * ここまで
          */
-
 
         // 予約詳細をDB検索して、画面にマッピングするメソッド
 //        dbSearchReserveConfirm();
@@ -343,9 +409,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 //*** 早期退出ダイアログを表示 ***//
                 EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
                 earlyOutDialog.show(getFragmentManager(), "out");
-                //*** 早期退出完了通知ダイアログを表示 ***//
-                EalryOutResultDialog ealryOutResultDialog = new EalryOutResultDialog();
-                ealryOutResultDialog.show(getFragmentManager(), "out");
                 break;
             // 「予約変更」が選択された
             case R.id.option_reserveChange:
@@ -362,9 +425,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 //*** 延長ダイアログを表示 ***//
                 ExtentionDialog extentionDialog = new ExtentionDialog();
                 extentionDialog.show(getFragmentManager(), KEYEX);
-                //*** 延長結果ダイアログを表示 ***//
-                ExtentResultDialog extentResultDialog = new ExtentResultDialog();
-                extentResultDialog.show(getFragmentManager(), KEYEX);
                 break;
         }
         // 選択された結果（項目）を返す
