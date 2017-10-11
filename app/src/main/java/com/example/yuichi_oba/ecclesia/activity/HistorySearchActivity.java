@@ -275,7 +275,7 @@ public class HistorySearchActivity extends AppCompatActivity
         SQLiteDatabase db_list = listdeta.getReadableDatabase();
         Cursor c_list = db_list.rawQuery("select * from t_reserve x" +
                 " inner join t_member y on x.re_id = y.re_id" +
-                " inner join m_out_emp as a on y.mem_id = a.outemp_id" +
+                " inner join m_out as a on y.mem_id = a.out_id" +
                 " inner join m_company as b on a.com_id = b.com_id" +
                 " inner join m_purpose as p on p.pur_id = x.pur_id"+
                 " inner join m_room as c on c.room_id = x.room_id", new String[]{});
@@ -283,15 +283,12 @@ public class HistorySearchActivity extends AppCompatActivity
         //会社用のデータベース
         while (c_list.moveToNext()) {
             Reserve li = new Reserve();
-<<<<<<< HEAD
-            Person p = new Person();
-            li.setId(c_list.getLong(ID));
-=======
+
+//            Person p = new Person();
+            //*** 今後必要になるためコメントアウト ***//
 //            li.setId(c_list.getLong(ID));
->>>>>>> master/master
             li.setRe_name(c_list.getString(GAIYOU));
             li.setRe_startDay(c_list.getString(DAY));
-//            li.setRe_company(c_list.getString(COM_MEMBER));
 //            li.setRe_member(c_list.getClass(COM_MEMBER));
             li.setRe_company(c_list.getString(26));
             li.setRe_purpose_name(c_list.getString(28));
@@ -396,11 +393,11 @@ public class HistorySearchActivity extends AppCompatActivity
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-<<<<<<< HEAD
+
         //*** ListItemとレイアウトとを関連付け ***//
-=======
+
         //ListItemとレイアウトとを関連付け
->>>>>>> master/master
+
         final MyListAdapter adapter1 = new MyListAdapter(this);
         listView = (ListView) findViewById(R.id.ahs_lis_history);
         adapter1.setItemList(listItems);
