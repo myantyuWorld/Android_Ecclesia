@@ -35,7 +35,10 @@ import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import java.util.Calendar;
@@ -63,6 +66,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     public static String gamen;
     public static Reserve reserve;
     private Button btn_confirm;
+    Spinner spTime;
     // 内部クラスからgetApplicationContextするためのやつ(普通にやるとno-staticで怒られる)
     private static ReserveConfirmActivity instance = null;
     // デバッグ用
@@ -124,10 +128,14 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //                            Toast.makeText(getActivity(), "早期退出", Toast.LENGTH_SHORT).show();
                             //*** DBへ更新をかけるために用意 ***//
                             ContentValues con = new ContentValues();
-                            //*** セッターで終了時刻更新 ***//;
-                            reserve.setRe_endTime("早期退出を押した時刻が入ります");
+                            //*** 現在時刻取得 ***//
+                            Date ealDate = new Date();
+                            //*** フォ－マットを用意 ***//
+                            SimpleDateFormat ealFor = new SimpleDateFormat("HH:mm");
+                            //*** 現在時刻をフォーマットにかけてStringへ変換 ***//
+                            String ealTime = ealFor.format(ealDate);
                             //*** 早期退出による終了時刻をセット ***//
-                            con.put("re_endTime", reserve.getRe_endTime());
+                            con.put("re_endTime", ealTime);
                             //*** where句を用意 ***//
                             String where = "re_id = ?";
                             //*** ?に入れるものを指定する ***//
@@ -198,12 +206,27 @@ public class ReserveConfirmActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialogInterface, int i) {
                             //*** 延長情報をDBへ投げるために用意 ***//
                             ContentValues con = new ContentValues();
+                            //*** 延長による終了時刻を計算 ***//
+                            SimpleDateFormat endFor = new SimpleDateFormat("HH:mm");
+                            Calendar excal = Calendar.getInstance();
+                            try {
+                                //*** フォーマットで変換をかけてCalenderにセット ***//
+                                excal.setTime(endFor.parse(reserve.getRe_endTime()));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            //*** セットされたCalenderに延長時間を加算する ***//
+                            excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
+                            //*** CalenderをDateに変換 ***//
+                            Date exDate = excal.getTime();
+                            //*** DateをフォーマットにかけてStringに変換 ***//
+                            exTime = endFor.format(exDate);
                             //*** DBにインサートする延長情報をセット ***//
                             con.put("re_id", reserve.getRe_id());
                             con.put("ex_startDay", reserve.getRe_startDay());
                             con.put("ex_startTime", reserve.getRe_startTime());
                             con.put("ex_endDay", reserve.getRe_endDay());
-                            con.put("ex_endTime", reserve.getRe_endTime());
+//                            con.put("ex_endTime", reserve.getRe_endTime());
                             con.put("ex_endtime", exTime);
                             //*** 必要なインスタンス類を用意 ***//
                             SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
@@ -232,6 +255,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "ReserveConfirmActivity->onCreate()");
+
+//        spTime = (Spinner) findViewById(R.id.extentionDia_time);
 
         //*** 前画面からの引数を受け取る ***//
         Intent intent = getIntent();
