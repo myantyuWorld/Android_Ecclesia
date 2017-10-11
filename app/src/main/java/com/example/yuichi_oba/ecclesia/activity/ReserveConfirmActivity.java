@@ -125,16 +125,17 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-
 //                            Toast.makeText(getActivity(), "早期退出", Toast.LENGTH_SHORT).show();
                             //*** DBへ更新をかけるために用意 ***//
                             ContentValues con = new ContentValues();
-                            //*** セッターで終了時刻更新 ***//;
-                            reserve.setRe_endTime("早期退出を押した時刻が入ります");
-                            //*** 早期退出時間を計算 ***//
-
+                            //*** 現在時刻取得 ***//
+                            Date ealDate = new Date();
+                            //*** フォ－マットを用意 ***//
+                            SimpleDateFormat ealFor = new SimpleDateFormat("HH:mm");
+                            //*** 現在時刻をフォーマットにかけてStringへ変換 ***//
+                            String ealTime = ealFor.format(ealDate);
                             //*** 早期退出による終了時刻をセット ***//
-                            con.put("re_endTime", reserve.getRe_endTime());
+                            con.put("re_endTime", ealTime);
                             //*** where句を用意 ***//
                             String where = "re_id = ?";
                             //*** ?に入れるものを指定する ***//
@@ -207,19 +208,25 @@ public class ReserveConfirmActivity extends AppCompatActivity
                             ContentValues con = new ContentValues();
                             //*** 延長による終了時刻を計算 ***//
                             SimpleDateFormat endFor = new SimpleDateFormat("HH:mm");
-                            SimpleDateFormat exFor = new SimpleDateFormat("mm");
+                            Calendar excal = Calendar.getInstance();
                             try {
-                                Date end = endFor.parse(reserve.getRe_endTime());
-                                Date ex = exFor.parse(exTime);
+                                //*** フォーマットで変換をかけてCalenderにセット ***//
+                                excal.setTime(endFor.parse(reserve.getRe_endTime()));
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
+                            //*** セットされたCalenderに延長時間を加算する ***//
+                            excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
+                            //*** CalenderをDateに変換 ***//
+                            Date exDate = excal.getTime();
+                            //*** DateをフォーマットにかけてStringに変換 ***//
+                            exTime = endFor.format(exDate);
                             //*** DBにインサートする延長情報をセット ***//
                             con.put("re_id", reserve.getRe_id());
                             con.put("ex_startDay", reserve.getRe_startDay());
                             con.put("ex_startTime", reserve.getRe_startTime());
                             con.put("ex_endDay", reserve.getRe_endDay());
-                            con.put("ex_endTime", reserve.getRe_endTime());
+//                            con.put("ex_endTime", reserve.getRe_endTime());
                             con.put("ex_endtime", exTime);
                             //*** 必要なインスタンス類を用意 ***//
                             SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
