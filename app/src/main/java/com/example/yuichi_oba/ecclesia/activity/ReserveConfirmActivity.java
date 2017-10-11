@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
@@ -31,14 +33,17 @@ import com.example.yuichi_oba.ecclesia.model.OutEmployee;
 import com.example.yuichi_oba.ecclesia.model.Person;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
-import com.example.yuichi_oba.ecclesia.tools.MyInterface;
+import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Calendar;
+
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ONE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
@@ -49,9 +54,8 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 // DO: 2017/09/19 延長ダイアログの正常動作の実装
 // TODO: 2017/09/19 延長ダイアログのレイアウト調整およびデザインの考察 
 public class ReserveConfirmActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MyInterface {
+        implements NavigationView.OnNavigationItemSelectedListener {
     public static String exTime = "";
-
     //***  ***//
 //    public static Reserve reserve;
     private Employee employee;
@@ -59,14 +63,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
     public static String gamen;
     public static Reserve reserve;
     private Button btn_confirm;
-
     // 内部クラスからgetApplicationContextするためのやつ(普通にやるとno-staticで怒られる)
     private static ReserveConfirmActivity instance = null;
-
     // デバッグ用
     private static final String TAG = ReserveConfirmActivity.class.getSimpleName();
-
-
 
     //*** 会議参加者をリスト形式で出す、ダイアログフラグメントクラス ***//
     public static class MemberConfirmDialog extends DialogFragment {
@@ -121,7 +121,23 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Toast.makeText(getActivity(), "早期退出", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getActivity(), "早期退出", Toast.LENGTH_SHORT).show();
+                            //*** DBへ更新をかけるために用意 ***//
+                            ContentValues con = new ContentValues();
+                            //*** セッターで終了時刻更新 ***//;
+                            reserve.setRe_endTime("早期退出を押した時刻が入ります");
+                            //*** 早期退出による終了時刻をセット ***//
+                            con.put("re_endTime", reserve.getRe_endTime());
+                            //*** where句を用意 ***//
+                            String where = "re_id = ?";
+                            //*** ?に入れるものを指定する ***//
+                            String whereArgs[] = new String[ONE];
+                            whereArgs[ZERO] = reserve.getRe_id();
+                            //*** 必要なインスタンスを用意 ***//
+                            SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
+                            SQLiteDatabase db = helper.getWritableDatabase();
+                            //*** updateをかける ***//
+                            db.update("t_reserve", con, where, whereArgs);
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -139,14 +155,26 @@ public class ReserveConfirmActivity extends AppCompatActivity
         }
     }
 
+    //*** 早期退出完了通知ダイアログ ***//
+    public static class EalryOutResultDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity()).setTitle("早期退出完了")
+                    .setMessage("早期退出が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) { }
+                    }).create();
+        }
+    }
+
+    //*** 延長完了を通知するダイアログ ***//
     public static class ExtentResultDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new AlertDialog.Builder(getActivity()).setTitle("延長完了")
                     .setMessage("延長が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
+                        public void onClick(DialogInterface dialog, int which) { }
                     }).create();
         }
 
@@ -168,21 +196,25 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     .setPositiveButton(EX, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            //*** 延長情報をDBへ投げるために用意 ***//
                             ContentValues con = new ContentValues();
+                            //*** DBにインサートする延長情報をセット ***//
+                            con.put("re_id", reserve.getRe_id());
+                            con.put("ex_startDay", reserve.getRe_startDay());
+                            con.put("ex_startTime", reserve.getRe_startTime());
+                            con.put("ex_endDay", reserve.getRe_endDay());
+                            con.put("ex_endTime", reserve.getRe_endTime());
                             con.put("ex_endtime", exTime);
+                            //*** 必要なインスタンス類を用意 ***//
                             SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
                             SQLiteDatabase db = helper.getWritableDatabase();
-                            if (db.update("t_extension", con, "re_id = " + re_id, null) > ZERO) {
-//                                Toast.makeText(getActivity(), "延長しました", Toast.LENGTH_SHORT).show();
-                                ExtentResultDialog extentResultDialog = new ExtentResultDialog();
-                                extentResultDialog.show(getFragmentManager(), "exres");
-                            } else {
-                                Toast.makeText(getActivity(), "延長失敗", Toast.LENGTH_SHORT).show();
-                            }
+                            //*** 延長テーブルにインサートをかける ***//
+                            db.insert("t_extension", null, con);
                         }
                     }).setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            exTime = "";
                         }
                     }).create();
         }
@@ -215,8 +247,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
         } else {                         //*** 「一覧」画面からの画面遷移 ***//
             reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
         }
-
         instance = this;
+
+        setReserveDetail(); //***  ***//
 
         /***
          * レイアウト情報をマッピングする
@@ -243,6 +276,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
         // 予約詳細をDB検索して、画面にマッピングするメソッド
 //        dbSearchReserveConfirm();
     }
+
+
 
     //*** アクティビティのライフサイクルとして、別の画面にいってまた帰ってきたとき、コールされる ***//
     @Override
@@ -280,8 +315,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
         switch (id) {
             // 「早期退出」が選択された
             case R.id.option_earlyOut:
+                //*** 早期退出ダイアログを表示 ***//
                 EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
                 earlyOutDialog.show(getFragmentManager(), "out");
+                //*** 早期退出完了通知ダイアログを表示 ***//
+                EalryOutResultDialog ealryOutResultDialog = new EalryOutResultDialog();
+                ealryOutResultDialog.show(getFragmentManager(), "out");
                 break;
             // 「予約変更」が選択された
             case R.id.option_reserveChange:
@@ -295,8 +334,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 break;
             // 「延長」が選択された
             case R.id.option_extention:
+                //*** 延長ダイアログを表示 ***//
                 ExtentionDialog extentionDialog = new ExtentionDialog();
                 extentionDialog.show(getFragmentManager(), KEYEX);
+                //*** 延長結果ダイアログを表示 ***//
+                ExtentResultDialog extentResultDialog = new ExtentResultDialog();
+                extentResultDialog.show(getFragmentManager(), KEYEX);
                 break;
         }
         // 選択された結果（項目）を返す
@@ -338,7 +381,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
     // これでどこからでもgetApplicationContextできる
     // 同一Activityから呼び出す際は不要
 //    public static ReserveConfirmActivity getInstance() {
@@ -346,20 +388,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //    }
 
     //*** --- SELF MADE METHOD --- 各ウィジェットの初期化処理メソッド ***//
-    @Override
     public void init() {
         btn_confirm = (Button) findViewById(R.id.arconfirm_btn_mem_confirm);    //*** 参加者確認ボタン ***//
-    }
-    //*** --- SELF MADE METHOD --- 各ウィジェットのリスナー登録メソッド ***//
-    @Override
-    public void setWidgetListener() {
-
-//        btn_confirm.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
     }
     //*** --- SELF MADE METHOD --- 参加者確認ボタン押下時の処理 ***//
     public void onClickMemConfirm(View view) {
@@ -368,7 +398,54 @@ public class ReserveConfirmActivity extends AppCompatActivity
         MemberConfirmDialog dialog = new MemberConfirmDialog();
         dialog.show(getFragmentManager(), "confirm_a");
     }
+    //*** --- SELF MADE METHOD --- 確定ボタン押下時の処理 ***//
+    public void onClickKakutei(View view) {
+        Log.d("call", "call onClickKakutei");
 
+        //***  ***//
+        float priorityAverage = setReserveDetail();         //***  ***//
 
+        ContentValues c = new ContentValues();
+        c.put("re_id", reserve.getRe_id());                 //***  ***//
+        c.put("re_overview", reserve.getRe_name());         //***  ***//
+        c.put("re_startday", reserve.getRe_startDay());     //***  ***//
+        c.put("re_endday", reserve.getRe_endDay());         //***  ***//
+        c.put("re_starttime", reserve.getRe_startTime());   //***  ***//
+        c.put("re_endtime", reserve.getRe_endTime());       //***  ***//
+        c.put("re_switch", reserve.getRe_switch());         //***  ***//
+        c.put("re_fixture", reserve.getRe_fixtures());      //***  ***//
+        c.put("re_remarks", reserve.getRe_remarks());       //***  ***//
+        c.put("re_priority", priorityAverage);              //***  ***//
+        c.put("com_id", "");                                //***  ***//
+        c.put("emp_id", reserve.getRe_applicant());         //***  ***//
+        c.put("room_id", reserve.getRe_room_id());          //***  ***//
+        c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
+        c.put("reapplicant", reserve.getRe_applicant());    //***  ***//
 
+        SQLiteOpenHelper helper = new DB(getApplicationContext());  //***  ***//
+        SQLiteDatabase db = helper.getWritableDatabase();           //***  ***//
+        db.insert("t_reserve", null, c);                            //***  ***//
+        db.close();
+    }
+    //*** --- SELF MADE METHOD --- 予約インスタンスの情報を、DBに書き込める形にまで設定するメソッド ***//
+    private float setReserveDetail() {
+        //*** 申請者の氏名－＞ 社員IDに変換して、予約インスタンスにセットする ***//
+        reserve.setRe_applicant(Util.returnEmpId(reserve.getRe_applicant()));
+
+        Integer sumPriority = 0;
+        // TODO: 2017/10/06 会議目的優先度をどう処理するか考察
+
+        //*** 参加者の優先度の合計を算出する ***//
+        for (Person p : reserve.getRe_member()) {
+            if (p instanceof Employee) {                //*** 社員クラス ***//
+                //***  ***//
+                sumPriority += Integer.valueOf(((Employee) p).getPos_priority());
+            } else if (p instanceof OutEmployee) {      //*** 社外者クラス ***//
+                //***  ***//
+                sumPriority += Integer.valueOf(((OutEmployee) p).getPos_priority());
+            }
+        }
+        //*** 参加者の優先度合計の平均を算出してその値を返す ***//
+        return sumPriority / reserve.getRe_member().size();
+    }
 }

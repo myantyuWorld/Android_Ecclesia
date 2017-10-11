@@ -124,6 +124,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     private Paint p_myConference;           //*** 自分の会議用 ***//
     private Paint p_myConference_waku;
     private Paint p_otherConference;        //*** 他人の会議用 ***//
+    private Paint p_detail;                 //*** RECT内部の、社内社外・会議目的描画 ***//
 
     public static float x = 0;    // タップしたｘ座標
     public static float y = 0;    // タップしたｙ座標
@@ -140,10 +141,12 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         super(context);
         init();
     }
+
     public TimeTableView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
+
     public TimeTableView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
@@ -158,11 +161,10 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         //*** 特別ABC列の色の描画 ***//
         // l t r b
 
-        c.drawRect(216, 3, 432, 2000, tokubetsu );
+        c.drawRect(216, 3, 432, 2000, tokubetsu);
         c.drawRect(432, 3, 648, 2000, roomA);
         c.drawRect(648, 3, 864, 2000, roomB);
         c.drawRect(864, 3, 1078, 2000, roomC);
-
 
 
         timeFloats = new float[24];
@@ -178,8 +180,6 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         for (int i = 1; i <= 4; i++) {
             c.drawLine(i * x, 0, i * x, room_y, p);
         }
-
-
 
 
         // 会議室名の描画
@@ -203,6 +203,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
 
     }
+
     //*** 会議を角丸で描画するメソッド ***//
     private void onDrawConference(Canvas c) {
         int cnt = 0;
@@ -247,11 +248,19 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             // 予約会議の描画
             c.drawRoundRect(rectF, 30, 30, p_myConference);
             c.drawRoundRect(rectF, 30, 30, p_myConference_waku);
-            // TODO: 2017/10/04 社内・社外の文字を、RECT内部に描画するロジックの実装
-            cnt++;
+
+            //*** RECTの高さが、100dp以上ならば、描画を行う ***//
+            if (rectF.bottom - rectF.top >= 100) {
+                // TODO: 2017/10/04 社内・社外の文字を、RECT内部に描画するロジックの実装
+                float margin = 20;
+                c.drawText(r.getRe_switch().contains("0") ? "社内" : "社外", rectF.centerX(), rectF.centerY() - margin, p_detail);  //***  ***//
+                c.drawText(r.getRe_purpose_name(), rectF.centerX(), rectF.centerY() + margin, p_detail);                           //***  ***//
+            }
+            cnt++;  //***  ***//
         }
 
     }
+
     //*** 開始終了時刻・会議室を基に、描画すべき座標を返すメソッド ***//
     private RectF retRectCooperation(String sTime, String eTime, String room_id) {
         float sX = 0, eX = 0, sY = 0, eY = 0;
@@ -290,6 +299,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
         return new RectF(sX, sY, eX, eY);
     }
+
     //*** 時間割の枠の描画 ***//
     private void onDrawTimeTable(Canvas canvas) {
         float x = 216;
@@ -307,6 +317,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         }
         canvas.drawRect(ZERO, y_timetable, MAX_WIDTH, y_timetable + 48 * y, p);
     }
+
     //*** Paintクラスの初期化処理メソッド ***//
     private void init() {
         Log.d("call", "call TimeTableView->init()");
@@ -379,7 +390,14 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         p_otherConference.setColor(Color.parseColor("#f5f5f5"));    //*** 再考の余地あり ***//
         p_otherConference.setStyle(Paint.Style.FILL);
         p_otherConference.setStrokeWidth(10);
+
+        //*** RECT内部の社内社外・会議目的 描画用 ***//
+        p_detail = new Paint();
+        p_detail.setTextSize(20);
+        p_detail.setTypeface(Typeface.MONOSPACE);
+        p_detail.setColor(Color.BLACK);
     }
+
     //*** 画面タッチ時のイベント ***//
     @Override
     public boolean onTouchEvent(MotionEvent e) {
@@ -398,6 +416,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
         return true;
     }
+
     //*** 再描画を行うメソッド ***//
     public void reView(String emp_id, String date) {
         // DO: 2017/09/06 review()コールで、引数の日付をデータベース検索をかけたのち、自身のreserveInfoに格納する-> invalidate() で描画する
@@ -453,6 +472,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         c.close();
         invalidate();
     }
+
     //*** タップした会議の予約ＩＤを返すメソッド ***//
     public String getSelectedReserve() {
         Log.d("call", "TimeTableView->getSelectedReserve()");
@@ -507,6 +527,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         Log.d("call", "Re_id : " + re_id);
         return re_id;
     }
+
     //*** x y の値を基に、ユーザがタッチしたのか否かを返すメソッド ***//
     public boolean isTouched() {
 //        Log.d("call", "call TimeTableView->isTouched()");
@@ -521,19 +542,23 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         Log.d("call", "onDown");
         return true;
     }
+
     @Override
     public void onShowPress(MotionEvent e) {
 
     }
+
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
         Log.d("call", "onSingleTapUp!");
         return true;
     }
+
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         return false;
     }
+
     @Override
     public void onLongPress(MotionEvent e) {
         Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
@@ -548,21 +573,25 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         bundle.putString("re_id", re_id);       //*** Bundle に予約IDを渡す ***//
         cancelDialog.show(ReserveListActivity.getInstance().getFragmentManager(), "cancel");
     }
+
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         Log.d("call", "onFling");
         return false;
     }
+
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
         Log.d("call", "onSingleTapConfirmed");
         return false;
     }
+
     @Override
     public boolean onDoubleTap(MotionEvent e) {
         Log.d("call", "onDoubleTap");
         return false;
     }
+
     @Override
     public boolean onDoubleTapEvent(MotionEvent e) {
         Log.d("call", "onDoubleTapEvent");

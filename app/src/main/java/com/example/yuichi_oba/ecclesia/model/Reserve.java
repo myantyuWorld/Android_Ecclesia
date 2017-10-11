@@ -36,6 +36,7 @@ public class Reserve implements Serializable{
     private String re_applicant;            //*** 申請者 ***//
     private String re_room_id;              //*** 会議室ID ***//
     private String re_room_name;            //*** 会議室名 ***//
+
 //    private List<Employee> re_member;
     private List<Person> re_member;         //*** 参加者を保持するための、ポリモー使用のリスト ***//
     private float[] coop;                   //*** 予約情報の座標情報を保持するfloat型配列 ***//

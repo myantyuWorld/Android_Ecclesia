@@ -49,8 +49,8 @@ public class Hint {
      //                setResult(RESULT_OK, intent);   リクエストコード（任意）, intentのインスタンス
      //                finish();
 
-          からの
-          呼び出しもとで、onActivityResultをオーバーライドする
+     からの
+     呼び出しもとで、onActivityResultをオーバーライドする
      * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
      * _/_/_/
      * _/_/_/           Bundleへの値わたし
@@ -105,26 +105,59 @@ public class Hint {
      canvas.drawPoint(100, 100 + i, mPaint);
      }
      */
+    //*** DB INSERTのやり方 ***//
 
-    //*** HCP 画面担当一覧 ***//
-     //*** ReserveChangeActivity        しゃま***//
-     //*** ReserveListActivity          オレ***//
-     //*** HistorySearchActivity        ぐちお ***//
-     //*** ReserveCheckActivity         くに***//
-     //*** ReserveConfirmActivity       くに***//
-     //*** AddMemberActivity            ヨッシー ***//
-     //*** ReserveActivity              にしかわ ***//
+//    ContentValues c = new ContentValues();                //*** 挿入したいデータをセットする ***//
+//        c.put("re_id",reserve.getRe_id());
+//        c.put("re_overview",reserve.getRe_name());
+//        c.put("re_startday",reserve.getRe_startDay());
+//        c.put("re_endday",reserve.getRe_endDay());
+//        c.put("re_starttime",reserve.getRe_startTime());
+//        c.put("re_endtime",reserve.getRe_endTime());
+//        c.put("re_switch",reserve.getRe_switch());
+//        c.put("re_fixture",reserve.getRe_fixtures());
+//        c.put("re_remarks",reserve.getRe_remarks());
+//        c.put("re_priority",priorityAverage);
+//        c.put("com_id","");
+//        c.put("emp_id",reserve.getRe_applicant());
+//        c.put("room_id",reserve.getRe_room_id());
+//        c.put("pur_id",reserve.getRe_purpose_id());
+//        c.put("reapplicant",reserve.getRe_applicant());
+//
+//    SQLiteOpenHelper helper = new DB(getApplicationContext());
+//    SQLiteDatabase db = helper.getWritableDatabase();     //*** 書き込みモードで、DBを取得する ***//
+//        db.insert("t_reserve",null,c);                    ///*** テーブル名、nullの処理方法、データセット（上記のインスタンス） ***//
+//        db.close();                                       //*** DBを閉じる ***//
 
-     // 今更命名規則
+     // -------------------------------------------------------------------------------------------------
+    //*** HCP 画面担当一覧 ***//　                                 ひな形完成          HCP完成
+     // -------------------------------------------------------------------------------------------------
+    //*** ReserveChangeActivity         しゃま***//　
+    //*** ReserveListActivity           オレ***//　                 　OK
+     //*** TimeTableView ***//          おれ　                      　
+     //*** RoomView ***//               おれ　                        OK                OK
+    //*** HistorySearchActivity         ぐちお ***//　
+     //*** HistorySearch ***//          ぐちお　
+    //*** ReserveCheckActivity          くに***//　                 　OK
+    //*** ReserveConfirmActivity        くに***//　                 　OK
+     //*** Reserve_confirm ***//        くに       　
+     //*** ReserveCheck ***//           くに　
+    //*** AddMemberActivity             ヨッシー ***//　              OK
+     //*** AddMember ***//              よっしー　                    OK                OK
+     //*** ReserveView ***//            よっしー　                    OK                OK
+    //*** ReserveActivity               よっしー（にしかわ） ***//　  OK
+     // --------------------------------------------------------------------------------------------------
 
-          // 画面名（略称。アンダーバーごとに頭文字だけ）_部品名_その内容
+    // 今更命名規則
 
-               // content_reserve の確定ボタンなら cr_btn_correct みたいな感じ
-               // 略して同じになる画面は最後の部分を頭文字ではなくフルで書く
-               // (content_reserve_chack と content_reserve_change は両方crcになるので、acchange と accheckという具合)
+    // 画面名（略称。アンダーバーごとに頭文字だけ）_部品名_その内容
 
-               // 部品名（基本三文字か二文字に略す）
-               // ボタン btn     テキストビュー txt    エディットテキスト etxt      スピナー sp
-               // スイッチ sw     リストビュー lis    サーチビュー sea
-               // ラジオボタン rbt  ラジオボタングループ     rbg
+    // content_reserve の確定ボタンなら cr_btn_correct みたいな感じ
+    // 略して同じになる画面は最後の部分を頭文字ではなくフルで書く
+    // (content_reserve_chack と content_reserve_change は両方crcになるので、acchange と accheckという具合)
+
+    // 部品名（基本三文字か二文字に略す）
+    // ボタン btn     テキストビュー txt    エディットテキスト etxt      スピナー sp
+    // スイッチ sw     リストビュー lis    サーチビュー sea
+    // ラジオボタン rbt  ラジオボタングループ     rbg
 }
