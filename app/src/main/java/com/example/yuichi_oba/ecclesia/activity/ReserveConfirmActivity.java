@@ -35,7 +35,10 @@ import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import java.util.Calendar;
@@ -63,6 +66,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     public static String gamen;
     public static Reserve reserve;
     private Button btn_confirm;
+    Spinner spTime;
     // 内部クラスからgetApplicationContextするためのやつ(普通にやるとno-staticで怒られる)
     private static ReserveConfirmActivity instance = null;
     // デバッグ用
@@ -121,6 +125,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+
 //                            Toast.makeText(getActivity(), "早期退出", Toast.LENGTH_SHORT).show();
                             //*** DBへ更新をかけるために用意 ***//
                             ContentValues con = new ContentValues();
@@ -200,6 +205,15 @@ public class ReserveConfirmActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialogInterface, int i) {
                             //*** 延長情報をDBへ投げるために用意 ***//
                             ContentValues con = new ContentValues();
+                            //*** 延長による終了時刻を計算 ***//
+                            SimpleDateFormat endFor = new SimpleDateFormat("HH:mm");
+                            SimpleDateFormat exFor = new SimpleDateFormat("mm");
+                            try {
+                                Date end = endFor.parse(reserve.getRe_endTime());
+                                Date ex = exFor.parse(exTime);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                             //*** DBにインサートする延長情報をセット ***//
                             con.put("re_id", reserve.getRe_id());
                             con.put("ex_startDay", reserve.getRe_startDay());
@@ -234,6 +248,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "ReserveConfirmActivity->onCreate()");
+
+//        spTime = (Spinner) findViewById(R.id.extentionDia_time);
 
         //*** 前画面からの引数を受け取る ***//
         Intent intent = getIntent();
