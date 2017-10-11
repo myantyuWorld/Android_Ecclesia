@@ -283,15 +283,15 @@ public class HistorySearchActivity extends AppCompatActivity
         //会社用のデータベース
         while (c_list.moveToNext()) {
             Reserve li = new Reserve();
+            Person p = new Person();
             li.setId(c_list.getLong(ID));
             li.setRe_name(c_list.getString(GAIYOU));
             li.setRe_startDay(c_list.getString(DAY));
 //            li.setRe_company(c_list.getString(COM_MEMBER));
-            //*** 会社のメンバーをセットする***//
-//            li.setRe_member
+//            li.setRe_member(c_list.getClass(COM_MEMBER));
             li.setRe_company(c_list.getString(26));
             li.setRe_purpose_name(c_list.getString(28));
-            Log.d("call", (c_list.getString(GAIYOU)) + " : " + c_list.getString(DAY) + " : " + c_list.getString(26) + " : " + c_list.getString(28) + " : " + c_list.getString(COM_MEMBER));
+            Log.d("call", (c_list.getString(GAIYOU)) + " : " + c_list.getString(DAY) + " : " + c_list.getString(26) + " : " + c_list.getString(28));
             // addするメソッドを書く
             listItems.add(li);
         }
@@ -339,8 +339,8 @@ public class HistorySearchActivity extends AppCompatActivity
         for(String s:strings){
             Log.d("call",s);
         }
-        Spinner sp = (Spinner) findViewById(R.id.ahs_sp_purpose);
         //スピナーを取得
+        Spinner sp = (Spinner) findViewById(R.id.ahs_sp_purpose);
         //
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item,strings);
@@ -392,11 +392,25 @@ public class HistorySearchActivity extends AppCompatActivity
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        //ListItemとレイアウトとを関連付け
-        MyListAdapter adapter1 = new MyListAdapter(this);
+        //*** ListItemとレイアウトとを関連付け ***//
+        final MyListAdapter adapter1 = new MyListAdapter(this);
         listView = (ListView) findViewById(R.id.ahs_lis_history);
         adapter1.setItemList(listItems);
         listView.setAdapter(adapter1);
+
+
+        //*** リスト項目をタップした時の処理を定義 ***//
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //*** 中身はまだ考え中 ***//
+
+                //*** 画面遷移のインテント作成中
+                //Intent i = new Intent(this,遷移先画面のクラスを書く);
+                //*** アクティビティを起動 ***//
+                //startActivity(i);
+            }
+        });
 
         //フィルタ機能を有効化
         listView.setTextFilterEnabled(true);

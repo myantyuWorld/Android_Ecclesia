@@ -20,6 +20,7 @@ import java.util.List;
 public class Reserve implements Serializable{
 
     //*** Field ***//
+    private  long id;                       //*** ID(long型)***//
     private String re_id;                   //*** 予約ID ***//
     private String re_name;                 //*** 概要 ***//
     private String re_startDay;             //*** 開始日時 ***//
@@ -148,6 +149,14 @@ public class Reserve implements Serializable{
     }
     public void setRe_room_name(String re_room_name) {
         this.re_room_name = re_room_name;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     //*** --- SELF MADE METHOD --- 参加者優先度を計算するメソッド ***//
