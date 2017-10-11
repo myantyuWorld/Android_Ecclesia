@@ -140,8 +140,8 @@ public class Hint {
      //*** HistorySearch ***//          ぐちお　
     //*** ReserveCheckActivity          くに***//　                 　OK
     //*** ReserveConfirmActivity        くに***//　                 　OK
-     //*** Reserve_confirm ***//        くに       　
-     //*** ReserveCheck ***//           くに　
+     //*** Reserve_confirm ***//        くに       　                                   OK
+     //*** ReserveCheck ***//           くに　                                          OK
     //*** AddMemberActivity             ヨッシー ***//　              OK
      //*** AddMember ***//              よっしー　                    OK                OK
      //*** ReserveView ***//            よっしー　                    OK                OK
