@@ -126,6 +126,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
                             ContentValues con = new ContentValues();
                             //*** セッターで終了時刻更新 ***//;
                             reserve.setRe_endTime("早期退出を押した時刻が入ります");
+                            //*** 早期退出時間を計算 ***//
+
                             //*** 早期退出による終了時刻をセット ***//
                             con.put("re_endTime", reserve.getRe_endTime());
                             //*** where句を用意 ***//
