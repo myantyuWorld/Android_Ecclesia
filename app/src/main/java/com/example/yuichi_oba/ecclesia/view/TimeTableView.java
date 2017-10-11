@@ -224,11 +224,11 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         cnt = 0;
         //*** 自分の参加会議に対する処理 ***//
         for (Reserve r : reserveInfo) {
-            String sTime = r.getRe_startTime();
-            String eTime = r.getRe_endTime();
-            String room_id = r.getRe_room_id();
+            String sTime = r.getRe_startTime();                         //*** 開始時刻の取得 ***//
+            String eTime = r.getRe_endTime();                           //*** 終了時刻の取得 ***//
+            String room_id = r.getRe_room_id();                         //*** 会議室ＩＤの取得 ***//
 
-            RectF rectF = retRectCooperation(sTime, eTime, room_id);
+            RectF rectF = retRectCooperation(sTime, eTime, room_id);    //***  ***//
             // 予約会議の座標情報を記録する
             reserveInfo.get(cnt).setCoop(new float[]{rectF.left, rectF.top, rectF.right, rectF.bottom});
 //            switch (room_id) {
@@ -253,10 +253,11 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             if (rectF.bottom - rectF.top >= 100) {
                 // TODO: 2017/10/04 社内・社外の文字を、RECT内部に描画するロジックの実装
                 float margin = 20;
-                c.drawText(r.getRe_switch().contains("0") ? "社内" : "社外", rectF.centerX(), rectF.centerY() - margin, p_detail);  //***  ***//
-                c.drawText(r.getRe_purpose_name(), rectF.centerX(), rectF.centerY() + margin, p_detail);                           //***  ***//
+                c.drawText(r.getRe_switch().contains("0") ? "[社内]" : "[社外]",
+                        rectF.centerX(), rectF.centerY() - margin, p_detail);                               //*** 社内社外区分の描画 ***//
+                c.drawText(r.getRe_purpose_name(), rectF.centerX(), rectF.centerY() + margin, p_detail);    //*** 会議目的名の描画 ***//
             }
-            cnt++;  //***  ***//
+            cnt++;  //*** 次の会議を見るために、添え字をインクリする ***//
         }
 
     }
@@ -393,9 +394,9 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
         //*** RECT内部の社内社外・会議目的 描画用 ***//
         p_detail = new Paint();
-        p_detail.setTextSize(30);
+        p_detail.setTextSize(25);
         p_detail.setTextAlign(Paint.Align.CENTER);
-        p_detail.setTypeface(Typeface.MONOSPACE);
+        p_detail.setTypeface(Typeface.DEFAULT_BOLD);
         p_detail.setColor(Color.BLACK);
     }
 
