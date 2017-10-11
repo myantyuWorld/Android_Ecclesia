@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+
 /*************************************************************************************
  *
  *                                  Hint!
@@ -116,6 +117,7 @@ public class HistorySearchActivity extends AppCompatActivity
     private class Purpose {
         private String pur_id;
         private String pur_name;
+
         public String getPur_id() {
             return pur_id;
         }
@@ -133,6 +135,7 @@ public class HistorySearchActivity extends AppCompatActivity
         }
 
     }
+
     private class Company {
         private String com_id;
         private String com_name;
@@ -154,7 +157,7 @@ public class HistorySearchActivity extends AppCompatActivity
         }
     }
 
-    private class MyListAdapter extends BaseAdapter{
+    private class MyListAdapter extends BaseAdapter {
         private Context context;
         private ArrayList<Reserve> data = null;
         private int resource = 0;
@@ -176,6 +179,7 @@ public class HistorySearchActivity extends AppCompatActivity
         public void setItemList(ArrayList<Reserve> data) {
             this.data = data;
         }
+
         //データの個数を取得
         @Override
         public int getCount() {
@@ -252,6 +256,7 @@ public class HistorySearchActivity extends AppCompatActivity
     List<Purpose> purpose;
     List<Company> companiesy;
     ArrayList<Reserve> listItems;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "HistorySearchActivity->onCreate()");
@@ -277,7 +282,7 @@ public class HistorySearchActivity extends AppCompatActivity
                 " inner join t_member y on x.re_id = y.re_id" +
                 " inner join m_out_emp as a on y.mem_id = a.outemp_id" +
                 " inner join m_company as b on a.com_id = b.com_id" +
-                " inner join m_purpose as p on p.pur_id = x.pur_id"+
+                " inner join m_purpose as p on p.pur_id = x.pur_id" +
                 " inner join m_room as c on c.room_id = x.room_id", new String[]{});
 
         //会社用のデータベース
@@ -287,8 +292,8 @@ public class HistorySearchActivity extends AppCompatActivity
             li.setRe_name(c_list.getString(GAIYOU));
             li.setRe_startDay(c_list.getString(DAY));
 //            li.setRe_company(c_list.getString(COM_MEMBER));
-            //*** 会社のメンバーをセットする***//
 //            li.setRe_member
+
             li.setRe_company(c_list.getString(26));
             li.setRe_purpose_name(c_list.getString(28));
             Log.d("call", (c_list.getString(GAIYOU)) + " : " + c_list.getString(DAY) + " : " + c_list.getString(26) + " : " + c_list.getString(28) + " : " + c_list.getString(COM_MEMBER));
@@ -296,6 +301,8 @@ public class HistorySearchActivity extends AppCompatActivity
             listItems.add(li);
         }
         c_list.close();
+        //*** 会社のメンバーをセットする***//
+
 
         //リストに表示するデータを準備
 //        String pupose[] = {"定例会","商談"};
@@ -321,7 +328,7 @@ public class HistorySearchActivity extends AppCompatActivity
 
 
         //データベース検索
-        purpose= new ArrayList<>();
+        purpose = new ArrayList<>();
         List<String> strings = new ArrayList<>();
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -336,14 +343,14 @@ public class HistorySearchActivity extends AppCompatActivity
         }
         c.close();
 
-        for(String s:strings){
-            Log.d("call",s);
+        for (String s : strings) {
+            Log.d("call", s);
         }
         Spinner sp = (Spinner) findViewById(R.id.ahs_sp_purpose);
         //スピナーを取得
         //
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item,strings);
+                android.R.layout.simple_spinner_dropdown_item, strings);
         sp.setAdapter(adapter);
         //スピナーに対してのイベントリスナーを登録
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -352,13 +359,15 @@ public class HistorySearchActivity extends AppCompatActivity
                 Spinner sp = (Spinner) parent;
                 //選択項目を取得し、その値で検索をする？それとトースト表示
 
-                Toast.makeText(HistorySearchActivity.this,String.format("選択目的 : %s",sp.getSelectedItem()),
+                Toast.makeText(HistorySearchActivity.this, String.format("選択目的 : %s", sp.getSelectedItem()),
                         Toast.LENGTH_SHORT).show();
-                Log.d("call","");
+                Log.d("call", "");
             }
+
             //項目が選択されなかったときの処理(今は空)
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         //データベース検索(会社名)
@@ -369,14 +378,14 @@ public class HistorySearchActivity extends AppCompatActivity
         Cursor cursor = db2.rawQuery("select * from m_company", new String[]{});
         while (cursor.moveToNext()) {
             strings1.add(cursor.getString(1));
-            Log.d("call",cursor.getString(1));
+            Log.d("call", cursor.getString(1));
         }
 
         //スピナーを取得
         Spinner sp_company = (Spinner) findViewById(R.id.ahs_sp_company);
         //adapterを宣言
         ArrayAdapter<String> adapter_com = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item,strings1);
+                android.R.layout.simple_spinner_dropdown_item, strings1);
         sp_company.setAdapter(adapter_com);
         Log.d("call", "");
         //スピナーに対してのイベントリスナーを登録
@@ -385,11 +394,12 @@ public class HistorySearchActivity extends AppCompatActivity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Spinner sp = (Spinner) parent;
                 //スピナーに対しての処理
-                Toast.makeText(HistorySearchActivity.this,String.format("選択会社名 : %s",sp.getSelectedItem()),Toast.LENGTH_SHORT).show();
+                Toast.makeText(HistorySearchActivity.this, String.format("選択会社名 : %s", sp.getSelectedItem()), Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         //ListItemとレイアウトとを関連付け
@@ -411,7 +421,7 @@ public class HistorySearchActivity extends AppCompatActivity
         });
 
         //serchviewの検索ボックスに入力された時の処理
-        searchView  = (SearchView) findViewById(R.id.ahs_sea_freeword);
+        searchView = (SearchView) findViewById(R.id.ahs_sea_freeword);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
