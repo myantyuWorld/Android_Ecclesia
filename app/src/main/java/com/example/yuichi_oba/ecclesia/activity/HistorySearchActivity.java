@@ -283,7 +283,7 @@ public class HistorySearchActivity extends AppCompatActivity
         //会社用のデータベース
         while (c_list.moveToNext()) {
             Reserve li = new Reserve();
-            li.setId(c_list.getLong(ID));
+//            li.setId(c_list.getLong(ID));
             li.setRe_name(c_list.getString(GAIYOU));
             li.setRe_startDay(c_list.getString(DAY));
 //            li.setRe_company(c_list.getString(COM_MEMBER));
@@ -393,7 +393,7 @@ public class HistorySearchActivity extends AppCompatActivity
         });
 
         //ListItemとレイアウトとを関連付け
-        MyListAdapter adapter1 = new MyListAdapter(this);
+        final MyListAdapter adapter1 = new MyListAdapter(this);
         listView = (ListView) findViewById(R.id.ahs_lis_history);
         adapter1.setItemList(listItems);
         listView.setAdapter(adapter1);

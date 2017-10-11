@@ -393,7 +393,8 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
         //*** RECT内部の社内社外・会議目的 描画用 ***//
         p_detail = new Paint();
-        p_detail.setTextSize(20);
+        p_detail.setTextSize(30);
+        p_detail.setTextAlign(Paint.Align.CENTER);
         p_detail.setTypeface(Typeface.MONOSPACE);
         p_detail.setColor(Color.BLACK);
     }
@@ -420,6 +421,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     //*** 再描画を行うメソッド ***//
     public void reView(String emp_id, String date) {
         // DO: 2017/09/06 review()コールで、引数の日付をデータベース検索をかけたのち、自身のreserveInfoに格納する-> invalidate() で描画する
+
         Log.d("call", "TimeTableView->reView()");
         SQLiteOpenHelper helper = new DB(getContext());
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -428,18 +430,18 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         reserveInfo.clear();
         while (c.moveToNext()) {
             // 予約情報のインスタンス生成
-            // TODO: 2017/09/15 ここで、検索結果のすべてを記録する
             Reserve r = new Reserve();
-            r.setRe_id(c.getString(RE_ID));
-            r.setRe_name(c.getString(1));
-            r.setRe_startDay(c.getString(2));
-            r.setRe_endDay(c.getString(3));
-            r.setRe_startTime(c.getString(4));
-            r.setRe_endTime(c.getString(5));
-            r.setRe_switch(c.getString(6));
-            r.setRe_fixtures(c.getString(7));
-            r.setRe_remarks(c.getString(8));
-            r.setRe_room_id(c.getString(10));
+            r.setRe_id(c.getString(RE_ID));         //*** 予約ID ***//
+            r.setRe_name(c.getString(1));           //*** 概要 ***//
+            r.setRe_startDay(c.getString(2));       //*** 開始日時 ***//
+            r.setRe_endDay(c.getString(3));         //*** 終了日時 ***//
+            r.setRe_startTime(c.getString(4));      //*** 開始時刻 ***//
+            r.setRe_endTime(c.getString(5));        //*** 終了時刻 ***/
+            r.setRe_switch(c.getString(6));         //*** 社内社外区分 ***//
+            r.setRe_fixtures(c.getString(7));       //*** 備品 ***//
+            r.setRe_remarks(c.getString(8));        //*** 備考 ***//
+            r.setRe_room_id(c.getString(10));       //*** 会議室ID ***//
+            r.setRe_purpose_name(c.getString(19));  //*** 会議目的名 ***//
 //            r.setRe_pur_priority(c.getString(18));
             // TODO: 2017/10/04 会議目的優先度の取得のロジックの実装 
 
