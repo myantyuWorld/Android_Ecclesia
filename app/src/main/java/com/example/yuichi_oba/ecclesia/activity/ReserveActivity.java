@@ -194,7 +194,9 @@ public class ReserveActivity extends AppCompatActivity
 
         //*** 前画面からのオブジェクトをもらう（Employeeクラスのインスタンス） ***//
         Intent intent = getIntent();
-        employee = (Employee) intent.getSerializableExtra("emp");
+        employee = (Employee) intent.getSerializableExtra("emp");   //***  ***//
+        String date = intent.getStringExtra("date");                //***  ***//
+
 
 
         super.onCreate(savedInstanceState);
@@ -228,7 +230,7 @@ public class ReserveActivity extends AppCompatActivity
             }
         });
 
-        init();
+        init(date);
     }
 
     //*** 開いたアクティビティ(AddMemberActivity)から何かしらの情報を受け取る ***//
@@ -319,27 +321,29 @@ public class ReserveActivity extends AppCompatActivity
      *
      *          自作メソッド
      *
-     * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/*/
+     * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+     * @param date*/
     //*** --- SELF MADE METHOD --- 各ウィジェットの初期化処理メソッド ***//
-    private void init() {
+    private void init(String date) {
         mapPurpose = new HashMap<>();
         mapRoom = new HashMap<>();
 
-        edOverView = (EditText) findViewById(R.id.ar_etxt_overview);
-        btStartDay = (Button) findViewById(R.id.ar_btn_start_day);
-        btStartTime = (Button) findViewById(R.id.ar_btn_re_start_time);
-        btEndDay = (Button) findViewById(R.id.ar_btn_end_day);
-        btEndTime = (Button) findViewById(R.id.ar_btn_re_end_time);
-        txtApplicant = (TextView) findViewById(R.id.ar_txt_applicant);
-        swSwitch = (Switch) findViewById(R.id.ar_sw_switch);
-        sp_member = (Spinner) findViewById(R.id.ar_sp_member);
-        sp_purpose = (Spinner) findViewById(R.id.ar_sp_purpose);
-        ar_sp_room = (Spinner) findViewById(R.id.ar_sp_room);
-        edFixture = (EditText) findViewById(R.id.ar_etxt_fixture);
-        edRemark = (EditText) findViewById(R.id.ar_etxt_remark);
-        btReConfirm = (Button) findViewById(R.id.ar_btn_confirm);
+        edOverView = (EditText) findViewById(R.id.ar_etxt_overview);        //***  ***//
+        btStartDay = (Button) findViewById(R.id.ar_btn_start_day);          //***  ***//
+        btStartTime = (Button) findViewById(R.id.ar_btn_re_start_time);     //***  ***//
+        btEndDay = (Button) findViewById(R.id.ar_btn_end_day);              //***  ***//
+        btEndTime = (Button) findViewById(R.id.ar_btn_re_end_time);         //***  ***//
+        txtApplicant = (TextView) findViewById(R.id.ar_txt_applicant);      //***  ***//
+        swSwitch = (Switch) findViewById(R.id.ar_sw_switch);                //***  ***//
+        sp_member = (Spinner) findViewById(R.id.ar_sp_member);              //***  ***//
+        sp_purpose = (Spinner) findViewById(R.id.ar_sp_purpose);            //***  ***//
+        ar_sp_room = (Spinner) findViewById(R.id.ar_sp_room);               //***  ***//
+        edFixture = (EditText) findViewById(R.id.ar_etxt_fixture);          //***  ***//
+        edRemark = (EditText) findViewById(R.id.ar_etxt_remark);            //***  ***//
+        btReConfirm = (Button) findViewById(R.id.ar_btn_confirm);           //***  ***//
 
-
+        btStartDay.setText(date);   //*** 開始日時の設定 ***//
+        btEndDay.setText(date);     //*** 終了時刻の設定 ***//
 //        reserveInfo = new ReserveInfo();
         //*** 申請者の設定 ***//
         TextView txtApplicant = (TextView) findViewById(R.id.ar_txt_applicant);
