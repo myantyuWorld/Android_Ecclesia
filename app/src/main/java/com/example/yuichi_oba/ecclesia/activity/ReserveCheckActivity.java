@@ -104,9 +104,13 @@ implements NavigationView.OnNavigationItemSelectedListener{
     //*** SelfMadeMethod ***//
     //*** 実際にDBの予約情報を書き換える(現在エラー中) ***//
     public void reserveChange() {
+        //*** 必要なインスタンスを用意 ***//
+        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
+        //*** トランザクション開始 ***//
+        db.beginTransaction();
         //*** DBに変更をかけるためのクラス ***//
         ContentValues con = new ContentValues();
-
         //*** 書き換えるカラム、書き換える情報の指定 ***//
         con.put("re_overview", checkRes.getRe_name());
         con.put("re_startday", checkRes.getRe_startDay());
@@ -120,19 +124,17 @@ implements NavigationView.OnNavigationItemSelectedListener{
         con.put("emp_id", checkRes.getRe_applicant());
         con.put("por_id", checkRes.getRe_purpose_id());
         con.put("room_id", checkRes.getRe_room_id());
-
         //*** where句を用意 ***//
         String where = "re_id = ?";
         //*** ?に入れるものを指定する ***//
         String whereArgs[] = new String[ONE];
         whereArgs[ZERO] = checkRes.getRe_id();
-
-        //*** 必要なインスタンスを用意 ***//
-        SQLiteOpenHelper helper = new DB(getApplicationContext());
-        SQLiteDatabase db = helper.getWritableDatabase();
-
         //*** アップデートを掛けに行く ***//
         db.update("t_extension", con, where, whereArgs);
+        //*** コミットをかける ***//
+        db.setTransactionSuccessful();
+        //*** トランザクション終了 ***//
+        db.endTransaction();
     }
 
     //*** 変更成功通知ダイアログ ***//
