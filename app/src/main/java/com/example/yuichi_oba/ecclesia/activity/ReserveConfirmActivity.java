@@ -6,7 +6,6 @@ import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -21,11 +20,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
@@ -36,15 +33,13 @@ import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
-import java.sql.ResultSet;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import java.util.Calendar;
-
+import static com.example.yuichi_oba.ecclesia.tools.DB.db;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
@@ -493,54 +488,31 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
         //*** 申請者の氏名－＞ 社員IDに変換して、予約インスタンスにセットする ***//
         reserve.setRe_applicant(Util.returnEmpId(reserve.getRe_applicant()));
+        // TODO: 2017/10/13 会議時間帯の重複をチェックする
+        // TODO: 2017/10/13 優先度をチェックする
+        //*** 予約の確定メソッドコールし、予約確定をおこなう ***//
+        int rs = reserve.reserveCorrenct(reserve, setReserveDetail());   //***  ***//
 
 
-        //***  ***//
-        float priorityAverage = setReserveDetail();         //***  ***//
-
-        ContentValues c = new ContentValues();
-        c.put("re_id", reserve.getRe_id());                 //***  ***//
-        c.put("re_overview", reserve.getRe_name());         //***  ***//
-        c.put("re_startday", reserve.getRe_startDay());     //***  ***//
-        c.put("re_endday", reserve.getRe_endDay());         //***  ***//
-        c.put("re_starttime", reserve.getRe_startTime());   //***  ***//
-        c.put("re_endtime", reserve.getRe_endTime());       //***  ***//
-        c.put("re_switch", reserve.getRe_switch());         //***  ***//
-        c.put("re_fixture", reserve.getRe_fixtures());      //***  ***//
-        c.put("re_remarks", reserve.getRe_remarks());       //***  ***//
-        c.put("re_priority", priorityAverage);              //***  ***//
-        c.put("com_id", "");                                //***  ***//
-        c.put("emp_id", reserve.getRe_applicant());         //***  ***//
-        c.put("room_id", reserve.getRe_room_id());          //***  ***//
-        c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
-        c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
-
-        SQLiteOpenHelper helper = new DB(getApplicationContext());                     //***  ***//
-        SQLiteDatabase db = helper.getWritableDatabase();           //***  ***//
-//        long ret = db.insertOrThrow("t_reserve", null, c);               //***  ***//
-
-
-        db.execSQL("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                new Object[]{
-                        reserve.getRe_id(),
-                        reserve.getRe_name(),
-                        reserve.getRe_startDay(),
-                        reserve.getRe_endDay(),
-                        reserve.getRe_startTime(),
-                        reserve.getRe_endTime(),
-                        reserve.getRe_switch(),
-                        reserve.getRe_fixtures(),
-                        reserve.getRe_remarks(),
-                        priorityAverage,
-                        "aa",
-                        reserve.getRe_applicant(),
-                        reserve.getRe_room_id(),
-                        reserve.getRe_purpose_id(),
-                        reserve.getRe_applicant()
-                });
-
-
-        long ret = 0;
+//        db.execSQL("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+//                new Object[]{
+//                        reserve.getRe_id(),
+//                        reserve.getRe_name(),
+//                        reserve.getRe_startDay(),
+//                        reserve.getRe_endDay(),
+//                        reserve.getRe_startTime(),
+//                        reserve.getRe_endTime(),
+//                        reserve.getRe_switch(),
+//                        reserve.getRe_fixtures(),
+//                        reserve.getRe_remarks(),
+//                        priorityAverage,
+//                        "aa",
+//                        reserve.getRe_applicant(),
+//                        reserve.getRe_room_id(),
+//                        reserve.getRe_purpose_id(),
+//                        reserve.getRe_applicant()
+//                });
+//
         if (ret == -1) {
             Log.d("call", "予約情報のインサート処理失敗!");
         } else {

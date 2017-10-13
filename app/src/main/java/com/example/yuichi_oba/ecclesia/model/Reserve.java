@@ -1,5 +1,6 @@
 package com.example.yuichi_oba.ecclesia.model;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -164,7 +165,16 @@ public class Reserve implements Serializable{
         return 1;
     }
     //*** --- SELF MADE METHOD --- 会議の時間帯の重複をチェックするメソッド ***//
-    public boolean timeDuplicationCheck() {
+    public boolean timeDuplicationCheck(Reserve r) {
+        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+
+        //*** 引数の会議時間と同じ時間帯・会議室の会議を取得する ***//
+
+        //*** 開始時刻の重複がないかチェックする ***//
+
+        //*** 終了時刻の重複がないかチェックする ***//
         return true;
     }
     //*** --- SELF MADE METHOD --- 優先度をチェックするメソッド ***//
@@ -172,8 +182,29 @@ public class Reserve implements Serializable{
         return true;
     }
     //*** --- SELF MADE METHOD --- 予約を確定するメソッド ***//
-    public int reserveCorrenct() {
-        return 1;
+    public int reserveCorrenct(Reserve reserve, float priorityAverage) {
+
+        ContentValues c = new ContentValues();
+        c.put("re_id", reserve.getRe_id());                 //***  ***//
+        c.put("re_overview", reserve.getRe_name());         //***  ***//
+        c.put("re_startday", reserve.getRe_startDay());     //***  ***//
+        c.put("re_endday", reserve.getRe_endDay());         //***  ***//
+        c.put("re_starttime", reserve.getRe_startTime());   //***  ***//
+        c.put("re_endtime", reserve.getRe_endTime());       //***  ***//
+        c.put("re_switch", reserve.getRe_switch());         //***  ***//
+        c.put("re_fixture", reserve.getRe_fixtures());      //***  ***//
+        c.put("re_remarks", reserve.getRe_remarks());       //***  ***//
+        c.put("re_priority", priorityAverage);              //***  ***//
+        c.put("com_id", "");                                //***  ***//
+        c.put("emp_id", reserve.getRe_applicant());         //***  ***//
+        c.put("room_id", reserve.getRe_room_id());          //***  ***//
+        c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
+        c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
+
+        //***  ***//
+        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+
+        return (int) helper.getWritableDatabase().insertOrThrow("t_reserve", null, c);  //***  ***//
     }
     //*** --- SELF MADE METHOD --- 予約をキャンセルするメソッド ***//
     public void reserveCancel(String re_id) {
