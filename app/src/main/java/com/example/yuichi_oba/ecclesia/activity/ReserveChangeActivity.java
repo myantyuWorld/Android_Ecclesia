@@ -69,7 +69,6 @@ public class ReserveChangeActivity extends AppCompatActivity
     String re_id;
     Reserve changeRes ;
     Button editBtn;
-
     public static String[] changes ;
     public static Employee appEmp;
 
