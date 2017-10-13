@@ -1,6 +1,5 @@
 package com.example.yuichi_oba.ecclesia.tools;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -107,6 +106,11 @@ public class Util {
         return p; //*** 役職情報のインスタンスを返す ***//
     }
 
+    /***
+     *
+     * @param posName
+     * @return
+     */
     public static AddMemberActivity.Position returnPositionId(String posName) {
         SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -133,7 +137,9 @@ public class Util {
         SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
 
-        Cursor c = db.rawQuery("select * from m_room", null);
+        Cursor c = db.rawQuery("select * from m_room where room_name = ?",
+                new String[]{roomName});
+
         String roomId = "";
         if (c.moveToNext()) {
             roomId = c.getString(0);    //*** 会議室ID ***//
@@ -141,6 +147,22 @@ public class Util {
         c.close();
 
         return roomId;  //*** 会議室ＩＤを返す ***//
+    }
+
+    public static String returnRoomName(String roomId) {
+        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor c = db.rawQuery("select * from m_room where room_id = ?",
+                new String[]{roomId});
+
+        String roomName = "";
+        if (c.moveToNext()) {
+            roomName = c.getString(0);    //*** 会議室ID ***//
+        }
+        c.close();
+
+        return roomName;//*** 会議室名を返す ***//
     }
     /***
      * 予約テーブルの予約IDの最大値＋１をDB検索して、書式指定して返すメソッド

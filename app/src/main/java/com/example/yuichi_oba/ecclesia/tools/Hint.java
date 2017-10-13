@@ -145,7 +145,7 @@ public class Hint {
     //*** AddMemberActivity             ヨッシー ***//　              OK
      //*** AddMember ***//              よっしー　                    OK                OK
      //*** ReserveView ***//            よっしー　                    OK                OK
-    //*** ReserveActivity               よっしー（にしかわ） ***//　  OK
+    //*** ReserveActivity               よっしー（にしかわ） ***//     OK
      // --------------------------------------------------------------------------------------------------
 
     // 今更命名規則
