@@ -292,7 +292,6 @@ public class HistorySearchActivity extends AppCompatActivity
             Reserve li = new Reserve();
             Person p = new Person();
 
-//            Person p = new Person();
             //*** 今後必要になるためコメントアウト ***//
 //            li.setId(c_list.getLong(ID));
             li.setRe_name(c_list.getString(GAIYOU));
