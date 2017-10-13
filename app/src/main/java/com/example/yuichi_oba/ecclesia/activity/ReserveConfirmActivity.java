@@ -60,7 +60,6 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 // TODO: 2017/09/19 延長ダイアログのレイアウト調整およびデザインの考察 
 public class ReserveConfirmActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    public static String exTime = "";
     //***  ***//
 //    public static Reserve reserve;
     private Employee employee;
@@ -217,7 +216,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     .setPositiveButton(EX, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            try {
+                                String exTime = "";
                                 //*** スピナーで選択された延長時間を代入 ***//
                                 Spinner spTime = (Spinner) layout.findViewById(R.id.extentionDia_time);
                                 exTime = spTime.getSelectedItem().toString();
@@ -233,8 +232,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
                                 Calendar excal = Calendar.getInstance();
                                 Log.d("nowEnd", reserve.getRe_endTime());
                                 //*** フォーマットで変換をかけてCalenderにセット ***//
-                                excal.setTime(endFor.parse(reserve.getRe_endTime()));
-                                Log.d("changeTime", String.valueOf(endFor.parse(reserve.getRe_endTime())));
+                                try {
+                                    excal.setTime(endFor.parse(reserve.getRe_endTime()));
+                                    Log.d("changeTime", String.valueOf(endFor.parse(reserve.getRe_endTime())));
+                                } catch (ParseException e) {
+                                    e.getStackTrace();
+                                }
                                 //*** セットされたCalenderに延長時間を加算する ***//
                                 excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
                                 //*** CalenderをDateに変換 ***//
@@ -247,7 +250,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                                 con.put("ex_startDay", reserve.getRe_startDay());
                                 con.put("ex_startTime", reserve.getRe_startTime());
                                 con.put("ex_endDay", reserve.getRe_endDay());
-//                            con.put("ex_endTime", reserve.getRe_endTime());
+                                con.put("ex_endTime", exTime);
                                 con.put("ex_endtime", exTime);
                                 //*** 延長テーブルにインサートをかける ***//
                                 db.insert("t_extension", null, con);
@@ -258,9 +261,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                                 //*** 延長結果ダイアログを表示 ***//
                                 ExtentResultDialog extentResultDialog = new ExtentResultDialog();
                                 extentResultDialog.show(getFragmentManager(), KEYEX);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+
 //                            //*** スピナーで選択された延長時間を代入 ***//
 //                            Spinner spTime = (Spinner) layout.findViewById(R.id.extentionDia_time);
 //                            exTime = spTime.getSelectedItem().toString();
@@ -308,9 +309,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                         }
                     }).setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            exTime = "";
-                        }
+                        public void onClick(DialogInterface dialog, int which) { }
                     }).create();
         }
 
@@ -404,29 +403,88 @@ public class ReserveConfirmActivity extends AppCompatActivity
         int id = item.getItemId();
 
         Intent intent;
+        //*** 現在時刻取得 ***//
+        Calendar cal = Calendar.getInstance();
+        //*** 比較用Calender ***//
+        Calendar cmp = Calendar.getInstance();
+        //*** フォーマット用意 ***//
+        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy/MM/dd HH：mm");
         // idによって処理を分ける
         switch (id) {
             // 「早期退出」が選択された
             case R.id.option_earlyOut:
-                //*** 早期退出ダイアログを表示 ***//
-                EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
-                earlyOutDialog.show(getFragmentManager(), "out");
+                try {
+                    //*** Calenderにセット ***//
+                    cmp.setTime(timeFormat.parse(reserve.getRe_endDay() + " " + reserve.getRe_endTime()));
+                } catch (ParseException e) {
+                    e.getStackTrace();
+                    break;
+                }
+                //*** 退出しようとしている会議が現在日付・時刻に矛盾していないか ***//
+                if ((cal.get(Calendar.YEAR) == cmp.get(Calendar.YEAR)) && (cal.get(Calendar.MONTH) == cmp.get(Calendar.MONTH)) && (cal.get(Calendar.DAY_OF_MONTH) == cmp.get(Calendar.DAY_OF_MONTH))
+                        && (cal.get(Calendar.HOUR_OF_DAY) <= cmp.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) < cmp.get(Calendar.MINUTE))){
+                    //*** 早期退出ダイアログを表示 ***//
+                    EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
+                    earlyOutDialog.show(getFragmentManager(), "out");
+                } else {
+                    Toast.makeText(this, "早期退出できる会議ではありません", Toast.LENGTH_SHORT).show();
+                    //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
+                    EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
+                    earlyOutDialog.show(getFragmentManager(), "out");
+                }
                 break;
             // 「予約変更」が選択された
             case R.id.option_reserveChange:
                 re_id = reserve.getRe_id();
-                intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
-                intent.putExtra(KEYCHANGE, reserve);
-                intent.putExtra("emp", employee);
-                startActivity(intent);
+                try {
+                    //*** 変更しようとしている会議の開始時間をセット ***//
+                    cmp.setTime(timeFormat.parse(reserve.getRe_startDay() + " " + reserve.getRe_startTime()));
+                } catch (ParseException e) {
+                    e.getStackTrace();
+                    break;
+                }
+                //*** 変更しようとしている会議が現在日付・時刻に矛盾していないか ***//
+                if ((cal.get(Calendar.YEAR) == cmp.get(Calendar.YEAR)) && (cal.get(Calendar.MONTH) == cmp.get(Calendar.MONTH)) && cal.get(Calendar.DAY_OF_MONTH) == cmp.get(Calendar.DAY_OF_MONTH)
+                        && (cal.get(Calendar.HOUR_OF_DAY)) <= cal.get(Calendar.HOUR_OF_DAY) && (cal.get(Calendar.MINUTE) < cmp.get(Calendar.MINUTE))) {
+                    //*** 次画面（ReserveChangeActivity）に予約インスタンスを渡す ***//
+                    intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
+                    intent.putExtra(KEYCHANGE, reserve);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "変更できる会議ではありません", Toast.LENGTH_SHORT).show();
+                    //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
+                    intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
+                    intent.putExtra(KEYCHANGE, reserve);
+                    startActivity(intent);
+                }
 //                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
-                // 予約情報インスタンスを次の画面にオブジェクト渡しする
                 break;
             // 「延長」が選択された
             case R.id.option_extention:
-                //*** 延長ダイアログを表示 ***//
-                ExtentionDialog extentionDialog = new ExtentionDialog();
-                extentionDialog.show(getFragmentManager(), KEYEX);
+                //*** 比較用Calenderその２ ***//
+                Calendar cmp2 = Calendar.getInstance();
+                try {
+                    //*** 延長を試みる会議の開始終了時刻をセット ***//
+                    cmp.setTime(timeFormat.parse(reserve.getRe_startDay() + " " + reserve.getRe_startTime()));
+                    cmp2.setTime(timeFormat.parse(reserve.getRe_endDay() + " " + reserve.getRe_endTime()));
+                } catch (ParseException e) {
+                    e.getStackTrace();
+                    break;
+                }
+                //*** 延長しようとしている会議が現在日付・時刻に矛盾していないか ***//
+                if (((cal.get(Calendar.YEAR) == cmp.get(Calendar.YEAR)) || (cal.get(Calendar.YEAR) == cmp2.get(Calendar.YEAR)))
+                        && ((cal.get(Calendar.MONTH) == cmp.get(Calendar.MONTH)) || (cal.get(Calendar.MONTH) == cmp2.get(Calendar.MONTH)))
+                        && ((cal.get(Calendar.DAY_OF_MONTH) == cmp.get(Calendar.DAY_OF_MONTH)) || (cal.get(Calendar.DAY_OF_MONTH) == cmp2.get(Calendar.DAY_OF_MONTH)))
+                        && (cal.get(Calendar.HOUR_OF_DAY) <= cmp2.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) < cmp2.get(Calendar.MINUTE))) {
+                    //*** 延長ダイアログを表示 ***//
+                    ExtentionDialog extentionDialog = new ExtentionDialog();
+                    extentionDialog.show(getFragmentManager(), KEYEX);
+                } else {
+                    Toast.makeText(this, "延長ができる会議ではありません", Toast.LENGTH_SHORT).show();
+                    //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
+                    ExtentionDialog extentionDialog = new ExtentionDialog();
+                    extentionDialog.show(getFragmentManager(), KEYEX);
+                }
                 break;
         }
         // 選択された結果（項目）を返す
