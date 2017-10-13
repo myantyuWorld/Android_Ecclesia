@@ -211,7 +211,7 @@ public class HistorySearchActivity extends AppCompatActivity
 //            }
 //            ((RelativeLayout)convertView).findViewById(R.id.customview).invalidate();
 //************************************************************************************************
-            
+
             ((TextView) convertView.findViewById(R.id.txt_purpose)).setText(item.getRe_purpose_name());
             ((TextView) convertView.findViewById(R.id.txt_date)).setText(item.getRe_startDay());
             ((TextView) convertView.findViewById(R.id.txt_overview)).setText(item.getRe_name());
