@@ -151,11 +151,9 @@ public class Reserve implements Serializable{
     public void setRe_room_name(String re_room_name) {
         this.re_room_name = re_room_name;
     }
-
     public long getId() {
         return id;
     }
-
     public void setId(long id) {
         this.id = id;
     }
