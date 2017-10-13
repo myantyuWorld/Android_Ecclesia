@@ -168,13 +168,42 @@ public class Reserve implements Serializable{
     public boolean timeDuplicationCheck(Reserve r) {
         SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
+        //*** 引数の会議日と同じ会議をListで取得する ***//
+        Cursor c = db.rawQuery(
+                "select * from t_reserve where re_startday = ? and room_id = ?",
+                new String[]{r.getRe_startDay(), r.getRe_room_id()});
 
+        List<Reserve> list = new ArrayList<>();
+        while (c.moveToNext()) {
+            Reserve reserve = new Reserve();
+            reserve.setRe_startTime(c.getString(4));       //*** 開始時刻 ***//
+            reserve.setRe_endTime(c.getString(5));         //*** 終了時刻 ***//
+            reserve.setRe_purpose_id(c.getString(13));     //*** 会議目的ID ***//
+            reserve.setRe_mem_priority(
+                    Integer.valueOf(c.getString(9)));      //*** 会議の優先度 ***//
 
-        //*** 引数の会議時間と同じ時間帯・会議室の会議を取得する ***//
+            list.add(reserve);  //*** リストに追加 ***//
+        }
+        c.close();
+
+        //*** その日の同じ会議室で会議がない ***//
+        if (list.size() == 0) {
+            return true;        //*** 時間の重複なしを返す ***//
+        }
+
 
         //*** 開始時刻の重複がないかチェックする ***//
+        for (Reserve other : list) {
+            Integer start = Integer.valueOf(other.getRe_startTime().split(":")[0] + other.getRe_startTime().split(":")[1]);
+            Integer end = Integer.valueOf(other.getRe_endTime().split(":")[0] + other.getRe_endTime().split(":")[1]);
+        }
+
 
         //*** 終了時刻の重複がないかチェックする ***//
+        for (Reserve other : list) {
+            Integer start = Integer.valueOf(other.getRe_startTime().split(":")[0] + other.getRe_startTime().split(":")[1]);
+            Integer end = Integer.valueOf(other.getRe_endTime().split(":")[0] + other.getRe_endTime().split(":")[1]);
+        }
         return true;
     }
     //*** --- SELF MADE METHOD --- 優先度をチェックするメソッド ***//
