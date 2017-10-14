@@ -10,9 +10,15 @@ import android.widget.SpinnerAdapter;
 import com.example.yuichi_oba.ecclesia.activity.AddMemberActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class Util {
 
     public static final int COLUMN_INDEX = 1;
+    public static final String DATE_PATTERN = "yyyy/MM/dd HH:mm";
 
     /***
      * 項目引数に渡すと、その項目のインデックスを返すUtilityメソッド
@@ -211,6 +217,20 @@ public class Util {
         return db.rawQuery(args, strArray);
     }
 
+    /***
+     * 引数の文字列を、Calenderクラスのインスタンス化したものを返すメソッド
+     * 引数の渡し方 yyyy/MM/dd HH:mm となるように、args に String.formatで整形して渡す
+     * @param args
+     * @return
+     * @throws ParseException
+     */
+    public static Calendar convertCalenderString(String args) throws ParseException {
+        Date date = new Date((new SimpleDateFormat(DATE_PATTERN).parse(args).getTime()));
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+
+        return c;   //***  ***//
+    }
 //    public static long insertReserve(Reserve reserve, float priorityAverage) {
 //
 //        ContentValues c = new ContentValues();

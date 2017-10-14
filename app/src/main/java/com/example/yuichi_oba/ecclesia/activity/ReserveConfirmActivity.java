@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
@@ -33,13 +34,13 @@ import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.DB.db;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
@@ -211,51 +212,51 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     .setPositiveButton(EX, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                                String exTime = "";
-                                //*** スピナーで選択された延長時間を代入 ***//
-                                Spinner spTime = (Spinner) layout.findViewById(R.id.extentionDia_time);
-                                exTime = spTime.getSelectedItem().toString();
-                                //*** 必要なインスタンス類を用意 ***//
-                                SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
-                                SQLiteDatabase db = helper.getWritableDatabase();
-                                //*** トランザクション開始 ***//
-                                db.beginTransaction();
-                                //*** 延長情報をDBへ投げるために用意 ***//
-                                ContentValues con = new ContentValues();
-                                //*** 延長による終了時刻を計算 ***//
-                                SimpleDateFormat endFor = new SimpleDateFormat("HH：mm");
-                                Calendar excal = Calendar.getInstance();
-                                Log.d("nowEnd", reserve.getRe_endTime());
-                                //*** フォーマットで変換をかけてCalenderにセット ***//
-                                try {
-                                    excal.setTime(endFor.parse(reserve.getRe_endTime()));
-                                    Log.d("changeTime", String.valueOf(endFor.parse(reserve.getRe_endTime())));
-                                } catch (ParseException e) {
-                                    e.getStackTrace();
-                                }
-                                //*** セットされたCalenderに延長時間を加算する ***//
-                                excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
-                                //*** CalenderをDateに変換 ***//
-                                Date exDate = excal.getTime();
-                                //*** DateをフォーマットにかけてStringに変換 ***//
-                                exTime = endFor.format(exDate);
-                                Log.d("exTIme", exTime);
-                                //*** DBにインサートする延長情報をセット ***//
-                                con.put("re_id", reserve.getRe_id());
-                                con.put("ex_startDay", reserve.getRe_startDay());
-                                con.put("ex_startTime", reserve.getRe_startTime());
-                                con.put("ex_endDay", reserve.getRe_endDay());
-                                con.put("ex_endTime", exTime);
-                                con.put("ex_endtime", exTime);
-                                //*** 延長テーブルにインサートをかける ***//
-                                db.insert("t_extension", null, con);
-                                //*** コミットみたいな感じ ***//
-                                db.setTransactionSuccessful();
-                                //*** トランザクション終了 ***//
-                                db.endTransaction();
-                                //*** 延長結果ダイアログを表示 ***//
-                                ExtentResultDialog extentResultDialog = new ExtentResultDialog();
-                                extentResultDialog.show(getFragmentManager(), KEYEX);
+                            String exTime = "";
+                            //*** スピナーで選択された延長時間を代入 ***//
+                            Spinner spTime = (Spinner) layout.findViewById(R.id.extentionDia_time);
+                            exTime = spTime.getSelectedItem().toString();
+                            //*** 必要なインスタンス類を用意 ***//
+                            SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
+                            SQLiteDatabase db = helper.getWritableDatabase();
+                            //*** トランザクション開始 ***//
+                            db.beginTransaction();
+                            //*** 延長情報をDBへ投げるために用意 ***//
+                            ContentValues con = new ContentValues();
+                            //*** 延長による終了時刻を計算 ***//
+                            SimpleDateFormat endFor = new SimpleDateFormat("HH：mm");
+                            Calendar excal = Calendar.getInstance();
+                            Log.d("nowEnd", reserve.getRe_endTime());
+                            //*** フォーマットで変換をかけてCalenderにセット ***//
+                            try {
+                                excal.setTime(endFor.parse(reserve.getRe_endTime()));
+                                Log.d("changeTime", String.valueOf(endFor.parse(reserve.getRe_endTime())));
+                            } catch (ParseException e) {
+                                e.getStackTrace();
+                            }
+                            //*** セットされたCalenderに延長時間を加算する ***//
+                            excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
+                            //*** CalenderをDateに変換 ***//
+                            Date exDate = excal.getTime();
+                            //*** DateをフォーマットにかけてStringに変換 ***//
+                            exTime = endFor.format(exDate);
+                            Log.d("exTIme", exTime);
+                            //*** DBにインサートする延長情報をセット ***//
+                            con.put("re_id", reserve.getRe_id());
+                            con.put("ex_startDay", reserve.getRe_startDay());
+                            con.put("ex_startTime", reserve.getRe_startTime());
+                            con.put("ex_endDay", reserve.getRe_endDay());
+                            con.put("ex_endTime", exTime);
+                            con.put("ex_endtime", exTime);
+                            //*** 延長テーブルにインサートをかける ***//
+                            db.insert("t_extension", null, con);
+                            //*** コミットみたいな感じ ***//
+                            db.setTransactionSuccessful();
+                            //*** トランザクション終了 ***//
+                            db.endTransaction();
+                            //*** 延長結果ダイアログを表示 ***//
+                            ExtentResultDialog extentResultDialog = new ExtentResultDialog();
+                            extentResultDialog.show(getFragmentManager(), KEYEX);
 
 //                            //*** スピナーで選択された延長時間を代入 ***//
 //                            Spinner spTime = (Spinner) layout.findViewById(R.id.extentionDia_time);
@@ -304,7 +305,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
                         }
                     }).setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) { }
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
                     }).create();
         }
 
@@ -417,7 +419,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 }
                 //*** 退出しようとしている会議が現在日付・時刻に矛盾していないか ***//
                 if ((cal.get(Calendar.YEAR) == cmp.get(Calendar.YEAR)) && (cal.get(Calendar.MONTH) == cmp.get(Calendar.MONTH)) && (cal.get(Calendar.DAY_OF_MONTH) == cmp.get(Calendar.DAY_OF_MONTH))
-                        && (cal.get(Calendar.HOUR_OF_DAY) <= cmp.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) < cmp.get(Calendar.MINUTE))){
+                        && (cal.get(Calendar.HOUR_OF_DAY) <= cmp.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) < cmp.get(Calendar.MINUTE))) {
                     //*** 早期退出ダイアログを表示 ***//
                     EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
                     earlyOutDialog.show(getFragmentManager(), "out");
@@ -541,16 +543,24 @@ public class ReserveConfirmActivity extends AppCompatActivity
     }
 
     //*** --- SELF MADE METHOD --- 確定ボタン押下時の処理 ***//
-    public void onClickKakutei(View view) {
+    public void onClickKakutei(View view) throws ParseException {
         Log.d("call", "call onClickKakutei");
+
 
         //*** 申請者の氏名－＞ 社員IDに変換して、予約インスタンスにセットする ***//
         reserve.setRe_applicant(Util.returnEmpId(reserve.getRe_applicant()));
-        // TODO: 2017/10/13 会議時間帯の重複をチェックする
-        // TODO: 2017/10/13 優先度をチェックする
+
+        // TODO: 2017/10/14 社外利用ならば、問答無用で、インサート、元あった会議は、追い出し
+
+
+        //*** 会議時間帯の重複 優先度チェック ***//
+        if (!reserve.timeDuplicationCheck(reserve) || !reserve.priorityCheck(reserve)){
+            return ;
+        }
+
         //*** 予約の確定メソッドコールし、予約確定をおこなう ***//
         int rs = reserve.reserveCorrenct(reserve, setReserveDetail());   //***  ***//
-
+        Log.d("call", String.format("登録結果 %d 件", rs));
 
 //        db.execSQL("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 //                new Object[]{
@@ -571,12 +581,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //                        reserve.getRe_applicant()
 //                });
 //
-        if (ret == -1) {
-            Log.d("call", "予約情報のインサート処理失敗!");
-        } else {
-            Log.d("call", "予約情報のインサート処理成功！");
-        }
-        db.close();
+//        if (ret == -1) {
+//            Log.d("call", "予約情報のインサート処理失敗!");
+//        } else {
+//            Log.d("call", "予約情報のインサート処理成功！");
+//        }
+//        db.close();
     }
 
     //*** --- SELF MADE METHOD --- 予約インスタンスの情報を、DBに書き込める形にまで設定するメソッド ***//

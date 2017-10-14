@@ -20,6 +20,7 @@ import java.util.List;
 
 public class Reserve implements Serializable{
 
+    public static final String Q_SAME_DAY_MEETING = "select * from t_reserve where re_startday = ? and room_id = ?";
     //*** Field ***//
     private  long id;                       //*** ID(long型)***//
     private String re_id;                   //*** 予約ID ***//
@@ -164,15 +165,33 @@ public class Reserve implements Serializable{
     }
     //*** --- SELF MADE METHOD --- 会議の時間帯の重複をチェックするメソッド ***//
     public boolean timeDuplicationCheck(Reserve r) {
+        //*** 引数の会議日と同じ会議をListで取得する ***//
+        List<Reserve> list = getSameDayMeeting(r);
+
+        //*** その日の同じ会議室で会議がない ***//
+        if (list.size() == 0)     return true;        //*** 時間の重複なしを返す ***//
+
+        //*** 開始時刻からみて、同じ時間帯に会議があるかチェック ***//
+        for (Reserve other : list) {
+            //*** 同じ時間帯かチェック ***//
+            if (r.getRe_startTime().split(":")[0].contains(other.getRe_startTime().split(":")[0])) {
+                return false;                         //*** 暫定これで、重複ありとする ***//
+            }
+        }
+        return true;
+    }
+
+    //*** 引数の会議日と同じ会議をListで取得する ***//
+    private List<Reserve> getSameDayMeeting(Reserve r) {
         SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
-        //*** 引数の会議日と同じ会議をListで取得する ***//
         Cursor c = db.rawQuery(
-                "select * from t_reserve where re_startday = ? and room_id = ?",
+                Q_SAME_DAY_MEETING,
                 new String[]{r.getRe_startDay(), r.getRe_room_id()});
 
         List<Reserve> list = new ArrayList<>();
         while (c.moveToNext()) {
+            //*** 予約のインスタンスを生成 ***//
             Reserve reserve = new Reserve();
             reserve.setRe_startTime(c.getString(4));       //*** 開始時刻 ***//
             reserve.setRe_endTime(c.getString(5));         //*** 終了時刻 ***//
@@ -180,32 +199,26 @@ public class Reserve implements Serializable{
             reserve.setRe_mem_priority(
                     Integer.valueOf(c.getString(9)));      //*** 会議の優先度 ***//
 
-            list.add(reserve);  //*** リストに追加 ***//
+            list.add(reserve);  //*** インスタンスをリストに追加 ***//
         }
         c.close();
+        db.close();
 
-        //*** その日の同じ会議室で会議がない ***//
-        if (list.size() == 0) {
-            return true;        //*** 時間の重複なしを返す ***//
-        }
-
-
-        //*** 開始時刻の重複がないかチェックする ***//
-        for (Reserve other : list) {
-            Integer start = Integer.valueOf(other.getRe_startTime().split(":")[0] + other.getRe_startTime().split(":")[1]);
-            Integer end = Integer.valueOf(other.getRe_endTime().split(":")[0] + other.getRe_endTime().split(":")[1]);
-        }
-
-
-        //*** 終了時刻の重複がないかチェックする ***//
-        for (Reserve other : list) {
-            Integer start = Integer.valueOf(other.getRe_startTime().split(":")[0] + other.getRe_startTime().split(":")[1]);
-            Integer end = Integer.valueOf(other.getRe_endTime().split(":")[0] + other.getRe_endTime().split(":")[1]);
-        }
-        return true;
+        return list;
     }
+
     //*** --- SELF MADE METHOD --- 優先度をチェックするメソッド ***//
-    public boolean priorityCheck() {
+    public boolean priorityCheck(Reserve r) {
+        //*** 引数の会議日と同じ会議をListで取得する ***//
+        List<Reserve> list = getSameDayMeeting(r);
+
+        //***  ***//
+        // TODO: 2017/10/14  ヌルポ エラー
+//        for (Reserve other : list) {
+//            if (other.getRe_mem_priority() > r.getRe_mem_priority()) {
+//                return false;
+//            }
+//        }
         return true;
     }
     //*** --- SELF MADE METHOD --- 予約を確定するメソッド ***//
@@ -230,8 +243,12 @@ public class Reserve implements Serializable{
 
         //***  ***//
         SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
+        int rs = (int) db.insert("t_reserve", null, c);
+        db.close();
 
-        return (int) helper.getWritableDatabase().insertOrThrow("t_reserve", null, c);  //***  ***//
+
+        return rs;
     }
     //*** --- SELF MADE METHOD --- 予約をキャンセルするメソッド ***//
     public void reserveCancel(String re_id) {
