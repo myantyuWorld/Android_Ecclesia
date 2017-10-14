@@ -552,7 +552,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
         // TODO: 2017/10/14 社外利用ならば、問答無用で、インサート、元あった会議は、追い出し
 
-
         //*** 会議時間帯の重複 優先度チェック ***//
         if (!reserve.timeDuplicationCheck(reserve) || !reserve.priorityCheck(reserve)){
             return ;
