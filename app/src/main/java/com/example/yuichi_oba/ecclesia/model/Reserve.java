@@ -31,6 +31,7 @@ public class Reserve implements Serializable{
     private String re_remarks;              //*** 備考 ***//
     private String re_switch;               //*** 社内/社外区分 0 社内 1 社外***//
     private String re_company;              //*** 参加する会社名 ***//
+    private String re_mem;                  //*** 参加した会社メンバー***//
     private Integer re_mem_priority;        //*** 参加者全員の平均の優先度 ***//
     private String re_purpose_id;           //*** 会議目的ID ***//
     private String re_purpose_name;         //*** 会議目的名 ***//
@@ -155,6 +156,14 @@ public class Reserve implements Serializable{
     }
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getRe_mem() {
+        return re_mem;
+    }
+
+    public void setRe_mem(String re_mem) {
+        this.re_mem = re_mem;
     }
 
     //*** --- SELF MADE METHOD --- 参加者優先度を計算するメソッド ***//

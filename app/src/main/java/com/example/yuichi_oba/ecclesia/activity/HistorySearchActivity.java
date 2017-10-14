@@ -216,7 +216,7 @@ public class HistorySearchActivity extends AppCompatActivity
             ((TextView) convertView.findViewById(R.id.txt_date)).setText(item.getRe_startDay());
             ((TextView) convertView.findViewById(R.id.txt_overview)).setText(item.getRe_name());
             ((TextView) convertView.findViewById(R.id.txt_company)).setText(item.getRe_company());
-//           ((TextView) convertView.findViewById(R.id.txt_member)).setText(p_item.getName());
+           ((TextView) convertView.findViewById(R.id.txt_member)).setText(item.getRe_mem());
             return convertView;
         }
 
@@ -290,14 +290,15 @@ public class HistorySearchActivity extends AppCompatActivity
         //会社用のデータベース
         while (c_list.moveToNext()) {
             Reserve li = new Reserve();
-            Person p = new Person();
+//            Person p = new Person();
 
             //*** 今後必要になるためコメントアウト ***//
 //            li.setId(c_list.getLong(ID));
             li.setRe_name(c_list.getString(GAIYOU));
             li.setRe_startDay(c_list.getString(DAY));
             //*** 社員名をセット(まだ実行してないので未確認。) ***//
-            p.setName(c_list.getString(COM_MEMBER));
+//            p.setName(c_list.getString(COM_MEMBER));
+            li.setRe_mem(c_list.getString(COM_MEMBER));
             li.setRe_company(c_list.getString(26));
             li.setRe_purpose_name(c_list.getString(28));
             Log.d("call", (c_list.getString(GAIYOU)) + " : " + c_list.getString(DAY) + " : " + c_list.getString(26) + " : " + c_list.getString(28) + " : " + c_list.getString(COM_MEMBER));
