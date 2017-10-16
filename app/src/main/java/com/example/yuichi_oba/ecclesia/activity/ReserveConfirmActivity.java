@@ -540,6 +540,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
         //*** 参加者一覧ダイアログを表示する ***//
         MemberConfirmDialog dialog = new MemberConfirmDialog();
         dialog.show(getFragmentManager(), "confirm_a");
+
+
     }
 
     //*** --- SELF MADE METHOD --- 確定ボタン押下時の処理 ***//
