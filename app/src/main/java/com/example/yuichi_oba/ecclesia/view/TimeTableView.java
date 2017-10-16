@@ -141,12 +141,10 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         super(context);
         init();
     }
-
     public TimeTableView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
-
     public TimeTableView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
@@ -203,7 +201,6 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
 
     }
-
     //*** 会議を角丸で描画するメソッド ***//
     private void onDrawConference(Canvas c) {
         int cnt = 0;
@@ -263,7 +260,6 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         }
 
     }
-
     //*** --- SELF MADE METHOD --- 矩形内部に社内社外・会議目的の文字を描画する ***//
     private void onDrawRectText(Reserve r, RectF rectF, Canvas c) {
         //*** RECTの高さが、100dp以上ならば、描画を行う ***//
