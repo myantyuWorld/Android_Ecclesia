@@ -308,7 +308,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
                         }
                     }).setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) { }
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
                     }).create();
         }
 
@@ -421,7 +422,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 }
                 //*** 退出しようとしている会議が現在日付・時刻に矛盾していないか ***//
                 if ((cal.get(Calendar.YEAR) == cmp.get(Calendar.YEAR)) && (cal.get(Calendar.MONTH) == cmp.get(Calendar.MONTH)) && (cal.get(Calendar.DAY_OF_MONTH) == cmp.get(Calendar.DAY_OF_MONTH))
-                        && (cal.get(Calendar.HOUR_OF_DAY) <= cmp.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) < cmp.get(Calendar.MINUTE))){
+                        && (cal.get(Calendar.HOUR_OF_DAY) <= cmp.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) < cmp.get(Calendar.MINUTE))) {
                     //*** 早期退出ダイアログを表示 ***//
                     EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
                     earlyOutDialog.show(getFragmentManager(), "out");
@@ -542,68 +543,54 @@ public class ReserveConfirmActivity extends AppCompatActivity
         //*** 参加者一覧ダイアログを表示する ***//
         MemberConfirmDialog dialog = new MemberConfirmDialog();
         dialog.show(getFragmentManager(), "confirm_a");
+
+
     }
 
     //*** --- SELF MADE METHOD --- 確定ボタン押下時の処理 ***//
-    public void onClickKakutei(View view) {
+    public void onClickKakutei(View view) throws ParseException {
         Log.d("call", "call onClickKakutei");
+
 
         //*** 申請者の氏名－＞ 社員IDに変換して、予約インスタンスにセットする ***//
         reserve.setRe_applicant(Util.returnEmpId(reserve.getRe_applicant()));
 
+        // TODO: 2017/10/14 社外利用ならば、問答無用で、インサート、元あった会議は、追い出し
 
-        //***  ***//
-        float priorityAverage = setReserveDetail();         //***  ***//
-
-        ContentValues c = new ContentValues();
-        c.put("re_id", reserve.getRe_id());                 //***  ***//
-        c.put("re_overview", reserve.getRe_name());         //***  ***//
-        c.put("re_startday", reserve.getRe_startDay());     //***  ***//
-        c.put("re_endday", reserve.getRe_endDay());         //***  ***//
-        c.put("re_starttime", reserve.getRe_startTime());   //***  ***//
-        c.put("re_endtime", reserve.getRe_endTime());       //***  ***//
-        c.put("re_switch", reserve.getRe_switch());         //***  ***//
-        c.put("re_fixture", reserve.getRe_fixtures());      //***  ***//
-        c.put("re_remarks", reserve.getRe_remarks());       //***  ***//
-        c.put("re_priority", priorityAverage);              //***  ***//
-        c.put("com_id", "");                                //***  ***//
-        c.put("emp_id", reserve.getRe_applicant());         //***  ***//
-        c.put("room_id", reserve.getRe_room_id());          //***  ***//
-        c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
-        c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
-
-        SQLiteOpenHelper helper = new DB(getApplicationContext());                     //***  ***//
-        SQLiteDatabase db = helper.getWritableDatabase();           //***  ***//
-//        long ret = db.insertOrThrow("t_reserve", null, c);               //***  ***//
-
-
-        db.execSQL("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                new Object[]{
-                        reserve.getRe_id(),
-                        reserve.getRe_name(),
-                        reserve.getRe_startDay(),
-                        reserve.getRe_endDay(),
-                        reserve.getRe_startTime(),
-                        reserve.getRe_endTime(),
-                        reserve.getRe_switch(),
-                        reserve.getRe_fixtures(),
-                        reserve.getRe_remarks(),
-                        priorityAverage,
-                        "aa",
-                        reserve.getRe_applicant(),
-                        reserve.getRe_room_id(),
-                        reserve.getRe_purpose_id(),
-                        reserve.getRe_applicant()
-                });
-
-
-        long ret = 0;
-        if (ret == -1) {
-            Log.d("call", "予約情報のインサート処理失敗!");
-        } else {
-            Log.d("call", "予約情報のインサート処理成功！");
+        //*** 会議時間帯の重複 優先度チェック ***//
+        if (!reserve.timeDuplicationCheck(reserve) || !reserve.priorityCheck(reserve)){
+            return ;
         }
-        db.close();
+
+        //*** 予約の確定メソッドコールし、予約確定をおこなう ***//
+        int rs = reserve.reserveCorrenct(reserve, setReserveDetail());   //***  ***//
+        Log.d("call", String.format("登録結果 %d 件", rs));
+
+//        db.execSQL("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+//                new Object[]{
+//                        reserve.getRe_id(),
+//                        reserve.getRe_name(),
+//                        reserve.getRe_startDay(),
+//                        reserve.getRe_endDay(),
+//                        reserve.getRe_startTime(),
+//                        reserve.getRe_endTime(),
+//                        reserve.getRe_switch(),
+//                        reserve.getRe_fixtures(),
+//                        reserve.getRe_remarks(),
+//                        priorityAverage,
+//                        "aa",
+//                        reserve.getRe_applicant(),
+//                        reserve.getRe_room_id(),
+//                        reserve.getRe_purpose_id(),
+//                        reserve.getRe_applicant()
+//                });
+//
+//        if (ret == -1) {
+//            Log.d("call", "予約情報のインサート処理失敗!");
+//        } else {
+//            Log.d("call", "予約情報のインサート処理成功！");
+//        }
+//        db.close();
     }
 
     //*** --- SELF MADE METHOD --- 予約インスタンスの情報を、DBに書き込める形にまで設定するメソッド ***//
