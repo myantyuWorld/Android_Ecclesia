@@ -43,6 +43,7 @@ import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,16 +70,10 @@ public class ReserveChangeActivity extends AppCompatActivity
     String re_id;
     Reserve changeRes ;
     Button editBtn;
-
     public static String[] changes ;
-    public static Employee appEmp;
 
     EditText overview;
     Spinner sp_purpose;
-    TextView startDay;
-    TextView endDay;
-    TextView startTime;
-    TextView endTime;
     private static Button startDayBtn;
     private static Button endDayBtn;
     private static Button startTimeBtn;
@@ -101,7 +96,6 @@ public class ReserveChangeActivity extends AppCompatActivity
 
         Intent intent = getIntent();
         changeRes = (Reserve) intent.getSerializableExtra(KEYCHANGE);
-        appEmp = (Employee) intent.getSerializableExtra("emp");
 
         init();
         setListener();
@@ -168,7 +162,6 @@ public class ReserveChangeActivity extends AppCompatActivity
         overview.setText(changeRes.getRe_name());
         fixtrues.setText(changeRes.getRe_fixtures());
         remarks.setText(changeRes.getRe_remarks());
-        sinseisya.setText(changeRes.getRe_applicant());
         sinseisya.setText(changeRes.getRe_applicant());
         startDayBtn.setText(changeRes.getRe_startDay());
         endDayBtn.setText(changeRes.getRe_endDay());
@@ -269,6 +262,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 changeRes.setRe_room_name(room.getSelectedItem().toString());
+                changeRes.setRe_room_id(Util.returnRoomId(changeRes.getRe_room_name()));
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { }
@@ -278,8 +272,10 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void onClick(View v){
 //                setReserveInfo();
+                //***  ***//
                 changes = new String[]{changeRes.getRe_name(), changeRes.getRe_purpose_name(), changeRes.getRe_startDay() + " " + changeRes.getRe_startTime(), changeRes.getRe_endDay() + " " + changeRes.getRe_endTime(),
                         changeRes.getRe_applicant(), "", changeRes.getRe_switch(), changeRes.getRe_room_name(), "", changeRes.getRe_fixtures(), changeRes.getRe_remarks()};
+
 
                 Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
                 intent.putExtra(KEYCHECK, changeRes);
@@ -464,6 +460,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             Log.d("room", reserve.getRe_room_name());
 
             //*** 変更前情報を保持する配列に挿入 ***//
+            //*** applicantの次…member  switchの次…company ***//
             before = new String[]{reserve.getRe_name(), reserve.getRe_purpose_name(), reserve.getRe_startDay() + " " + reserve.getRe_startTime(), reserve.getRe_endDay() + " " + reserve.getRe_endTime(),
                    reserve.getRe_applicant(), "", reserve.getRe_switch(), "", reserve.getRe_room_name(), reserve.getRe_fixtures(), reserve.getRe_remarks()};
         }

@@ -33,7 +33,6 @@ import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 import com.example.yuichi_oba.ecclesia.view.TimeTableView;
-import com.example.yuichi_oba.ecclesia.view.TimeTableView;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -337,19 +336,20 @@ public class ReserveListActivity extends AppCompatActivity
                     thCnt = 0;
                 }
                 Log.d("call", "Thread");
-                String re_id = arl_view_timetableView.getSelectedReserve();
-                Log.d("call", "re_id :: " + re_id);
+                String[] info = arl_view_timetableView.getSelectedReserve();
+                Log.d("call", "info :: " + info);
                 //*** 新規予約登録画面への遷移 ***//
-                if (re_id.equals(NONE)) {
+                if (info[0].equals(NONE)) {
                     Log.d("call", "新規予約登録画面への遷移");
                     Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
                     intent.putExtra("emp", employee);                           //*** 社員インスタンスをインテント渡し ***//
                     intent.putExtra("date", arl_txt_date.getText().toString()); //*** 選択されている日付をインテント渡し ***//
+                    intent.putExtra("roomId", info[1]);                         //*** 会議室IDを渡す ***//
 
                     startActivity(intent);  //*** 新規予約登録画面 ***//
                 } else {
                     Log.d("call", "予約確認画面への遷移");
-                    Reserve reserve = Reserve.retReserveConfirm(re_id); //*** 特定した予約IDを基に、予約情報を検索 ***//
+                    Reserve reserve = Reserve.retReserveConfirm(info[1]); //*** 特定した予約IDを基に、予約情報を検索 ***//
 
 //                    intent.putExtra("emp", employee); //*** 不要？ ***//
                     Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);

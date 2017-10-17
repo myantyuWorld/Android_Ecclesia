@@ -8,7 +8,9 @@
         android:id="@+id/customview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        class="com.example.yuichi_oba.ecclesia.view.ListItemView" />
+        class="com.example.yuichi_oba.ecclesia.view.ListItemView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/txt_purpose"
