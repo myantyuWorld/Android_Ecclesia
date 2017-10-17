@@ -132,20 +132,20 @@ public class Hint {
      // -------------------------------------------------------------------------------------------------
     //*** HCP 画面担当一覧 ***//　                                 ひな形完成          HCP完成
      // -------------------------------------------------------------------------------------------------
-    //*** ReserveChangeActivity         しゃま***//　
+    //*** ReserveChangeActivity         しゃま***//　                 OK
     //*** ReserveListActivity           オレ***//　                 　OK
      //*** TimeTableView ***//          おれ　                      　
      //*** RoomView ***//               おれ　                        OK                OK
     //*** HistorySearchActivity         ぐちお ***//　
      //*** HistorySearch ***//          ぐちお　
-    //*** ReserveCheckActivity          くに***//　                 　OK
-    //*** ReserveConfirmActivity        くに***//　                 　OK
+    //*** ReserveCheckActivity          くに***//　                 　OK                 OK
+    //*** ReserveConfirmActivity        くに***//　                 　OK                 OK
      //*** Reserve_confirm ***//        くに       　                                   OK
      //*** ReserveCheck ***//           くに　                                          OK
     //*** AddMemberActivity             ヨッシー ***//　              OK
      //*** AddMember ***//              よっしー　                    OK                OK
      //*** ReserveView ***//            よっしー　                    OK                OK
-    //*** ReserveActivity               よっしー（にしかわ） ***//　  OK
+    //*** ReserveActivity               よっしー（にしかわ） ***//     OK
      // --------------------------------------------------------------------------------------------------
 
     // 今更命名規則

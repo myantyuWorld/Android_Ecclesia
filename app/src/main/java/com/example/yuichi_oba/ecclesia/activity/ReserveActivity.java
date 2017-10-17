@@ -194,8 +194,9 @@ public class ReserveActivity extends AppCompatActivity
 
         //*** 前画面からのオブジェクトをもらう（Employeeクラスのインスタンス） ***//
         Intent intent = getIntent();
-        employee = (Employee) intent.getSerializableExtra("emp");   //***  ***//
-        String date = intent.getStringExtra("date");                //***  ***//
+        employee = (Employee) intent.getSerializableExtra("emp");   //*** 社員インスタンス ***//
+        String date = intent.getStringExtra("date");                //*** 日付 ***//
+        String roomId = intent.getStringExtra("roomId");            //*** 会議室ID ***//
 
 
 
@@ -230,7 +231,9 @@ public class ReserveActivity extends AppCompatActivity
             }
         });
 
-        init(date);
+        //*** 各ウィジェットの初期化処理（日付、会議室） ***//
+        init(date, roomId);
+
     }
 
     //*** 開いたアクティビティ(AddMemberActivity)から何かしらの情報を受け取る ***//
@@ -323,9 +326,10 @@ public class ReserveActivity extends AppCompatActivity
      *          自作メソッド
      *
      * _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-     * @param date*/
+     * @param date
+     * @param roomId*/
     //*** --- SELF MADE METHOD --- 各ウィジェットの初期化処理メソッド ***//
-    private void init(String date) {
+    private void init(String date, String roomId) {
         mapPurpose = new HashMap<>();
         mapRoom = new HashMap<>();
 
@@ -384,6 +388,8 @@ public class ReserveActivity extends AppCompatActivity
         c.close();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, listRoom);
         ar_sp_room.setAdapter(adapter);
+        //*** 引数の会議室IDに該当する会議室名でスピナーをセットする ***//
+        ar_sp_room.setSelection(Util.setSelection(ar_sp_room, Util.returnRoomName(roomId)));
 
 
         //***  ***//

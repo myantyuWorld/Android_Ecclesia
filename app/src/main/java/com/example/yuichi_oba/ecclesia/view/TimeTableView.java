@@ -25,12 +25,12 @@ import android.widget.Toast;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
-import com.example.yuichi_oba.ecclesia.tools.NameConst;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.MAX_WIDTH;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.ROOM_A;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.ROOM_B;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.ROOM_C;
@@ -141,12 +141,10 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         super(context);
         init();
     }
-
     public TimeTableView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
-
     public TimeTableView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
@@ -203,7 +201,6 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
 
     }
-
     //*** 会議を角丸で描画するメソッド ***//
     private void onDrawConference(Canvas c) {
         int cnt = 0;
@@ -219,6 +216,8 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
             c.drawRoundRect(rectF, 30, 30, p_otherConference);
             c.drawRoundRect(rectF, 30, 30, p_myConference_waku);
+            //*** 矩形内部に社内社外・会議目的の文字を描画する ***//
+            onDrawRectText(r, rectF, c);
             cnt++;
         }
         cnt = 0;
@@ -247,22 +246,32 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 //            }
             // 予約会議の描画
             c.drawRoundRect(rectF, 30, 30, p_myConference);
-            c.drawRoundRect(rectF, 30, 30, p_myConference_waku);
+            //*** 矩形内部に社内社外・会議目的の文字を描画する ***//
+            onDrawRectText(r, rectF, c);
 
-            //*** RECTの高さが、100dp以上ならば、描画を行う ***//
-            if (rectF.bottom - rectF.top >= 100) {
-                // TODO: 2017/10/04 社内・社外の文字を、RECT内部に描画するロジックの実装
-                float margin = 20;
-                c.drawText(r.getRe_switch().contains("0") ? "[社内]" : "[社外]",
-                        rectF.centerX(), rectF.centerY() - margin, p_detail);                               //*** 社内社外区分の描画 ***//
-                c.drawText(r.getRe_purpose_name(), rectF.centerX(), rectF.centerY() + margin, p_detail);    //*** 会議目的名の描画 ***//
-            }
+//            //*** RECTの高さが、100dp以上ならば、描画を行う ***//
+//            if (rectF.bottom - rectF.top >= 100) {
+//                float margin = 20;
+//                c.drawText(r.getRe_switch().contains("0") ? "[社内]" : "[社外]",
+//                        rectF.centerX(), rectF.centerY() - margin, p_detail);                               //*** 社内社外区分の描画 ***//
+//                c.drawText(r.getRe_purpose_name(), rectF.centerX(), rectF.centerY() + margin, p_detail);    //*** 会議目的名の描画 ***//
+//            }
             cnt++;  //*** 次の会議を見るために、添え字をインクリする ***//
         }
 
     }
+    //*** --- SELF MADE METHOD --- 矩形内部に社内社外・会議目的の文字を描画する ***//
+    private void onDrawRectText(Reserve r, RectF rectF, Canvas c) {
+        //*** RECTの高さが、100dp以上ならば、描画を行う ***//
+        if (rectF.bottom - rectF.top >= 100) {
+            float margin = 20;
+            c.drawText(r.getRe_switch().contains("0") ? "[社内]" : "[社外]",
+                    rectF.centerX(), rectF.centerY() - margin, p_detail);                               //*** 社内社外区分の描画 ***//
+            c.drawText(r.getRe_purpose_name(), rectF.centerX(), rectF.centerY() + margin, p_detail);    //*** 会議目的名の描画 ***//
+        }
+    }
 
-    //*** 開始終了時刻・会議室を基に、描画すべき座標を返すメソッド ***//
+    //*** --- SELF MADE METHOD --- 開始終了時刻・会議室を基に、描画すべき座標を返すメソッド ***//
     private RectF retRectCooperation(String sTime, String eTime, String room_id) {
         float sX = 0, eX = 0, sY = 0, eY = 0;
         float x = 216;
@@ -466,6 +475,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             r.setRe_fixtures(c.getString(7));
             r.setRe_remarks(c.getString(8));
             r.setRe_room_id(c.getString(10));
+            r.setRe_purpose_name(c.getString(19));  //*** 会議目的名 ***//
 //            r.setRe_pur_priority(c.getString(18));
             // TODO: 2017/10/04  会議目的優先度の取得のロジックの実装
 
@@ -477,10 +487,10 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     }
 
     //*** タップした会議の予約ＩＤを返すメソッド ***//
-    public String getSelectedReserve() {
+    public String[] getSelectedReserve() {
         Log.d("call", "TimeTableView->getSelectedReserve()");
         //
-        String re_id = "";
+        String roomId = "";                         //*** 押された会議室の区分 ***//
         Log.d("call", String.valueOf(thread_flg));
 //        thread_flg = true;
         while (thread_flg) {
@@ -489,46 +499,60 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             if (isTouched()) {
                 if (x > wX && x < 2 * wX) {
                     Log.d("call", "tokubetu");
-                    re_id = TOKUBETSU;
+                    roomId = TOKUBETSU;
                 } else if (x > 2 * wX && x < 3 * wX) {
                     Log.d("call", "roomA");
-                    re_id = ROOM_A;
+                    roomId = ROOM_A;
                 } else if (x > 3 * wX && x < 4 * wX) {
                     Log.d("call", "roomB");
-                    re_id = ROOM_B;
+                    roomId = ROOM_B;
                 } else if (x > 4 * wX && x < 5 * wX) {
                     Log.d("call", "roomC");
-                    re_id = ROOM_C;
+                    roomId = ROOM_C;
                 }
-                // re_id と y座標を基に、どの会議がタップされたかを返す
+                // roomId と y座標を基に、どの会議がタップされたかを返す
                 int cnt = 0;
                 for (Reserve r : reserveInfo) {
                     if (r.getCoop() != null && r.getCoop()[1] < y && r.getCoop()[3] > y) {
                         // 特定した
-                        if (re_id.equals(r.getRe_room_id())) {
+                        if (roomId.equals(r.getRe_room_id())) {
                             Log.d("call", "会議を特定した！  " + r.getRe_room_id());
-                            re_id = r.getRe_id();
                             thread_flg = false;
-                            return re_id;
+//                            return r.getRe_id();        //*** 特定した会議室予約IDを返す ***//
+                            //*** 特定した会議室IDと、会議室IDを返す ***//
+                            return new String[]{r.getRe_id(), roomId};
+
+                        }
+                        cnt++;
+                    }
+                }
+                // TODO: 2017/10/13 要検証
+                //*** 他人の会議がタップされたかを判定する ***//
+                for (Reserve r : reserveOther) {
+                    if (r.getCoop() != null && r.getCoop()[1] < y && r.getCoop()[3] > y) {
+                        // 特定した
+                        if (roomId.equals(r.getRe_room_id())) {
+                            Log.d("call", "会議を特定した！  " + r.getRe_room_id());
+                            thread_flg = false;
+//                            return r.getRe_id();        //*** 特定した会議室予約IDを返す ***//
+                            //*** 特定した会議室IDと、会議室IDを返す ***//
+                            return new String[]{r.getRe_id(), roomId};
                         }
                         cnt++;
                     }
                 }
                 Log.d("call", "cnt :: " + String.valueOf(cnt));
-                Log.d("call", re_id);
-                // TODO: 2017/09/06 該当する会議がないー→ 新規会議の予約画面に移行するロジックの実装
+                Log.d("call", roomId);
                 if (cnt > 0) {
-                    Log.d("call", "新規会議の登録ロジック開始！");
-                    return NameConst.NONE;
+                    Log.d("call", "新規会議の登録ロジック開");
+                    return new String[]{NONE, roomId};    //*** 新規予約であることを返す ***//
                 }
 //                x = 0;
 //                y = 0;
-            } else {
-//                Log.d("call", "no Touch");
             }
         }
-        Log.d("call", "Re_id : " + re_id);
-        return re_id;
+        Log.d("call", "Re_id : " + roomId);
+        return new String[]{NONE, roomId};    //*** 新規予約であることを返す ***//
     }
 
     //*** x y の値を基に、ユーザがタッチしたのか否かを返すメソッド ***//
@@ -568,12 +592,12 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         Log.d("call", "LongTouch");
 
         //*** タップした会議の予約IDを求めて代入する ***//
-        String re_id = getSelectedReserve();
+        String[] info = getSelectedReserve();
 
         //*** キャンセルダイアログの生成 ***//
         CancelDialog cancelDialog = new CancelDialog();
         Bundle bundle = new Bundle();
-        bundle.putString("re_id", re_id);       //*** Bundle に予約IDを渡す ***//
+        bundle.putString("info", info[0]);       //*** Bundle に予約IDを渡す ***//
         cancelDialog.show(ReserveListActivity.getInstance().getFragmentManager(), "cancel");
     }
 

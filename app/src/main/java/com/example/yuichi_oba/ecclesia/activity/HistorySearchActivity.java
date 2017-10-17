@@ -200,17 +200,23 @@ public class HistorySearchActivity extends AppCompatActivity
 
 //            Activity activity = (Activity) context;
             Reserve item = (Reserve) getItem(position);
-            //初回かどうか確認
+            //*** 会社メンバーセットのクラス呼び出し(エラーが発生しているのでコメント) ***//
+//            Person p_item = (Person) getItem(position);
+
+//************************************************************************************************
+//            初回かどうか確認
 //            if (convertView == null) {
 //                //Layoutを取得
 //                convertView = activity.getLayoutInflater().inflate(resource, null);
 //            }
 //            ((RelativeLayout)convertView).findViewById(R.id.customview).invalidate();
+//************************************************************************************************
+
             ((TextView) convertView.findViewById(R.id.txt_purpose)).setText(item.getRe_purpose_name());
             ((TextView) convertView.findViewById(R.id.txt_date)).setText(item.getRe_startDay());
-            ((TextView) convertView.findViewById(R.id.txt_overview)).setText(item.getRe_remarks());
+            ((TextView) convertView.findViewById(R.id.txt_overview)).setText(item.getRe_name());
             ((TextView) convertView.findViewById(R.id.txt_company)).setText(item.getRe_company());
-//            ((TextView) convertView.findViewById(R.id.txt_member)).setText((CharSequence) item.getRe_memxber());
+//           ((TextView) convertView.findViewById(R.id.txt_member)).setText(p_item.getName());
             return convertView;
         }
 
@@ -275,7 +281,7 @@ public class HistorySearchActivity extends AppCompatActivity
         SQLiteDatabase db_list = listdeta.getReadableDatabase();
         Cursor c_list = db_list.rawQuery("select * from  t_reserve x" +
                 " inner join t_member y on x.re_id = y.re_id" +
-                " inner join m_out_emp as a on y.mem_id = a.outemp_id" +
+                " inner join m_out as a on y.mem_id = a.out_id" +
                 " inner join m_company as b on a.com_id = b.com_id" +
                 " inner join m_purpose as p on p.pur_id = x.pur_id"+
                 " inner join m_room as c on c.room_id = x.room_id"+
@@ -284,16 +290,17 @@ public class HistorySearchActivity extends AppCompatActivity
         //会社用のデータベース
         while (c_list.moveToNext()) {
             Reserve li = new Reserve();
+            Person p = new Person();
 
-//            Person p = new Person();
             //*** 今後必要になるためコメントアウト ***//
 //            li.setId(c_list.getLong(ID));
             li.setRe_name(c_list.getString(GAIYOU));
             li.setRe_startDay(c_list.getString(DAY));
-//            li.setRe_member(c_list.getClass(COM_MEMBER));
+            //*** 社員名をセット(まだ実行してないので未確認。) ***//
+            p.setName(c_list.getString(COM_MEMBER));
             li.setRe_company(c_list.getString(26));
             li.setRe_purpose_name(c_list.getString(28));
-            Log.d("call", (c_list.getString(GAIYOU)) + " : " + c_list.getString(DAY) + " : " + c_list.getString(26) + " : " + c_list.getString(28));
+            Log.d("call", (c_list.getString(GAIYOU)) + " : " + c_list.getString(DAY) + " : " + c_list.getString(26) + " : " + c_list.getString(28) + " : " + c_list.getString(COM_MEMBER));
             // addするメソッドを書く
             listItems.add(li);
         }

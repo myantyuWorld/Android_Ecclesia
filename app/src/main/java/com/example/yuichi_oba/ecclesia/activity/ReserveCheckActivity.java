@@ -3,7 +3,6 @@ package com.example.yuichi_oba.ecclesia.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,15 +18,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
 
 public class ReserveCheckActivity extends AppCompatActivity
 implements NavigationView.OnNavigationItemSelectedListener{
@@ -104,35 +101,41 @@ implements NavigationView.OnNavigationItemSelectedListener{
     //*** SelfMadeMethod ***//
     //*** 実際にDBの予約情報を書き換える(現在エラー中) ***//
     public void reserveChange() {
-        //*** DBに変更をかけるためのクラス ***//
-        ContentValues con = new ContentValues();
-
-        //*** 書き換えるカラム、書き換える情報の指定 ***//
-        con.put("re_overview", checkRes.getRe_name());
-        con.put("re_startday", checkRes.getRe_startDay());
-        con.put("re_endday", checkRes.getRe_endDay());
-        con.put("re_starttime", checkRes.getRe_startTime());
-        con.put("re_endtime", checkRes.getRe_endTime());
-        con.put("re_switch", checkRes.getRe_switch());
-        con.put("re_fixtrue", checkRes.getRe_fixtures());
-        con.put("re_remarks", checkRes.getRe_remarks());
-        con.put("com_id", checkRes.getRe_company());
-        con.put("emp_id", checkRes.getRe_applicant());
-        con.put("por_id", checkRes.getRe_purpose_id());
-        con.put("room_id", checkRes.getRe_room_id());
-
-        //*** where句を用意 ***//
-        String where = "re_id = ?";
-        //*** ?に入れるものを指定する ***//
-        String whereArgs[] = new String[ONE];
-        whereArgs[ZERO] = checkRes.getRe_id();
-
         //*** 必要なインスタンスを用意 ***//
         SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getWritableDatabase();
-
+        //*** トランザクション開始 ***//
+//        db.beginTransaction();
+        //*** DBに変更をかけるためのクラス ***//
+//        ContentValues con = new ContentValues();
+        //*** 書き換えるカラム、書き換える情報の指定 ***//
+//        con.put("re_overview", checkRes.getRe_name());
+//        con.put("re_startday", checkRes.getRe_startDay());
+//        con.put("re_endday", checkRes.getRe_endDay());
+//        con.put("re_starttime", checkRes.getRe_startTime());
+//        con.put("re_endtime", checkRes.getRe_endTime());
+//        con.put("re_switch", checkRes.getRe_switch());
+//        con.put("re_fixtrue", checkRes.getRe_fixtures());
+//        con.put("re_remarks", checkRes.getRe_remarks());
+//        con.put("com_id", checkRes.getRe_company());
+//        con.put("emp_id", checkRes.getRe_applicant());
+//        con.put("por_id", checkRes.getRe_purpose_id());
+//        con.put("room_id", checkRes.getRe_room_id());
+        //*** where句を用意 ***//
+//        String where = "re_id = ?";
+        //*** ?に入れるものを指定する ***//
+//        String whereArgs[] = new String[ONE];
+//        whereArgs[ZERO] = checkRes.getRe_id();
         //*** アップデートを掛けに行く ***//
-        db.update("t_extension", con, where, whereArgs);
+//        db.update("t_extension", con, where, whereArgs);
+        //*** コミットをかける ***//
+//        db.setTransactionSuccessful();
+        //*** トランザクション終了 ***//
+//        db.endTransaction();
+
+        //*** 変更成功通知ダイアログを表示する ***//
+        ChangeResultDialog changeResultDialog = new ChangeResultDialog();
+        changeResultDialog.show(getFragmentManager(), "change");
     }
 
     //*** 変更成功通知ダイアログ ***//

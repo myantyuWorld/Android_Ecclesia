@@ -1,5 +1,6 @@
 package com.example.yuichi_oba.ecclesia.model;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,6 +20,7 @@ import java.util.List;
 
 public class Reserve implements Serializable{
 
+    public static final String Q_SAME_DAY_MEETING = "select * from t_reserve where re_startday = ? and room_id = ?";
     //*** Field ***//
     private  long id;                       //*** ID(long型)***//
     private String re_id;                   //*** 予約ID ***//
@@ -150,11 +152,9 @@ public class Reserve implements Serializable{
     public void setRe_room_name(String re_room_name) {
         this.re_room_name = re_room_name;
     }
-
     public long getId() {
         return id;
     }
-
     public void setId(long id) {
         this.id = id;
     }
@@ -164,16 +164,91 @@ public class Reserve implements Serializable{
         return 1;
     }
     //*** --- SELF MADE METHOD --- 会議の時間帯の重複をチェックするメソッド ***//
-    public boolean timeDuplicationCheck() {
+    public boolean timeDuplicationCheck(Reserve r) {
+        //*** 引数の会議日と同じ会議をListで取得する ***//
+        List<Reserve> list = getSameDayMeeting(r);
+
+        //*** その日の同じ会議室で会議がない ***//
+        if (list.size() == 0)     return true;        //*** 時間の重複なしを返す ***//
+
+        //*** 開始時刻からみて、同じ時間帯に会議があるかチェック ***//
+        for (Reserve other : list) {
+            //*** 同じ時間帯かチェック ***//
+            if (r.getRe_startTime().split(":")[0].contains(other.getRe_startTime().split(":")[0])) {
+                return false;                         //*** 暫定これで、重複ありとする ***//
+            }
+        }
         return true;
     }
+
+    //*** 引数の会議日と同じ会議をListで取得する ***//
+    private List<Reserve> getSameDayMeeting(Reserve r) {
+        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor c = db.rawQuery(
+                Q_SAME_DAY_MEETING,
+                new String[]{r.getRe_startDay(), r.getRe_room_id()});
+
+        List<Reserve> list = new ArrayList<>();
+        while (c.moveToNext()) {
+            //*** 予約のインスタンスを生成 ***//
+            Reserve reserve = new Reserve();
+            reserve.setRe_startTime(c.getString(4));       //*** 開始時刻 ***//
+            reserve.setRe_endTime(c.getString(5));         //*** 終了時刻 ***//
+            reserve.setRe_purpose_id(c.getString(13));     //*** 会議目的ID ***//
+            reserve.setRe_mem_priority(
+                    Integer.valueOf(c.getString(9)));      //*** 会議の優先度 ***//
+
+            list.add(reserve);  //*** インスタンスをリストに追加 ***//
+        }
+        c.close();
+        db.close();
+
+        return list;
+    }
+
     //*** --- SELF MADE METHOD --- 優先度をチェックするメソッド ***//
-    public boolean priorityCheck() {
+    public boolean priorityCheck(Reserve r) {
+        //*** 引数の会議日と同じ会議をListで取得する ***//
+        List<Reserve> list = getSameDayMeeting(r);
+
+        //***  ***//
+        // TODO: 2017/10/14  ヌルポ エラー
+//        for (Reserve other : list) {
+//            if (other.getRe_mem_priority() > r.getRe_mem_priority()) {
+//                return false;
+//            }
+//        }
         return true;
     }
     //*** --- SELF MADE METHOD --- 予約を確定するメソッド ***//
-    public int reserveCorrenct() {
-        return 1;
+    public int reserveCorrenct(Reserve reserve, float priorityAverage) {
+
+        ContentValues c = new ContentValues();
+        c.put("re_id", reserve.getRe_id());                 //***  ***//
+        c.put("re_overview", reserve.getRe_name());         //***  ***//
+        c.put("re_startday", reserve.getRe_startDay());     //***  ***//
+        c.put("re_endday", reserve.getRe_endDay());         //***  ***//
+        c.put("re_starttime", reserve.getRe_startTime());   //***  ***//
+        c.put("re_endtime", reserve.getRe_endTime());       //***  ***//
+        c.put("re_switch", reserve.getRe_switch());         //***  ***//
+        c.put("re_fixture", reserve.getRe_fixtures());      //***  ***//
+        c.put("re_remarks", reserve.getRe_remarks());       //***  ***//
+        c.put("re_priority", priorityAverage);              //***  ***//
+        c.put("com_id", "");                                //***  ***//
+        c.put("emp_id", reserve.getRe_applicant());         //***  ***//
+        c.put("room_id", reserve.getRe_room_id());          //***  ***//
+        c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
+        c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
+
+        //***  ***//
+        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
+        int rs = (int) db.insert("t_reserve", null, c);
+        db.close();
+
+
+        return rs;
     }
     //*** --- SELF MADE METHOD --- 予約をキャンセルするメソッド ***//
     public void reserveCancel(String re_id) {
