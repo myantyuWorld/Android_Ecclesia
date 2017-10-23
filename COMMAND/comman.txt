@@ -1,9 +1,13 @@
-﻿#
+﻿# _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+#
 #	要 エミュレータ起動！
 #
 #
-# COMMAND の 中身をデスクトップにコピー
-# pull の前に実行 --> データベースの中身をコピー
+# 	COMMAND の 中身をデスクトップにコピー
+# 	pull の前に実行 --> データベースの中身をコピー
+#
+#
+# _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 adb -e shell
 su
 chmod -R 777 data
@@ -18,12 +22,17 @@ chmod -R 777 data
 #
 cp /data/data/com.example.yuichi_oba.ecclesia/databases/ecclesia.db /sdcard
 exit
-
-# push後のコマンド
+# _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+#
+# 		push後のコマンド
+#
+# _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 adb -e shell
 su
 chmod -R 777 data
+#
 #cp /sdcard/sample.db /data/data/to.msn.wings.db_sqlite/databases/
+#
 #
 cp /sdcard/ecclesia.db /data/data/com.example.yuichi_oba.ecclesia/databases/ecclesia.db
 cd /data/data/com.example.yuichi_oba.ecclesia/databases/
