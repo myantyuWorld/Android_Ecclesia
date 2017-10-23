@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -42,7 +41,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -53,6 +57,9 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 // TODO: 2017/09/19 延長ダイアログのレイアウト調整およびデザインの考察 
 public class ReserveConfirmActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private DB helper = new DB(getApplicationContext());
+    private static  SQLiteDatabase db;
 
     //***  ***//
 //    public static Reserve reserve;
@@ -498,6 +505,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        helper.closeDB();
+    }
+
     //*** SelfMadeMethod ***//
     //*** getApplicationContext用 ***//
     public static ReserveConfirmActivity getInstance() {
@@ -586,11 +599,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
         c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
         c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
 
-        SQLiteOpenHelper helper = new DB(getApplicationContext());                     //***  ***//
-        SQLiteDatabase db = helper.getWritableDatabase();           //***  ***//
-//        long ret = db.insertOrThrow("t_reserve", null, c);               //***  ***//
-
-
+        db = helper.getWritableDatabase();                      //***  ***//
         db.execSQL("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 new Object[]{
                         reserve.getRe_id(),
@@ -611,13 +620,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 });
 
 
-        long ret = 0;
-        if (ret == -1) {
-            Log.d("call", "予約情報のインサート処理失敗!");
-        } else {
-            Log.d("call", "予約情報のインサート処理成功！");
-        }
-        db.close();
     }
 
     //*** --- SELF MADE METHOD --- 予約インスタンスの情報を、DBに書き込める形にまで設定するメソッド ***//

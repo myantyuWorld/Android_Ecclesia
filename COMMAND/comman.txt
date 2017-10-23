@@ -1,0 +1,15 @@
+#
+# COMMAND の 中身をデスクトップにコピー
+# pull の前に実行 --> データベースの中身をコピー
+su
+chmod -R 777 data
+cp /data/data/to.msn.wings.db_sqlite/databases/sample.db /sdcard
+exit
+
+# push後のコマンド
+su
+chmod -R 777 data
+cp /sdcard/sample.db /data/data/to.msn.wings.db_sqlite/databases/
+cd /data/data/to.msn.wings.db_sqlite/databases/
+ls -l
+sqlite3 sample.db
