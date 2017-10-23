@@ -1,12 +1,12 @@
-#
-# COMMAND ‚Ì ’†g‚ğƒfƒXƒNƒgƒbƒv‚ÉƒRƒs[
-# pull ‚Ì‘O‚ÉÀs --> ƒf[ƒ^ƒx[ƒX‚Ì’†g‚ğƒRƒs[
+ï»¿#
+# COMMAND ã® ä¸­èº«ã‚’ãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—ã«ã‚³ãƒ”ãƒ¼
+# pull ã®å‰ã«å®Ÿè¡Œ --> ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã®ä¸­èº«ã‚’ã‚³ãƒ”ãƒ¼
 su
 chmod -R 777 data
 cp /data/data/to.msn.wings.db_sqlite/databases/sample.db /sdcard
 exit
 
-# pushŒã‚ÌƒRƒ}ƒ“ƒh
+# pushå¾Œã®ã‚³ãƒãƒ³ãƒ‰
 su
 chmod -R 777 data
 cp /sdcard/sample.db /data/data/to.msn.wings.db_sqlite/databases/
