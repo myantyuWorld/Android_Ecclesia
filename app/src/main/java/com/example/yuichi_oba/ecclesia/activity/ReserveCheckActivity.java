@@ -28,6 +28,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
 
 public class ReserveCheckActivity extends AppCompatActivity
 implements NavigationView.OnNavigationItemSelectedListener{
+    private static ReserveCheckActivity instance = null;
 
     //*** 変更情報を入力した後の予約インスタンス ***//
     Reserve checkRes;
@@ -39,6 +40,8 @@ implements NavigationView.OnNavigationItemSelectedListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reserve_check);
+
+        instance = this;
 
         //*** 変更箇所入力後の予約インスタンスを受け取る ***//
         checkRes = (Reserve) getIntent().getSerializableExtra(KEYCHECK);
@@ -133,9 +136,24 @@ implements NavigationView.OnNavigationItemSelectedListener{
         //*** トランザクション終了 ***//
 //        db.endTransaction();
 
+        //*** SQLでアップデートかける ***//
+        db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
+                " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
+                " where re_id = ? ", new Object[]{checkRes.getRe_name(), checkRes.getRe_startDay(), checkRes.getRe_endDay(), checkRes.getRe_startTime(),
+                checkRes.getRe_endTime(), checkRes.getRe_switch(), checkRes.getRe_fixtures(), checkRes.getRe_remarks(), "会議優先度", checkRes.getRe_room_id()
+                , checkRes.getRe_purpose_id(), checkRes.getRe_id()});
+
         //*** 変更成功通知ダイアログを表示する ***//
         ChangeResultDialog changeResultDialog = new ChangeResultDialog();
         changeResultDialog.show(getFragmentManager(), "change");
+
+        //*** 予約一覧へ画面遷移を行う ***//
+        Intent intent = new Intent(getApplicationContext(), ReserveListActivity.class);
+        startActivity(intent);
+    }
+
+    public static ReserveCheckActivity getInstance() {
+        return instance;
     }
 
     //*** 変更成功通知ダイアログ ***//

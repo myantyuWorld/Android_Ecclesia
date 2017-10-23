@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -41,9 +42,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -54,6 +53,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
 // TODO: 2017/09/19 延長ダイアログのレイアウト調整およびデザインの考察 
 public class ReserveConfirmActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
     //***  ***//
 //    public static Reserve reserve;
     private Employee employee;
@@ -130,7 +130,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                             //*** 現在時刻取得 ***//
                             Date ealDate = new Date();
                             //*** フォ－マットを用意 ***//
-                            SimpleDateFormat ealFor = new SimpleDateFormat("HH：mm");
+                            SimpleDateFormat ealFor = new SimpleDateFormat(HH_MM);
                             //*** 現在時刻をフォーマットにかけてStringへ変換 ***//
                             String ealTime = ealFor.format(ealDate);
                             //*** 早期退出による終了時刻をセット ***//
@@ -147,6 +147,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //                            db.setTransactionSuccessful();
                             //*** トランザクション終了 ***//
 //                            db.endTransaction();
+
+                            db.execSQL("update t_reserve set re_endtime = ? where re_id = ?", new Object[]{ealTime, reserve.getRe_id()});
+
                             //*** 早期退出完了通知ダイアログを表示 ***//
                             EalryOutResultDialog ealryOutResultDialog = new EalryOutResultDialog();
                             ealryOutResultDialog.show(getFragmentManager(), "out");
@@ -222,7 +225,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                                 //*** 延長情報をDBへ投げるために用意 ***//
 //                                ContentValues con = new ContentValues();
                                 //*** 延長による終了時刻を計算 ***//
-                                SimpleDateFormat endFor = new SimpleDateFormat("HH：mm");
+                                SimpleDateFormat endFor = new SimpleDateFormat(HH_MM);
                                 Calendar excal = Calendar.getInstance();
                                 Log.d("nowEnd", reserve.getRe_endTime());
                                 //*** フォーマットで変換をかけてCalenderにセット ***//
@@ -253,7 +256,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
                                 //*** トランザクション終了 ***//
 //                                db.endTransaction();
 
-                            db.execSQL("insert into t_extension values(?,?,?,?,?)", new Object[]{reserve.getRe_id(), reserve.getRe_startDay(), reserve.getRe_startTime(), reserve.getRe_endDay(), reserve.getRe_endTime()});
+                            db.execSQL("insert into t_extension values(?,?,?,?,?)",
+                                    new Object[]{reserve.getRe_id(),
+                                                reserve.getRe_startDay(),
+                                                reserve.getRe_startTime(),
+                                                reserve.getRe_endDay(),
+                                                reserve.getRe_endTime()});
 
                                 //*** 延長結果ダイアログを表示 ***//
                                 ExtentResultDialog extentResultDialog = new ExtentResultDialog();
@@ -407,14 +415,14 @@ public class ReserveConfirmActivity extends AppCompatActivity
         //*** 比較用Calender ***//
         Calendar cmp = Calendar.getInstance();
         //*** フォーマット用意 ***//
-        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy/MM/dd HH：mm");
+        SimpleDateFormat timeFormat = new SimpleDateFormat(YYYY_MM_DD_HH_MM);
         // idによって処理を分ける
         switch (id) {
             // 「早期退出」が選択された
             case R.id.option_earlyOut:
                 try {
                     //*** Calenderにセット ***//
-                    cmp.setTime(timeFormat.parse(reserve.getRe_endDay() + " " + reserve.getRe_endTime()));
+                    cmp.setTime(timeFormat.parse(reserve.getRe_endDay() + SPACE + reserve.getRe_endTime()));
                 } catch (ParseException e) {
                     e.getStackTrace();
                     break;
@@ -488,6 +496,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
         }
         // 選択された結果（項目）を返す
         return super.onOptionsItemSelected(item);
+    }
+
+    //*** SelfMadeMethod ***//
+    //*** getApplicationContext用 ***//
+    public static ReserveConfirmActivity getInstance() {
+        return instance;
     }
 
     //*** ナビを選択したときの処理 ***//
