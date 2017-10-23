@@ -13,7 +13,7 @@ chmod -R 777 data
 #
 #
 #
-cp /data/data/to.msn.wings.db_sqlite/databases/sample.db /sdcard
+cp /data/data/com.example.yuichi_oba.ecclesia/databases/ecclesia.db /sdcard
 exit
 
 # push後のコマンド
