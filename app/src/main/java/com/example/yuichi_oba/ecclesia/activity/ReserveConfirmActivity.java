@@ -58,7 +58,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
 public class ReserveConfirmActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private DB helper = new DB(getApplicationContext());
+    private DB helper;
     private static  SQLiteDatabase db;
 
     //***  ***//
@@ -340,6 +340,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "ReserveConfirmActivity->onCreate()");
+
+        helper = new DB(getApplicationContext());
 
         //*** 前画面からの引数を受け取る ***//
         Intent intent = getIntent();
