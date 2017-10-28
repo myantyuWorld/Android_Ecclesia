@@ -11,8 +11,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 //*** 新しいDBヘルパー//
 public class MyHelper extends SQLiteOpenHelper {
 
+    private static final int DB_VERSION = 1;
+    private static final String ECCLESIA_DB = "ecclesia.db";
+
     //***  ***//
-    public enum Query {
+    private enum Query {
         //*** CREATE TABLE ***//
         Q_CREATE_M_COMPANY("CREATE TABLE \"m_company\" ( `com_id` TEXT, `com_name` TEXT, PRIMARY KEY(`com_id`) )"),
         Q_CREATE_M_DEPART("CREATE TABLE \"m_depart\" ( `dep_id` TEXT, `dep_name` TEXT, PRIMARY KEY(`dep_id`) )"),
@@ -207,7 +210,7 @@ public class MyHelper extends SQLiteOpenHelper {
 
     //***  ***//
     public MyHelper(Context context) {
-        super(context, "ecclesia.db", null, 1);
+        super(context, ECCLESIA_DB, null, DB_VERSION);
     }
 
     @Override
