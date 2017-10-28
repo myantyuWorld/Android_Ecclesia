@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -601,25 +602,50 @@ public class ReserveConfirmActivity extends AppCompatActivity
         c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
         c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
 
-        db = helper.getWritableDatabase();                      //***  ***//
-        db.execSQL("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                new Object[]{
-                        reserve.getRe_id(),
-                        reserve.getRe_name(),
-                        reserve.getRe_startDay(),
-                        reserve.getRe_endDay(),
-                        reserve.getRe_startTime(),
-                        reserve.getRe_endTime(),
-                        reserve.getRe_switch(),
-                        reserve.getRe_fixtures(),
-                        reserve.getRe_remarks(),
-                        priorityAverage,
-                        "aa",
-                        reserve.getRe_applicant(),
-                        reserve.getRe_room_id(),
-                        reserve.getRe_purpose_id(),
-                        reserve.getRe_applicant()
-                });
+        db = helper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            try (SQLiteStatement st = db.compileStatement("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
+                    st.bindString(1, reserve.getRe_id());
+                    st.bindString(2, reserve.getRe_name());
+                    st.bindString(3, reserve.getRe_startDay());
+                    st.bindString(4, reserve.getRe_endDay());
+                    st.bindString(5, reserve.getRe_startTime());
+                    st.bindString(6, reserve.getRe_endTime());
+                    st.bindString(7, reserve.getRe_switch());
+                    st.bindString(8, reserve.getRe_fixtures());
+                    st.bindString(9, reserve.getRe_remarks());
+                    st.bindString(10, String.valueOf(priorityAverage));
+                    st.bindString(11, "company_name");
+                    st.bindString(12, reserve.getRe_applicant());
+                    st.bindString(13, reserve.getRe_room_id());
+                    st.bindString(14, reserve.getRe_purpose_id());
+                    st.bindString(15, reserve.getRe_applicant());
+                    st.executeInsert();
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+//        db = helper.getWritableDatabase();                      //***  ***//
+//        db.execSQL("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+//                new Object[]{
+//                        reserve.getRe_id(),
+//                        reserve.getRe_name(),
+//                        reserve.getRe_startDay(),
+//                        reserve.getRe_endDay(),
+//                        reserve.getRe_startTime(),
+//                        reserve.getRe_endTime(),
+//                        reserve.getRe_switch(),
+//                        reserve.getRe_fixtures(),
+//                        reserve.getRe_remarks(),
+//                        priorityAverage,
+//                        "aa",
+//                        reserve.getRe_applicant(),
+//                        reserve.getRe_room_id(),
+//                        reserve.getRe_purpose_id(),
+//                        reserve.getRe_applicant()
+//                });
 
 
     }
