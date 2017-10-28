@@ -110,17 +110,17 @@ public class DB extends SQLiteOpenHelper {
     public synchronized SQLiteDatabase getWritableDatabase() {
         SQLiteDatabase sqLiteDatabase = super.getWritableDatabase();
 
-        return super.getWritableDatabase();
+//        return super.getWritableDatabase();
         // TODO: 2017/10/13 ここ、いったんコメアウト（このロジックが、インサートできなくしている？） 
-//        if (createDatabase){
-//            try {
-//                sqLiteDatabase = copyDatabase(sqLiteDatabase);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-////        return super.getWritableDatabase();
-//        return sqLiteDatabase;
+        if (createDatabase){
+            try {
+                sqLiteDatabase = copyDatabase(sqLiteDatabase);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+//        return super.getWritableDatabase();
+        return sqLiteDatabase;
     }
 
     @Override
@@ -150,8 +150,8 @@ public class DB extends SQLiteOpenHelper {
         createDatabase = false;
 
         // db を閉じたので、また開いて返す
-        return super.getWritableDatabase();
-//        return sqLiteDatabase;
+//        return super.getWritableDatabase();
+        return sqLiteDatabase;
     }
 
     private int copy(InputStream in, OutputStream out) throws IOException {
