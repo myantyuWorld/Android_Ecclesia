@@ -424,7 +424,7 @@ public class HistorySearchActivity extends AppCompatActivity
                         String.format("選択したのは%s",msg.toString()),Toast.LENGTH_SHORT).show();
                 //*** 画面遷移のインテント作成中
                 Intent intent = new Intent(getApplicationContext(),ReserveConfirmActivity.class);
-                intent.putExtra("gamen","1");           //*** どの画面からの遷移か(履歴検索)***//
+                intent.putExtra("gamen",1);           //*** どの画面からの遷移か(履歴検索)***//
                 //*** アクティビティを起動 ***//
                 startActivity(intent);
             }

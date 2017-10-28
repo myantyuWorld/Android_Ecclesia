@@ -109,15 +109,18 @@ public class DB extends SQLiteOpenHelper {
     @Override
     public synchronized SQLiteDatabase getWritableDatabase() {
         SQLiteDatabase sqLiteDatabase = super.getWritableDatabase();
-        if (createDatabase){
-            try {
-                sqLiteDatabase = copyDatabase(sqLiteDatabase);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-//        return super.getWritableDatabase();
-        return sqLiteDatabase;
+
+        return super.getWritableDatabase();
+        // TODO: 2017/10/13 ここ、いったんコメアウト（このロジックが、インサートできなくしている？） 
+//        if (createDatabase){
+//            try {
+//                sqLiteDatabase = copyDatabase(sqLiteDatabase);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+////        return super.getWritableDatabase();
+//        return sqLiteDatabase;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.example.yuichi_oba.ecclesia.tools;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -11,9 +10,15 @@ import android.widget.SpinnerAdapter;
 import com.example.yuichi_oba.ecclesia.activity.AddMemberActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class Util {
 
     public static final int COLUMN_INDEX = 1;
+    public static final String DATE_PATTERN = "yyyy/MM/dd HH:mm";
 
     /***
      * 項目引数に渡すと、その項目のインデックスを返すUtilityメソッド
@@ -63,7 +68,6 @@ public class Util {
 
         return depName; //*** 部署名を返す ***//
     }
-
     /***
      *
      * @param depName
@@ -83,7 +87,6 @@ public class Util {
 
         return depId;   //*** 部署ＩＤを返す ***//
     }
-
     /***
      *  役職IDから、役職名をDB検索してリターンするメソッド
      * @param pos_id    役職ID
@@ -106,7 +109,11 @@ public class Util {
 
         return p; //*** 役職情報のインスタンスを返す ***//
     }
-
+    /***
+     *
+     * @param posName
+     * @return
+     */
     public static AddMemberActivity.Position returnPositionId(String posName) {
         SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -123,7 +130,6 @@ public class Util {
 
         return p;   //*** 役職情報のインスタンスを返す ***//
     }
-
     /***
      * 会議室名から、会議室ＩＤをＤＢ検索してリターンするメソッド
      * @param roomName  会議室名
@@ -133,7 +139,9 @@ public class Util {
         SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
 
-        Cursor c = db.rawQuery("select * from m_room", null);
+        Cursor c = db.rawQuery("select * from m_room where room_name = ?",
+                new String[]{roomName});
+
         String roomId = "";
         if (c.moveToNext()) {
             roomId = c.getString(0);    //*** 会議室ID ***//
@@ -141,6 +149,26 @@ public class Util {
         c.close();
 
         return roomId;  //*** 会議室ＩＤを返す ***//
+    }
+    /***
+     *
+     * @param roomId
+     * @return
+     */
+    public static String returnRoomName(String roomId) {
+        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor c = db.rawQuery("select * from m_room where room_id = ?",
+                new String[]{roomId});
+
+        String roomName = "";
+        if (c.moveToNext()) {
+            roomName = c.getString(0);    //*** 会議室ID ***//
+        }
+        c.close();
+
+        return roomName;//*** 会議室名を返す ***//
     }
     /***
      * 予約テーブルの予約IDの最大値＋１をDB検索して、書式指定して返すメソッド
@@ -188,6 +216,45 @@ public class Util {
 
         return db.rawQuery(args, strArray);
     }
+
+    /***
+     * 引数の文字列を、Calenderクラスのインスタンス化したものを返すメソッド
+     * 引数の渡し方 yyyy/MM/dd HH:mm となるように、args に String.formatで整形して渡す
+     * @param args
+     * @return
+     * @throws ParseException
+     */
+    public static Calendar convertCalenderString(String args) throws ParseException {
+        Date date = new Date((new SimpleDateFormat(DATE_PATTERN).parse(args).getTime()));
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+
+        return c;   //***  ***//
+    }
+//    public static long insertReserve(Reserve reserve, float priorityAverage) {
+//
+//        ContentValues c = new ContentValues();
+//        c.put("re_id", reserve.getRe_id());                 //***  ***//
+//        c.put("re_overview", reserve.getRe_name());         //***  ***//
+//        c.put("re_startday", reserve.getRe_startDay());     //***  ***//
+//        c.put("re_endday", reserve.getRe_endDay());         //***  ***//
+//        c.put("re_starttime", reserve.getRe_startTime());   //***  ***//
+//        c.put("re_endtime", reserve.getRe_endTime());       //***  ***//
+//        c.put("re_switch", reserve.getRe_switch());         //***  ***//
+//        c.put("re_fixture", reserve.getRe_fixtures());      //***  ***//
+//        c.put("re_remarks", reserve.getRe_remarks());       //***  ***//
+//        c.put("re_priority", priorityAverage);              //***  ***//
+//        c.put("com_id", "");                                //***  ***//
+//        c.put("emp_id", reserve.getRe_applicant());         //***  ***//
+//        c.put("room_id", reserve.getRe_room_id());          //***  ***//
+//        c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
+//        c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
+//
+//        //***  ***//
+//        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+//
+//        return helper.getWritableDatabase().insertOrThrow("t_reserve", null, c);  //***  ***//
+//    }
 
 
 }
