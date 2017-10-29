@@ -417,6 +417,32 @@ public class HistorySearchActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //*** 中身はまだ考え中 ***//
                 Log.d("call","履歴確認画面への遷移");
+                //*** 入力されている情報で、予約情報インスタンスを作る ***//
+//                Reserve reserve = new Reserve();
+//                reserve.setRe_id(Util.returnMaxReserveId());                        //*** 予約ID ***//
+//                reserve.setRe_name(edOverView.getText().toString());                //*** 概要 ***//
+//                reserve.setRe_purpose_name((String) sp_purpose.getSelectedItem());  //*** 会議目的名 ***//
+//                reserve.setRe_startDay(btStartDay.getText().toString());            //*** 開始日時 ***//
+//                reserve.setRe_endDay(btEndDay.getText().toString());                //*** 終了日時 ***//
+//                reserve.setRe_startTime(btStartTime.getText().toString());          //*** 開始時刻 ***//
+//                reserve.setRe_endTime(btEndTime.getText().toString());              //*** 終了時刻 ***//
+//                reserve.setRe_applicant(txtApplicant.getText().toString());         //*** 申請者 ***//
+//                reserve.setRe_member(member);                                       //*** 会議参加者のリスト ***//
+//                reserve.setRe_switch(switchFlg ? "0" : "1");                        //*** true(社内) : false(社外) ***//
+//                reserve.setRe_company("");  //*** 現状これで対処 ***////
+//                //*** 選択されている会議室名を取得 ***//
+//                reserve.setRe_room_id(Util.returnRoomId((String) ar_sp_room.getSelectedItem()));   //*** 会議室ＩＤ ***//
+//                reserve.setRe_room_name((String) ar_sp_room.getSelectedItem());     //*** 会議室名 ***//
+//                reserve.setRe_fixtures(edFixture.getText().toString());             //*** 備品 ***//
+//                reserve.setRe_remarks(edRemark.getText().toString());               //*** 備考 ***//
+
+                //        Reserve reserve = Reserve.retReserveConfirm(re_id);
+                //*** 画面遷移のインテント作成中
+                Intent intent = new Intent(getApplicationContext(),ReserveConfirmActivity.class);
+                intent.putExtra("gamen","0");         //*** どの画面からの遷移か(履歴検索)***//
+//                intent.putExtra("reserve",reserve);
+                //*** アクティビティを起動 ***//
+                startActivity(intent);      //*** 予約確認画面へ画面遷移 ***//
 
         //        Reserve reserve = Reserve.retReserveConfirm(re_id);
                 CharSequence msg = ((TextView) view).getText();
