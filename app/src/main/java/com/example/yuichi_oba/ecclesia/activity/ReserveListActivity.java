@@ -29,6 +29,7 @@ import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 import com.example.yuichi_oba.ecclesia.view.TimeTableView;
 
@@ -174,6 +175,7 @@ public class ReserveListActivity extends AppCompatActivity
     private int thCnt = 0;
     public static ReserveListActivity instance = null;
     private DB helper;
+    private MyHelper myHelper;
 
 //    public static List<Reserve> reserveInfo;    // 予約情報記録クラスの変数   非同期エラーが起きるため使用禁止する！
 
@@ -182,6 +184,11 @@ public class ReserveListActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         instance = this;
         Util.easyLog("ReserveListActivity->onCreate() 予約一覧画面");
+        //*** DB関連 ***//
+//        helper = new DB(getApplicationContext());
+        myHelper = new MyHelper(this);
+        db = myHelper.getWritableDatabase();
+
         /*** 各ウィジェットの初期化処理 && 社員情報の取得 ***/
         init();
 
@@ -378,9 +385,7 @@ public class ReserveListActivity extends AppCompatActivity
     private void init() {
         Log.d(TAG, "init()");
 
-        //*** DB関連 ***//
-        helper = new DB(getApplicationContext());
-        db = helper.getWritableDatabase();
+
 
 
         // IMEIクラスのインスタンスを生成
