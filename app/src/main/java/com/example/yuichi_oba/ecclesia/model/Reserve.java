@@ -11,6 +11,7 @@ import com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -264,7 +265,8 @@ public class Reserve implements Serializable{
     }
     //*** --- SELF MADE METHOD --- 早期退出するメソッド ***//
     public void earlyExit() {
-        SQLiteOpenHelper helper = new DB(ReserveConfirmActivity.getInstance().getApplicationContext());
+//        SQLiteOpenHelper helper = new DB(ReserveConfirmActivity.getInstance().getApplicationContext());
+        MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getWritableDatabase();
         //*** 現在時刻取得 ***//
         Date ealDate = new Date();
@@ -279,7 +281,8 @@ public class Reserve implements Serializable{
     //*** --- SELF MADE METHOD --- 終了時間を延長するメソッド ***//
     public void endTimeExtention(String exTime) {
         //*** 必要なインスタンス類を用意 ***//
-        SQLiteOpenHelper helper = new DB(ReserveConfirmActivity.getInstance().getApplicationContext());
+//        SQLiteOpenHelper helper = new DB(ReserveConfirmActivity.getInstance().getApplicationContext());
+        MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getWritableDatabase();
         //*** 延長による終了時刻を計算 ***//
         SimpleDateFormat endFor = new SimpleDateFormat(HH_MM);
@@ -310,7 +313,8 @@ public class Reserve implements Serializable{
     //*** --- SELF MADE METHOD --- 予約を変更するメソッド ***//
     public void reserveEdit() {
         //*** 必要なインスタンスを用意 ***//
-        SQLiteOpenHelper helper = new DB(ReserveCheckActivity.getInstance().getApplicationContext());
+//        SQLiteOpenHelper helper = new DB(ReserveCheckAcetInstance().getApplicationContext());
+        MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getWritableDatabase();
         db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
                 " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +

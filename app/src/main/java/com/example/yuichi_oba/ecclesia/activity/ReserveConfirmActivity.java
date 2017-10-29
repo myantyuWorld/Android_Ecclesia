@@ -33,6 +33,7 @@ import com.example.yuichi_oba.ecclesia.model.OutEmployee;
 import com.example.yuichi_oba.ecclesia.model.Person;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import java.text.ParseException;
@@ -129,7 +130,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialogInterface, int i) {
 //                            Toast.makeText(getActivity(), "早期退出", Toast.LENGTH_SHORT).show();
                             //*** 必要なインスタンスを用意 ***//
-                            SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
+//                            SQLiteOpenHelper helper = new DB(instanceApplicationContext());
+                            MyHelper helper = new MyHelper(instance.getApplicationContext());
                             SQLiteDatabase db = helper.getWritableDatabase();
                             //*** トランザクション開始 ***//
 //                            db.beginTransaction();
@@ -159,8 +161,16 @@ public class ReserveConfirmActivity extends AppCompatActivity
                             db.execSQL("update t_reserve set re_endtime = ? where re_id = ?", new Object[]{ealTime, reserve.getRe_id()});
 
                             //*** 早期退出完了通知ダイアログを表示 ***//
-                            EalryOutResultDialog ealryOutResultDialog = new EalryOutResultDialog();
-                            ealryOutResultDialog.show(getFragmentManager(), "out");
+//                            EalryOutResultDialog ealryOutResultDialog = new EalryOutResultDialog();
+//                            ealryOutResultDialog.show(getFragmentManager(), "out");
+
+                            AlertDialog.Builder result = new AlertDialog.Builder(instance.getApplicationContext());
+                            result.setTitle("早期退出完了")
+                                    .setMessage("早期退出が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            }).create();
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -226,7 +236,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
                                 Spinner spTime = (Spinner) layout.findViewById(R.id.extentionDia_time);
                                 exTime = spTime.getSelectedItem().toString();
                                 //*** 必要なインスタンス類を用意 ***//
-                                SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
+//                                SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
+                                MyHelper helper = new MyHelper(instance.getApplicationContext());
                                 SQLiteDatabase db = helper.getWritableDatabase();
                                 //*** トランザクション開始 ***//
 //                                db.beginTransaction();
@@ -274,6 +285,14 @@ public class ReserveConfirmActivity extends AppCompatActivity
                                 //*** 延長結果ダイアログを表示 ***//
                                 ExtentResultDialog extentResultDialog = new ExtentResultDialog();
                                 extentResultDialog.show(getFragmentManager(), KEYEX);
+
+                            AlertDialog.Builder result = new AlertDialog.Builder(instance.getApplicationContext());
+                            result.setTitle("延長完了")
+                                    .setMessage("延長が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            }).create();
 
 //                            //*** スピナーで選択された延長時間を代入 ***//
 //                            Spinner spTime = (Spinner) layout.findViewById(R.id.extentionDia_time);
@@ -420,6 +439,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
         int id = item.getItemId();
 
         Intent intent;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+
         //*** 現在時刻取得 ***//
         Calendar cal = Calendar.getInstance();
         //*** 比較用Calender ***//
@@ -444,10 +466,20 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
                     earlyOutDialog.show(getFragmentManager(), "out");
                 } else {
-                    Toast.makeText(this, "早期退出できる会議ではありません", Toast.LENGTH_SHORT).show();
+                    builder.setTitle("早期退出不可能").setMessage("早期退出できる会議ではありません").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {}
+                    }).create();
+//                    Toast.makeText(this, "早期退出できる会議ではありません", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
-                    EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
-                    earlyOutDialog.show(getFragmentManager(), "out");
+//                    EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
+//                    earlyOutDialog.show(getFragmentManager(), "out");
+                    builder.setTitle("早期退出完了")
+                            .setMessage("早期退出が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            }).create();
                 }
                 break;
             // 「予約変更」が選択された
@@ -468,7 +500,11 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     intent.putExtra(KEYCHANGE, reserve);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(this, "変更できる会議ではありません", Toast.LENGTH_SHORT).show();
+                    builder.setTitle("変更不可能").setMessage("変更できる会議ではありません").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {}
+                    }).create();
+//                    Toast.makeText(this, "変更できる会議ではありません", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
                     intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
                     intent.putExtra(KEYCHANGE, reserve);
@@ -497,7 +533,11 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     ExtentionDialog extentionDialog = new ExtentionDialog();
                     extentionDialog.show(getFragmentManager(), KEYEX);
                 } else {
-                    Toast.makeText(this, "延長ができる会議ではありません", Toast.LENGTH_SHORT).show();
+                    builder.setTitle("延長不可能").setMessage("延長できる会議ではありません").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {}
+                    }).create();
+//                    Toast.makeText(this, "延長ができる会議ではありません", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
                     ExtentionDialog extentionDialog = new ExtentionDialog();
                     extentionDialog.show(getFragmentManager(), KEYEX);
