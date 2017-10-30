@@ -98,7 +98,7 @@ public class CheckView extends View {
         //*** 変更前情報を保持する配列に挿入 ***//
         //*** applicantの次…member  switchの次…company ***//
         before = new String[]{reserve.getRe_name(), reserve.getRe_purpose_name(), reserve.getRe_startDay() + " " + reserve.getRe_startTime(), reserve.getRe_endDay() + " " + reserve.getRe_endTime(),
-                reserve.getRe_applicant(), "", reserve.getRe_switch(), "", reserve.getRe_room_name(), reserve.getRe_fixtures(), reserve.getRe_remarks()};
+                reserve.getRe_applicant(), "", reserve.getRe_switch(), "会社名", reserve.getRe_room_name(), reserve.getRe_fixtures(), reserve.getRe_remarks()};
     }
 
     //*** 描画メソッド ***//
@@ -132,7 +132,7 @@ public class CheckView extends View {
         c.drawText(changes[FOUR], 500, y_applicant, p_text);
         c.drawText(changes[FIVE], 500, y_member, p_text);
         c.drawText(changes[SIX].contains("0") ? "社内" : "社外", 500, y_switch, p_text);
-//            c.drawText(changes[SEVEN], 500, y_company, p_text);
+        c.drawText(changes[SEVEN], 500, y_company, p_text);
         c.drawText(changes[EIGHT], 500, y_room, p_text);
         c.drawText(changes[NINE], 500, y_fixture, p_text);
         c.drawText(changes[TEN], 500, y_remark, p_text);

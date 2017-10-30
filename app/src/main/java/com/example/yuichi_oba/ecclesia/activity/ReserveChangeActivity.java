@@ -1,8 +1,10 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -175,6 +177,7 @@ public class ReserveChangeActivity extends AppCompatActivity
         });
 
         // テキストが変わったとき　http://gupuru.hatenablog.jp/entry/2014/04/07/202334
+        //*** 概要変更時 ***//
         overview.addTextChangedListener(new TextWatcher() {
             // テキスト変更前
             @Override
@@ -190,6 +193,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             }
         });
 
+        //*** 備品変更時 ***//
         fixtrues.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -201,6 +205,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             }
         });
 
+        //*** 備考変更時 ***//
         remarks.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -212,6 +217,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             }
         });
 
+        //*** 開始日変更時 ***//
         startDayBtn.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -223,6 +229,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             }
         });
 
+        //*** 開始時間変更時 ***//
         startTimeBtn.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -234,6 +241,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             }
         });
 
+        //*** 終了日変更時 ***//
         endDayBtn.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -245,6 +253,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             }
         });
 
+        //*** 終了時間変更時 ***//
         endTimeBtn.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -254,6 +263,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             public void afterTextChanged(Editable s) { changeRes.setRe_endTime(s.toString()); }
         });
 
+        //*** 会議室変更時 ***//
         room.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
@@ -370,6 +380,13 @@ public class ReserveChangeActivity extends AppCompatActivity
             res = true;
         } else {
             Toast.makeText(this, "開始日時より終了日時のほうが早くなっています", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+            builder.setTitle("時間設定失敗").setMessage("開始日時より終了日時のほうが早くなっています")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    }).create();
         }
         return res;
     }

@@ -258,15 +258,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
                                 //*** DateをフォーマットにかけてStringに変換 ***//
                                 exTime = endFor.format(exDate);
                                 Log.d("exTIme", exTime);
-                                //*** DBにインサートする延長情報をセット ***//
-//                                con.put("re_id", reserve.getRe_id());
-//                                con.put("ex_startDay", reserve.getRe_startDay());
-//                                con.put("ex_startTime", reserve.getRe_startTime());
-//                                con.put("ex_endDay", reserve.getRe_endDay());
-//                                con.put("ex_endTime", exTime);
-//                                con.put("ex_endtime", exTime);
-                                //*** 延長テーブルにインサートをかける ***//
-//                                db.insert("t_extension", null, con);
                                 //*** コミットみたいな感じ ***//
 //                                db.setTransactionSuccessful();
                                 //*** トランザクション終了 ***//
