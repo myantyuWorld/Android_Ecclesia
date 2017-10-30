@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +24,7 @@ import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.OutEmployee;
 import com.example.yuichi_oba.ecclesia.model.Person;
-import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.MyInterface;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
@@ -103,6 +102,8 @@ public class AddMemberActivity extends AppCompatActivity
     //*** ポリモーフィズム使用 ***//
     List<Person> members = new ArrayList<>();
     private String emp_id;
+//    private MyHelper helper = new MyHelper(this);
+//    public static SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -279,7 +280,7 @@ public class AddMemberActivity extends AppCompatActivity
     //*** --- SELF MADE METHOD --- 部署スピナーの項目をDB検索して設定するメソッド ***//
     private void setSpinnerDepart() {
         // ＤＢ検索
-        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        MyHelper helper = new MyHelper(this);
         SQLiteDatabase db = helper.getReadableDatabase();
         // 結果をリストにつなぐ
         Cursor c = db.rawQuery("select * from m_depart", new String[]{});
@@ -295,7 +296,7 @@ public class AddMemberActivity extends AppCompatActivity
 
     //*** --- SELF MADE METHOD --- 役職スピナーの項目をDB検索して設定するメソッド ***//
     private void setSpinnerPosition() {
-        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        MyHelper helper = new MyHelper(this);
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = db.rawQuery("select * from m_position", null);
 
@@ -312,7 +313,7 @@ public class AddMemberActivity extends AppCompatActivity
     //*** --- SELF MADE METHOD --- 履歴スピナーの項目を動的設定するメソッド ***//
     private void setSpinnerHistory() {
         // DB 検索
-        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        MyHelper helper = new MyHelper(this);
         SQLiteDatabase db = helper.getReadableDatabase();
 //        Cursor cursor = db.rawQuery("select * from v_member", new String[]{});
         // 自分が参加した会議に参加したことのある人間を検索(社内)
@@ -427,7 +428,7 @@ public class AddMemberActivity extends AppCompatActivity
 
     //*** --- SELF MADE METHOD --- 指定されたテーブルのIDの最大値＋１を返すメソッド ***//
     private String returnMaxId(String tblName) {
-        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        MyHelper helper = new MyHelper(this);
         SQLiteDatabase db = helper.getReadableDatabase();
 
         String maxId = "";

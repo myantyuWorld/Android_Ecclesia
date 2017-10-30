@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
-import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ import java.util.List;
 //*** 「社員」クラス ***//
 public class Employee extends Person implements Serializable {
 
+//    private MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
     public static final int RE_ID = 0;
     public static final int RE_NAME = 1;
     public static final int RE_START_DAY = 2;
@@ -61,7 +62,7 @@ public class Employee extends Person implements Serializable {
     }
 
     public void setDep_id(String dep_id) {
-        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
         //*** 部署テーブルを検索 ***//
         Cursor c = db.rawQuery("SELECT * FROM m_depart", null);
@@ -76,7 +77,7 @@ public class Employee extends Person implements Serializable {
     }
 
     public void setPos_id(String pos_id) {
-        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
         //*** 役職テーブルの検索 ***//
         Cursor c = db.rawQuery("SELECT * FROM m_position", null);
@@ -105,8 +106,8 @@ public class Employee extends Person implements Serializable {
     //*** --- SELF MADE METHOD --- 参加会議を抽出するメソッド ***//
     public void extractParticipationMeet(String today) {
         Context context = ReserveListActivity.getInstance();
-        SQLiteOpenHelper helper = new DB(context);
-        SQLiteDatabase db = helper.getReadableDatabase();
+        MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
         Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?",
                 new String[]{this.getEmp_id(), today});
 

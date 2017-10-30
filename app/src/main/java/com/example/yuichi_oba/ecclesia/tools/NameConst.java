@@ -37,6 +37,9 @@ public class NameConst {
     public static final String KEYEX = "EX"; // 受け渡し用キー
     public static final String KEYCHECK = "Check";
     public static final String KEYCHANGE = "Change";
+    public static final String YYYY_MM_DD_HH_MM = "yyyy/MM/dd HH：mm";
+    public static final String HH_MM = "HH：mm";
+    public static final String SPACE = " ";
 
     // yuichi
     public static final String TOKUBETSU = "0001";

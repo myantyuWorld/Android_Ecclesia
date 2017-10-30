@@ -132,18 +132,18 @@ public class Hint {
      // -------------------------------------------------------------------------------------------------
     //*** HCP 画面担当一覧 ***//　                                 ひな形完成          HCP完成
      // -------------------------------------------------------------------------------------------------
-    //*** ReserveChangeActivity         しゃま***//　                 OK
-    //*** ReserveListActivity           オレ***//　                 　OK
-     //*** TimeTableView ***//          おれ　                      　
+    //*** ReserveChangeActivity         しゃま***//　                 OK                OK
+    //*** ReserveListActivity           オレ***//　                 　OK                
+     //*** TimeTableView ***//          おれ　                      　                  OK
      //*** RoomView ***//               おれ　                        OK                OK
-    //*** HistorySearchActivity         ぐちお ***//　
-     //*** HistorySearch ***//          ぐちお　
-    //*** ReserveCheckActivity          くに***//　                 　OK                 OK
-    //*** ReserveConfirmActivity        くに***//　                 　OK                 OK
+    //*** HistorySearchActivity         ぐちお ***//　                                  OK
+     //*** HistorySearch ***//          ぐちお　                                        OK
+    //*** ReserveCheckActivity          くに***//　                 　OK                OK
+    //*** ReserveConfirmActivity        くに***//　                 　OK                OK
      //*** Reserve_confirm ***//        くに       　                                   OK
      //*** ReserveCheck ***//           くに　                                          OK
-    //*** AddMemberActivity             ヨッシー ***//　              OK
-     //*** AddMember ***//              よっしー　                    OK                OK
+    //*** AddMemberActivity             ヨッシー ***//　              OK                OK
+     //*** AddMember ***//              よっしー　                    OK                
      //*** ReserveView ***//            よっしー　                    OK                OK
     //*** ReserveActivity               よっしー（にしかわ） ***//     OK
      // --------------------------------------------------------------------------------------------------

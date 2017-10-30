@@ -7,7 +7,6 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -30,10 +29,11 @@ import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
-import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 import com.example.yuichi_oba.ecclesia.view.TimeTableView;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -47,8 +47,19 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
 // _/_/
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // TODO: 2017/09/19  長押し対応は無理か？ 一覧での、タップは反応するが、長押しには反応しない・・・
+//*** オブジェクト渡しのはいし OK ***//
 public class ReserveListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    @SuppressLint("StaticFieldLeak")
+    static TextView arl_txt_date;
+    static TimeTableView arl_view_timetableView;
+    public static Employee employee;
+    private int thCnt = 0;
+    public static ReserveListActivity instance = null;
+    //    private DB helper;
+    private MyHelper helper;
+    public static SQLiteDatabase db;
 
     public static final int EMP_NAME = 1;
     public static final int EMP_TEL = 2;
@@ -68,15 +79,12 @@ public class ReserveListActivity extends AppCompatActivity
         public String getId() {
             return id;
         }
-
         public void setId(String id) {
             this.id = id;
         }
-
         public String getImeiNumber() {
             return imeiNumber;
         }
-
         public void setImeiNumber(String imeiNumber) {
             this.imeiNumber = imeiNumber;
         }
@@ -84,20 +92,20 @@ public class ReserveListActivity extends AppCompatActivity
         //*** SelfMadeMethod ***//
         //*** 端末IMEIを取得するメソッド ***//
         public void getTerminalImei() {
-            Log.d(TAG, "getTerminalImei()");
+            Log.d("call", "getTerminalImei()");
             TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 //        return manager.getDeviceId();
             // TODO: 2017/09/15 ハードコーディング!
-            this.setImeiNumber("352272080218786");   // 大馬 の 端末ＩＭＥＩ
+//            this.setImeiNumber("352272080218786");   // 大馬 の 端末ＩＭＥＩ
+            this.setImeiNumber("0");   // 大馬 の 端末ＩＭＥＩ
         }
 
         //*** 社員を認証するメソッド ***//
         public String authEmployee() {
             Log.d("call", "ReserveListActivity->authEmployee()");
             String emp_id = "";
-            SQLiteOpenHelper helper = new DB(getApplicationContext());
-            SQLiteDatabase db = helper.getReadableDatabase();
             Cursor c = db.rawQuery("select * from m_terminal where ter_id = ?", new String[]{this.imeiNumber});
+
             if (c.moveToNext()) {
                 // 端末ＩＭＥＩから社員ＩＤ取得が成功した
                 emp_id = c.getString(EMP_NAME);
@@ -111,10 +119,8 @@ public class ReserveListActivity extends AppCompatActivity
             Log.d("call", TAG + "->getEmployeeInfo()");
             String emp_id = authEmployee();
             if (!emp_id.isEmpty()) {
-                SQLiteOpenHelper helper2 = new DB(getApplicationContext());
-                SQLiteDatabase db2 = helper2.getReadableDatabase();
                 // 社員ＩＤが空またはＮＵＬＬでなければ次のロジックを実行する
-                Cursor c = db2.rawQuery("select * from v_employee where emp_id = ?",
+                Cursor c = db.rawQuery("select * from v_employee where emp_id = ?",
                         new String[]{emp_id});
                 if (c.moveToNext()) {
                     // 社員ＩＤから社員情報を検索して、設定する
@@ -173,12 +179,7 @@ public class ReserveListActivity extends AppCompatActivity
     public static final String RESERVE_INFO = "reserve_info";
 
 
-    @SuppressLint("StaticFieldLeak")
-    static TextView arl_txt_date;
-    static TimeTableView arl_view_timetableView;
-    public static Employee employee;
-    private int thCnt = 0;
-    public static ReserveListActivity instance = null;
+
 
 //    public static List<Reserve> reserveInfo;    // 予約情報記録クラスの変数   非同期エラーが起きるため使用禁止する！
 
@@ -187,6 +188,11 @@ public class ReserveListActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         instance = this;
         Util.easyLog("ReserveListActivity->onCreate() 予約一覧画面");
+        //*** DB関連 ***//
+//        helper = new DB(getApplicationContext());
+        helper = new MyHelper(this);
+        db = helper.getWritableDatabase();
+
         /*** 各ウィジェットの初期化処理 && 社員情報の取得 ***/
         init();
 
@@ -262,9 +268,18 @@ public class ReserveListActivity extends AppCompatActivity
                 arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
             }
         });
+
+
     }
 
-//    @Override
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        db.close();
+        helper.close();
+
+    }
+    //    @Override
 //    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 //        super.onCreateContextMenu(menu, v, menuInfo);
 //        getMenuInflater().inflate(R.menu.menu, menu);
@@ -324,6 +339,7 @@ public class ReserveListActivity extends AppCompatActivity
     protected void onResume() {
         Log.d("call", "ReserveListActivity->onResume()");
         super.onResume();
+        arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
         arl_view_timetableView.thread_flg = true;
 
         Thread thread = new Thread(new Runnable() {
@@ -337,12 +353,15 @@ public class ReserveListActivity extends AppCompatActivity
                 }
                 Log.d("call", "Thread");
                 String[] info = arl_view_timetableView.getSelectedReserve();
-                Log.d("call", "info :: " + info);
+                Log.d("call", "info :: " + Arrays.toString(info));
                 //*** 新規予約登録画面への遷移 ***//
                 if (info[0].equals(NONE)) {
                     Log.d("call", "新規予約登録画面への遷移");
                     Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
-                    intent.putExtra("emp", employee);                           //*** 社員インスタンスをインテント渡し ***//
+                    //*** オブジェクト渡しがエラーのため、コメアウト ***//
+//                    intent.putExtra("emp", employee);                           //*** 社員インスタンスをインテント渡し ***//
+                    intent.putExtra("emp_id", employee.getEmp_id());
+
                     intent.putExtra("date", arl_txt_date.getText().toString()); //*** 選択されている日付をインテント渡し ***//
                     intent.putExtra("roomId", info[1]);                         //*** 会議室IDを渡す ***//
 
@@ -375,6 +394,10 @@ public class ReserveListActivity extends AppCompatActivity
     //*** ウィジェットの初期化処理メソッド ***//
     private void init() {
         Log.d(TAG, "init()");
+
+
+
+
         // IMEIクラスのインスタンスを生成
         Imei imei = new Imei();
         imei.getTerminalImei(); // 端末IMEIを取得する

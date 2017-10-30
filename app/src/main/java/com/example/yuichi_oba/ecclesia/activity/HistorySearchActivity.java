@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,7 +20,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,7 +28,7 @@ import android.widget.Toast;
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.model.Person;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
-import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +58,14 @@ public class HistorySearchActivity extends AppCompatActivity
     public static final int DAY = 2;
     public static final int GAIYOU = 1;
     public static final int ID = 0;
+
+    SearchView searchView;
+    ListView listView;
+    List<Purpose> purpose;
+    List<Company> companiesy;
+    ArrayList<Reserve> listItems;
+    private MyHelper helper = new MyHelper(this);
+    public static SQLiteDatabase db;
 
     //    private class ListItem {
 //        private long id;
@@ -253,11 +259,7 @@ public class HistorySearchActivity extends AppCompatActivity
 //        }
     }
 
-    SearchView searchView;
-    ListView listView;
-    List<Purpose> purpose;
-    List<Company> companiesy;
-    ArrayList<Reserve> listItems;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "HistorySearchActivity->onCreate()");
@@ -277,9 +279,10 @@ public class HistorySearchActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         //データベースを準備
         listItems = new ArrayList<>();
-        SQLiteOpenHelper listdeta = new DB(getApplicationContext());
-        SQLiteDatabase db_list = listdeta.getReadableDatabase();
-        Cursor c_list = db_list.rawQuery("select * from  t_reserve x" +
+        SQLiteDatabase db_list = helper.getReadableDatabase();
+        db = helper.getReadableDatabase();
+
+        Cursor c_list = db.rawQuery("select * from  t_reserve x" +
                 " inner join t_member y on x.re_id = y.re_id" +
                 " inner join m_out as a on y.mem_id = a.out_id" +
                 " inner join m_company as b on a.com_id = b.com_id" +
@@ -333,8 +336,6 @@ public class HistorySearchActivity extends AppCompatActivity
         //データベース検索
         purpose= new ArrayList<>();
         List<String> strings = new ArrayList<>();
-        SQLiteOpenHelper helper = new DB(getApplicationContext());
-        SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = db.rawQuery("select * from m_purpose", new String[]{});
         while (c.moveToNext()) {
             strings.add(c.getString(1));
@@ -374,9 +375,7 @@ public class HistorySearchActivity extends AppCompatActivity
         //データベース検索(会社名)
         companiesy = new ArrayList<>();
         List<String> strings1 = new ArrayList<>();
-        SQLiteOpenHelper helper2 = new DB(getApplicationContext());
-        SQLiteDatabase db2 = helper2.getReadableDatabase();
-        Cursor cursor = db2.rawQuery("select * from m_company", new String[]{});
+        Cursor cursor = db.rawQuery("select * from m_company", new String[]{});
         while (cursor.moveToNext()) {
             strings1.add(cursor.getString(1));
             Log.d("call",cursor.getString(1));
@@ -448,6 +447,12 @@ public class HistorySearchActivity extends AppCompatActivity
                 CharSequence msg = ((TextView) view).getText();
                 Toast.makeText(HistorySearchActivity.this,
                         String.format("選択したのは%s",msg.toString()),Toast.LENGTH_SHORT).show();
+                //*** 予約IDを特定 ***//
+
+                //*** 予約のインスタンスを生成 ***//
+
+                //*** intent.puextra(xxx)する ***//
+
                 //*** 画面遷移のインテント作成中
                 Intent intent = new Intent(getApplicationContext(),ReserveConfirmActivity.class);
                 intent.putExtra("gamen",1);           //*** どの画面からの遷移か(履歴検索)***//
