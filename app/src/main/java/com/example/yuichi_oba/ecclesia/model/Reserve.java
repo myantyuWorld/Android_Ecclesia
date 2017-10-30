@@ -25,7 +25,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
 
 public class Reserve implements Serializable{
 
-    private MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
+//    private MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
     public static SQLiteDatabase db;
 
     public static final String Q_SAME_DAY_MEETING = "select * from t_reserve where re_startday = ? and room_id = ?";
@@ -191,6 +191,7 @@ public class Reserve implements Serializable{
 
     //*** 引数の会議日と同じ会議をListで取得する ***//
     private List<Reserve> getSameDayMeeting(Reserve r) {
+        MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = db.rawQuery(
                 Q_SAME_DAY_MEETING,
@@ -249,6 +250,7 @@ public class Reserve implements Serializable{
         c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
 
         //***  ***//
+        MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
         SQLiteDatabase db = helper.getWritableDatabase();
         int rs = (int) db.insert("t_reserve", null, c);
         db.close();
@@ -279,8 +281,10 @@ public class Reserve implements Serializable{
     public void endTimeExtention(String exTime) {
         //*** 必要なインスタンス類を用意 ***//
 //        SQLiteOpenHelper helper = new DB(ReserveConfirmActivity.getInstance().getApplicationContext());
-        MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
-        SQLiteDatabase db = helper.getWritableDatabase();
+//        MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
+//        SQLiteDatabase db = helper.getWritableDatabase();
+        MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
+        db = helper.getWritableDatabase();
         //*** 延長による終了時刻を計算 ***//
         SimpleDateFormat endFor = new SimpleDateFormat(HH_MM);
         Calendar excal = Calendar.getInstance();
