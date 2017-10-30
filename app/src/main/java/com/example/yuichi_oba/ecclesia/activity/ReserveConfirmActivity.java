@@ -3,7 +3,6 @@ package com.example.yuichi_oba.ecclesia.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -614,22 +613,22 @@ public class ReserveConfirmActivity extends AppCompatActivity
         //***  ***//
         float priorityAverage = setReserveDetail();         //***  ***//
 
-        ContentValues c = new ContentValues();
-        c.put("re_id", reserve.getRe_id());                 //***  ***//
-        c.put("re_overview", reserve.getRe_name());         //***  ***//
-        c.put("re_startday", reserve.getRe_startDay());     //***  ***//
-        c.put("re_endday", reserve.getRe_endDay());         //***  ***//
-        c.put("re_starttime", reserve.getRe_startTime());   //***  ***//
-        c.put("re_endtime", reserve.getRe_endTime());       //***  ***//
-        c.put("re_switch", reserve.getRe_switch());         //***  ***//
-        c.put("re_fixture", reserve.getRe_fixtures());      //***  ***//
-        c.put("re_remarks", reserve.getRe_remarks());       //***  ***//
-        c.put("re_priority", priorityAverage);              //***  ***//
-        c.put("com_id", "");                                //***  ***//
-        c.put("emp_id", reserve.getRe_applicant());         //***  ***//
-        c.put("room_id", reserve.getRe_room_id());          //***  ***//
-        c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
-        c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
+//        ContentValues c = new ContentValues();
+//        c.put("re_id", reserve.getRe_id());                 //***  ***//
+//        c.put("re_overview", reserve.getRe_name());         //***  ***//
+//        c.put("re_startday", reserve.getRe_startDay());     //***  ***//
+//        c.put("re_endday", reserve.getRe_endDay());         //***  ***//
+//        c.put("re_starttime", reserve.getRe_startTime());   //***  ***//
+//        c.put("re_endtime", reserve.getRe_endTime());       //***  ***//
+//        c.put("re_switch", reserve.getRe_switch());         //***  ***//
+//        c.put("re_fixture", reserve.getRe_fixtures());      //***  ***//
+//        c.put("re_remarks", reserve.getRe_remarks());       //***  ***//
+//        c.put("re_priority", priorityAverage);              //***  ***//
+//        c.put("com_id", "");                                //***  ***//
+//        c.put("emp_id", reserve.getRe_applicant());         //***  ***//
+//        c.put("room_id", reserve.getRe_room_id());          //***  ***//
+//        c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
+//        c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
 
         db = helper.getWritableDatabase();
         db.beginTransaction();
@@ -648,7 +647,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     st.bindString(11, "company_name");
                     st.bindString(12, reserve.getRe_applicant());
                     st.bindString(13, reserve.getRe_room_id());
-                    st.bindString(14, reserve.getRe_purpose_id());
+//                    st.bindString(14, reserve.getRe_purpose_id());
+                    st.bindString(14, "0001");
+
                     st.bindString(15, reserve.getRe_applicant());
                     st.executeInsert();
             }
