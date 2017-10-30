@@ -7,12 +7,20 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
 
 /**
  * Created by Yuichi-Oba on 2017/09/15.
@@ -256,15 +264,62 @@ public class Reserve implements Serializable{
     }
     //*** --- SELF MADE METHOD --- 早期退出するメソッド ***//
     public void earlyExit() {
+//        SQLiteOpenHelper helper = new DB(ReserveConfirmActivity.getInstance().getApplicationContext());
+        MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
+        //*** 現在時刻取得 ***//
+        Date ealDate = new Date();
+        //*** フォ－マットを用意 ***//
+        SimpleDateFormat ealFor = new SimpleDateFormat(HH_MM);
+        //*** 現在時刻をフォーマットにかけてStringへ変換 ***//
+        String ealTime = ealFor.format(ealDate);
+        Log.d("ealTIme", ealTime);
 
+        db.execSQL("update t_reserve set re_endtime = ? where re_id = ?", new Object[]{ealTime, re_id});
     }
     //*** --- SELF MADE METHOD --- 終了時間を延長するメソッド ***//
-    public void endTimeExtention() {
+    public void endTimeExtention(String exTime) {
+        //*** 必要なインスタンス類を用意 ***//
+//        SQLiteOpenHelper helper = new DB(ReserveConfirmActivity.getInstance().getApplicationContext());
+        MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
+        //*** 延長による終了時刻を計算 ***//
+        SimpleDateFormat endFor = new SimpleDateFormat(HH_MM);
+        Calendar excal = Calendar.getInstance();
+        Log.d("nowEnd", re_endTime);
+        //*** フォーマットで変換をかけてCalenderにセット ***//
+        try {
+            excal.setTime(endFor.parse(re_endTime));
+            Log.d("changeTime", String.valueOf(endFor.parse(re_endTime)));
+        } catch (ParseException e) {
+            e.getStackTrace();
+        }
+        //*** セットされたCalenderに延長時間を加算する ***//
+        excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
+        //*** CalenderをDateに変換 ***//
+        Date exDate = excal.getTime();
+        //*** DateをフォーマットにかけてStringに変換 ***//
+        exTime = endFor.format(exDate);
+        Log.d("exTIme", exTime);
 
+        db.execSQL("insert into t_extension values(?,?,?,?,?)",
+                new Object[]{re_id,
+                        re_startDay,
+                        re_startTime,
+                        re_endDay,
+                        re_endTime});
     }
     //*** --- SELF MADE METHOD --- 予約を変更するメソッド ***//
     public void reserveEdit() {
-
+        //*** 必要なインスタンスを用意 ***//
+//        SQLiteOpenHelper helper = new DB(ReserveCheckAcetInstance().getApplicationContext());
+        MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
+                " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
+                " where re_id = ? ", new Object[]{re_name, re_startDay, re_endDay, re_startTime,
+                re_endTime, re_switch, re_fixtures, re_remarks, "会議優先度", re_room_id
+                , re_purpose_id, re_id});
     }
     //*** --- SELF MADE METHOD --- 通知メールを送るメソッド ***//
     public void sentMail() {
