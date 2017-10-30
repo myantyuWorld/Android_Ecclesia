@@ -102,8 +102,8 @@ public class AddMemberActivity extends AppCompatActivity
     //*** ポリモーフィズム使用 ***//
     List<Person> members = new ArrayList<>();
     private String emp_id;
-    private MyHelper helper = new MyHelper(this);
-    public static SQLiteDatabase db;
+//    private MyHelper helper = new MyHelper(this);
+//    public static SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -280,6 +280,7 @@ public class AddMemberActivity extends AppCompatActivity
     //*** --- SELF MADE METHOD --- 部署スピナーの項目をDB検索して設定するメソッド ***//
     private void setSpinnerDepart() {
         // ＤＢ検索
+        MyHelper helper = new MyHelper(this);
         SQLiteDatabase db = helper.getReadableDatabase();
         // 結果をリストにつなぐ
         Cursor c = db.rawQuery("select * from m_depart", new String[]{});
@@ -295,6 +296,7 @@ public class AddMemberActivity extends AppCompatActivity
 
     //*** --- SELF MADE METHOD --- 役職スピナーの項目をDB検索して設定するメソッド ***//
     private void setSpinnerPosition() {
+        MyHelper helper = new MyHelper(this);
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = db.rawQuery("select * from m_position", null);
 
@@ -311,6 +313,7 @@ public class AddMemberActivity extends AppCompatActivity
     //*** --- SELF MADE METHOD --- 履歴スピナーの項目を動的設定するメソッド ***//
     private void setSpinnerHistory() {
         // DB 検索
+        MyHelper helper = new MyHelper(this);
         SQLiteDatabase db = helper.getReadableDatabase();
 //        Cursor cursor = db.rawQuery("select * from v_member", new String[]{});
         // 自分が参加した会議に参加したことのある人間を検索(社内)
@@ -425,6 +428,7 @@ public class AddMemberActivity extends AppCompatActivity
 
     //*** --- SELF MADE METHOD --- 指定されたテーブルのIDの最大値＋１を返すメソッド ***//
     private String returnMaxId(String tblName) {
+        MyHelper helper = new MyHelper(this);
         SQLiteDatabase db = helper.getReadableDatabase();
 
         String maxId = "";

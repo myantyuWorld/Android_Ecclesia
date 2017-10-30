@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,9 +17,9 @@ import java.util.List;
  */
 
 //*** 「社員」クラス ***//
-public class Employee extends Person {
+public class Employee extends Person implements Serializable {
 
-    private MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
+//    private MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
     public static final int RE_ID = 0;
     public static final int RE_NAME = 1;
     public static final int RE_START_DAY = 2;
@@ -105,6 +106,7 @@ public class Employee extends Person {
     //*** --- SELF MADE METHOD --- 参加会議を抽出するメソッド ***//
     public void extractParticipationMeet(String today) {
         Context context = ReserveListActivity.getInstance();
+        MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
         SQLiteDatabase db = helper.getWritableDatabase();
         Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?",
                 new String[]{this.getEmp_id(), today});

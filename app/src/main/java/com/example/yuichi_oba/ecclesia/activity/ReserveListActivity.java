@@ -47,6 +47,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
 // _/_/
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // TODO: 2017/09/19  長押し対応は無理か？ 一覧での、タップは反応するが、長押しには反応しない・・・
+//*** オブジェクト渡しのはいし OK ***//
 public class ReserveListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -57,7 +58,7 @@ public class ReserveListActivity extends AppCompatActivity
     private int thCnt = 0;
     public static ReserveListActivity instance = null;
     //    private DB helper;
-    private MyHelper helper = new MyHelper(this);
+    private MyHelper helper;
     public static SQLiteDatabase db;
 
     public static final int EMP_NAME = 1;
@@ -189,6 +190,7 @@ public class ReserveListActivity extends AppCompatActivity
         Util.easyLog("ReserveListActivity->onCreate() 予約一覧画面");
         //*** DB関連 ***//
 //        helper = new DB(getApplicationContext());
+        helper = new MyHelper(this);
         db = helper.getWritableDatabase();
 
         /*** 各ウィジェットの初期化処理 && 社員情報の取得 ***/
@@ -355,7 +357,10 @@ public class ReserveListActivity extends AppCompatActivity
                 if (info[0].equals(NONE)) {
                     Log.d("call", "新規予約登録画面への遷移");
                     Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
-                    intent.putExtra("emp", employee);                           //*** 社員インスタンスをインテント渡し ***//
+                    //*** オブジェクト渡しがエラーのため、コメアウト ***//
+//                    intent.putExtra("emp", employee);                           //*** 社員インスタンスをインテント渡し ***//
+                    intent.putExtra("emp_id", employee.getEmp_id());
+
                     intent.putExtra("date", arl_txt_date.getText().toString()); //*** 選択されている日付をインテント渡し ***//
                     intent.putExtra("roomId", info[1]);                         //*** 会議室IDを渡す ***//
 
