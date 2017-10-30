@@ -153,6 +153,8 @@ public class CheckView extends View {
         }
 
         for (int i = 1; i <= 11; i++) {
+            Log.d("Be", before[i - 1]);
+            Log.d("Af", changes[i - 1]);
             if (!changes[i - 1].equals(before[i - 1])) {
                 c.drawRect(0 + padding, room * i - room + padding, 1080 - padding, room * i - padding, p_change);
             }

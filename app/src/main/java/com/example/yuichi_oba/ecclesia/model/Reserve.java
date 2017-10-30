@@ -281,8 +281,10 @@ public class Reserve implements Serializable{
     public void endTimeExtention(String exTime) {
         //*** 必要なインスタンス類を用意 ***//
 //        SQLiteOpenHelper helper = new DB(ReserveConfirmActivity.getInstance().getApplicationContext());
-        MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
-        SQLiteDatabase db = helper.getWritableDatabase();
+//        MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
+//        SQLiteDatabase db = helper.getWritableDatabase();
+        MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
+        db = helper.getWritableDatabase();
         //*** 延長による終了時刻を計算 ***//
         SimpleDateFormat endFor = new SimpleDateFormat(HH_MM);
         Calendar excal = Calendar.getInstance();

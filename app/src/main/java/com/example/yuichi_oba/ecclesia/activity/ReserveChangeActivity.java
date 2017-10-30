@@ -1,10 +1,8 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -376,17 +374,10 @@ public class ReserveChangeActivity extends AppCompatActivity
         }
         //*** 時間に矛盾がないか ***//
         if ((cal.get(Calendar.YEAR) <= cmp.get(Calendar.YEAR)) && (cal.get(Calendar.MONTH) <= cmp.get(Calendar.MONTH)) && (cal.get(Calendar.DAY_OF_MONTH) <= cmp.get(Calendar.DAY_OF_MONTH))
-                && (cal.get(Calendar.HOUR_OF_DAY) <= cmp.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) < cmp.get(Calendar.MINUTE))) {
+                && (cal.get(Calendar.HOUR_OF_DAY) <= cmp.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) <= cmp.get(Calendar.MINUTE))) {
             res = true;
         } else {
             Toast.makeText(this, "開始日時より終了日時のほうが早くなっています", Toast.LENGTH_SHORT).show();
-            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-            builder.setTitle("時間設定失敗").setMessage("開始日時より終了日時のほうが早くなっています")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                        }
-                    }).create();
         }
         return res;
     }
