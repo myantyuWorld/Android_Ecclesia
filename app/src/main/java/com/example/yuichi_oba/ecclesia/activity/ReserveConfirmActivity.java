@@ -645,7 +645,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     st.bindString(9, reserve.getRe_remarks());
                     st.bindString(10, String.valueOf(priorityAverage));
                     st.bindString(11, "company_name");
-                    st.bindString(12, reserve.getRe_applicant());
+                    st.bindString(12, employee.getEmp_id());
                     st.bindString(13, reserve.getRe_room_id());
                     st.bindString(14, reserve.getRe_purpose_id());
 //                    st.bindString(14, "0001");
