@@ -8,7 +8,6 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -38,7 +37,7 @@ import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.OutEmployee;
 import com.example.yuichi_oba.ecclesia.model.Person;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
-import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import java.util.ArrayList;
@@ -81,6 +80,8 @@ public class ReserveActivity extends AppCompatActivity
     private Button btReConfirm;         //*** 内容確認ボタン ***//
 
     private boolean switchFlg;          //*** 社内社外区分 ***//
+    private MyHelper helper = new MyHelper(this);
+    public static SQLiteDatabase db;
 
     //    private ReserveInfo reserveInfo;
 //    public static List<Employee> member = new ArrayList<>();
@@ -363,7 +364,6 @@ public class ReserveActivity extends AppCompatActivity
         sp_member.setAdapter(adapter_member);
 
         //*** 会議目的スピナー ***//
-        SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
         List<String> purpose = new ArrayList<>();
         Cursor c = db.rawQuery("select * from m_purpose", null);

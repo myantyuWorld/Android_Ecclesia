@@ -248,7 +248,7 @@ public class MyHelper extends SQLiteOpenHelper {
         db.execSQL(Query.Q_INSERT_TERMINAL.getString());
         db.execSQL(Query.Q_INSERT_RESERVE.getString());
         db.execSQL(Query.Q_INSERT_MEMBER.getString());
-        db.execSQL(Query.Q_INSERT_EXTENSION.getString());
+//        db.execSQL(Query.Q_INSERT_EXTENSION.getString());
 
 
         Cursor c = db.rawQuery("select * from m_admin", null);

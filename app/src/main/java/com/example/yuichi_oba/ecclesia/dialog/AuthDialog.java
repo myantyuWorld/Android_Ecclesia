@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
-import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 
 /**
  * Created by Yuichi-Oba on 2017/07/21.
@@ -46,7 +46,7 @@ public class AuthDialog extends DialogFragment {
                         /***
                          * ここで、管理者認証を行い、良ければ、管理者画面に遷移するといっても、管理者画面はなし・・・
                          */
-                        SQLiteOpenHelper helper = new DB(getContext());
+                        SQLiteOpenHelper helper = new MyHelper(getContext());
                         SQLiteDatabase db = helper.getReadableDatabase();
                         Cursor c = db.rawQuery("select * from m_admin where admin_id = ? and admin_pass = ?",
                                 new String[]{id.getText().toString(), pass.getText().toString()});
@@ -59,6 +59,7 @@ public class AuthDialog extends DialogFragment {
                         else {
                             ;   // TODO: 2017/10/04 ログイン失敗を教える何らかのメッセージ を出力する
                         }
+                        c.close();
 
                     }
                 })

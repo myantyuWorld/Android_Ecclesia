@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
-import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 
 import java.io.Serializable;
 
@@ -38,7 +38,7 @@ public class Admin extends Employee implements Serializable{
     //*** 管理者を認証するメソッド ***//
     public boolean authAdminCheck() {
         Context context = ReserveListActivity.getInstance();
-        SQLiteOpenHelper helper = new DB(context);
+        SQLiteOpenHelper helper = new MyHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = db.rawQuery("select * from m_admin where admin_id = ? and admin_pass = ?",
                 new String[]{this.adminId, this.adminPass});

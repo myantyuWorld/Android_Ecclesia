@@ -55,7 +55,7 @@ public class Util {
     public static String returnDepartName(String dep_id) {
         Log.d("call", "call returnDepartName()");
         Log.d("call", dep_id);
-        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
 
         Cursor c = db.rawQuery("SELECT * FROM m_depart where dep_id = ?",
@@ -74,7 +74,7 @@ public class Util {
      * @return
      */
     public static String returnDepartId(String depName) {
-        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
 
         Cursor c = db.rawQuery("SELECT * FROM m_depart where dep_name = ?",
@@ -88,12 +88,12 @@ public class Util {
         return depId;   //*** 部署ＩＤを返す ***//
     }
     /***
-     *  役職IDから、役職名をDB検索してリターンするメソッド
+     *  役職IDから、役職名をMyHelper検索してリターンするメソッド
      * @param pos_id    役職ID
      * @return 検索した役職名（ヒットなしは 空文字 ヲ返す ）
      */
     public static AddMemberActivity.Position returnPostionName(String pos_id) {
-        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
 
         Cursor c = db.rawQuery("SELECT * FROM m_position", null);
@@ -115,7 +115,7 @@ public class Util {
      * @return
      */
     public static AddMemberActivity.Position returnPositionId(String posName) {
-        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
 
         Cursor c = db.rawQuery("SELECT * FROM m_position where pos_name = ?",
@@ -136,7 +136,7 @@ public class Util {
      * @return 検索した会議室ＩＤ（ヒットなしは 空文字を返す ）
      */
     public static String returnRoomId(String roomName) {
-        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
 
         Cursor c = db.rawQuery("select * from m_room where room_name = ?",
@@ -156,7 +156,7 @@ public class Util {
      * @return
      */
     public static String returnRoomName(String roomId) {
-        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
 
         Cursor c = db.rawQuery("select * from m_room where room_id = ?",
@@ -171,15 +171,15 @@ public class Util {
         return roomName;//*** 会議室名を返す ***//
     }
     /***
-     * 予約テーブルの予約IDの最大値＋１をDB検索して、書式指定して返すメソッド
+     * 予約テーブルの予約IDの最大値＋１をMyHelper検索して、書式指定して返すメソッド
      * @return
      */
     public static String returnMaxReserveId() {
-        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
 
         String maxReserveId = "";
-        //*** 予約テーブルの予約IDの最大値＋１をDB検索 ***//
+        //*** 予約テーブルの予約IDの最大値＋１をMyHelper検索 ***//
         Cursor c = db.rawQuery("select max(re_id) + 1 from t_reserve", null);
         if (c.moveToNext()) {
             maxReserveId = c.getString(0);          //*** 検索結果の代入（ここでは、未だ０埋めされていない） ***//
@@ -192,7 +192,7 @@ public class Util {
         return newReId;        //*** 書式指定付きで、０埋めして返す (ex: 0018) ***//
     }
     /***
-     * 引数の社員名から、その社員の社員IDをDB検索して値を返すメソッド
+     * 引数の社員名から、その社員の社員IDをMyHelper検索して値を返すメソッド
      * @param empName
      * @return
      */
@@ -205,13 +205,13 @@ public class Util {
         return empId;               //***  ***//
     }
     /***
-     * DB簡単SQL発行メソッド
+     * MyHelper簡単SQL発行メソッド
      * @param args
      * @param strArray
      * @return
      */
     public static Cursor rawQuery(String args, String[] strArray) {
-        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
 
         return db.rawQuery(args, strArray);
@@ -251,7 +251,7 @@ public class Util {
 //        c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
 //
 //        //***  ***//
-//        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
+//        SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
 //
 //        return helper.getWritableDatabase().insertOrThrow("t_reserve", null, c);  //***  ***//
 //    }

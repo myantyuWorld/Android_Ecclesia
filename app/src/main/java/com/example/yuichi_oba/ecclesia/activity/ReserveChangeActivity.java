@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -35,7 +34,7 @@ import android.widget.Toast;
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
-import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import java.text.ParseException;
@@ -84,6 +83,8 @@ public class ReserveChangeActivity extends AppCompatActivity
     FloatingActionButton fbn;
 
     List<String> member = new ArrayList<>();
+    private MyHelper helper = new MyHelper(this);
+    public static SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +131,7 @@ public class ReserveChangeActivity extends AppCompatActivity
         editBtn = (Button) findViewById(R.id.acchange_btn_confirm);
         inout = (Switch) findViewById(R.id.acchange_sw_inout);
 
-        SQLiteOpenHelper helper = new DB(getApplicationContext());
+//        SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
         List<String> purpose = new ArrayList<>();
         Cursor c = db.rawQuery("select * from m_purpose", null);
