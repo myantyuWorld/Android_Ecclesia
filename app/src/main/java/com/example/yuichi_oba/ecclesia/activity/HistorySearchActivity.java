@@ -420,6 +420,12 @@ public class HistorySearchActivity extends AppCompatActivity
                 CharSequence msg = ((TextView) view).getText();
                 Toast.makeText(HistorySearchActivity.this,
                         String.format("選択したのは%s",msg.toString()),Toast.LENGTH_SHORT).show();
+                //*** 予約IDを特定 ***//
+
+                //*** 予約のインスタンスを生成 ***//
+
+                //*** intent.puextra(xxx)する ***//
+
                 //*** 画面遷移のインテント作成中
                 Intent intent = new Intent(getApplicationContext(),ReserveConfirmActivity.class);
                 intent.putExtra("gamen",1);           //*** どの画面からの遷移か(履歴検索)***//

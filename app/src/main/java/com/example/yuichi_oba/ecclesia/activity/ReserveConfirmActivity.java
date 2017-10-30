@@ -305,6 +305,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
         } else {                         //*** 「一覧」画面からの画面遷移 ***//
             reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
         }
+
+        intent.getIntExtra("gamen", 1);
         instance = this;
 
         setReserveDetail(); //***  ***//
