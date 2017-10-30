@@ -657,6 +657,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
         } finally {
             db.endTransaction();
         }
+        //*** 画面を殺す ***//
+        finish();
 //        db = helper.getWritableDatabase();                      //***  ***//
 //        db.execSQL("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
 //                new Object[]{
