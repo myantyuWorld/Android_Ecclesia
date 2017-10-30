@@ -647,8 +647,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     st.bindString(11, "company_name");
                     st.bindString(12, reserve.getRe_applicant());
                     st.bindString(13, reserve.getRe_room_id());
-//                    st.bindString(14, reserve.getRe_purpose_id());
-                    st.bindString(14, "0001");
+                    st.bindString(14, reserve.getRe_purpose_id());
+//                    st.bindString(14, "0001");
 
                     st.bindString(15, reserve.getRe_applicant());
                     st.executeInsert();
@@ -682,6 +682,13 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     //*** --- SELF MADE METHOD --- 予約インスタンスの情報を、DBに書き込める形にまで設定するメソッド ***//
     private float setReserveDetail() {
+        //*** 会議目的IDをセットする ***//
+        String purName = reserve.getRe_purpose_name();  //***  ***//
+        String purId = Util.returnPurposeId(purName);   //*** 会議目的名を ***//
+        reserve.setRe_purpose_id(purId);
+
+
+        //*** 会議参加者の優先度を計算する ***//
         Integer sumPriority = 0;
         // TODO: 2017/10/06 会議目的優先度をどう処理するか考察
 
