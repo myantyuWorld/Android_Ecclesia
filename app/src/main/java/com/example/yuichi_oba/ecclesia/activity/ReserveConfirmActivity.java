@@ -427,6 +427,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     //*** 次画面（ReserveChangeActivity）に予約インスタンスを渡す ***//
                     intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
                     intent.putExtra(KEYCHANGE, reserve);
+//                    intent.putExtra(KEYCHANGE, re_id);
                     startActivity(intent);
                 } else {
 //                    builder.setTitle("変更不可能").setMessage("変更できる会議ではありません").setPositiveButton("OK", new DialogInterface.OnClickListener() {
