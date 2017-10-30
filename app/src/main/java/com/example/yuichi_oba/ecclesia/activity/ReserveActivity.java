@@ -195,7 +195,22 @@ public class ReserveActivity extends AppCompatActivity
 
         //*** 前画面からのオブジェクトをもらう（Employeeクラスのインスタンス） ***//
         Intent intent = getIntent();
-        employee = (Employee) intent.getSerializableExtra("emp");   //*** 社員インスタンス ***//
+//        employee = (Employee) intent.getSerializableExtra("emp");   //*** 社員インスタンス ***//
+        String emp_id = intent.getStringExtra("emp_id");
+        db = helper.getWritableDatabase();
+        Cursor c = db.rawQuery("select * from v_employee where emp_id = ?", new String[]{emp_id});
+        if (c.moveToNext()) {
+            employee = new Employee(
+                    emp_id,                     //*** 社員ID ***//
+                    c.getString(1),      //*** 氏名 ***//
+                    c.getString(2),       //*** 電話番号 ***//
+                    c.getString(3), //*** メールアドレス ***//
+                    c.getString(4),             //*** 部署ID ***//
+                    c.getString(6)              //*** 役職ID ***//
+            );
+        }
+        c.close();
+
         String date = intent.getStringExtra("date");                //*** 日付 ***//
         String roomId = intent.getStringExtra("roomId");            //*** 会議室ID ***//
 
