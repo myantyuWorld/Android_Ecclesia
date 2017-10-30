@@ -243,29 +243,29 @@ public class Util {
     }
 
     //    public static long insertReserve(Reserve reserve, float priorityAverage) {
-//
-//        ContentValues c = new ContentValues();
-//        c.put("re_id", reserve.getRe_id());                 //***  ***//
-//        c.put("re_overview", reserve.getRe_name());         //***  ***//
-//        c.put("re_startday", reserve.getRe_startDay());     //***  ***//
-//        c.put("re_endday", reserve.getRe_endDay());         //***  ***//
-//        c.put("re_starttime", reserve.getRe_startTime());   //***  ***//
-//        c.put("re_endtime", reserve.getRe_endTime());       //***  ***//
-//        c.put("re_switch", reserve.getRe_switch());         //***  ***//
-//        c.put("re_fixture", reserve.getRe_fixtures());      //***  ***//
-//        c.put("re_remarks", reserve.getRe_remarks());       //***  ***//
-//        c.put("re_priority", priorityAverage);              //***  ***//
-//        c.put("com_id", "");                                //***  ***//
-//        c.put("emp_id", reserve.getRe_applicant());         //***  ***//
-//        c.put("room_id", reserve.getRe_room_id());          //***  ***//
-//        c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
-//        c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
-//
-//        //***  ***//
-//        SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
-//
-//        return helper.getWritableDatabase().insertOrThrow("t_reserve", null, c);  //***  ***//
-//    }
+    //
+    //        ContentValues c = new ContentValues();
+    //        c.put("re_id", reserve.getRe_id());                 //***  ***//
+    //        c.put("re_overview", reserve.getRe_name());         //***  ***//
+    //        c.put("re_startday", reserve.getRe_startDay());     //***  ***//
+    //        c.put("re_endday", reserve.getRe_endDay());         //***  ***//
+    //        c.put("re_starttime", reserve.getRe_startTime());   //***  ***//
+    //        c.put("re_endtime", reserve.getRe_endTime());       //***  ***//
+    //        c.put("re_switch", reserve.getRe_switch());         //***  ***//
+    //        c.put("re_fixture", reserve.getRe_fixtures());      //***  ***//
+    //        c.put("re_remarks", reserve.getRe_remarks());       //***  ***//
+    //        c.put("re_priority", priorityAverage);              //***  ***//
+    //        c.put("com_id", "");                                //***  ***//
+    //        c.put("emp_id", reserve.getRe_applicant());         //***  ***//
+    //        c.put("room_id", reserve.getRe_room_id());          //***  ***//
+    //        c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
+    //        c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
+    //
+    //        //***  ***//
+    //        SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
+    //
+    //        return helper.getWritableDatabase().insertOrThrow("t_reserve", null, c);  //***  ***//
+    //    }
     public static String returnPurposeId(String purName) {
         MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
         SQLiteDatabase db = helper.getReadableDatabase();

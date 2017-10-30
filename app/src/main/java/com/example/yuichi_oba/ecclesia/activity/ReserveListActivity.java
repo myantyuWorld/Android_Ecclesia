@@ -339,6 +339,7 @@ public class ReserveListActivity extends AppCompatActivity
     protected void onResume() {
         Log.d("call", "ReserveListActivity->onResume()");
         super.onResume();
+        arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
         arl_view_timetableView.thread_flg = true;
 
         Thread thread = new Thread(new Runnable() {
