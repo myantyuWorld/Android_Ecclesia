@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -28,15 +29,14 @@ import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
-import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 import com.example.yuichi_oba.ecclesia.view.TimeTableView;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
-import static com.example.yuichi_oba.ecclesia.tools.DB.db;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
 
 //import static com.example.yuichi_oba.ecclesia.activity.MyDialog.employee;
@@ -49,6 +49,16 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
 // TODO: 2017/09/19  長押し対応は無理か？ 一覧での、タップは反応するが、長押しには反応しない・・・
 public class ReserveListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    @SuppressLint("StaticFieldLeak")
+    static TextView arl_txt_date;
+    static TimeTableView arl_view_timetableView;
+    public static Employee employee;
+    private int thCnt = 0;
+    public static ReserveListActivity instance = null;
+    //    private DB helper;
+    private MyHelper helper = new MyHelper(this);
+    public static SQLiteDatabase db;
 
     public static final int EMP_NAME = 1;
     public static final int EMP_TEL = 2;
@@ -168,14 +178,7 @@ public class ReserveListActivity extends AppCompatActivity
     public static final String RESERVE_INFO = "reserve_info";
 
 
-    @SuppressLint("StaticFieldLeak")
-    static TextView arl_txt_date;
-    static TimeTableView arl_view_timetableView;
-    public static Employee employee;
-    private int thCnt = 0;
-    public static ReserveListActivity instance = null;
-    private DB helper;
-    private MyHelper myHelper;
+
 
 //    public static List<Reserve> reserveInfo;    // 予約情報記録クラスの変数   非同期エラーが起きるため使用禁止する！
 
@@ -186,8 +189,7 @@ public class ReserveListActivity extends AppCompatActivity
         Util.easyLog("ReserveListActivity->onCreate() 予約一覧画面");
         //*** DB関連 ***//
 //        helper = new DB(getApplicationContext());
-        myHelper = new MyHelper(this);
-        db = myHelper.getWritableDatabase();
+        db = helper.getWritableDatabase();
 
         /*** 各ウィジェットの初期化処理 && 社員情報の取得 ***/
         init();
@@ -271,7 +273,9 @@ public class ReserveListActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        helper.closeDB();
+        db.close();
+        helper.close();
+
     }
     //    @Override
 //    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -346,7 +350,7 @@ public class ReserveListActivity extends AppCompatActivity
                 }
                 Log.d("call", "Thread");
                 String[] info = arl_view_timetableView.getSelectedReserve();
-                Log.d("call", "info :: " + info);
+                Log.d("call", "info :: " + Arrays.toString(info));
                 //*** 新規予約登録画面への遷移 ***//
                 if (info[0].equals(NONE)) {
                     Log.d("call", "新規予約登録画面への遷移");

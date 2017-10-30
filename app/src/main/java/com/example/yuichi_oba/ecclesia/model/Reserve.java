@@ -1,16 +1,12 @@
 package com.example.yuichi_oba.ecclesia.model;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity;
-import com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
-import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 
 import java.io.Serializable;
@@ -28,6 +24,9 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
  */
 
 public class Reserve implements Serializable{
+
+    private MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
+    public static SQLiteDatabase db;
 
     public static final String Q_SAME_DAY_MEETING = "select * from t_reserve where re_startday = ? and room_id = ?";
     //*** Field ***//
@@ -192,7 +191,6 @@ public class Reserve implements Serializable{
 
     //*** 引数の会議日と同じ会議をListで取得する ***//
     private List<Reserve> getSameDayMeeting(Reserve r) {
-        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = db.rawQuery(
                 Q_SAME_DAY_MEETING,
@@ -251,7 +249,6 @@ public class Reserve implements Serializable{
         c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
 
         //***  ***//
-        SQLiteOpenHelper helper = new DB(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getWritableDatabase();
         int rs = (int) db.insert("t_reserve", null, c);
         db.close();
@@ -341,8 +338,7 @@ public class Reserve implements Serializable{
         if (!re_id.contains("0")) { //*** 新規ではない ***//
             Log.d("call", "新規ではない、予約内容のDB検索");
         }
-        Context context = ReserveListActivity.getInstance();
-        SQLiteOpenHelper helper = new DB(context);
+        MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor c = db.rawQuery("select * from v_reserve_member x \n" +
                         " inner join m_room y on x.room_id = y.room_id\n" +

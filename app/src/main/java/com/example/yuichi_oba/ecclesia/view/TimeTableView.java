@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
-import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +85,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
                             Log.d("call", "引数で渡された予約ID : " + re_id);
 
                             //*** 予約のキャンセル処理を行う ***//
-                            SQLiteOpenHelper helper = new DB(getContext());
+                            SQLiteOpenHelper helper = new MyHelper(getContext());
                             SQLiteDatabase db = helper.getWritableDatabase();
 
                             //*** 予約レコードの削除を行うSQL実行 ***//
@@ -433,7 +433,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         // DO: 2017/09/06 review()コールで、引数の日付をデータベース検索をかけたのち、自身のreserveInfoに格納する-> invalidate() で描画する
 
         Log.d("call", "TimeTableView->reView()");
-        SQLiteOpenHelper helper = new DB(getContext());
+        SQLiteOpenHelper helper = new MyHelper(getContext());
         SQLiteDatabase db = helper.getReadableDatabase();
         //*** 自分の参加会議の検索 ***//
         Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?", new String[]{emp_id, date});

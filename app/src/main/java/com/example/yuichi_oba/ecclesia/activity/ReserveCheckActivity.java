@@ -6,7 +6,6 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -22,7 +21,7 @@ import android.widget.Button;
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
-import com.example.yuichi_oba.ecclesia.tools.DB;
+import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
 
@@ -32,9 +31,10 @@ implements NavigationView.OnNavigationItemSelectedListener{
 
     //*** 変更情報を入力した後の予約インスタンス ***//
     Reserve checkRes;
-
     //*** 確定ボタン ***//
     Button button;
+    private MyHelper helper = new MyHelper(this);
+    public static SQLiteDatabase db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,7 +105,6 @@ implements NavigationView.OnNavigationItemSelectedListener{
     //*** 実際にDBの予約情報を書き換える(現在エラー中) ***//
     public void reserveChange() {
         //*** 必要なインスタンスを用意 ***//
-        SQLiteOpenHelper helper = new DB(getApplicationContext());
         SQLiteDatabase db = helper.getWritableDatabase();
         //*** トランザクション開始 ***//
 //        db.beginTransaction();

@@ -7,7 +7,6 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -24,7 +23,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
@@ -32,7 +30,6 @@ import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.OutEmployee;
 import com.example.yuichi_oba.ecclesia.model.Person;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
-import com.example.yuichi_oba.ecclesia.tools.DB;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
@@ -60,7 +57,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
 public class ReserveConfirmActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private DB helper;
+    private MyHelper helper = new MyHelper(this);
     private static  SQLiteDatabase db;
 
     //***  ***//
@@ -361,7 +358,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "ReserveConfirmActivity->onCreate()");
 
-        helper = new DB(getApplicationContext());
+//        helper = new DB(getApplicationContext());
 
         //*** 前画面からの引数を受け取る ***//
         Intent intent = getIntent();
@@ -551,7 +548,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        helper.closeDB();
+        helper.close();
+        db.close();
     }
 
     //*** SelfMadeMethod ***//
