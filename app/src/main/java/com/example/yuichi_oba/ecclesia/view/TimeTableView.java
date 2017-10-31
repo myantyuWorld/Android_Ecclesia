@@ -212,6 +212,8 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     for (Reserve r : reserveOther) {
       String sTime = r.getRe_startTime();
       String eTime = r.getRe_endTime();
+      Log.d("call", String.format("%s startTime : %s endTime : %s", r.getId(), sTime, eTime));
+
       String room_id = r.getRe_room_id();
 
       RectF rectF = retRectCooperation(sTime, eTime, room_id);
