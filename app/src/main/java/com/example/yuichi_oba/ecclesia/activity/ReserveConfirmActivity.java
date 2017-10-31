@@ -554,11 +554,19 @@ public class ReserveConfirmActivity extends AppCompatActivity
   public void onClickKakutei(View view) {
     Log.d("call", "call onClickKakutei");
 
+    //*** 会議の重複をチェックする ***//
+    if (reserve.timeDuplicationCheck(reserve)){
+      //*** 重複あり ***//
+    }
+    insertReserveTable(reserve, setReserveDetail());                  //*** 予約テーブルへのインサート ***//
+    insertMemberTable(reserve.getRe_id(), reserve.getRe_member());    //*** 参加者テーブルへのインサート ***//
 
-    //***  ***//
-    insertReserveTable(reserve, setReserveDetail());
-    //*** 参加者テーブルへのインサート ***//
-    insertMemberTable(reserve.getRe_id(), reserve.getRe_member());
+
+
+
+
+
+
 
     //*** 画面を殺す ***//
     finish();
@@ -588,7 +596,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
   private void insertReserveTable(Reserve reserve, float priorityAverage) {
     //*** 申請者の氏名－＞ 社員IDに変換して、予約インスタンスにセットする ***//
     reserve.setRe_applicant(Util.returnEmpId(reserve.getRe_applicant()));
-    
+
     db = helper.getWritableDatabase();
     db.beginTransaction();
     try {
