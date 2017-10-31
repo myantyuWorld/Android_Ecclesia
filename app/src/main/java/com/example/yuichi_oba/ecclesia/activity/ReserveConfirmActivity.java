@@ -309,6 +309,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
         } else {                         //*** 「一覧」画面からの画面遷移 ***//
             reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
             employee = (Employee) intent.getSerializableExtra("employee");
+            Log.d("Emp in Confirm:", employee.toString());
         }
         instance = this;
 
@@ -431,6 +432,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     //*** 次画面（ReserveChangeActivity）に予約インスタンスを渡す ***//
                     intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
                     intent.putExtra(KEYCHANGE, reserve);
+                    Log.d("sent change Emp:", employee.toString());
                     intent.putExtra("employee", employee);
 //                    intent.putExtra(KEYCHANGE, re_id);
                     startActivity(intent);
@@ -443,6 +445,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
                     intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
                     intent.putExtra(KEYCHANGE, reserve);
+                    Log.d("sent change Emp:", employee.toString());
+                    intent.putExtra("employee", employee);
                     startActivity(intent);
                 }
 //                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();

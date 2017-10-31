@@ -298,8 +298,7 @@ public class ReserveChangeActivity extends AppCompatActivity
 //                setReserveInfo();
                 //*** 変更後の予約情報をViewで扱う配列に格納 ***//
                 changes = new String[]{changeRes.getRe_name(), changeRes.getRe_purpose_name(), changeRes.getRe_startDay() + SPACE + changeRes.getRe_startTime(), changeRes.getRe_endDay() + SPACE + changeRes.getRe_endTime(),
-                        changeRes.getRe_applicant(), "", changeRes.getRe_switch(), changeRes.getRe_room_name(), "", changeRes.getRe_fixtures(), changeRes.getRe_remarks()};
-
+                        changeRes.getRe_applicant(), "", changeRes.getRe_switch(), "何々会社", changeRes.getRe_room_name(), changeRes.getRe_fixtures(), changeRes.getRe_remarks()};
 
                 Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
                 intent.putExtra(KEYCHECK, changeRes);
