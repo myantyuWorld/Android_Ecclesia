@@ -486,7 +486,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
   protected void onDestroy() {
     super.onDestroy();
     helper.close();
-    db.close();
+//    db.close();
   }
 
   //*** SelfMadeMethod ***//

@@ -439,6 +439,10 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
   public void reView(String emp_id, String date) {
     // DO: 2017/09/06 review()コールで、引数の日付をデータベース検索をかけたのち、自身のreserveInfoに格納する-> invalidate() で描画する
 
+    //***  ***//
+    reserveInfo.clear();
+    reserveOther.clear();
+
     Log.d("call", "TimeTableView->reView()");
     SQLiteOpenHelper helper = new MyHelper(getContext());
     SQLiteDatabase db = helper.getReadableDatabase();
