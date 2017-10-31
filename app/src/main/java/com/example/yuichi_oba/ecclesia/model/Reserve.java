@@ -5,7 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.yuichi_oba.ecclesia.activity.ReserveActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity;
+import com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 
@@ -333,7 +335,14 @@ public class Reserve implements Serializable{
     }
     //*** --- SELF MADE METHOD --- 追い出しを行うメソッド ***//
     public void eviction(String re_id) {
+        MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
 
+        //*** 追い出し（DBから削除） ***//
+        db.rawQuery("delete from t_reserve where re_id = ?", new String[]{re_id});
+
+        //*** 追い出された側に通知 ***//
+        //*** 未記述 ***//
     }
     //*** --- SELF MADE METHOD --- 予約内容をDB検索するメソッド ***//
     public static Reserve retReserveConfirm(String re_id) {

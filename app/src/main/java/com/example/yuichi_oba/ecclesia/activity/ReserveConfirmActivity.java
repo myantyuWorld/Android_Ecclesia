@@ -144,7 +144,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
                             //*** 早期退出による終了時刻をセット ***//
 //                            con.put("re_endTime", ealTime);
                             Log.d("ealTIme", ealTime);
-                            reserve.earlyExit();
+
+                            db.execSQL("update t_reserve set re_endtime = ? where re_id = ?", new Object[]{ealTime, re_id});
+//                            reserve.earlyExit();
+
                             AlertDialog.Builder result = new AlertDialog.Builder(instance.getApplicationContext());
 //                            result.setTitle("早期退出完了")
 //                                    .setMessage("早期退出が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -247,14 +250,14 @@ public class ReserveConfirmActivity extends AppCompatActivity
                                 //*** トランザクション終了 ***//
 //                                db.endTransaction();
 
-//                            db.execSQL("insert into t_extension values(?,?,?,?,?)",
-//                                    new Object[]{reserve.getRe_id(),
-//                                                reserve.getRe_startDay(),
-//                                                reserve.getRe_startTime(),
-//                                                reserve.getRe_endDay(),
-//                                                reserve.getRe_endTime()});
+                                db.execSQL("insert into t_extension values(?,?,?,?,?)",
+                                        new Object[]{reserve.getRe_id(),
+                                                    reserve.getRe_startDay(),
+                                                    reserve.getRe_startTime(),
+                                                    reserve.getRe_endDay(),
+                                                    reserve.getRe_endTime()});
 
-                                reserve.endTimeExtention(exTime);
+//                                reserve.endTimeExtention(exTime);
 
                                 //*** 延長結果ダイアログを表示 ***//
                                 ExtentResultDialog extentResultDialog = new ExtentResultDialog();
@@ -305,6 +308,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
         } else {                         //*** 「一覧」画面からの画面遷移 ***//
             reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
+            employee = (Employee) intent.getSerializableExtra("employee");
         }
         instance = this;
 
@@ -427,6 +431,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     //*** 次画面（ReserveChangeActivity）に予約インスタンスを渡す ***//
                     intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
                     intent.putExtra(KEYCHANGE, reserve);
+                    intent.putExtra("employee", employee);
 //                    intent.putExtra(KEYCHANGE, re_id);
                     startActivity(intent);
                 } else {

@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,6 +32,7 @@ import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
@@ -62,6 +64,7 @@ public class ReserveChangeActivity extends AppCompatActivity
 
     String re_id;
     Reserve changeRes ;
+    Employee employee;
     Button editBtn;
     public static String[] changes ;
 
@@ -80,7 +83,6 @@ public class ReserveChangeActivity extends AppCompatActivity
     TextView comp;
     FloatingActionButton fbn;
 
-    List<String> member = new ArrayList<>();
     private MyHelper helper = new MyHelper(this);
     public static SQLiteDatabase db;
 
@@ -91,6 +93,7 @@ public class ReserveChangeActivity extends AppCompatActivity
 
         Intent intent = getIntent();
         changeRes = (Reserve) intent.getSerializableExtra(KEYCHANGE);
+        employee = (Employee) intent.getSerializableExtra("employee");
 
         init();
         setListener();
@@ -130,9 +133,11 @@ public class ReserveChangeActivity extends AppCompatActivity
         inout = (Switch) findViewById(R.id.acchange_sw_inout);
 
 //        SQLiteOpenHelper helper = new DB(getApplicationContext());
+        //*** 目的スピナー ***//
         SQLiteDatabase db = helper.getReadableDatabase();
         List<String> purpose = new ArrayList<>();
         Cursor c = db.rawQuery("select * from m_purpose", null);
+        //*** スピナー内容セット ***//
         while (c.moveToNext()) {
             purpose.add(c.getString(ZERO) + ":" + c.getString(ONE));
         }
@@ -140,6 +145,19 @@ public class ReserveChangeActivity extends AppCompatActivity
         ArrayAdapter<String> adapter_purpose = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, purpose);
         sp_purpose.setAdapter(adapter_purpose);
 
+
+        //*** 参加者スピナー ***//
+        List<String> member = new ArrayList<>();
+        c = db.rawQuery("select emp_name from v_reserve_member where re_id = ? ", new String[]{changeRes.getRe_id()});
+        while (c.moveToNext()) {
+            member.add(c.getString(ZERO));
+        }
+        c.close();
+        c = db.rawQuery("select out_name from v_reserve_out_member where re_id = ?", new String[]{changeRes.getRe_id()});
+        while (c.moveToNext()) {
+            member.add(c.getString(ZERO));
+        }
+        c.close();
         ArrayAdapter<String> memberdap = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, member);
         members.setAdapter(memberdap);
 
@@ -169,8 +187,10 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 // ここで、参加者
-                Intent intent = new Intent(getApplication(), AddMemberActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(getApplicationContext(), AddMemberActivity.class);
+                Log.d("changeEmp:", employee.getEmp_id());
+                intent.putExtra("emp_id", employee.getEmp_id());
+                startActivityForResult(intent, 1);
             }
         });
 

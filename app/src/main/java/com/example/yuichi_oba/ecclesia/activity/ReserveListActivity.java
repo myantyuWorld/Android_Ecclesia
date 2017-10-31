@@ -373,6 +373,7 @@ public class ReserveListActivity extends AppCompatActivity
                     Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
                     intent.putExtra("gamen", "1");          //*** どの画面からの遷移か ***//
                     intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
+                    intent.putExtra("employee", employee);
 
                     startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
                 }

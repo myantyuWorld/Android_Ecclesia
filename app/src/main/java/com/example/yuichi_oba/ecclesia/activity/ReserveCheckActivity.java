@@ -141,6 +141,12 @@ implements NavigationView.OnNavigationItemSelectedListener{
         return instance;
     }
 
+    public void onClickMemConfirm(View view) {
+        //*** 参加者一覧ダイアログを表示する ***//
+        ReserveConfirmActivity.MemberConfirmDialog dialog = new ReserveConfirmActivity.MemberConfirmDialog();
+        dialog.show(getFragmentManager(), "confirm_a");
+    }
+
     //*** 変更成功通知ダイアログ ***//
     public static class ChangeResultDialog extends DialogFragment{
         @Override
