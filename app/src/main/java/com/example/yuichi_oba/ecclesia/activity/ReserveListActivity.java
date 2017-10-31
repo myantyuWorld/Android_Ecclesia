@@ -49,81 +49,84 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
 // TODO: 2017/09/19  長押し対応は無理か？ 一覧での、タップは反応するが、長押しには反応しない・・・
 //*** オブジェクト渡しのはいし OK ***//
 public class ReserveListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+    implements NavigationView.OnNavigationItemSelectedListener {
 
-    @SuppressLint("StaticFieldLeak")
-    static TextView arl_txt_date;
-    static TimeTableView arl_view_timetableView;
-    public static Employee employee;
-    private int thCnt = 0;
-    public static ReserveListActivity instance = null;
-    //    private DB helper;
-    private MyHelper helper;
-    public static SQLiteDatabase db;
+  @SuppressLint("StaticFieldLeak")
+  static TextView arl_txt_date;
+  static TimeTableView arl_view_timetableView;
+  public static Employee employee;
+  private int thCnt = 0;
+  public static ReserveListActivity instance = null;
+  //    private DB helper;
+  private MyHelper helper;
+  public static SQLiteDatabase db;
 
-    public static final int EMP_NAME = 1;
-    public static final int EMP_TEL = 2;
-    public static final int EMP_MAIL_ADDR = 4;
-    public static final int DEP_NAME = 5;
-    public static final int POS_NAME = 7;
-    public static final int POS_PRIORITY = 8;
+  public static final int EMP_NAME = 1;
+  public static final int EMP_TEL = 2;
+  public static final int EMP_MAIL_ADDR = 4;
+  public static final int DEP_NAME = 5;
+  public static final int POS_NAME = 7;
+  public static final int POS_PRIORITY = 8;
 
-    //*** 端末IMEIクラス ***//
-    public class Imei {
+  //*** 端末IMEIクラス ***//
+  public class Imei {
 
-        //*** Field ***//
-        private String id;
-        private String imeiNumber;
+    //*** Field ***//
+    private String id;
+    private String imeiNumber;
 
-        //*** GetterSetter ***//
-        public String getId() {
-            return id;
-        }
-        public void setId(String id) {
-            this.id = id;
-        }
-        public String getImeiNumber() {
-            return imeiNumber;
-        }
-        public void setImeiNumber(String imeiNumber) {
-            this.imeiNumber = imeiNumber;
-        }
+    //*** GetterSetter ***//
+    public String getId() {
+      return id;
+    }
 
-        //*** SelfMadeMethod ***//
-        //*** 端末IMEIを取得するメソッド ***//
-        public void getTerminalImei() {
-            Log.d("call", "getTerminalImei()");
-            TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+    public void setId(String id) {
+      this.id = id;
+    }
+
+    public String getImeiNumber() {
+      return imeiNumber;
+    }
+
+    public void setImeiNumber(String imeiNumber) {
+      this.imeiNumber = imeiNumber;
+    }
+
+    //*** SelfMadeMethod ***//
+    //*** 端末IMEIを取得するメソッド ***//
+    public void getTerminalImei() {
+      Log.d("call", "getTerminalImei()");
+      TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 //        return manager.getDeviceId();
-            // TODO: 2017/09/15 ハードコーディング!
+      // TODO: 2017/09/15 ハードコーディング!
 //            this.setImeiNumber("352272080218786");   // 大馬 の 端末ＩＭＥＩ
-            this.setImeiNumber("0");   // 大馬 の 端末ＩＭＥＩ
-        }
+      this.setImeiNumber("0");   // 大馬 の 端末ＩＭＥＩ
+    }
 
-        //*** 社員を認証するメソッド ***//
-        public String authEmployee() {
-            Log.d("call", "ReserveListActivity->authEmployee()");
-            String emp_id = "";
-            Cursor c = db.rawQuery("select * from m_terminal where ter_id = ?", new String[]{this.imeiNumber});
+    //*** 社員を認証するメソッド ***//
+    public String authEmployee() {
+      Log.d("call", "ReserveListActivity->authEmployee()");
+      String emp_id = "";
+      Cursor c = db.rawQuery("select * from m_terminal where ter_id = ?", new String[]{this.imeiNumber});
 
-            if (c.moveToNext()) {
-                // 端末ＩＭＥＩから社員ＩＤ取得が成功した
-                emp_id = c.getString(EMP_NAME);
-            }
-            c.close();
-            return emp_id;
-        }
+      if (c.moveToNext()) {
+        // 端末ＩＭＥＩから社員ＩＤ取得が成功した
+        emp_id = c.getString(EMP_NAME);
+      }
+      c.close();
+      return emp_id;
+    }
 
-        //*** 認証済み社員を生成するメソッド ***//
-        public Employee getEmployeeInfo() {
-            Log.d("call", TAG + "->getEmployeeInfo()");
-            String emp_id = authEmployee();
-            if (!emp_id.isEmpty()) {
-                // 社員ＩＤが空またはＮＵＬＬでなければ次のロジックを実行する
-                Cursor c = db.rawQuery("select * from v_employee where emp_id = ?",
-                        new String[]{emp_id});
-                if (c.moveToNext()) {
-                    // 社員ＩＤから社員情報を検索して、設定する
+    //*** 認証済み社員を生成するメソッド ***//
+    public Employee getEmployeeInfo() {
+      Log.d("call", TAG + "->getEmployeeInfo()");
+      String emp_id = authEmployee();
+      if (!emp_id.isEmpty()) {
+        // 社員ＩＤが空またはＮＵＬＬでなければ次のロジックを実行する
+        Cursor c = db.rawQuery("select * from v_employee where emp_id = ?",
+            new String[]{emp_id});
+        if (c.moveToNext()) {
+          // 社員ＩＤから社員情報を検索して、設定する
 //                    Employee e = new Employee();
 //                    e.setId(emp_id);
 //                    e.setName(c.getString(EMP_NAME));
@@ -133,114 +136,112 @@ public class ReserveListActivity extends AppCompatActivity
 //                    e.setPos_name(c.getString(POS_NAME));
 //                    e.setPos_priority(c.getString(POS_PRIORITY));
 
-                    //*** 「社員」クラスのインスタンスを生成 ***//
-                    Employee e = new Employee(
-                            emp_id,                     //*** 社員ID ***//
-                            c.getString(EMP_NAME),      //*** 氏名 ***//
-                            c.getString(EMP_TEL),       //*** 電話番号 ***//
-                            c.getString(EMP_MAIL_ADDR), //*** メールアドレス ***//
-                            c.getString(4),             //*** 部署ID ***//
-                            c.getString(6)              //*** 役職ID ***//
-                    );
+          //*** 「社員」クラスのインスタンスを生成 ***//
+          Employee e = new Employee(
+              emp_id,                     //*** 社員ID ***//
+              c.getString(EMP_NAME),      //*** 氏名 ***//
+              c.getString(EMP_TEL),       //*** 電話番号 ***//
+              c.getString(EMP_MAIL_ADDR), //*** メールアドレス ***//
+              c.getString(4),             //*** 部署ID ***//
+              c.getString(6)              //*** 役職ID ***//
+          );
 
-                    return e;   //*** インスタンスを返す ***//
-                }
-                c.close();
+          return e;   //*** インスタンスを返す ***//
+        }
+        c.close();
+      }
+      return null;
+    }
+  }
+
+  //*** 日付選択用ダイアログフラグメント ***//
+  public static class MyDialog extends DialogFragment {
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+      final Calendar cal = Calendar.getInstance();
+      return new DatePickerDialog(
+          getActivity(),
+          new DatePickerDialog.OnDateSetListener() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+              arl_txt_date.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
             }
-            return null;
-        }
+          },
+          cal.get(Calendar.YEAR),
+          cal.get(Calendar.MONTH),
+          cal.get(Calendar.DAY_OF_MONTH)
+
+      );
     }
-
-    //*** 日付選択用ダイアログフラグメント ***//
-    public static class MyDialog extends DialogFragment {
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar cal = Calendar.getInstance();
-            return new DatePickerDialog(
-                    getActivity(),
-                    new DatePickerDialog.OnDateSetListener() {
-                        @SuppressLint("DefaultLocale")
-                        @Override
-                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                            arl_txt_date.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
-                        }
-                    },
-                    cal.get(Calendar.YEAR),
-                    cal.get(Calendar.MONTH),
-                    cal.get(Calendar.DAY_OF_MONTH)
-
-            );
-        }
-    }
+  }
 
 
-    private static final String TAG = ReserveListActivity.class.getSimpleName();
-    public static final String RESERVE_INFO = "reserve_info";
-
-
+  private static final String TAG = ReserveListActivity.class.getSimpleName();
+  public static final String RESERVE_INFO = "reserve_info";
 
 
 //    public static List<Reserve> reserveInfo;    // 予約情報記録クラスの変数   非同期エラーが起きるため使用禁止する！
 
-    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        instance = this;
-        Util.easyLog("ReserveListActivity->onCreate() 予約一覧画面");
-        //*** DB関連 ***//
+  @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    instance = this;
+    Util.easyLog("ReserveListActivity->onCreate() 予約一覧画面");
+    //*** DB関連 ***//
 //        helper = new DB(getApplicationContext());
-        helper = new MyHelper(this);
-        db = helper.getWritableDatabase();
+    helper = new MyHelper(this);
+    db = helper.getWritableDatabase();
 
-        /*** 各ウィジェットの初期化処理 && 社員情報の取得 ***/
-        init();
+    /*** 各ウィジェットの初期化処理 && 社員情報の取得 ***/
+    init();
 
-        setContentView(R.layout.activity_main);
-        super.onCreate(savedInstanceState);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    setContentView(R.layout.activity_main);
+    super.onCreate(savedInstanceState);
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+    ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+    drawer.setDrawerListener(toggle);
+    toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        // 画面情報の設定
-        arl_txt_date = (TextView) findViewById(R.id.arl_txt_date);
-        final Calendar c = Calendar.getInstance();
-        arl_txt_date.setText(String.format(Locale.JAPAN, "%04d/%02d/%02d", c.get(Calendar.YEAR) + 1, 1, 17));
+    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+    navigationView.setNavigationItemSelectedListener(this);
+    // 画面情報の設定
+    arl_txt_date = (TextView) findViewById(R.id.arl_txt_date);
+    final Calendar c = Calendar.getInstance();
+    arl_txt_date.setText(String.format(Locale.JAPAN, "%04d/%02d/%02d", c.get(Calendar.YEAR) + 1, 1, 17));
 
-        //*** コンテキストメニューの発生元ビューを取得 ***//
-        registerForContextMenu(findViewById(R.id.content_main));
+    //*** コンテキストメニューの発生元ビューを取得 ***//
+    registerForContextMenu(findViewById(R.id.content_main));
 
-        /*** ここまで ***/
+    /*** ここまで ***/
 
 
-        // 予約情報の設定
+    // 予約情報の設定
 //        getReserveInfo();
 //        for (ReserveInfo r : reserveInfo) {
 //            Log.d(TAG, r.getRe_id() + " : " + r.getRe_startTime() + "(" + r.getRe_endTime() + ") room_id : " + r.getRe_roomId());
 //        }
-        /*** 社員ID と アプリ起動時の日付を渡して、描画する ***/
-        arl_view_timetableView = (TimeTableView) this.findViewById(R.id.arl_view_timetable);
-        Log.d("call", employee.getEmp_id());
-        Log.d("call", arl_txt_date.getText().toString());
-        arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
+    /*** 社員ID と アプリ起動時の日付を渡して、描画する ***/
+    arl_view_timetableView = (TimeTableView) this.findViewById(R.id.arl_view_timetable);
+    Log.d("call", employee.getEmp_id());
+    Log.d("call", arl_txt_date.getText().toString());
+    arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
 
-        arl_txt_date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "arl_txt_date click!");
-                MyDialog d = new MyDialog();
-                d.show(getFragmentManager(), "dateDialog");
-            }
-        });
+    arl_txt_date.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Log.d(TAG, "arl_txt_date click!");
+        MyDialog d = new MyDialog();
+        d.show(getFragmentManager(), "dateDialog");
+      }
+    });
 
-        /*** 予約情報リストの同期エラーがでるため、コメアウトします ***/
+    /*** 予約情報リストの同期エラーがでるため、コメアウトします ***/
 //        Button btPrev = (Button) findViewById(R.id.bt_prev);
 //        btPrev.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -259,27 +260,27 @@ public class ReserveListActivity extends AppCompatActivity
 //                arl_view_timetableView.reView(reserveInfo);
 //            }
 //        });
-        Button arl_btn_search = (Button) findViewById(R.id.arl_btn_search);
-        arl_btn_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(ReserveListActivity.this, arl_txt_date.getText().toString(), Toast.LENGTH_SHORT).show();
-                // TODO: 2017/10/04 自分の予約情報をもっているリストを一回クリアしないと、前の情報も描画されてしまう
-                arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
-            }
-        });
+    Button arl_btn_search = (Button) findViewById(R.id.arl_btn_search);
+    arl_btn_search.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Toast.makeText(ReserveListActivity.this, arl_txt_date.getText().toString(), Toast.LENGTH_SHORT).show();
+        // TODO: 2017/10/04 自分の予約情報をもっているリストを一回クリアしないと、前の情報も描画されてしまう
+        arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
+      }
+    });
 
 
-    }
+  }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        db.close();
-        helper.close();
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    db.close();
+    helper.close();
 
-    }
-    //    @Override
+  }
+  //    @Override
 //    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 //        super.onCreateContextMenu(menu, v, menuInfo);
 //        getMenuInflater().inflate(R.menu.menu, menu);
@@ -291,131 +292,129 @@ public class ReserveListActivity extends AppCompatActivity
 //        return true;
 //    }
 
-    //*** 戻るボタン押下時の処理 ***//
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+  //*** 戻るボタン押下時の処理 ***//
+  @Override
+  public void onBackPressed() {
+    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+    if (drawer.isDrawerOpen(GravityCompat.START)) {
+      drawer.closeDrawer(GravityCompat.START);
+    } else {
+      super.onBackPressed();
+    }
+  }
+
+  //*** ナビを選択したときの処理 ***//
+  @SuppressWarnings("StatementWithEmptyBody")
+  @Override
+  public boolean onNavigationItemSelected(MenuItem item) {
+    // 選択したナビのIDを取得し、idに代入する
+    int id = item.getItemId();
+
+    // Intentクラスの変数を宣言し、nullで初期化
+    Intent intent = null;
+    // idで処理を分ける
+    switch (id) {
+      // 「履歴検索」が選択されたとき
+      case R.id.nav_rireki:
+        // Intentクラスのインスタンス生成し、画面遷移させる
+        intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
+        startActivity(intent);
+        break;
+      // 「管理者認証」が選択されたとき
+      case R.id.nav_admin_auth:
+        // 管理者認証ダイアログを生成する
+        AuthDialog authDialog = new AuthDialog();
+        authDialog.show(getFragmentManager(), "aaa");
+        break;
+
     }
 
-    //*** ナビを選択したときの処理 ***//
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // 選択したナビのIDを取得し、idに代入する
-        int id = item.getItemId();
+    // ようわからん(笑) ＝＝＞ HCPには書かんでいいよ
+    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+    drawer.closeDrawer(GravityCompat.START);
+    return true;
+  }
 
-        // Intentクラスの変数を宣言し、nullで初期化
-        Intent intent = null;
-        // idで処理を分ける
-        switch (id) {
-            // 「履歴検索」が選択されたとき
-            case R.id.nav_rireki:
-                // Intentクラスのインスタンス生成し、画面遷移させる
-                intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
-                startActivity(intent);
-                break;
-            // 「管理者認証」が選択されたとき
-            case R.id.nav_admin_auth:
-                // 管理者認証ダイアログを生成する
-                AuthDialog authDialog = new AuthDialog();
-                authDialog.show(getFragmentManager(), "aaa");
-                break;
+  //*** 画面が表示・再表示されたらコールされる (画面遷移はここ！)***//
+  @Override
+  protected void onResume() {
+    Log.d("call", "ReserveListActivity->onResume()");
+    super.onResume();
+    arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
+    arl_view_timetableView.thread_flg = true;
 
+    Thread thread = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        if (thCnt != 0) {
+          arl_view_timetableView.thread_flg = true;
+          arl_view_timetableView.x = 0;
+          arl_view_timetableView.y = 0;
+          thCnt = 0;
         }
-
-        // ようわからん(笑) ＝＝＞ HCPには書かんでいいよ
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    //*** 画面が表示・再表示されたらコールされる (画面遷移はここ！)***//
-    @Override
-    protected void onResume() {
-        Log.d("call", "ReserveListActivity->onResume()");
-        super.onResume();
-        arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
-        arl_view_timetableView.thread_flg = true;
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (thCnt != 0) {
-                    arl_view_timetableView.thread_flg = true;
-                    arl_view_timetableView.x = 0;
-                    arl_view_timetableView.y = 0;
-                    thCnt = 0;
-                }
-                Log.d("call", "Thread");
-                String[] info = arl_view_timetableView.getSelectedReserve();
-                Log.d("call", "info :: " + Arrays.toString(info));
-                //*** 新規予約登録画面への遷移 ***//
-                if (info[0].equals(NONE)) {
-                    Log.d("call", "新規予約登録画面への遷移");
-                    Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
-                    //*** オブジェクト渡しがエラーのため、コメアウト ***//
+        Log.d("call", "Thread");
+        String[] info = arl_view_timetableView.getSelectedReserve();
+        Log.d("call", "info :: " + Arrays.toString(info));
+        //*** 新規予約登録画面への遷移 ***//
+        if (info[0].equals(NONE)) {
+          Log.d("call", "新規予約登録画面への遷移");
+          Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
+          //*** オブジェクト渡しがエラーのため、コメアウト ***//
 //                    intent.putExtra("emp", employee);                           //*** 社員インスタンスをインテント渡し ***//
-                    intent.putExtra("emp_id", employee.getEmp_id());
+          intent.putExtra("emp_id", employee.getEmp_id());
 
-                    intent.putExtra("date", arl_txt_date.getText().toString()); //*** 選択されている日付をインテント渡し ***//
-                    intent.putExtra("roomId", info[1]);                         //*** 会議室IDを渡す ***//
+          intent.putExtra("date", arl_txt_date.getText().toString()); //*** 選択されている日付をインテント渡し ***//
+          intent.putExtra("roomId", info[1]);                         //*** 会議室IDを渡す ***//
 
-                    startActivity(intent);  //*** 新規予約登録画面 ***//
-                } else {
-                    Log.d("call", "予約確認画面への遷移");
-                    Reserve reserve = Reserve.retReserveConfirm(info[1]); //*** 特定した予約IDを基に、予約情報を検索 ***//
+          startActivity(intent);  //*** 新規予約登録画面 ***//
+        } else {
+          Log.d("call", "予約確認画面への遷移");
+          Reserve reserve = Reserve.retReserveConfirm(info[1]); //*** 特定した予約IDを基に、予約情報を検索 ***//
 
 //                    intent.putExtra("emp", employee); //*** 不要？ ***//
-                    Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-                    intent.putExtra("gamen", "1");          //*** どの画面からの遷移か ***//
-                    intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
+          Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+          intent.putExtra("gamen", "1");          //*** どの画面からの遷移か ***//
+          intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
 
-                    startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
-                }
-                thCnt++;
-                try {
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        thread.start();
-
-    }
-
-    //*** SelfMadeMethod ***//
-    //*** ウィジェットの初期化処理メソッド ***//
-    private void init() {
-        Log.d(TAG, "init()");
-
-
-
-
-        // IMEIクラスのインスタンスを生成
-        Imei imei = new Imei();
-        imei.getTerminalImei(); // 端末IMEIを取得する
-
-        // 社員情報の設定
-        Object o = imei.getEmployeeInfo(); // 端末IMEIから、社員クラスのインスタンスを生成
-        if (o != null) {
-            employee = (Employee) o;
-            Log.d("call", employee.toString());
+          startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
         }
-    }
+        thCnt++;
+        try {
+          Thread.sleep(20);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    });
 
-    //*** この画面のインスタンスを返すメソッド（非アクティビティクラスで、DB検索する際に使用する） ***//
-    public static ReserveListActivity getInstance() {
-        return instance;
-    }
+    thread.start();
 
-    //    /***
+  }
+
+  //*** SelfMadeMethod ***//
+  //*** ウィジェットの初期化処理メソッド ***//
+  private void init() {
+    Log.d(TAG, "init()");
+
+
+    // IMEIクラスのインスタンスを生成
+    Imei imei = new Imei();
+    imei.getTerminalImei(); // 端末IMEIを取得する
+
+    // 社員情報の設定
+    Object o = imei.getEmployeeInfo(); // 端末IMEIから、社員クラスのインスタンスを生成
+    if (o != null) {
+      employee = (Employee) o;
+      Log.d("call", employee.toString());
+    }
+  }
+
+  //*** この画面のインスタンスを返すメソッド（非アクティビティクラスで、DB検索する際に使用する） ***//
+  public static ReserveListActivity getInstance() {
+    return instance;
+  }
+
+  //    /***
 //     * アプリを立ち上げた社員の端末ＩＭＥＩを返すメソッド
 //     * @return 端末ＩＭＥＩ
 //     */
