@@ -437,16 +437,14 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
   //*** 再描画を行うメソッド ***//
   public void reView(String emp_id, String date) {
-    // DO: 2017/09/06 review()コールで、引数の日付をデータベース検索をかけたのち、自身のreserveInfoに格納する-> invalidate() で描画する
-
-    //***  ***//
+    Log.d("call", "TimeTableView->reView()");
+    //*** 前の情報をいったんクリアする ***//
     reserveInfo.clear();
     reserveOther.clear();
 
-    Log.d("call", "TimeTableView->reView()");
+    //*** 自分の参加会議の検索 ***//
     SQLiteOpenHelper helper = new MyHelper(getContext());
     SQLiteDatabase db = helper.getReadableDatabase();
-    //*** 自分の参加会議の検索 ***//
     Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?", new String[]{emp_id, date});
     reserveInfo.clear();
     while (c.moveToNext()) {
