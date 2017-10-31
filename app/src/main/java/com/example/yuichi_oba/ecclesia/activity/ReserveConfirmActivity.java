@@ -554,31 +554,41 @@ public class ReserveConfirmActivity extends AppCompatActivity
   public void onClickKakutei(View view) {
     Log.d("call", "call onClickKakutei");
 
-    //*** 申請者の氏名－＞ 社員IDに変換して、予約インスタンスにセットする ***//
-    reserve.setRe_applicant(Util.returnEmpId(reserve.getRe_applicant()));
-
 
     //***  ***//
-    float priorityAverage = setReserveDetail();         //***  ***//
+    insertReserveTable(reserve, setReserveDetail());
+    //*** 参加者テーブルへのインサート ***//
+    insertMemberTable(reserve.getRe_id(), reserve.getRe_member());
 
-//        ContentValues c = new ContentValues();
-//        c.put("re_id", reserve.getRe_id());                 //***  ***//
-//        c.put("re_overview", reserve.getRe_name());         //***  ***//
-//        c.put("re_startday", reserve.getRe_startDay());     //***  ***//
-//        c.put("re_endday", reserve.getRe_endDay());         //***  ***//
-//        c.put("re_starttime", reserve.getRe_startTime());   //***  ***//
-//        c.put("re_endtime", reserve.getRe_endTime());       //***  ***//
-//        c.put("re_switch", reserve.getRe_switch());         //***  ***//
-//        c.put("re_fixture", reserve.getRe_fixtures());      //***  ***//
-//        c.put("re_remarks", reserve.getRe_remarks());       //***  ***//
-//        c.put("re_priority", priorityAverage);              //***  ***//
-//        c.put("com_id", "");                                //***  ***//
-//        c.put("emp_id", reserve.getRe_applicant());         //***  ***//
-//        c.put("room_id", reserve.getRe_room_id());          //***  ***//
-//        c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
-//        c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
+    //*** 画面を殺す ***//
+    finish();
+//        db = helper.getWritableDatabase();                      //***  ***//
+//        db.execSQL("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+//                new Object[]{
+//                        reserve.getRe_id(),
+//                        reserve.getRe_name(),
+//                        reserve.getRe_startDay(),
+//                        reserve.getRe_endDay(),
+//                        reserve.getRe_startTime(),
+//                        reserve.getRe_endTime(),
+//                        reserve.getRe_switch(),
+//                        reserve.getRe_fixtures(),
+//                        reserve.getRe_remarks(),
+//                        priorityAverage,
+//                        "aa",
+//                        reserve.getRe_applicant(),
+//                        reserve.getRe_room_id(),
+//                        reserve.getRe_purpose_id(),
+//                        reserve.getRe_applicant()
+//                });
 
-    //*** 予約テーブルへのインサート ***//
+
+  }
+
+  private void insertReserveTable(Reserve reserve, float priorityAverage) {
+    //*** 申請者の氏名－＞ 社員IDに変換して、予約インスタンスにセットする ***//
+    reserve.setRe_applicant(Util.returnEmpId(reserve.getRe_applicant()));
+    
     db = helper.getWritableDatabase();
     db.beginTransaction();
     try {
@@ -606,33 +616,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
     } finally {
       db.endTransaction();
     }
-
-    //*** 参加者テーブルへのインサート ***//
-    insertMemberTable(reserve.getRe_id(), reserve.getRe_member());
-
-    //*** 画面を殺す ***//
-    finish();
-//        db = helper.getWritableDatabase();                      //***  ***//
-//        db.execSQL("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-//                new Object[]{
-//                        reserve.getRe_id(),
-//                        reserve.getRe_name(),
-//                        reserve.getRe_startDay(),
-//                        reserve.getRe_endDay(),
-//                        reserve.getRe_startTime(),
-//                        reserve.getRe_endTime(),
-//                        reserve.getRe_switch(),
-//                        reserve.getRe_fixtures(),
-//                        reserve.getRe_remarks(),
-//                        priorityAverage,
-//                        "aa",
-//                        reserve.getRe_applicant(),
-//                        reserve.getRe_room_id(),
-//                        reserve.getRe_purpose_id(),
-//                        reserve.getRe_applicant()
-//                });
-
-
   }
 
   @RequiresApi(api = Build.VERSION_CODES.N)
