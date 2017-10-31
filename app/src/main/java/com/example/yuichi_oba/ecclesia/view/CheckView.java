@@ -98,7 +98,7 @@ public class CheckView extends View {
         //*** 変更前情報を保持する配列に挿入 ***//
         //*** applicantの次…member  switchの次…company ***//
         before = new String[]{reserve.getRe_name(), reserve.getRe_purpose_name(), reserve.getRe_startDay() + " " + reserve.getRe_startTime(), reserve.getRe_endDay() + " " + reserve.getRe_endTime(),
-                reserve.getRe_applicant(), "", reserve.getRe_switch(), "会社名", reserve.getRe_room_name(), reserve.getRe_fixtures(), reserve.getRe_remarks()};
+                reserve.getRe_applicant(), "", reserve.getRe_switch(), "何々会社", reserve.getRe_room_name(), reserve.getRe_fixtures(), reserve.getRe_remarks()};
     }
 
     //*** 描画メソッド ***//

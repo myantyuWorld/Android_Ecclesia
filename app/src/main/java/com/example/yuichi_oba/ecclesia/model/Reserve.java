@@ -5,7 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.yuichi_oba.ecclesia.activity.ReserveActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity;
+import com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 
@@ -452,24 +454,17 @@ public class Reserve implements Serializable {
   //*** --- SELF MADE METHOD --- 通知メールを送るメソッド ***//
   public void sentMail() {
 
-  }
+    }
+    //*** --- SELF MADE METHOD --- 追い出しを行うメソッド ***//
+    public void eviction(String re_id) {
+        MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
 
-  //*** --- SELF MADE METHOD --- 通知をするメソッド ***//
-  public void notification(String re_id) {
+        //*** 追い出し（DBから削除） ***//
+        db.rawQuery("delete from t_reserve where re_id = ?", new String[]{re_id});
 
-  }
-
-  //*** --- SELF MADE METHOD --- 追い出しを行うメソッド ***//
-  public void eviction(String re_id) {
-
-  }
-
-  //*** --- SELF MADE METHOD --- 予約内容をDB検索するメソッド ***//
-  public static Reserve retReserveConfirm(String re_id) {
-    Reserve reserve = new Reserve();
-
-    if (!re_id.contains("0")) { //*** 新規ではない ***//
-      Log.d("call", "新規ではない、予約内容のDB検索");
+        //*** 追い出された側に通知 ***//
+        //*** 未記述 ***//
     }
     MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
     SQLiteDatabase db = helper.getReadableDatabase();

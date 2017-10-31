@@ -372,9 +372,27 @@ public class ReserveListActivity extends AppCompatActivity
           Reserve reserve = Reserve.retReserveConfirm(info[1]); //*** 特定した予約IDを基に、予約情報を検索 ***//
 
 //                    intent.putExtra("emp", employee); //*** 不要？ ***//
+<<<<<<< HEAD
           Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
           intent.putExtra("gamen", "1");          //*** どの画面からの遷移か ***//
           intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
+=======
+                    Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+                    intent.putExtra("gamen", "1");          //*** どの画面からの遷移か ***//
+                    intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
+                    intent.putExtra("employee", employee);
+
+                    startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
+                }
+                thCnt++;
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+>>>>>>> syama/master
 
           startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
         }

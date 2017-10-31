@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -68,6 +70,22 @@ implements NavigationView.OnNavigationItemSelectedListener{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //*** 時間帯の被りをチェック ***//
+//                checkRes.timeDuplicationCheck();
+//                MyHelper helper = new MyHelper(getApplicationContext());
+//                SQLiteDatabase db = helper.getWritableDatabase();
+//                Cursor cursor = db.rawQuery("select * from t_reserve where room_id = ? and re_starttime", new String[]{checkRes.getRe_room_id()});
+//                while (cursor.moveToNext()) {
+//
+//
+//                }
+                //*** 優先度チェック ***//
+//                    checkRes.priorityCheck();
+                //*** 追い出し ***//
+//                checkRes.eviction();
+                //*** 追い出し（DBから削除） ***//
+//                db.rawQuery("delete from t_reserve where re_id = ?", new String[]{checkRes.getRe_id()});
+
                 reserveChange();
             }
         });
@@ -124,13 +142,13 @@ implements NavigationView.OnNavigationItemSelectedListener{
 //        ChangeResultDialog changeResultDialog = new ChangeResultDialog();
 //        changeResultDialog.show(getFragmentManager(), "change");
 //
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-        builder.setTitle("予約変更完了")
-                .setMessage("予約変更が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        }).create();
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+//        builder.setTitle("予約変更完了")
+//                .setMessage("予約変更が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//            }
+//        }).create();
 
         //*** 予約一覧へ画面遷移を行う ***//
         Intent intent = new Intent(getApplicationContext(), ReserveListActivity.class);
@@ -139,6 +157,12 @@ implements NavigationView.OnNavigationItemSelectedListener{
 
     public static ReserveCheckActivity getInstance() {
         return instance;
+    }
+
+    public void onClickMemConfirm(View view) {
+        //*** 参加者一覧ダイアログを表示する ***//
+        ReserveConfirmActivity.MemberConfirmDialog dialog = new ReserveConfirmActivity.MemberConfirmDialog();
+        dialog.show(getFragmentManager(), "confirm_a");
     }
 
     //*** 変更成功通知ダイアログ ***//
