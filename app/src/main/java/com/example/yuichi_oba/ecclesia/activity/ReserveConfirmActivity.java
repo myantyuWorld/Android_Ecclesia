@@ -705,9 +705,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
     builder.setSmallIcon(R.drawable.aaa);
 
     RemoteViews views = new RemoteViews(getPackageName(), R.layout.notification_layout);
-    views.setTextViewText(R.id.noti_title, "Title");
-    views.setTextViewText(R.id.noti_purpose, "Purpose");
-    views.setTextViewText(R.id.noti_date, "yyyy/MM/dd");
+    views.setTextViewText(R.id.noti_title, "以下の会議が削除されました！");
+    views.setTextViewText(R.id.noti_purpose, String.format("概要 : %s", r.getRe_name()));
+    views.setTextViewText(R.id.noti_date, String.format("開始時刻 %s : %s", r.getRe_startDay(), r.getRe_startTime()));
     builder.setContent(views);
 
     Notification notification = builder.build();
