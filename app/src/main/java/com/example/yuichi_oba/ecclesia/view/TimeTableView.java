@@ -302,6 +302,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         eX = 5 * x - padding;
         break;
     }
+    // TODO: 2017/11/04 0時をまたぐ予約で落ちるバグ発覚
     int s = Integer.parseInt(sTime.split("：")[0]); // 08:00 -> 8 => 8 - 8 = 0
     sY = timeFloats[s] + padding;
     if (Integer.parseInt(sTime.split("：")[1]) >= 30) {
