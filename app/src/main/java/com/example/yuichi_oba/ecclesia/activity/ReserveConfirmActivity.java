@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -586,10 +585,17 @@ public class ReserveConfirmActivity extends AppCompatActivity
     Log.d("call", "call onClickKakutei");
 
     //*** 会議の重複をチェックする ***//
-    if (!reserve.timeDuplicationCheck(reserve)) {
+    String resultCode = reserve.timeDuplicationCheck(reserve);
+    if (resultCode.contains("false")) {
       //*** 重複あり ***//
       Log.d("call", "時間の重複が発生！ 処理を抜けます");
       return;
+    } else if (resultCode.contains("true")) {
+      ;
+    } else {
+      Log.d("call", "追い出し処理検知！追い出された予約情報を通知します");
+      notificationEviction(resultCode);
+      reserve.eviction(resultCode);
     }
 
     Log.d("call", "予約ID:" + reserve.getRe_id());
@@ -603,7 +609,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     //*** 追い出しフラグが立っていたら、通知を発行する ***//
     evictionFlg = true; //*** 実験用に、フラグを立てる ***//
     if (evictionFlg) {
-      notificationEviction(); //*** 通知発行メソッドコール ***//
+      notificationEviction(resultCode); //*** 通知発行メソッドコール ***//
       evictionFlg = false;
     }
 
@@ -651,7 +657,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
   }
 
   //***  ***//
-  private void notificationEviction() {
+  private void notificationEviction(String otherReId) {
+    Log.d("call", "call ReserveConfirmActivity.notificationEviction()");
+    Util.easyLog("追い出し検知！ ステータス通知発行！");
     Intent intent = new Intent(Intent.ACTION_VIEW);
     intent.setData(Uri.parse("http://www.google.com/"));
 

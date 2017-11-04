@@ -37,6 +37,8 @@ public class Reserve implements Serializable {
   public static final int MINUTE = 4;
   public static final String SYANAI = "0";
   public static final String SYAGAI = "1";
+  public static final String TRUE = "1";
+  public static final String FALSE = "false";
   //    private MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
   public static SQLiteDatabase db;
 
@@ -234,14 +236,14 @@ public class Reserve implements Serializable {
   }
 
   //*** --- SELF MADE METHOD --- 会議の時間帯の重複をチェックするメソッド ***//
-  public boolean timeDuplicationCheck(Reserve r) {
+  public String timeDuplicationCheck(Reserve r) {
     Util.easyLog("Reserve SELF MADE METHOD");
     Log.d("call", "call Reserve.timeDuplicateCheck()");
     //*** 引数の会議日と同じ会議をListで取得する ***//
     List<Reserve> list = getSameDayMeeting(r);
 
     //*** その日の同じ会議室で会議がない ***//
-    if (list.size() == 0) return true;        //*** 時間の重複なしを返す ***//
+    if (list.size() == 0) return TRUE;        //*** 時間の重複なしを返す ***//
 
     //*** 開始時刻からみて、同じ時間帯に会議があるかチェック ***//
     for (Reserve other : list) {
@@ -258,13 +260,14 @@ public class Reserve implements Serializable {
         //*** 本来はここで、優先度チェックを行い、追い出し処理を行う priorityCheck()***//
         if (priorityCheck(r, other)) {
           //*** 優先度で「勝ち」==> 追い出し処理を行う eviction()***//
-          r.eviction(other.getRe_id());
+//          r.eviction(other.getRe_id());
+          return other.getRe_id();  //*** 追い出し対象の、予約IDを返す ***//
         }
         //*** 時間の重複あり & 優先度のチェックでも負け***//
-        return false;         //*** 予約ができない！を返す ***//
+        return FALSE;         //*** 予約ができない！を返す ***//
       }
     }
-    return true;
+    return TRUE;
   }
 
   //*** 引数の指定現在時刻が指定時間帯の範囲内かチェックするメソッド ***//
@@ -518,10 +521,6 @@ public class Reserve implements Serializable {
     db.rawQuery("delete from t_reserve where re_id = ?", new String[]{otherReId});
     //*** 追い出し（memberTableから削除） ***//
     db.rawQuery("delete from t_member where re_id = ?", new String[]{otherReId});
-
-    //*** 追い出された側に通知 ***//
-    ReserveConfirmActivity.evictionFlg = true;
-    //*** 未記述 ***//
   }
 
   public static Reserve retReserveConfirm(String re_id) {
