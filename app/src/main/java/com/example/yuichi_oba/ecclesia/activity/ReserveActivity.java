@@ -259,7 +259,8 @@ public class ReserveActivity extends AppCompatActivity
     super.onActivityResult(requestCode, resultCode, data);
 
     switch (requestCode) {
-      case (1):
+      case (1): //*** AddMemberActivityからの結果 ***//
+
         //*** OKボタン押下で、戻ってきたときの処理 ***//
         if (resultCode == RESULT_OK) {
           Object o = data.getSerializableExtra("member");
@@ -291,6 +292,11 @@ public class ReserveActivity extends AppCompatActivity
           //*** キャンセルボタン押下で、戻ってきたときの処理 ***//
         }
         break;
+      case (2): //*** ReserveConfirmActivityからの結果 ***//
+        if (resultCode == RESULT_OK) {
+          finish();
+        }
+
       default:
         break;
     }
@@ -552,8 +558,11 @@ public class ReserveActivity extends AppCompatActivity
     intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
     intent.putExtra("emp", employee);
 
+    //*** 予約確認画面への遷移、結果も取得する ***//
+    startActivityForResult(intent, 2);
 
-    startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
+
+//    startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
   }
 
   //*** --- SELF MADE METHOD --- 参加者の人数が、会議室の最大人数以下かどうかチェックする ***//

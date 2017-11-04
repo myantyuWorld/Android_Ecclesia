@@ -596,8 +596,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
     insertReserveTable(reserve, setReserveDetail());                  //*** 予約テーブルへのインサート ***//
     insertMemberTable(reserve.getRe_id(), reserve.getRe_member());    //*** 参加者テーブルへのインサート ***//
 
+    //*** 予約を確定したので、reserveをnullにする ***//
+    reserve = null;
 
     //*** 画面を殺す ***//
+    Intent intent = new Intent();
+    setResult(RESULT_OK, intent);
     finish();
 //        db = helper.getWritableDatabase();                      //***  ***//
 //        db.execSQL("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
