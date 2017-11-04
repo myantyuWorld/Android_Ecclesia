@@ -3,10 +3,15 @@ package com.example.yuichi_oba.ecclesia.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -68,6 +73,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
   public static String re_id;
   public static String gamen;
   public static Reserve reserve;
+  public static boolean evictionFlg = false;
   private Button btn_confirm;
   // 内部クラスからgetApplicationContextするためのやつ(普通にやるとno-staticで怒られる)
   private static ReserveConfirmActivity instance = null;
@@ -594,6 +600,13 @@ public class ReserveConfirmActivity extends AppCompatActivity
     //*** 予約を確定したので、reserveをnullにする ***//
     reserve = null;
 
+    //*** 追い出しフラグが立っていたら、通知を発行する ***//
+    evictionFlg = true; //*** 実験用に、フラグを立てる ***//
+    if (evictionFlg) {
+      notificationEviction(); //*** 通知発行メソッドコール ***//
+      evictionFlg = false;
+    }
+
     //*** 画面を殺す 結果を、ReserveActivityに返す ***//
     Intent intent = new Intent();
     setResult(RESULT_OK, intent);
@@ -635,5 +648,32 @@ public class ReserveConfirmActivity extends AppCompatActivity
     }
     //*** 参加者の優先度合計の平均を算出してその値を返す ***//
     return sumPriority / reserve.getRe_member().size();
+  }
+
+  //***  ***//
+  private void notificationEviction() {
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setData(Uri.parse("http://www.google.com/"));
+
+    PendingIntent pendingIntent = PendingIntent.getActivity(
+        getApplicationContext(),
+        0,
+        intent,
+        0
+    );
+
+    Notification notification = new Notification.Builder(ReserveListActivity.getInstance().getApplicationContext())
+        .setContentTitle("タイトル！")
+        .setContentText("お知らせぜよ～～")
+        .addAction(R.drawable.aaa, "決まりて：押し出し", pendingIntent)
+        .setContentIntent(pendingIntent)
+        .setSmallIcon(R.drawable.aaa)
+        .setAutoCancel(true)
+        .build();
+
+    NotificationManager nm = (NotificationManager)
+        getSystemService(Context.NOTIFICATION_SERVICE);
+
+    nm.notify(1000, notification);
   }
 }

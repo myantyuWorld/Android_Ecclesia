@@ -520,6 +520,7 @@ public class Reserve implements Serializable {
     db.rawQuery("delete from t_member where re_id = ?", new String[]{otherReId});
 
     //*** 追い出された側に通知 ***//
+    ReserveConfirmActivity.evictionFlg = true;
     //*** 未記述 ***//
   }
 

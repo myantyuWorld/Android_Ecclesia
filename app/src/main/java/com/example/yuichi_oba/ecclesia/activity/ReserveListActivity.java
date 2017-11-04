@@ -297,10 +297,11 @@ public class ReserveListActivity extends AppCompatActivity
         );
 
         Notification notification = new Notification.Builder(ReserveListActivity.getInstance().getApplicationContext())
-            .setContentTitle("Title!")
-            .setContentText("Content Text!")
+            .setContentTitle("タイトル！")
+            .setContentText("お知らせぜよ～～")
+            .addAction(R.drawable.aaa, "決まりて：押し出し", pendingIntent)
             .setContentIntent(pendingIntent)
-            .setSmallIcon(R.drawable.icon)
+            .setSmallIcon(R.drawable.aaa)
             .setAutoCancel(true)
             .build();
 
