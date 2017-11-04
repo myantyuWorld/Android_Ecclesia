@@ -585,10 +585,11 @@ public class ReserveConfirmActivity extends AppCompatActivity
       Log.d("call", "時間の重複が発生！ 処理を抜けます");
       return;
     }
+
     Log.d("call", "予約ID:" + reserve.getRe_id());
 
-    insertReserveTable(reserve, setReserveDetail());                  //*** 予約テーブルへのインサート ***//
-    insertMemberTable(reserve.getRe_id(), reserve.getRe_member());    //*** 参加者テーブルへのインサート ***//
+    //*** 時間の重複も、優先度チェックも何も必要なし＝＝＞ そのままインサートする ***//
+    reserve.reserveCorrenct(setReserveDetail());      //*** 予約テーブル,参加者テーブル へのインサート ***//
 
     //*** 予約を確定したので、reserveをnullにする ***//
     reserve = null;
@@ -597,27 +598,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
     Intent intent = new Intent();
     setResult(RESULT_OK, intent);
     finish();
-//        db = helper.getWritableDatabase();                      //***  ***//
-//        db.execSQL("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-//                new Object[]{
-//                        reserve.getRe_id(),
-//                        reserve.getRe_name(),
-//                        reserve.getRe_startDay(),
-//                        reserve.getRe_endDay(),
-//                        reserve.getRe_startTime(),
-//                        reserve.getRe_endTime(),
-//                        reserve.getRe_switch(),
-//                        reserve.getRe_fixtures(),
-//                        reserve.getRe_remarks(),
-//                        priorityAverage,
-//                        "aa",
-//                        reserve.getRe_applicant(),
-//                        reserve.getRe_room_id(),
-//                        reserve.getRe_purpose_id(),
-//                        reserve.getRe_applicant()
-//                });
-
-
   }
 
 
@@ -629,62 +609,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
   //*** --- SELF MADE METHOD --- 各ウィジェットの初期化処理メソッド ***//
   public void init() {
     btn_confirm = (Button) findViewById(R.id.arconfirm_btn_mem_confirm);    //*** 参加者確認ボタン ***//
-  }
-
-  private void insertReserveTable(Reserve reserve, float priorityAverage) {
-    //*** 申請者の氏名－＞ 社員IDに変換して、予約インスタンスにセットする ***//
-    reserve.setRe_applicant(Util.returnEmpId(reserve.getRe_applicant()));
-
-    db = helper.getWritableDatabase();
-    db.beginTransaction();
-    try {
-      try (SQLiteStatement st = db.compileStatement("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
-        st.bindString(1, reserve.getRe_id());
-        st.bindString(2, reserve.getRe_name());
-        st.bindString(3, reserve.getRe_startDay());
-        st.bindString(4, reserve.getRe_endDay());
-        st.bindString(5, reserve.getRe_startTime());
-        st.bindString(6, reserve.getRe_endTime());
-        st.bindString(7, reserve.getRe_switch());
-        st.bindString(8, reserve.getRe_fixtures());
-        st.bindString(9, reserve.getRe_remarks());
-        st.bindString(10, String.valueOf(priorityAverage));
-        st.bindString(11, "company_name");
-        st.bindString(12, employee.getEmp_id());
-        st.bindString(13, reserve.getRe_room_id());
-        st.bindString(14, reserve.getRe_purpose_id());
-//                    st.bindString(14, "0001");
-
-        st.bindString(15, reserve.getRe_applicant());
-        st.executeInsert();
-      }
-      db.setTransactionSuccessful();
-    } finally {
-      db.endTransaction();
-    }
-  }
-
-  @RequiresApi(api = Build.VERSION_CODES.N)
-  private void insertMemberTable(String re_id, List<Person> members) {
-    db = helper.getWritableDatabase();
-    db.beginTransaction();
-    SQLiteStatement st = db.compileStatement("insert into t_member values (?, ?)");
-    for (Person m : members) {
-      st.bindString(1, re_id);
-      String mem_id = null;
-      //***  ***//
-      if (m instanceof Employee) {
-        mem_id = ((Employee) m).getEmp_id();
-      }
-      //***  ***//
-      else if (m instanceof OutEmployee) {
-        mem_id = ((OutEmployee) m).getOut_id();
-      }
-      st.bindString(2, mem_id);
-      st.executeInsert();
-    }
-    db.setTransactionSuccessful();
-    db.endTransaction();
   }
 
   //*** --- SELF MADE METHOD --- 予約インスタンスの情報を、DBに書き込める形にまで設定するメソッド ***//
