@@ -9,16 +9,20 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.RemoteViews;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -608,17 +613,18 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     //*** 追い出しフラグが立っていたら、通知を発行する ***//
     evictionFlg = true; //*** 実験用に、フラグを立てる ***//
+    // TODO: 2017/11/04 実験用 -----
     if (evictionFlg) {
-      notificationEviction(resultCode); //*** 通知発行メソッドコール ***//
+      notificationEviction("0001"); //*** 通知発行メソッドコール ***//
       evictionFlg = false;
     }
+    // TODO: 2017/11/04 ----- ここまで
 
     //*** 画面を殺す 結果を、ReserveActivityに返す ***//
     Intent intent = new Intent();
     setResult(RESULT_OK, intent);
     finish();
   }
-
 
 
   //*** ------------------------ ***//
@@ -660,6 +666,28 @@ public class ReserveConfirmActivity extends AppCompatActivity
   private void notificationEviction(String otherReId) {
     Log.d("call", "call ReserveConfirmActivity.notificationEviction()");
     Util.easyLog("追い出し検知！ ステータス通知発行！");
+
+    //*** 通知で表示する追い出し対象の予約情報を取得する ***//
+    db = helper.getWritableDatabase();
+    Cursor c = db.rawQuery("select * from v_reserve_member where re_id = ?", new String[]{otherReId});
+    Reserve r = new Reserve();
+    if (c.moveToNext()) {
+      //*** 追い出し対象の予約インスタンスを生成 ***//
+      r.setRe_id(otherReId);         //*** 予約ID ***//
+      r.setRe_name(c.getString(1));           //*** 概要 ***//
+      r.setRe_startDay(c.getString(2));       //*** 開始日時 ***//
+      r.setRe_endDay(c.getString(3));         //*** 終了日時 ***//
+      r.setRe_startTime(c.getString(4));      //*** 開始時刻 ***//
+      r.setRe_endTime(c.getString(5));        //*** 終了時刻 ***/
+      r.setRe_switch(c.getString(6));         //*** 社内社外区分 ***//
+      r.setRe_fixtures(c.getString(7));       //*** 備品 ***//
+      r.setRe_remarks(c.getString(8));        //*** 備考 ***//
+      r.setRe_room_id(c.getString(10));       //*** 会議室ID ***//
+      r.setRe_purpose_name(c.getString(19));  //*** 会議目的名 ***//
+    }
+    c.close();
+
+    //*** ステータス通知をタップで、どの処理を行うか設定 ***//
     Intent intent = new Intent(Intent.ACTION_VIEW);
     intent.setData(Uri.parse("http://www.google.com/"));
 
@@ -670,18 +698,37 @@ public class ReserveConfirmActivity extends AppCompatActivity
         0
     );
 
-    Notification notification = new Notification.Builder(ReserveListActivity.getInstance().getApplicationContext())
-        .setContentTitle("タイトル！")
-        .setContentText("お知らせぜよ～～")
-        .addAction(R.drawable.aaa, "決まりて：押し出し", pendingIntent)
-        .setContentIntent(pendingIntent)
-        .setSmallIcon(R.drawable.aaa)
-        .setAutoCancel(true)
-        .build();
 
-    NotificationManager nm = (NotificationManager)
-        getSystemService(Context.NOTIFICATION_SERVICE);
+    // TODO: 2017/11/04 ↓ カスタマイズ可能！
+    //*** ステータス通知で表示する部品の設定 ***//
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+    builder.setSmallIcon(R.drawable.aaa);
 
-    nm.notify(1000, notification);
+    RemoteViews views = new RemoteViews(getPackageName(), R.layout.notification_layout);
+    views.setTextViewText(R.id.noti_title, "Title");
+    views.setTextViewText(R.id.noti_purpose, "Purpose");
+    views.setTextViewText(R.id.noti_date, "yyyy/MM/dd");
+    builder.setContent(views);
+
+    Notification notification = builder.build();
+    notification.bigContentView = views;
+    NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
+    manager.notify(123, notification);
+
+
+
+//    Notification notification = new Notification.Builder(ReserveListActivity.getInstance().getApplicationContext())
+//        .setContentTitle("以下の会議が優先度の関係で削除されました")
+//        .setContentText(String.format("開始時刻 : [%s] 会議目的 : [%s] ", r.getRe_startDay() + " " + r.getRe_startTime(), r.getRe_purpose_name()))
+//        .addAction(R.drawable.aaa, String.format("概要 : [%s]", r.getRe_name()), pendingIntent)
+//        .setContentIntent(pendingIntent)
+//        .setSmallIcon(R.drawable.aaa)
+//        .setAutoCancel(false)
+//        .build();
+//
+//    NotificationManager nm = (NotificationManager)
+//        getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//    nm.notify(1000, notification);
   }
 }
