@@ -259,7 +259,10 @@ public class ReserveActivity extends AppCompatActivity
     super.onActivityResult(requestCode, resultCode, data);
 
     switch (requestCode) {
-      case (1): //*** AddMemberActivityからの結果 ***//
+      //*** --------------------------***//
+      //*** AddMemberActivityからの結果 ***//
+      //*** --------------------------***//
+      case (1):
 
         //*** OKボタン押下で、戻ってきたときの処理 ***//
         if (resultCode == RESULT_OK) {
@@ -268,33 +271,30 @@ public class ReserveActivity extends AppCompatActivity
             Employee e = (Employee) o;
             //*** AddMemberActivity->405行目くらいで、その処理があります ***//
             Log.d("call", String.format("社内参加者の役職優先度 : %s", e.getPos_priority()));
-            member.add(e);      //*** 参加者を追加する ***//
+            member.add(e);
           } else {                        //*** インスタンスが、OutEmployeeクラスのインスタンス ***//
             OutEmployee e = (OutEmployee) o;
             Log.d("call", String.format("社外参加者 : %s", e.toString()));
-            member.add(e);      //*** 参加者を追加する ***//
+            member.add(e);
           }
 
           //*** 参加者を追加する ***//
           final List<String> list = new ArrayList<>();
-          for (Person p : member) {
-            if (p instanceof Employee) {
-              list.add("社内 : " + p.getName());
-            } else {
-              Log.d("call", "-----社外者参加者");
-            }
-          }
+          member.forEach(p -> {
+            if (p instanceof Employee) list.add("社内 : " + p.getName());
+            else                        Log.d("call", "-----社外者参加者");
+          });
           //*** 参加者スピナーに反映する ***//
           ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
           sp_member.setAdapter(adapter_member);
-
-        } else if (resultCode == RESULT_CANCELED) {
-          //*** キャンセルボタン押下で、戻ってきたときの処理 ***//
         }
         break;
-      case (2): //*** ReserveConfirmActivityからの結果 ***//
+      //*** --------------------------------***//
+      //*** ReserveConfirmActivityからの結果 ***//
+      //*** --------------------------------***//
+      case (2):
         if (resultCode == RESULT_OK) {
-          finish();
+          finish(); //*** 予約画面、殺す ***//
         }
 
       default:

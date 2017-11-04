@@ -366,7 +366,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //        dbSearchReserveConfirm();
   }
 
-
   //*** アクティビティのライフサイクルとして、別の画面にいってまた帰ってきたとき、コールされる ***//
   @Override
   protected void onStart() {
@@ -567,11 +566,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //        return instance;
 //    }
 
-  //*** --- SELF MADE METHOD --- 各ウィジェットの初期化処理メソッド ***//
-  public void init() {
-    btn_confirm = (Button) findViewById(R.id.arconfirm_btn_mem_confirm);    //*** 参加者確認ボタン ***//
-  }
-
   //*** --- SELF MADE METHOD --- 参加者確認ボタン押下時の処理 ***//
   public void onClickMemConfirm(View view) {
     Log.d("call", "btn_confirm_member->onClick()");
@@ -599,7 +593,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     //*** 予約を確定したので、reserveをnullにする ***//
     reserve = null;
 
-    //*** 画面を殺す ***//
+    //*** 画面を殺す 結果を、ReserveActivityに返す ***//
     Intent intent = new Intent();
     setResult(RESULT_OK, intent);
     finish();
@@ -624,6 +618,17 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //                });
 
 
+  }
+
+
+
+  //*** ------------------------ ***//
+  //*** --- SELF MADE METHOD --- ***//
+  //*** ------------------------ ***//
+
+  //*** --- SELF MADE METHOD --- 各ウィジェットの初期化処理メソッド ***//
+  public void init() {
+    btn_confirm = (Button) findViewById(R.id.arconfirm_btn_mem_confirm);    //*** 参加者確認ボタン ***//
   }
 
   private void insertReserveTable(Reserve reserve, float priorityAverage) {
