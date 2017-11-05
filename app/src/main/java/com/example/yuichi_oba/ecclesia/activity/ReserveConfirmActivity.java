@@ -659,7 +659,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     //*** 会議参加者の優先度を計算する ***//
     Integer sumPriority = 0;
-    // TODO: 2017/10/06 会議目的優先度をどう処理するか考察
 
     //*** 参加者の優先度の合計を算出する ***//
     for (Person p : reserve.getRe_member()) {
@@ -712,7 +711,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
     );
 
 
-    // TODO: 2017/11/04 ↓ カスタマイズ可能！
     //*** ステータス通知で表示する部品の設定 ***//
     NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
     builder.setSmallIcon(R.drawable.aaa);
