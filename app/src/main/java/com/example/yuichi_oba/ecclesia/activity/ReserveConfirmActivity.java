@@ -589,6 +589,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
   public void onClickKakutei(View view) {
     Log.d("call", "call onClickKakutei");
 
+    //*** 新規からの画面遷移でなければ、以降の処理は無効なので、戻る ***//
+    if (gamen.contains("一覧")) {
+      finish();
+      return;
+    }
+
     //*** 会議の重複をチェックする ***//
     String resultCode = reserve.timeDuplicationCheck(reserve);
     if (resultCode.contains("false")) {
@@ -624,6 +630,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     Intent intent = new Intent();
     setResult(RESULT_OK, intent);
     finish();
+
   }
 
 

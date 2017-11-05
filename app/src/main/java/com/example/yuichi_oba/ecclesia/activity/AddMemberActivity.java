@@ -323,8 +323,7 @@ public class AddMemberActivity extends AppCompatActivity
     SQLiteDatabase db = helper.getReadableDatabase();
 //        Cursor cursor = db.rawQuery("select * from v_member", new String[]{});
     // 自分が参加した会議に参加したことのある人間を検索(社内)
-    String sqlArgs = Q_SELECT_HISTORY_EMPLOYEE;
-    Cursor c = db.rawQuery(sqlArgs, new String[]{emp_id});
+    Cursor c = db.rawQuery(Q_SELECT_HISTORY_EMPLOYEE, new String[]{emp_id});
     // メンバークラスのインスタンス生成
     List<String> list = new ArrayList<>();
     while (c.moveToNext()) {
@@ -341,7 +340,6 @@ public class AddMemberActivity extends AppCompatActivity
       Log.d("call", String.format("社員情報 : %s", e.toString()));    //***  ***//
 
       members.add(e);
-//            list.add(e.getCom_name() + " : " + e.getName());
       list.add("社内" + ":" + e.getName());
 
     }
@@ -349,16 +347,6 @@ public class AddMemberActivity extends AppCompatActivity
     // 自分が参加した会議に参加したことのある人間を検索(社外)
     c = db.rawQuery(Q_SELECT_HISTORY_OUTEMPLOYEE, new String[]{emp_id});
     while (c.moveToNext()) {
-//            Employee e = new Employee();
-//            e.setId(c.getString(10));           // ID
-//            e.setName(c.getString(11));         // 氏名
-//            e.setTel(c.getString(12));          // 電話番号
-//            e.setMailaddr(c.getString(13));     // メールアドレス
-//            e.setDep_name(c.getString(14));     // 部署名
-//            e.setPos_name(c.getString(15));     // 役職名
-//            e.setPos_priority(c.getString(16)); // 役職の優先度
-//            e.setCom_name(c.getString(18));     // 会社名
-
       //*** [社外者]クラスのインスタンスを生成 ***//
       OutEmployee e = new OutEmployee(
           c.getString(10),            //*** ID ***//
@@ -370,7 +358,6 @@ public class AddMemberActivity extends AppCompatActivity
           c.getString(16),            //*** 役職優先度 ***//
           c.getString(18)             //*** 会社名 ***//
       );
-
       members.add(e);
       list.add(e.getCom_name() + ":" + e.getName());
     }
@@ -399,7 +386,7 @@ public class AddMemberActivity extends AppCompatActivity
       //*** 履歴検索ラジオボタン選択時 ***//
       //*** ------------------------- ***//
       case R.id.aam_rbt_history:
-        Log.d("call", "rirekikensaku radio button ");
+        Log.d("call", "履歴検索 radio button ");
 
         //*** 選択されている社員情報をmembersから抜き取る ***//
         Intent intent = new Intent();
@@ -445,8 +432,9 @@ public class AddMemberActivity extends AppCompatActivity
       //*** ------------------------- ***//
       //*** 新規登録ラジオボタン選択時 ***//
       //*** ------------------------- ***//
+      // TODO: 2017/11/05 新規登録ならば、各項目の内容で、社内、社外テーブルへのインサート処理を行う
       case R.id.aam_rbt_new_regist:
-        Log.d("call", "new regist radio button");
+        Log.d("call", "新規登録 radio button");
         //*** 各ウィジェットの情報を基に、参加者のインスタンスを生成 ***//
         Intent intent2 = new Intent();
         if (aam_etxt_company.getText().toString().contains("")) {     //*** 社内の場合 ***//
@@ -462,11 +450,8 @@ public class AddMemberActivity extends AppCompatActivity
           t_emp.setPos_priority(Util.returnPositionId(sp_position.getSelectedItem().toString()).posPriority);
 
           Log.d("call", t_emp.toString());
-//          t_emp.setDep_id(sp_depart.getSelectedItem().toString());
-//          t_emp.setPos_id(sp_position.getSelectedItem().toString());
-
           intent2.putExtra("member", t_emp);   //*** intent に セットする ***//
-        } else {                                                //*** 社外者の場合 ***//
+        } else {                                          //*** 社外者の場合 ***//
           OutEmployee outEmployee = new OutEmployee(
               returnMaxId(M_OUT_EMP),                     //*** 社外者テーブルのIDの最大値＋１を代入 ***//
               ed_name.getText().toString(),               //*** 氏名 ***//
@@ -475,7 +460,7 @@ public class AddMemberActivity extends AppCompatActivity
               sp_depart.getSelectedItem().toString(),     //*** 部署名 ***//
               sp_position.getSelectedItem().toString(),   //*** 役職名 ***//
               "",                                         //*** 役職優先度 ***//
-              aam_etxt_company.getText().toString()             //*** 会社名 ***//
+              aam_etxt_company.getText().toString()       //*** 会社名 ***//
           );
           Log.d("call", outEmployee.toString());
 
