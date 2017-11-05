@@ -250,6 +250,10 @@ public class ReserveActivity extends AppCompatActivity
     //*** 各ウィジェットの初期化処理（日付、会議室） ***//
     init(date, roomId);
 
+    //*** 参加者をからにする ***//
+    Log.d("call", "参加者を殻にします");
+    member.clear();
+
   }
 
   //*** 開いたアクティビティ(AddMemberActivity)から何かしらの情報を受け取る ***//

@@ -395,6 +395,7 @@ public class Reserve implements Serializable {
     db = helper.getWritableDatabase();
 
     //*** 予約テーブルへのインサート ***//
+    Log.d("call", "予約テーブルへのインサート開始");
     db.beginTransaction();
     try {
       try (SQLiteStatement st = db.compileStatement("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
@@ -419,8 +420,10 @@ public class Reserve implements Serializable {
     } finally {
       db.endTransaction();
     }
+    Log.d("call", "予約テーブルへのインサート終了");
 
     //*** 参加者テーブルへのインサート ***//
+    Log.d("call", "参加者テーブルへのインサート開始");
     db.beginTransaction();
     SQLiteStatement st = db.compileStatement("insert into t_member values (?, ?)");
     for (Person m : this.getRe_member()) {
@@ -429,16 +432,19 @@ public class Reserve implements Serializable {
       //***  ***//
       if (m instanceof Employee) {
         mem_id = ((Employee) m).getEmp_id();
+        Log.d("call", String.format("社内mem_id : %s", mem_id));
       }
       //***  ***//
       else if (m instanceof OutEmployee) {
         mem_id = ((OutEmployee) m).getOut_id();
+        Log.d("call", String.format("社外mem_id : %s", mem_id));
       }
       st.bindString(2, mem_id);
       st.executeInsert();
     }
     db.setTransactionSuccessful();
     db.endTransaction();
+    Log.d("call", "参加者テーブルへのインサート終了");
 
 
     return 1;

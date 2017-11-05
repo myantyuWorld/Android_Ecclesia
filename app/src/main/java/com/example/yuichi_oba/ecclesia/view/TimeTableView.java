@@ -447,7 +447,6 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     SQLiteOpenHelper helper = new MyHelper(getContext());
     SQLiteDatabase db = helper.getReadableDatabase();
     Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?", new String[]{emp_id, date});
-    reserveInfo.clear();
     while (c.moveToNext()) {
       // 予約情報のインスタンス生成
       Reserve r = new Reserve();

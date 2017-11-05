@@ -183,6 +183,7 @@ public class Util {
    * @return
    */
   public static String returnMaxReserveId() {
+    Log.d("call", "call Util.returnMaxReserveId()");
     SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getReadableDatabase();
 
