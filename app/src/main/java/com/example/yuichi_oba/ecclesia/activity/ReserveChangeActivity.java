@@ -380,20 +380,21 @@ public class ReserveChangeActivity extends AppCompatActivity
     private boolean timeCheck() {
         boolean res = false;
         //*** 時刻比較カレンダー ***//
-        Calendar cal = Calendar.getInstance();
-        Calendar cmp = Calendar.getInstance();
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
         //*** フォーマット用意 ***//
         SimpleDateFormat timeFor = new SimpleDateFormat(YYYY_MM_DD_HH_MM);
         try {
             //*** 開始時刻終了時刻をセット ***//
-            cal.setTime(timeFor.parse(startDayBtn.getText() + SPACE + startTimeBtn.getText()));
-            cmp.setTime(timeFor.parse(endDayBtn.getText() + SPACE + endTimeBtn.getText()));
+            start.setTime(timeFor.parse(startDayBtn.getText() + SPACE + startTimeBtn.getText()));
+            end.setTime(timeFor.parse(endDayBtn.getText() + SPACE + endTimeBtn.getText()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
         //*** 時間に矛盾がないか ***//
-        if ((cal.get(Calendar.YEAR) <= cmp.get(Calendar.YEAR)) && (cal.get(Calendar.MONTH) <= cmp.get(Calendar.MONTH)) && (cal.get(Calendar.DAY_OF_MONTH) <= cmp.get(Calendar.DAY_OF_MONTH))
-                && (cal.get(Calendar.HOUR_OF_DAY) <= cmp.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) <= cmp.get(Calendar.MINUTE))) {
+        if ((start.get(Calendar.YEAR) <= end.get(Calendar.YEAR)) && (start.get(Calendar.MONTH) <= end.get(Calendar.MONTH)) && (start.get(Calendar.DAY_OF_MONTH) <= end.get(Calendar.DAY_OF_MONTH))
+                && (((start.get(Calendar.HOUR_OF_DAY) <= end.get(Calendar.HOUR_OF_DAY)) && (start.get(Calendar.MINUTE) <= end.get(Calendar.MINUTE)))
+                || ((start.get(Calendar.HOUR_OF_DAY) < end.get(Calendar.HOUR_OF_DAY)) && (start.get(Calendar.MINUTE) >= end.get(Calendar.MINUTE))))) {
             res = true;
         } else {
             Toast.makeText(this, "開始日時より終了日時のほうが早くなっています", Toast.LENGTH_SHORT).show();

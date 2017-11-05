@@ -424,7 +424,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
     //*** 現在時刻取得 ***//
     Calendar cal = Calendar.getInstance();
     //*** 比較用Calender ***//
-    Calendar cmp = Calendar.getInstance();
+    Calendar start = Calendar.getInstance();
+    //*** 比較用Calenderその２ ***//
+    Calendar end = Calendar.getInstance();
     //*** フォーマット用意 ***//
     SimpleDateFormat timeFormat = new SimpleDateFormat(YYYY_MM_DD_HH_MM);
 
@@ -435,14 +437,18 @@ public class ReserveConfirmActivity extends AppCompatActivity
       case R.id.option_earlyOut:
         try {
           //*** Calenderにセット ***//
-          cmp.setTime(timeFormat.parse(reserve.getRe_endDay() + SPACE + reserve.getRe_endTime()));
+          start.setTime(timeFormat.parse(reserve.getRe_startDay() + SPACE + reserve.getRe_startTime()));
+          end.setTime(timeFormat.parse(reserve.getRe_endDay() + SPACE + reserve.getRe_endTime()));
         } catch (ParseException e) {
           e.getStackTrace();
           break;
         }
         //*** 退出しようとしている会議が現在日付・時刻に矛盾していないか ***//
-        if ((cal.get(Calendar.YEAR) == cmp.get(Calendar.YEAR)) && (cal.get(Calendar.MONTH) == cmp.get(Calendar.MONTH)) && (cal.get(Calendar.DAY_OF_MONTH) == cmp.get(Calendar.DAY_OF_MONTH))
-            && (cal.get(Calendar.HOUR_OF_DAY) <= cmp.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) < cmp.get(Calendar.MINUTE))) {
+        if (((cal.get(Calendar.YEAR) == start.get(Calendar.YEAR)) || (cal.get(Calendar.YEAR) == end.get(Calendar.YEAR)))
+                && ((cal.get(Calendar.MONTH) == start.get(Calendar.MONTH)) || (cal.get(Calendar.MONTH) == end.get(Calendar.MONTH)))
+                && ((cal.get(Calendar.DAY_OF_MONTH) == start.get(Calendar.DAY_OF_MONTH)) || (cal.get(Calendar.DAY_OF_MONTH) == end.get(Calendar.DAY_OF_MONTH)))
+                && (((cal.get(Calendar.HOUR_OF_DAY)) <= end.get(Calendar.HOUR_OF_DAY) && (cal.get(Calendar.MINUTE) < end.get(Calendar.MINUTE)))
+                || (cal.get(Calendar.HOUR_OF_DAY) < end.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) > end.get(Calendar.MINUTE)))) {
           //*** 早期退出ダイアログを表示 ***//
           EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
           earlyOutDialog.show(getFragmentManager(), "out");
@@ -473,14 +479,15 @@ public class ReserveConfirmActivity extends AppCompatActivity
         re_id = reserve.getRe_id();
         try {
           //*** 変更しようとしている会議の開始時間をセット ***//
-          cmp.setTime(timeFormat.parse(reserve.getRe_startDay() + " " + reserve.getRe_startTime()));
+          start.setTime(timeFormat.parse(reserve.getRe_startDay() + " " + reserve.getRe_startTime()));
         } catch (ParseException e) {
           e.getStackTrace();
           break;
         }
         //*** 変更しようとしている会議が現在日付・時刻に矛盾していないか ***//
-        if ((cal.get(Calendar.YEAR) == cmp.get(Calendar.YEAR)) && (cal.get(Calendar.MONTH) == cmp.get(Calendar.MONTH)) && cal.get(Calendar.DAY_OF_MONTH) == cmp.get(Calendar.DAY_OF_MONTH)
-            && (cal.get(Calendar.HOUR_OF_DAY)) <= cal.get(Calendar.HOUR_OF_DAY) && (cal.get(Calendar.MINUTE) < cmp.get(Calendar.MINUTE))) {
+        if ((cal.get(Calendar.YEAR) <= start.get(Calendar.YEAR)) && (cal.get(Calendar.MONTH) <= start.get(Calendar.MONTH)) && cal.get(Calendar.DAY_OF_MONTH) <= start.get(Calendar.DAY_OF_MONTH)
+            && (((cal.get(Calendar.HOUR_OF_DAY)) <= start.get(Calendar.HOUR_OF_DAY) && (cal.get(Calendar.MINUTE) < start.get(Calendar.MINUTE)))
+            || (cal.get(Calendar.HOUR_OF_DAY) < start.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) > start.get(Calendar.MINUTE)))) {
           //*** 次画面（ReserveChangeActivity）に予約インスタンスを渡す ***//
           intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
           intent.putExtra(KEYCHANGE, reserve);
@@ -505,21 +512,21 @@ public class ReserveConfirmActivity extends AppCompatActivity
         break;
       // 「延長」が選択された
       case R.id.option_extention:
-        //*** 比較用Calenderその２ ***//
-        Calendar cmp2 = Calendar.getInstance();
+
         try {
           //*** 延長を試みる会議の開始終了時刻をセット ***//
-          cmp.setTime(timeFormat.parse(reserve.getRe_startDay() + " " + reserve.getRe_startTime()));
-          cmp2.setTime(timeFormat.parse(reserve.getRe_endDay() + " " + reserve.getRe_endTime()));
+          start.setTime(timeFormat.parse(reserve.getRe_startDay() + " " + reserve.getRe_startTime()));
+          end.setTime(timeFormat.parse(reserve.getRe_endDay() + " " + reserve.getRe_endTime()));
         } catch (ParseException e) {
           e.getStackTrace();
           break;
         }
         //*** 延長しようとしている会議が現在日付・時刻に矛盾していないか ***//
-        if (((cal.get(Calendar.YEAR) == cmp.get(Calendar.YEAR)) || (cal.get(Calendar.YEAR) == cmp2.get(Calendar.YEAR)))
-            && ((cal.get(Calendar.MONTH) == cmp.get(Calendar.MONTH)) || (cal.get(Calendar.MONTH) == cmp2.get(Calendar.MONTH)))
-            && ((cal.get(Calendar.DAY_OF_MONTH) == cmp.get(Calendar.DAY_OF_MONTH)) || (cal.get(Calendar.DAY_OF_MONTH) == cmp2.get(Calendar.DAY_OF_MONTH)))
-            && (cal.get(Calendar.HOUR_OF_DAY) <= cmp2.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) < cmp2.get(Calendar.MINUTE))) {
+        if (((cal.get(Calendar.YEAR) == start.get(Calendar.YEAR)) || (cal.get(Calendar.YEAR) == end.get(Calendar.YEAR)))
+            && ((cal.get(Calendar.MONTH) == start.get(Calendar.MONTH)) || (cal.get(Calendar.MONTH) == end.get(Calendar.MONTH)))
+            && ((cal.get(Calendar.DAY_OF_MONTH) == start.get(Calendar.DAY_OF_MONTH)) || (cal.get(Calendar.DAY_OF_MONTH) == end.get(Calendar.DAY_OF_MONTH)))
+            && (((cal.get(Calendar.HOUR_OF_DAY)) <= end.get(Calendar.HOUR_OF_DAY) && (cal.get(Calendar.MINUTE) < end.get(Calendar.MINUTE)))
+                || (cal.get(Calendar.HOUR_OF_DAY) < end.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) > end.get(Calendar.MINUTE)))) {
           //*** 延長ダイアログを表示 ***//
 
           ExtentionDialog extentionDialog = new ExtentionDialog();
