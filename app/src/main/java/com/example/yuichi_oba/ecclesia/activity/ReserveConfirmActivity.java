@@ -149,7 +149,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
               db.execSQL("update t_reserve set re_endtime = ? where re_id = ?", new Object[]{ealTime, re_id});
 //                            reserve.earlyExit();
 
-              AlertDialog.Builder result = new AlertDialog.Builder(instance.getApplicationContext());
+//              AlertDialog.Builder result = new AlertDialog.Builder(instance.getApplicationContext());
 //                            result.setTitle("早期退出完了")
 //                                    .setMessage("早期退出が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
 //                                @Override
@@ -174,34 +174,54 @@ public class ReserveConfirmActivity extends AppCompatActivity
   }
 
   //*** 早期退出完了通知ダイアログ ***//
-  public static class EalryOutResultDialog extends DialogFragment {
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-      return new AlertDialog.Builder(getActivity()).setTitle("早期退出完了")
-          .setMessage("早期退出が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-          }).create();
-    }
-  }
+//  public static class EalryOutResultDialog extends DialogFragment {
+//    @Override
+//    public Dialog onCreateDialog(Bundle savedInstanceState) {
+//      return new AlertDialog.Builder(getActivity()).setTitle("早期退出完了")
+//          .setMessage("早期退出が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//            }
+//          }).create();
+//    }
+//  }
 
   //*** 延長完了を通知するダイアログ ***//
-  public static class ExtentResultDialog extends DialogFragment {
+//  public static class ExtentResultDialog extends DialogFragment {
+//    @Override
+//    public Dialog onCreateDialog(Bundle savedInstanceState) {
+//      return new AlertDialog.Builder(getActivity()).setTitle("延長完了")
+//          .setMessage("延長が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//            }
+//          }).create();
+//    }
+//
+//
+//    @Override
+//    public void onPause() {
+//      super.onPause();
+//      dismiss();
+//    }
+//  }
+
+  public static class ResultDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-      return new AlertDialog.Builder(getActivity()).setTitle("延長完了")
-          .setMessage("延長が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-          }).create();
-    }
+      String str = "", title = "";
+      switch (getArguments().getString("result")) {
+        case "ex":
+          title = "延長完了";
+          str = "延長が完了しました";
+          break;
+        case "ear":
+          title = "早期退出完了";
+          str = "早期退出が完了しました";
+          break;
+      }
 
-    @Override
-    public void onPause() {
-      super.onPause();
-      dismiss();
+      return new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(str).setPositiveButton("OK", null).create();
     }
   }
 
@@ -261,16 +281,16 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //                                reserve.endTimeExtention(exTime);
 
               //*** 延長結果ダイアログを表示 ***//
-              ExtentResultDialog extentResultDialog = new ExtentResultDialog();
-              extentResultDialog.show(getFragmentManager(), KEYEX);
+//              ExtentResultDialog extentResultDialog = new ExtentResultDialog();
+//              extentResultDialog.show(getFragmentManager(), KEYEX);
 
-              AlertDialog.Builder result = new AlertDialog.Builder(instance.getApplicationContext());
-              result.setTitle("延長完了")
-                  .setMessage("延長が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                }
-              }).create();
+//              AlertDialog.Builder result = new AlertDialog.Builder(instance.getApplicationContext());
+//              result.setTitle("延長完了")
+//                  .setMessage("延長が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                }
+//              }).create();
               db.close();
               helper.close();
             }
@@ -407,6 +427,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
     Calendar cmp = Calendar.getInstance();
     //*** フォーマット用意 ***//
     SimpleDateFormat timeFormat = new SimpleDateFormat(YYYY_MM_DD_HH_MM);
+
+    Bundle diaBundle = new Bundle();
     // idによって処理を分ける
     switch (id) {
       // 「早期退出」が選択された
@@ -424,6 +446,11 @@ public class ReserveConfirmActivity extends AppCompatActivity
           //*** 早期退出ダイアログを表示 ***//
           EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
           earlyOutDialog.show(getFragmentManager(), "out");
+
+          diaBundle.putString("result", "ear");
+          ResultDialog resultDialog = new ResultDialog();
+          resultDialog.setArguments(diaBundle);
+          resultDialog.show(getFragmentManager(), "ear");
         } else {
 //                    builder.setTitle("早期退出不可能").setMessage("早期退出できる会議ではありません").setPositiveButton("OK", new DialogInterface.OnClickListener() {
 //                        @Override
@@ -494,8 +521,14 @@ public class ReserveConfirmActivity extends AppCompatActivity
             && ((cal.get(Calendar.DAY_OF_MONTH) == cmp.get(Calendar.DAY_OF_MONTH)) || (cal.get(Calendar.DAY_OF_MONTH) == cmp2.get(Calendar.DAY_OF_MONTH)))
             && (cal.get(Calendar.HOUR_OF_DAY) <= cmp2.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) < cmp2.get(Calendar.MINUTE))) {
           //*** 延長ダイアログを表示 ***//
+
           ExtentionDialog extentionDialog = new ExtentionDialog();
           extentionDialog.show(getFragmentManager(), KEYEX);
+
+          diaBundle.putString("result", "ex");
+          ResultDialog resultDialog = new ResultDialog();
+          resultDialog.setArguments(diaBundle);
+          resultDialog.show(getFragmentManager(), "ex");
         } else {
 //                    builder.setTitle("延長不可能").setMessage("延長できる会議ではありません").setPositiveButton("OK", new DialogInterface.OnClickListener() {
 //                        @Override
@@ -505,7 +538,16 @@ public class ReserveConfirmActivity extends AppCompatActivity
           //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
           ExtentionDialog extentionDialog = new ExtentionDialog();
           extentionDialog.show(getFragmentManager(), KEYEX);
+
+          diaBundle.putString("result", "ex");
+          ResultDialog resultDialog = new ResultDialog();
+          resultDialog.setArguments(diaBundle);
+          resultDialog.show(getFragmentManager(), "ex");
         }
+
+//        ExtentionDialog extentionDialog = new ExtentionDialog();
+//        extentionDialog.show(getFragmentManager(), KEYEX);
+
         break;
     }
     // 選択された結果（項目）を返す
