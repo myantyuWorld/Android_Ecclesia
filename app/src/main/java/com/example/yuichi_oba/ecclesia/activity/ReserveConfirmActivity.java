@@ -662,7 +662,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     return sumPriority / reserve.getRe_member().size();
   }
 
-  //***  ***//
+  //*** 追い出し通知を行うメソッド ***//
   private void notificationEviction(String otherReId) {
     Log.d("call", "call ReserveConfirmActivity.notificationEviction()");
     Util.easyLog("追い出し検知！ ステータス通知発行！");

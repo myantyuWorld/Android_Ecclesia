@@ -374,6 +374,9 @@ public class Reserve implements Serializable {
       return false;
     }
     //*** 優先度値を比較する 自分 ＜ 他 ***//
+    Log.d("call", String.format("myPriority : %s", r.getRe_mem_priority()));
+    Log.d("call", String.format("otherPriority : %s", o.getRe_mem_priority()));
+
     if (r.getRe_mem_priority() < o.getRe_mem_priority()) {
       return false;
     }
@@ -386,13 +389,16 @@ public class Reserve implements Serializable {
     //*** 申請者の氏名－＞ 社員IDに変換して、予約インスタンスにセットする ***//
     this.setRe_applicant(Util.returnEmpId(this.getRe_applicant()));
     MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
+
+    //*** 予約IDの最大値＋１を取得する ***//
+    String maxReId = Util.returnMaxReserveId();
     db = helper.getWritableDatabase();
 
     //*** 予約テーブルへのインサート ***//
     db.beginTransaction();
     try {
       try (SQLiteStatement st = db.compileStatement("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
-        st.bindString(1, this.getRe_id());
+        st.bindString(1, maxReId);
         st.bindString(2, this.getRe_name());
         st.bindString(3, this.getRe_startDay());
         st.bindString(4, this.getRe_endDay());
@@ -418,7 +424,7 @@ public class Reserve implements Serializable {
     db.beginTransaction();
     SQLiteStatement st = db.compileStatement("insert into t_member values (?, ?)");
     for (Person m : this.getRe_member()) {
-      st.bindString(1, re_id);
+      st.bindString(1, maxReId);
       String mem_id = null;
       //***  ***//
       if (m instanceof Employee) {
