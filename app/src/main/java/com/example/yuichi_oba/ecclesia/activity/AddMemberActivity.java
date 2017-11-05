@@ -34,6 +34,9 @@ import java.util.List;
 public class AddMemberActivity extends AppCompatActivity
     implements MyInterface {
 
+  public static final String Q_SELECT_HISTORY_EMPLOYEE = "select *, count(*) as cnt from v_reserve_member x inner join m_depart y on x.dep_name = y.dep_name where re_id in (select re_id from t_member where mem_id = ?) group by mem_id order by cnt desc limit 10 ";
+  public static final String Q_SELECT_HISTORY_OUTEMPLOYEE = "select * from v_reserve_out_member where re_id in (select re_id from t_member where mem_id = ?)";
+
   public static class CautionDialog extends DialogFragment {
     String[] str = new String[]{"氏名", "Email", "電話番号"};
 
@@ -320,9 +323,7 @@ public class AddMemberActivity extends AppCompatActivity
     SQLiteDatabase db = helper.getReadableDatabase();
 //        Cursor cursor = db.rawQuery("select * from v_member", new String[]{});
     // 自分が参加した会議に参加したことのある人間を検索(社内)
-    String sqlArgs = "select *, count(*) as cnt from v_reserve_member x " +
-        "inner join m_depart y on x.dep_name = y.dep_name " +
-        " where re_id in (select re_id from t_member where mem_id = ?) group by mem_id order by cnt desc limit 10 ";
+    String sqlArgs = Q_SELECT_HISTORY_EMPLOYEE;
     Cursor c = db.rawQuery(sqlArgs, new String[]{emp_id});
     // メンバークラスのインスタンス生成
     List<String> list = new ArrayList<>();
@@ -346,7 +347,7 @@ public class AddMemberActivity extends AppCompatActivity
     }
     c.close();
     // 自分が参加した会議に参加したことのある人間を検索(社外)
-    c = db.rawQuery("select * from v_reserve_out_member where re_id in (select re_id from t_member where mem_id = ?)", new String[]{emp_id});
+    c = db.rawQuery(Q_SELECT_HISTORY_OUTEMPLOYEE, new String[]{emp_id});
     while (c.moveToNext()) {
 //            Employee e = new Employee();
 //            e.setId(c.getString(10));           // ID
