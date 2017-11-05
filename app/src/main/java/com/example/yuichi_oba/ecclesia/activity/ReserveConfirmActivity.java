@@ -343,12 +343,13 @@ public class ReserveConfirmActivity extends AppCompatActivity
       reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
       employee = (Employee) intent.getSerializableExtra("employee");
       Log.d("Emp in Confirm:", employee.toString());
+
+//      btn_confirm = (Button) findViewById(R.id.arconfirm_btn_mem_confirm);    //*** 参加者確認ボタン ***//
+//      btn_confirm.setText("戻る");
     }
     instance = this;
 
 //    intent.getIntExtra("gamen", 1);
-    instance = this;
-
     setReserveDetail(); //***  ***//
 
     /***
@@ -371,6 +372,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
     /***
      * ここまで
      */
+    if (gamen.contains("一覧")) {
+      btn_confirm = (Button) findViewById(R.id.arconfirm_btn_correct);
+      btn_confirm.setText("戻る");
+    }
 
     // 予約詳細をDB検索して、画面にマッピングするメソッド
 //        dbSearchReserveConfirm();
@@ -594,6 +599,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
       finish();
       return;
     }
+    //*** --------------------------------------------------- ***//
 
     //*** 会議の重複をチェックする ***//
     String resultCode = reserve.timeDuplicationCheck(reserve);
