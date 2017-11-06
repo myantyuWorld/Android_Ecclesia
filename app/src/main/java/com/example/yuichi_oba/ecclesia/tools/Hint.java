@@ -177,4 +177,10 @@ public class Hint {
 
    manager.notify(123,notification);
    ***/
+
+//  AlarmManager の状態を取得するには、開発環境から以下のようにコマンドを実行します。
+//
+//
+//   adb shell dumpsys alarm > alarm.txt
+//   adb shell dumpsys alarm > alarm.txt
 }

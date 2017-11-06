@@ -755,7 +755,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     builder.setVibrate(new long[]{100, 0, 100, 0, 100, 0}); //*** ヘッドアップ通知にするためのメソッド ***//
     builder.setPriority(Notification.PRIORITY_HIGH);        //*** ヘッドアップ通知にするためのメソッド ***//
     builder.setContentText(String.format("会議ID: %s 開始時刻:%s:%s", r.getRe_id(), r.getRe_startDay(), r.getRe_startTime()));
-    builder.setContentTitle("会議キャンセルのお知らせ");
+    builder.setContentTitle("会議キャンセル");
 
     //*** 通知関連の情報をセット ***//
     Notification notification = builder.build();
