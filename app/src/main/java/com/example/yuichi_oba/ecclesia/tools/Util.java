@@ -279,5 +279,31 @@ public class Util {
     return "";
   }
 
+  /**
+   * 指定した日時のカレンダーを取得します。
+   *
+   * @param y
+   * :年
+   * @param m
+   * :月
+   * @param d
+   * :日
+   * @param h
+   * :時間
+   * @param min
+   * :分
+   */
+  public static Calendar getCalender(int y, int m, int d, int h, int min) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.YEAR, y);
+    calendar.set(Calendar.MONTH, m);
+    calendar.set(Calendar.DAY_OF_MONTH, d);
+    calendar.set(Calendar.HOUR, h);
+    calendar.set(Calendar.MINUTE, min);
+
+    return calendar;
+
+  }
+
 
 }

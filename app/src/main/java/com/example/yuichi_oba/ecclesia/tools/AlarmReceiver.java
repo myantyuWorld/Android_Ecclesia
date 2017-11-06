@@ -11,6 +11,7 @@ import android.util.Log;
  * Created by yuichi_develop on 2017/11/06.
  */
 
+//*** 会議の開始・終了用の通知を設定するAlarmManager ***//
 public class AlarmReceiver extends BroadcastReceiver {
 
   public static String NOTIFICATION_ID = "notificationId";
@@ -27,7 +28,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
   private Notification buildNotification(Context context, String content) {
     Notification.Builder builder = new Notification.Builder(context);
-    builder.setContentTitle("Notification!!")
+    builder.setContentTitle("お知らせ")
         .setContentText(content)
         .setVibrate(new long[]{100, 0, 100, 0, 100, 0})
         .setPriority(Notification.PRIORITY_HIGH)

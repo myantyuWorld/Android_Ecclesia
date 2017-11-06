@@ -317,13 +317,14 @@ public class ReserveListActivity extends AppCompatActivity
 //        nm.notify(1000, notification);
 
         //*** AlarmManagerで指定した日時にNotificationを送る実験 ***//
+        //*** 作品展の実演用に残しておく ***//
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.SECOND, 3);
+        calendar.add(Calendar.SECOND, 1);
 
         Intent notificationIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
         notificationIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, 1);
-        notificationIntent.putExtra(AlarmReceiver.NOTIFICATION_CONTENT, "vvvvvvvvvv");
+        notificationIntent.putExtra(AlarmReceiver.NOTIFICATION_CONTENT, "会議開始10分前となりました");
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
