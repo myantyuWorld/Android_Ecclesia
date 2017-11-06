@@ -751,8 +751,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
     c.close();
 
     //*** ステータス通知をタップで、どの処理を行うか設定 ***//
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setData(Uri.parse("http://www.google.com/"));
+    Intent intent = new Intent(Intent.ACTION_VIEW);       //*** 通知押下で遷移するIntent ***//
+    intent.setData(Uri.parse("http://www.google.com/"));  //***  ***//
 
     PendingIntent pendingIntent = PendingIntent.getActivity(
         getApplicationContext(),
@@ -760,50 +760,19 @@ public class ReserveConfirmActivity extends AppCompatActivity
         intent,
         0
     );
-
-
-    //*** ステータス通知で表示する部品の設定 ***//
-//    Intent push = new Intent();
-//    push.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//    push.setClass(getActivity(), LNotificationActivity.class);
-//    PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(getActivity(), 0,
-//        push, PendingIntent.FLAG_CANCEL_CURRENT);
-//    notificationBuilder
-//        .setContentText("Heads-Up Notification on Android L or above.")
-//        .setFullScreenIntent(fullScreenPendingIntent, true);
-//    Intent push = new Intent();
-//    PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
-//        push, PendingIntent.FLAG_CANCEL_CURRENT);
-//
-
     //*** ヘッドアップ通知 ***//
     NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
-    builder.setSmallIcon(R.drawable.aaa);
+    builder.setContentIntent(pendingIntent);                //*** 通知押下で、遷移するIntent指定 ***//
+    builder.setSmallIcon(R.drawable.aaa);                   //*** 通知で使用する画像（小） ***//
     builder.setVisibility(Notification.VISIBILITY_PUBLIC);
-    builder.setVibrate(new long[]{100, 0, 100, 0, 100, 0});
-    builder.setPriority(Notification.PRIORITY_HIGH);
-    builder.setContentText("aaaaaaaaaaaaa");
-    builder.setContentTitle("title");
+    builder.setVibrate(new long[]{100, 0, 100, 0, 100, 0}); //*** ヘッドアップ通知にするためのメソッド ***//
+    builder.setPriority(Notification.PRIORITY_HIGH);        //*** ヘッドアップ通知にするためのメソッド ***//
+    builder.setContentText(String.format("会議ID: %s 開始時刻:%s:%s", r.getRe_id(), r.getRe_startDay(), r.getRe_startTime()));
+    builder.setContentTitle("会議キャンセルのお知らせ");
 
+    //*** 通知関連の情報をセット ***//
     Notification notification = builder.build();
-//    notification.bigContentView = views;
     NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
     manager.notify(123, notification);
-
-    //***  ***//
-//    Toast toast = new Toast(getApplicationContext());
-//    // activity_main に inflate
-//    LayoutInflater inflate = (LayoutInflater)
-//        getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//    View view = inflate.inflate(R.layout.custom_toast, null);
-
-
-
-//    TextView textView = (TextView) view.findViewById(R.id.message);
-//    textView.setText("会議の追い出しが発生しました");
-//    toast.setView(view);
-//    toast.setDuration(Toast.LENGTH_SHORT);
-//    toast.setGravity(Gravity.TOP | Gravity.RIGHT, 20, 20);
-//    toast.show();
   }
 }
