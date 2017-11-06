@@ -567,7 +567,8 @@ public class Reserve implements Serializable {
       reserve.setRe_purpose_id(c.getString(18));
       reserve.setRe_purpose_name(c.getString(19));
       reserve.setRe_applicant(c.getString(26));
-      reserve.setRe_room_name(c.getString(22));
+      reserve.setRe_room_id(c.getString(22));
+      reserve.setRe_room_name(c.getString(23));
 
       reserve.setRe_id(re_id);
 

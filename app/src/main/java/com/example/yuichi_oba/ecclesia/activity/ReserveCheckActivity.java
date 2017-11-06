@@ -120,7 +120,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
     }
 
     //*** SelfMadeMethod ***//
-    //*** 実際にDBの予約情報を書き換える(現在エラー中) ***//
+    //*** 実際にDBの予約情報を書き換える ***//
     public void reserveChange() {
         //*** 必要なインスタンスを用意 ***//
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -145,18 +145,6 @@ implements NavigationView.OnNavigationItemSelectedListener{
 //        db.setTransactionSuccessful();
         //*** トランザクション終了 ***//
 //        db.endTransaction();
-
-        //*** 変更成功通知ダイアログを表示する ***//
-//        ChangeResultDialog changeResultDialog = new ChangeResultDialog();
-//        changeResultDialog.show(getFragmentManager(), "change");
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-//        builder.setTitle("予約変更完了")
-//                .setMessage("予約変更が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//            }
-//        }).create();
 
         //*** 予約一覧へ画面遷移を行う ***//
         Intent intent = new Intent(getApplicationContext(), ReserveListActivity.class);

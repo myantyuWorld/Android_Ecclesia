@@ -4,14 +4,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,16 +22,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.RemoteViews;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
@@ -160,14 +154,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
               db.execSQL("update t_reserve set re_endtime = ? where re_id = ?", new Object[]{ealTime, re_id});
 //                            reserve.earlyExit();
-
-//              AlertDialog.Builder result = new AlertDialog.Builder(instance.getApplicationContext());
-//                            result.setTitle("早期退出完了")
-//                                    .setMessage("早期退出が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                }
-//                            }).create();
             }
           })
           .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -436,8 +422,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     Intent intent;
 
-    AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-
     //*** 現在時刻取得 ***//
     Calendar cal = Calendar.getInstance();
     //*** 比較用Calender ***//
@@ -494,6 +478,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
       // 「予約変更」が選択された
       case R.id.option_reserveChange:
         re_id = reserve.getRe_id();
+        String[] startDay = reserve.getRe_startDay().split("/");
+//        for (String day : startDay) {
+//
+//        }
         try {
           //*** 変更しようとしている会議の開始時間をセット ***//
           start.setTime(timeFormat.parse(reserve.getRe_startDay() + " " + reserve.getRe_startTime()));
@@ -502,9 +490,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
           break;
         }
         //*** 変更しようとしている会議が現在日付・時刻に矛盾していないか ***//
-        if ((cal.get(Calendar.YEAR) <= start.get(Calendar.YEAR)) && (cal.get(Calendar.MONTH) <= start.get(Calendar.MONTH)) && cal.get(Calendar.DAY_OF_MONTH) <= start.get(Calendar.DAY_OF_MONTH)
-            && (((cal.get(Calendar.HOUR_OF_DAY)) <= start.get(Calendar.HOUR_OF_DAY) && (cal.get(Calendar.MINUTE) < start.get(Calendar.MINUTE)))
-            || (cal.get(Calendar.HOUR_OF_DAY) < start.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) > start.get(Calendar.MINUTE)))) {
+        if (cal.get(Calendar.YEAR) < start.get(Calendar.YEAR) || (cal.get(Calendar.YEAR) == start.get(Calendar.YEAR) && cal.get(Calendar.MONTH) < start.get(Calendar.MONTH))
+                || (cal.get(Calendar.YEAR) == start.get(Calendar.YEAR) && cal.get(Calendar.MONTH) == start.get(Calendar.MONTH) && cal.get(Calendar.DAY_OF_MONTH) <= start.get(Calendar.DAY_OF_MONTH))) {
           //*** 次画面（ReserveChangeActivity）に予約インスタンスを渡す ***//
           intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
           intent.putExtra(KEYCHANGE, reserve);
