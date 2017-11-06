@@ -139,7 +139,7 @@ public class ReserveChangeActivity extends AppCompatActivity
         Cursor c = db.rawQuery("select * from m_purpose", null);
         //*** スピナー内容セット ***//
         while (c.moveToNext()) {
-            purpose.add(c.getString(ZERO) + ":" + c.getString(ONE));
+            purpose.add(c.getString(ONE));
         }
         c.close();
         ArrayAdapter<String> adapter_purpose = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, purpose);
@@ -287,6 +287,17 @@ public class ReserveChangeActivity extends AppCompatActivity
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 changeRes.setRe_room_name(room.getSelectedItem().toString());
                 changeRes.setRe_room_id(Util.returnRoomId(changeRes.getRe_room_name()));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+
+        //*** 会議目的変更時 ***//
+        sp_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                changeRes.setRe_purpose_name(sp_purpose.getSelectedItem().toString());
+                changeRes.setRe_purpose_id(Util.returnPurposeId(changeRes.getRe_purpose_name()));
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { }
