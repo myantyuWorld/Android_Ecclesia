@@ -33,6 +33,8 @@ import android.widget.Toast;
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
+import com.example.yuichi_oba.ecclesia.model.OutEmployee;
+import com.example.yuichi_oba.ecclesia.model.Person;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
@@ -67,6 +69,8 @@ public class ReserveChangeActivity extends AppCompatActivity
     Employee employee;
     Button editBtn;
     public static String[] changes ;
+    List<Person> memberList = new ArrayList<>();
+    List<String> member = new ArrayList<>();
 
     EditText overview;
     Spinner sp_purpose;
@@ -112,7 +116,32 @@ public class ReserveChangeActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            Person person = (Person) data.getSerializableExtra("member");
+            if (person instanceof Employee) {
+                Employee employee = (Employee) person;
+                memberList.add(employee);
+            } else {
+                OutEmployee outEmployee = (OutEmployee) person;
+                memberList.add(outEmployee);
+            }
+
+            memberList.forEach(p -> {
+                if (p instanceof Employee) {
+                    member.add("社内 : " + p.getName());
+                }
+                else {
+                    Log.d("call", "-----社外者参加者");
+                }
+            });
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, member);
+            members.setAdapter(adapter);
+        }
+    }
 
     private void init() {
         fbn = (FloatingActionButton) findViewById(R.id.fbn_addMember);
@@ -147,7 +176,6 @@ public class ReserveChangeActivity extends AppCompatActivity
 
 
         //*** 参加者スピナー ***//
-        List<String> member = new ArrayList<>();
         c = db.rawQuery("select emp_name from v_reserve_member where re_id = ? ", new String[]{changeRes.getRe_id()});
         while (c.moveToNext()) {
             member.add(c.getString(ZERO));
