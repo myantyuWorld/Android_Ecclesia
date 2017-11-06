@@ -125,7 +125,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
         //*** 必要なインスタンスを用意 ***//
         SQLiteDatabase db = helper.getWritableDatabase();
         //*** トランザクション開始 ***//
-        db.beginTransaction();
+//        db.beginTransaction();
 
         //*** SQLでアップデートかける ***//
         db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
@@ -136,15 +136,15 @@ implements NavigationView.OnNavigationItemSelectedListener{
 
         checkRes.getRe_member().forEach(person -> {
             if (person instanceof Employee) {
-                db.execSQL("replace t_member set re_id = ? mem_id = ? ", new Object[]{checkRes.getRe_id(), Util.returnEmpId(person.getName())});
+                db.execSQL("replace into t_member values(?, ?) ", new Object[]{checkRes.getRe_id(), Util.returnEmpId(person.getName())});
             } else {
-                db.execSQL("replace t_member set re_id = ? mem_id = ? ", new Object[]{checkRes.getRe_id(), Util.returnOutEmpId(person.getName())});
+                db.execSQL("replace into t_member values(?, ?)", new Object[]{checkRes.getRe_id(), Util.returnOutEmpId(person.getName())});
             }
         });
         //*** コミットをかける ***//
-        db.setTransactionSuccessful();
+//        db.setTransactionSuccessful();
         //*** トランザクション終了 ***//
-        db.endTransaction();
+//        db.endTransaction();
 
         //*** 変更成功通知ダイアログを表示する ***//
 //        ChangeResultDialog changeResultDialog = new ChangeResultDialog();
