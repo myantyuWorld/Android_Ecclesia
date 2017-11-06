@@ -250,6 +250,10 @@ public class ReserveActivity extends AppCompatActivity
     //*** 各ウィジェットの初期化処理（日付、会議室） ***//
     init(date, roomId);
 
+    //*** 参加者をからにする ***//
+    Log.d("call", "参加者を殻にします");
+    member.clear();
+
   }
 
   //*** 開いたアクティビティ(AddMemberActivity)から何かしらの情報を受け取る ***//
@@ -281,8 +285,12 @@ public class ReserveActivity extends AppCompatActivity
           //*** 参加者を追加する ***//
           final List<String> list = new ArrayList<>();
           member.forEach(p -> {
-            if (p instanceof Employee) list.add("社内 : " + p.getName());
-            else                        Log.d("call", "-----社外者参加者");
+            //*** 「社内」 ***//
+            if (p instanceof Employee)
+              list.add("社内 : " + p.getName());
+            //*** 「社外」 ***//
+            else if (p instanceof OutEmployee)
+              list.add(((OutEmployee) p).getCom_name() + " : " + p.getName());
           });
           //*** 参加者スピナーに反映する ***//
           ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);

@@ -302,6 +302,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         eX = 5 * x - padding;
         break;
     }
+    // TODO: 2017/11/04 0時をまたぐ予約で落ちるバグ発覚
     int s = Integer.parseInt(sTime.split("：")[0]); // 08:00 -> 8 => 8 - 8 = 0
     sY = timeFloats[s] + padding;
     if (Integer.parseInt(sTime.split("：")[1]) >= 30) {
@@ -446,7 +447,6 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     SQLiteOpenHelper helper = new MyHelper(getContext());
     SQLiteDatabase db = helper.getReadableDatabase();
     Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?", new String[]{emp_id, date});
-    reserveInfo.clear();
     while (c.moveToNext()) {
       // 予約情報のインスタンス生成
       Reserve r = new Reserve();
