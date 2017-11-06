@@ -25,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +34,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
@@ -460,10 +462,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
         }
         //*** 退出しようとしている会議が現在日付・時刻に矛盾していないか ***//
         if (((cal.get(Calendar.YEAR) == start.get(Calendar.YEAR)) || (cal.get(Calendar.YEAR) == end.get(Calendar.YEAR)))
-                && ((cal.get(Calendar.MONTH) == start.get(Calendar.MONTH)) || (cal.get(Calendar.MONTH) == end.get(Calendar.MONTH)))
-                && ((cal.get(Calendar.DAY_OF_MONTH) == start.get(Calendar.DAY_OF_MONTH)) || (cal.get(Calendar.DAY_OF_MONTH) == end.get(Calendar.DAY_OF_MONTH)))
-                && (((cal.get(Calendar.HOUR_OF_DAY)) <= end.get(Calendar.HOUR_OF_DAY) && (cal.get(Calendar.MINUTE) < end.get(Calendar.MINUTE)))
-                || (cal.get(Calendar.HOUR_OF_DAY) < end.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) > end.get(Calendar.MINUTE)))) {
+            && ((cal.get(Calendar.MONTH) == start.get(Calendar.MONTH)) || (cal.get(Calendar.MONTH) == end.get(Calendar.MONTH)))
+            && ((cal.get(Calendar.DAY_OF_MONTH) == start.get(Calendar.DAY_OF_MONTH)) || (cal.get(Calendar.DAY_OF_MONTH) == end.get(Calendar.DAY_OF_MONTH)))
+            && (((cal.get(Calendar.HOUR_OF_DAY)) <= end.get(Calendar.HOUR_OF_DAY) && (cal.get(Calendar.MINUTE) < end.get(Calendar.MINUTE)))
+            || (cal.get(Calendar.HOUR_OF_DAY) < end.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) > end.get(Calendar.MINUTE)))) {
           //*** 早期退出ダイアログを表示 ***//
           EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
           earlyOutDialog.show(getFragmentManager(), "out");
@@ -541,7 +543,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
             && ((cal.get(Calendar.MONTH) == start.get(Calendar.MONTH)) || (cal.get(Calendar.MONTH) == end.get(Calendar.MONTH)))
             && ((cal.get(Calendar.DAY_OF_MONTH) == start.get(Calendar.DAY_OF_MONTH)) || (cal.get(Calendar.DAY_OF_MONTH) == end.get(Calendar.DAY_OF_MONTH)))
             && (((cal.get(Calendar.HOUR_OF_DAY)) <= end.get(Calendar.HOUR_OF_DAY) && (cal.get(Calendar.MINUTE) < end.get(Calendar.MINUTE)))
-                || (cal.get(Calendar.HOUR_OF_DAY) < end.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) > end.get(Calendar.MINUTE)))) {
+            || (cal.get(Calendar.HOUR_OF_DAY) < end.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) > end.get(Calendar.MINUTE)))) {
           //*** 延長ダイアログを表示 ***//
 
           ExtentionDialog extentionDialog = new ExtentionDialog();
@@ -761,34 +763,47 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
 
     //*** ステータス通知で表示する部品の設定 ***//
+//    Intent push = new Intent();
+//    push.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//    push.setClass(getActivity(), LNotificationActivity.class);
+//    PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(getActivity(), 0,
+//        push, PendingIntent.FLAG_CANCEL_CURRENT);
+//    notificationBuilder
+//        .setContentText("Heads-Up Notification on Android L or above.")
+//        .setFullScreenIntent(fullScreenPendingIntent, true);
+//    Intent push = new Intent();
+//    PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+//        push, PendingIntent.FLAG_CANCEL_CURRENT);
+//
+
+    //*** ヘッドアップ通知 ***//
     NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
     builder.setSmallIcon(R.drawable.aaa);
-
-    RemoteViews views = new RemoteViews(getPackageName(), R.layout.notification_layout);
-    views.setTextViewText(R.id.noti_title, "以下の会議が削除されました！");
-    views.setTextViewText(R.id.noti_purpose, String.format("概要 : %s", r.getRe_name()));
-    views.setTextViewText(R.id.noti_date, String.format("開始時刻 %s : %s", r.getRe_startDay(), r.getRe_startTime()));
-    builder.setContent(views);
+    builder.setVisibility(Notification.VISIBILITY_PUBLIC);
+    builder.setVibrate(new long[]{100, 0, 100, 0, 100, 0});
+    builder.setPriority(Notification.PRIORITY_HIGH);
+    builder.setContentText("aaaaaaaaaaaaa");
+    builder.setContentTitle("title");
 
     Notification notification = builder.build();
-    notification.bigContentView = views;
+//    notification.bigContentView = views;
     NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
     manager.notify(123, notification);
 
+    //***  ***//
+//    Toast toast = new Toast(getApplicationContext());
+//    // activity_main に inflate
+//    LayoutInflater inflate = (LayoutInflater)
+//        getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//    View view = inflate.inflate(R.layout.custom_toast, null);
 
 
-//    Notification notification = new Notification.Builder(ReserveListActivity.getInstance().getApplicationContext())
-//        .setContentTitle("以下の会議が優先度の関係で削除されました")
-//        .setContentText(String.format("開始時刻 : [%s] 会議目的 : [%s] ", r.getRe_startDay() + " " + r.getRe_startTime(), r.getRe_purpose_name()))
-//        .addAction(R.drawable.aaa, String.format("概要 : [%s]", r.getRe_name()), pendingIntent)
-//        .setContentIntent(pendingIntent)
-//        .setSmallIcon(R.drawable.aaa)
-//        .setAutoCancel(false)
-//        .build();
-//
-//    NotificationManager nm = (NotificationManager)
-//        getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//    nm.notify(1000, notification);
+
+//    TextView textView = (TextView) view.findViewById(R.id.message);
+//    textView.setText("会議の追い出しが発生しました");
+//    toast.setView(view);
+//    toast.setDuration(Toast.LENGTH_SHORT);
+//    toast.setGravity(Gravity.TOP | Gravity.RIGHT, 20, 20);
+//    toast.show();
   }
 }
