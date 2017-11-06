@@ -215,6 +215,21 @@ public class Util {
   }
 
   /***
+   * 引数の社員名から、その社員の社員IDをMyHelper検索して値を返すメソッド
+   * @param empName
+   * @return
+   */
+  public static String returnOutEmpId(String empName) {
+    Cursor c = rawQuery("select out_id from m_out where out_name = ?", new String[]{empName});
+    String outId = "";
+    if (c.moveToNext()) {
+      outId = c.getString(0);
+    }
+    //*** 社外者 ***//
+    return outId;
+  }
+
+  /***
    * MyHelper簡単SQL発行メソッド
    * @param args
    * @param strArray

@@ -20,8 +20,10 @@ import android.widget.Button;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
+import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
 
@@ -132,7 +134,13 @@ implements NavigationView.OnNavigationItemSelectedListener{
                 checkRes.getRe_endTime(), checkRes.getRe_switch(), checkRes.getRe_fixtures(), checkRes.getRe_remarks(), "会議優先度", checkRes.getRe_room_id()
                 , checkRes.getRe_purpose_id(), checkRes.getRe_id()});
 
-        db.execSQL("replace t_member set re_id = ? mem_id = ? ", new Object[]{checkRes.getRe_id()});
+        checkRes.getRe_member().forEach(person -> {
+            if (person instanceof Employee) {
+                db.execSQL("replace t_member set re_id = ? mem_id = ? ", new Object[]{checkRes.getRe_id(), Util.returnEmpId(person.getName())});
+            } else {
+                db.execSQL("replace t_member set re_id = ? mem_id = ? ", new Object[]{checkRes.getRe_id(), Util.returnOutEmpId(person.getName())});
+            }
+        });
         //*** コミットをかける ***//
         db.setTransactionSuccessful();
         //*** トランザクション終了 ***//

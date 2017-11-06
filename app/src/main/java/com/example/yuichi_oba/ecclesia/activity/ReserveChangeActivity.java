@@ -119,7 +119,7 @@ public class ReserveChangeActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        //*** AddMemberからの返答 ***//
         if (requestCode == 1 && resultCode == RESULT_OK) {
             Person person = (Person) data.getSerializableExtra("member");
             if (person instanceof Employee) {
@@ -130,10 +130,11 @@ public class ReserveChangeActivity extends AppCompatActivity
                 changeRes.getRe_member().add(outEmployee);
             }
 
+            //*** メンバーリスト内容を破棄（同一のものが登録されるため） ***//
             member.clear();
-            changeRes.getRe_member().forEach(p -> {
-                if (p instanceof Employee) {
-                    member.add("社内 : " + p.getName());
+            changeRes.getRe_member().forEach(per -> {
+                if (per instanceof Employee) {
+                    member.add("社内 : " + per.getName());
                 }
                 else {
 //                    member.add(changeRes.getRe_company() + " ： " + p.getName());
