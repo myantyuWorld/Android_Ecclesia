@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -125,11 +123,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
         //*** 必要なインスタンスを用意 ***//
         SQLiteDatabase db = helper.getWritableDatabase();
         //*** トランザクション開始 ***//
-//        db.beginTransaction();
-        //*** コミットをかける ***//
-//        db.setTransactionSuccessful();
-        //*** トランザクション終了 ***//
-//        db.endTransaction();
+        db.beginTransaction();
 
         //*** SQLでアップデートかける ***//
         db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
@@ -137,6 +131,12 @@ implements NavigationView.OnNavigationItemSelectedListener{
                 " where re_id = ? ", new Object[]{checkRes.getRe_name(), checkRes.getRe_startDay(), checkRes.getRe_endDay(), checkRes.getRe_startTime(),
                 checkRes.getRe_endTime(), checkRes.getRe_switch(), checkRes.getRe_fixtures(), checkRes.getRe_remarks(), "会議優先度", checkRes.getRe_room_id()
                 , checkRes.getRe_purpose_id(), checkRes.getRe_id()});
+
+        db.execSQL("replace t_member set re_id = ? mem_id = ? ", new Object[]{checkRes.getRe_id()});
+        //*** コミットをかける ***//
+        db.setTransactionSuccessful();
+        //*** トランザクション終了 ***//
+        db.endTransaction();
 
         //*** 変更成功通知ダイアログを表示する ***//
 //        ChangeResultDialog changeResultDialog = new ChangeResultDialog();

@@ -69,7 +69,7 @@ public class ReserveChangeActivity extends AppCompatActivity
     Employee employee;
     Button editBtn;
     public static String[] changes ;
-    List<Person> memberList = new ArrayList<>();
+//    List<Person> memberList = new ArrayList<>();
     List<String> member = new ArrayList<>();
 
     EditText overview;
@@ -124,18 +124,20 @@ public class ReserveChangeActivity extends AppCompatActivity
             Person person = (Person) data.getSerializableExtra("member");
             if (person instanceof Employee) {
                 Employee employee = (Employee) person;
-                memberList.add(employee);
+                changeRes.getRe_member().add(employee);
             } else {
                 OutEmployee outEmployee = (OutEmployee) person;
-                memberList.add(outEmployee);
+                changeRes.getRe_member().add(outEmployee);
             }
 
-            memberList.forEach(p -> {
+            member.clear();
+            changeRes.getRe_member().forEach(p -> {
                 if (p instanceof Employee) {
                     member.add("社内 : " + p.getName());
                 }
                 else {
-                    Log.d("call", "-----社外者参加者");
+//                    member.add(changeRes.getRe_company() + " ： " + p.getName());
+                    Log.d("change", "社外者");
                 }
             });
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, member);
@@ -176,16 +178,25 @@ public class ReserveChangeActivity extends AppCompatActivity
 
 
         //*** 参加者スピナー ***//
-        c = db.rawQuery("select emp_name from v_reserve_member where re_id = ? ", new String[]{changeRes.getRe_id()});
-        while (c.moveToNext()) {
-            member.add(c.getString(ZERO));
-        }
-        c.close();
-        c = db.rawQuery("select out_name from v_reserve_out_member where re_id = ?", new String[]{changeRes.getRe_id()});
-        while (c.moveToNext()) {
-            member.add(c.getString(ZERO));
-        }
-        c.close();
+//        c = db.rawQuery("select emp_name from v_reserve_member where re_id = ? ", new String[]{changeRes.getRe_id()});
+//        while (c.moveToNext()) {
+//            member.add(c.getString(ZERO));
+//        }
+//        c.close();
+//        c = db.rawQuery("select out_name from v_reserve_out_member where re_id = ?", new String[]{changeRes.getRe_id()});
+//        while (c.moveToNext()) {
+//            member.add(c.getString(ZERO));
+//        }
+//        c.close();
+        changeRes.getRe_member().forEach(p -> {
+            if (p instanceof Employee) {
+                member.add("社内 : " + p.getName());
+            }
+            else {
+//                member.add(changeRes.getRe_company() + " ： " + p.getName());
+                Log.d("changeMember", "社外者");
+            }
+        });
         ArrayAdapter<String> memberdap = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, member);
         members.setAdapter(memberdap);
 
