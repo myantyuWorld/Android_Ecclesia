@@ -3,6 +3,7 @@ package com.example.yuichi_oba.ecclesia.activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,6 +29,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
@@ -539,21 +541,22 @@ public class ReserveChangeActivity extends AppCompatActivity
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final Calendar calendar = Calendar.getInstance();
-            return new DatePickerDialog(getActivity(),
-                    new DatePickerDialog.OnDateSetListener() {
+            return new TimePickerDialog(getActivity(),
+                    new TimePickerDialog.OnTimeSetListener() {
                         @Override
-                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                            String date = getArguments().getString("time");
-                            if (date.contains("startTime")) {
-                                startTimeBtn.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            String time = getArguments().getString("time");
+                            Log.d("call", time);
+                            if (time.contains("startTime")) {
+                                startTimeBtn.setText(String.format("%02d：%02d", hourOfDay, minute));
                             } else {
-                                endTimeBtn.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+                                endTimeBtn.setText(String.format("%02d：%02d", hourOfDay, minute));
                             }
                         }
                     },
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH)
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE),
+                    true
             );
         }
     }
