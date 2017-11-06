@@ -1,14 +1,11 @@
 package com.example.yuichi_oba.ecclesia.model;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
-import com.example.yuichi_oba.ecclesia.activity.ReserveActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity;
-import com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
@@ -512,11 +509,20 @@ public class Reserve implements Serializable {
 //        SQLiteOpenHelper helper = new DB(ReserveCheckAcetInstance().getApplicationContext());
     MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getWritableDatabase();
+    //*** SQLでアップデートかける ***//
     db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
-        " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
-        " where re_id = ? ", new Object[]{re_name, re_startDay, re_endDay, re_startTime,
-        re_endTime, re_switch, re_fixtures, re_remarks, "会議優先度", re_room_id
-        , re_purpose_id, re_id});
+            " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
+            " where re_id = ? ", new Object[]{re_name, re_startDay, re_endDay, re_startTime,
+            re_endTime, re_switch, re_fixtures, re_remarks, re_mem_priority, re_room_id
+            , re_purpose_id, re_id});
+
+    re_member.forEach(person -> {
+      if (person instanceof Employee) {
+        db.execSQL("replace into t_member values(?, ?) ", new Object[]{re_id, Util.returnEmpId(person.getName())});
+      } else {
+        db.execSQL("replace into t_member values(?, ?)", new Object[]{re_id, Util.returnOutEmpId(person.getName())});
+      }
+    });
   }
 
   //*** --- SELF MADE METHOD --- 通知メールを送るメソッド ***//
