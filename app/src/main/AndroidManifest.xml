@@ -3,6 +3,7 @@
     package="com.example.yuichi_oba.ecclesia">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
@@ -40,6 +41,8 @@
                     android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".activity.ReserveCheckActivity"
                     android:theme="@style/AppTheme.NoActionBar"/>
+        <receiver android:name=".tools.AlarmReceiver"
+                  android:process=":remote" />
     </application>
 
 </manifest>

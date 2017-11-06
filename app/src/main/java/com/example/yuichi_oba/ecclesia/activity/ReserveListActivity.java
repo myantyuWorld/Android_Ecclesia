@@ -1,6 +1,7 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -14,6 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -34,6 +36,7 @@ import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
+import com.example.yuichi_oba.ecclesia.tools.AlarmReceiver;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 import com.example.yuichi_oba.ecclesia.view.TimeTableView;
@@ -278,37 +281,53 @@ public class ReserveListActivity extends AppCompatActivity
     /***
      *
      * 実験用：ステータス通知を出す隠し機能
+     * は、OK
+     * 次は、ボタン押下で、AlarmManagerで指定した日時にNotificationを送る実験
      *
 
      ***/
     arl_btn_search.setOnLongClickListener(new View.OnLongClickListener() {
       @Override
       public boolean onLongClick(View v) {
-        Toast.makeText(ReserveListActivity.this, "aaaaaaaaa", Toast.LENGTH_SHORT).show();
+        Log.d("call", "call ReserveListActivity.onLongClick()");
+//        Toast.makeText(ReserveListActivity.this, "aaaaaaaaa", Toast.LENGTH_SHORT).show();
+//
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setData(Uri.parse("http://www.google.com/"));
+//
+//        PendingIntent pendingIntent = PendingIntent.getActivity(
+//            ReserveListActivity.getInstance().getApplicationContext(),
+//            0,
+//            intent,
+//            0
+//        );
+//
+//        Notification notification = new Notification.Builder(ReserveListActivity.getInstance().getApplicationContext())
+//            .setContentTitle("タイトル！")
+//            .setContentText("お知らせぜよ～～")
+//            .addAction(R.drawable.aaa, "決まりて：押し出し", pendingIntent)
+//            .setContentIntent(pendingIntent)
+//            .setSmallIcon(R.drawable.aaa)
+//            .setAutoCancel(true)
+//            .build();
+//
+//        NotificationManager nm = (NotificationManager)
+//            getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//        nm.notify(1000, notification);
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("http://www.google.com/"));
+        //*** AlarmManagerで指定した日時にNotificationを送る実験 ***//
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.SECOND, 3);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-            ReserveListActivity.getInstance().getApplicationContext(),
-            0,
-            intent,
-            0
-        );
+        Intent notificationIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        notificationIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(AlarmReceiver.NOTIFICATION_CONTENT, "vvvvvvvvvv");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        Notification notification = new Notification.Builder(ReserveListActivity.getInstance().getApplicationContext())
-            .setContentTitle("タイトル！")
-            .setContentText("お知らせぜよ～～")
-            .addAction(R.drawable.aaa, "決まりて：押し出し", pendingIntent)
-            .setContentIntent(pendingIntent)
-            .setSmallIcon(R.drawable.aaa)
-            .setAutoCancel(true)
-            .build();
-
-        NotificationManager nm = (NotificationManager)
-            getSystemService(Context.NOTIFICATION_SERVICE);
-
-        nm.notify(1000, notification);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         return false;
       }
     });
