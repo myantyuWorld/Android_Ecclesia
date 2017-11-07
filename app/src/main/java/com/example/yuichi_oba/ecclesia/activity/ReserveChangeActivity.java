@@ -74,6 +74,9 @@ public class ReserveChangeActivity extends AppCompatActivity
 //    List<Person> memberList = new ArrayList<>();
     List<String> member = new ArrayList<>();
 
+    //*** メンバーに変更が生じたかの判定 ***//
+    boolean memberChange = false;
+
     EditText overview;
     Spinner sp_purpose;
     private static Button startDayBtn;
@@ -134,6 +137,7 @@ public class ReserveChangeActivity extends AppCompatActivity
 
             //*** メンバーリスト内容を破棄（同一のものが登録されるため） ***//
             member.clear();
+            //*** メンバーリストを再度作成 ***//
             changeRes.getRe_member().forEach(per -> {
                 if (per instanceof Employee) {
                     member.add("社内 : " + per.getName());
@@ -145,6 +149,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             });
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, member);
             members.setAdapter(adapter);
+            memberChange = true;
         }
     }
 
@@ -349,9 +354,13 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void onClick(View v){
 //                setReserveInfo();
+                String member = "";
+                if (memberChange) {
+                    member = " ";
+                }
                 //*** 変更後の予約情報をViewで扱う配列に格納 ***//
                 changes = new String[]{changeRes.getRe_name(), changeRes.getRe_purpose_name(), changeRes.getRe_startDay() + SPACE + changeRes.getRe_startTime(), changeRes.getRe_endDay() + SPACE + changeRes.getRe_endTime(),
-                        changeRes.getRe_applicant(), "", changeRes.getRe_switch(), "何々会社", changeRes.getRe_room_name(), changeRes.getRe_fixtures(), changeRes.getRe_remarks()};
+                        changeRes.getRe_applicant(), member, changeRes.getRe_switch(), "何々会社", changeRes.getRe_room_name(), changeRes.getRe_fixtures(), changeRes.getRe_remarks()};
 
                 Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
                 intent.putExtra(KEYCHECK, changeRes);
