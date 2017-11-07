@@ -597,17 +597,19 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
   @Override
   public void onLongPress(MotionEvent e) {
-    Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
+//    Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
     Log.d("call", "LongTouch");
 
-    //*** タップした会議の予約IDを求めて代入する ***//
-    String[] info = getSelectedReserve();
+    Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
 
-    //*** キャンセルダイアログの生成 ***//
-    CancelDialog cancelDialog = new CancelDialog();
-    Bundle bundle = new Bundle();
-    bundle.putString("info", info[0]);       //*** Bundle に予約IDを渡す ***//
-    cancelDialog.show(ReserveListActivity.getInstance().getFragmentManager(), "cancel");
+    //*** タップした会議の予約IDを求めて代入する ***//
+//    String[] info = getSelectedReserve();
+//
+//    //*** キャンセルダイアログの生成 ***//
+//    CancelDialog cancelDialog = new CancelDialog();
+//    Bundle bundle = new Bundle();
+//    bundle.putString("info", info[0]);       //*** Bundle に予約IDを渡す ***//
+//    cancelDialog.show(ReserveListActivity.getInstance().getFragmentManager(), "cancel");
   }
 
   @Override
