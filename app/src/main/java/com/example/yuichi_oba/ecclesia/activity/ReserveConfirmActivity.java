@@ -293,20 +293,21 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
         //*** 前画面からの引数を受け取る ***//
         Intent intent = getIntent();
-        gamen = intent.getStringExtra("gamen").contains("0") ? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***//
-
+        gamen = intent.getStringExtra("gamen"); //*** 0: 新規  1: 一覧　からの画面遷移 ***//
         // TODO: 2017/10/03 遷移元画面から、Reserveクラスのインスタンスをもらうよう修正する
         Log.d("call", "画面遷移元　" + gamen);
         //*** 画面遷移元によって、処理を分ける ***//
-        if (gamen.contains("新規")) {    //*** 「新規」画面からの画面遷移 ***//
+        if (gamen.contains("0")) {    //*** 「新規」画面からの画面遷移 ***//
             employee = (Employee) intent.getSerializableExtra("emp");        //*** 社員情報の取得 ***//
             reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
 
-        } else {                         //*** 「一覧」画面からの画面遷移 ***//
+        } else if (gamen.contains("1")) {                         //*** 「一覧」画面からの画面遷移 ***//
             reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
+        } else if (gamen.contains("2")) {
+            reserve = (Reserve) intent.getSerializableExtra("reserve");
+
         }
 
-        intent.getIntExtra("gamen", 1);
         instance = this;
 
         setReserveDetail(); //***  ***//
@@ -628,6 +629,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     //*** --- SELF MADE METHOD --- 予約インスタンスの情報を、DBに書き込める形にまで設定するメソッド ***//
     private float setReserveDetail() {
+        Log.d("call", "call ReserveConfirmActivity->setReserveDei tail()");
         //*** 会議目的IDをセットする ***//
         String purName = reserve.getRe_purpose_name();  //***  ***//
         String purId = Util.returnPurposeId(purName);   //*** 会議目的名を ***//

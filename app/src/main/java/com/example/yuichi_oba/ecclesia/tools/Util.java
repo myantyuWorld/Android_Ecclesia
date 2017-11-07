@@ -9,11 +9,16 @@ import android.widget.SpinnerAdapter;
 
 import com.example.yuichi_oba.ecclesia.activity.AddMemberActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
+import com.example.yuichi_oba.ecclesia.model.Employee;
+import com.example.yuichi_oba.ecclesia.model.OutEmployee;
+import com.example.yuichi_oba.ecclesia.model.Person;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class Util {
 
@@ -277,6 +282,50 @@ public class Util {
         c.close();
 
         return "";
+    }
+
+    public  static List<Person> retHistoryPesonsList(String emp_id) {
+        MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String sqlArgs = "select *, count(*) as cnt from v_reserve_member x " +
+                "inner join m_depart y on x.dep_name = y.dep_name " +
+                " where re_id in (select re_id from t_member where mem_id = ?) group by mem_id order by cnt desc limit 10 ";
+        Cursor c = db.rawQuery(sqlArgs, new String[]{emp_id});
+        List<Person> persons = new ArrayList<>();
+        while (c.moveToNext()) {
+            //*** [社員]クラスのインスタンスを生成 ***//
+            Employee e = new Employee();
+            e.setEmp_id(c.getString(11));           // ID
+            e.setName(c.getString(12));         // 氏名
+            e.setTel(c.getString(13));          // 電話番号
+            e.setMailaddr(c.getString(14));     // メールアドレス
+            e.setDep_id(c.getString(22));       //*** 部署ＩＤ ***//
+            e.setPos_name(c.getString(16));     // 役職名
+            e.setPos_priority(c.getString(17)); // 役職の優先度
+
+            Log.d("call", String.format("社員情報 : %s", e.toString()));    //***  ***//
+
+            persons.add(e);
+        }
+        c.close();
+
+
+        c = db.rawQuery("select * from v_reserve_out_member where re_id in (select re_id from t_member where mem_id = ?)", new String[]{emp_id});
+        while (c.moveToNext()) {
+            //*** [社外者]クラスのインスタンスを生成 ***//
+            OutEmployee e = new OutEmployee(
+                    c.getString(10),            //*** ID ***//
+                    c.getString(11),            //*** 氏名 ***//
+                    c.getString(12),            //*** 電話番号 ***//
+                    c.getString(13),            //*** メールアドレス ***//
+                    c.getString(14),            //*** 部署名 ***//
+                    c.getString(15),            //*** 役職名 ***//
+                    c.getString(16),            //*** 役職優先度 ***//
+                    c.getString(18)             //*** 会社名 ***//
+            );
+            persons.add(e);
+        }
+        return  persons;
     }
 
 
