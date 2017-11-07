@@ -270,6 +270,7 @@ public class ReserveActivity extends AppCompatActivity
 
         //*** OKボタン押下で、戻ってきたときの処理 ***//
         if (resultCode == RESULT_OK) {
+          // TODO: 2017/11/07 同じ人間を追加することを防ぐロジックの実装
           Object o = data.getSerializableExtra("member");
           if (o instanceof Employee) {    //*** インスタンスが、Employeeクラスのインスタンス ***//
             Employee e = (Employee) o;

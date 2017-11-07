@@ -374,6 +374,7 @@ public class Reserve implements Serializable {
     Log.d("call", String.format("myPriority : %s", r.getRe_mem_priority()));
     Log.d("call", String.format("otherPriority : %s", o.getRe_mem_priority()));
 
+    // TODO: 2017/11/07 初期データの会議に優先度つけていない？ 
     if (r.getRe_mem_priority() < o.getRe_mem_priority()) {
       return false;
     }
