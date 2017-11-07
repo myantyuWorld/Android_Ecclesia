@@ -583,6 +583,8 @@ public class ReserveActivity extends AppCompatActivity
     reserve.setRe_fixtures(edFixture.getText().toString());             //*** 備品 ***//
     reserve.setRe_remarks(edRemark.getText().toString());               //*** 備考 ***//
 
+    // TODO: 2017/11/07 会議の優先度をセットするロジックの実装
+
     //*** エラー未検出ならば画面遷移処理を行う ***//
     Log.d("call", "画面遷移開始");
     Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);

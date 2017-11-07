@@ -358,7 +358,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     instance = this;
 
 //    intent.getIntExtra("gamen", 1);
-    setReserveDetail(); //***  ***//
+    reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
 
     /***
      * レイアウト情報をマッピングする
