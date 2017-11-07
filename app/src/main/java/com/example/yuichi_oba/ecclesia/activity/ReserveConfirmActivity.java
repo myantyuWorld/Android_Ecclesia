@@ -217,6 +217,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
           title = "早期退出完了";
           str = "早期退出が完了しました";
           break;
+//        case "change":
+//          title = "変更完了";
+//          str = "変更が完了しました";
+//          break;
       }
 
       return new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(str).setPositiveButton("OK", null).create();
@@ -648,6 +652,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
       ;
     } else {
       Log.d("call", "追い出し処理検知！追い出された予約情報を通知します");
+      Log.d("call", "追い出しされる予約IDは" + resultCode);
       notificationEviction(resultCode);
       reserve.eviction(resultCode);
     }
