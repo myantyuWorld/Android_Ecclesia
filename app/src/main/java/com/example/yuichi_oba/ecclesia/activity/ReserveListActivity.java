@@ -515,10 +515,10 @@ public class ReserveListActivity extends AppCompatActivity
     c.close();
 
     //*** 取得した会議リスト全件ループ ***//
-    reserves.forEach(r -> {
-      //*** AlarmManagerの登録 ***//
-
-    });
+//    reserves.forEach(r -> {
+//      //*** AlarmManagerの登録 ***//
+//
+//    });
 
 
 
