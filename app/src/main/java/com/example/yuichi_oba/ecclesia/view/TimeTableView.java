@@ -41,6 +41,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
  * Created by Yuichi-Oba on 2017/08/28.
  */
 
+// TODO: 2017/11/07 タップした会議を正しく探索できていない？タップしたところと違う会議情報が表示されることがある 
 public class TimeTableView extends View implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
   //*** 早期退出」オプション選択時の ダイアログフラグメントクラス ***//
