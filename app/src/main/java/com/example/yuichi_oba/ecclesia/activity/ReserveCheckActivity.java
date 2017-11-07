@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,15 +14,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
+import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
 
@@ -120,16 +120,12 @@ implements NavigationView.OnNavigationItemSelectedListener{
     }
 
     //*** SelfMadeMethod ***//
-    //*** 実際にDBの予約情報を書き換える(現在エラー中) ***//
+    //*** 実際にDBの予約情報を書き換える ***//
     public void reserveChange() {
         //*** 必要なインスタンスを用意 ***//
         SQLiteDatabase db = helper.getWritableDatabase();
         //*** トランザクション開始 ***//
 //        db.beginTransaction();
-        //*** コミットをかける ***//
-//        db.setTransactionSuccessful();
-        //*** トランザクション終了 ***//
-//        db.endTransaction();
 
         //*** SQLでアップデートかける ***//
         db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
@@ -138,17 +134,17 @@ implements NavigationView.OnNavigationItemSelectedListener{
                 checkRes.getRe_endTime(), checkRes.getRe_switch(), checkRes.getRe_fixtures(), checkRes.getRe_remarks(), "会議優先度", checkRes.getRe_room_id()
                 , checkRes.getRe_purpose_id(), checkRes.getRe_id()});
 
-        //*** 変更成功通知ダイアログを表示する ***//
-//        ChangeResultDialog changeResultDialog = new ChangeResultDialog();
-//        changeResultDialog.show(getFragmentManager(), "change");
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-//        builder.setTitle("予約変更完了")
-//                .setMessage("予約変更が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//            }
-//        }).create();
+        checkRes.getRe_member().forEach(person -> {
+            if (person instanceof Employee) {
+                db.execSQL("replace into t_member values(?, ?) ", new Object[]{checkRes.getRe_id(), Util.returnEmpId(person.getName())});
+            } else {
+                db.execSQL("replace into t_member values(?, ?)", new Object[]{checkRes.getRe_id(), Util.returnOutEmpId(person.getName())});
+            }
+        });
+        //*** コミットをかける ***//
+//        db.setTransactionSuccessful();
+        //*** トランザクション終了 ***//
+//        db.endTransaction();
 
         //*** 予約一覧へ画面遷移を行う ***//
         Intent intent = new Intent(getApplicationContext(), ReserveListActivity.class);

@@ -3,6 +3,7 @@ package com.example.yuichi_oba.ecclesia.activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,11 +29,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
+import com.example.yuichi_oba.ecclesia.model.OutEmployee;
+import com.example.yuichi_oba.ecclesia.model.Person;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
@@ -67,6 +71,8 @@ public class ReserveChangeActivity extends AppCompatActivity
     Employee employee;
     Button editBtn;
     public static String[] changes ;
+//    List<Person> memberList = new ArrayList<>();
+    List<String> member = new ArrayList<>();
 
     EditText overview;
     Spinner sp_purpose;
@@ -112,7 +118,35 @@ public class ReserveChangeActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //*** AddMemberからの返答 ***//
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            Person person = (Person) data.getSerializableExtra("member");
+            if (person instanceof Employee) {
+                Employee employee = (Employee) person;
+                changeRes.getRe_member().add(employee);
+            } else {
+                OutEmployee outEmployee = (OutEmployee) person;
+                changeRes.getRe_member().add(outEmployee);
+            }
 
+            //*** メンバーリスト内容を破棄（同一のものが登録されるため） ***//
+            member.clear();
+            changeRes.getRe_member().forEach(per -> {
+                if (per instanceof Employee) {
+                    member.add("社内 : " + per.getName());
+                }
+                else {
+//                    member.add(changeRes.getRe_company() + " ： " + p.getName());
+                    Log.d("change", "社外者");
+                }
+            });
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, member);
+            members.setAdapter(adapter);
+        }
+    }
 
     private void init() {
         fbn = (FloatingActionButton) findViewById(R.id.fbn_addMember);
@@ -139,7 +173,7 @@ public class ReserveChangeActivity extends AppCompatActivity
         Cursor c = db.rawQuery("select * from m_purpose", null);
         //*** スピナー内容セット ***//
         while (c.moveToNext()) {
-            purpose.add(c.getString(ZERO) + ":" + c.getString(ONE));
+            purpose.add(c.getString(ONE));
         }
         c.close();
         ArrayAdapter<String> adapter_purpose = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, purpose);
@@ -147,17 +181,25 @@ public class ReserveChangeActivity extends AppCompatActivity
 
 
         //*** 参加者スピナー ***//
-        List<String> member = new ArrayList<>();
-        c = db.rawQuery("select emp_name from v_reserve_member where re_id = ? ", new String[]{changeRes.getRe_id()});
-        while (c.moveToNext()) {
-            member.add(c.getString(ZERO));
-        }
-        c.close();
-        c = db.rawQuery("select out_name from v_reserve_out_member where re_id = ?", new String[]{changeRes.getRe_id()});
-        while (c.moveToNext()) {
-            member.add(c.getString(ZERO));
-        }
-        c.close();
+//        c = db.rawQuery("select emp_name from v_reserve_member where re_id = ? ", new String[]{changeRes.getRe_id()});
+//        while (c.moveToNext()) {
+//            member.add(c.getString(ZERO));
+//        }
+//        c.close();
+//        c = db.rawQuery("select out_name from v_reserve_out_member where re_id = ?", new String[]{changeRes.getRe_id()});
+//        while (c.moveToNext()) {
+//            member.add(c.getString(ZERO));
+//        }
+//        c.close();
+        changeRes.getRe_member().forEach(p -> {
+            if (p instanceof Employee) {
+                member.add("社内 : " + p.getName());
+            }
+            else {
+//                member.add(changeRes.getRe_company() + " ： " + p.getName());
+                Log.d("changeMember", "社外者");
+            }
+        });
         ArrayAdapter<String> memberdap = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, member);
         members.setAdapter(memberdap);
 
@@ -292,6 +334,17 @@ public class ReserveChangeActivity extends AppCompatActivity
             public void onNothingSelected(AdapterView<?> adapterView) { }
         });
 
+        //*** 会議目的変更時 ***//
+        sp_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                changeRes.setRe_purpose_name(sp_purpose.getSelectedItem().toString());
+                changeRes.setRe_purpose_id(Util.returnPurposeId(changeRes.getRe_purpose_name()));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -380,20 +433,21 @@ public class ReserveChangeActivity extends AppCompatActivity
     private boolean timeCheck() {
         boolean res = false;
         //*** 時刻比較カレンダー ***//
-        Calendar cal = Calendar.getInstance();
-        Calendar cmp = Calendar.getInstance();
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
         //*** フォーマット用意 ***//
         SimpleDateFormat timeFor = new SimpleDateFormat(YYYY_MM_DD_HH_MM);
         try {
             //*** 開始時刻終了時刻をセット ***//
-            cal.setTime(timeFor.parse(startDayBtn.getText() + SPACE + startTimeBtn.getText()));
-            cmp.setTime(timeFor.parse(endDayBtn.getText() + SPACE + endTimeBtn.getText()));
+            start.setTime(timeFor.parse(startDayBtn.getText() + SPACE + startTimeBtn.getText()));
+            end.setTime(timeFor.parse(endDayBtn.getText() + SPACE + endTimeBtn.getText()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
         //*** 時間に矛盾がないか ***//
-        if ((cal.get(Calendar.YEAR) <= cmp.get(Calendar.YEAR)) && (cal.get(Calendar.MONTH) <= cmp.get(Calendar.MONTH)) && (cal.get(Calendar.DAY_OF_MONTH) <= cmp.get(Calendar.DAY_OF_MONTH))
-                && (cal.get(Calendar.HOUR_OF_DAY) <= cmp.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) <= cmp.get(Calendar.MINUTE))) {
+        if ((start.get(Calendar.YEAR) <= end.get(Calendar.YEAR)) && (start.get(Calendar.MONTH) <= end.get(Calendar.MONTH)) && (start.get(Calendar.DAY_OF_MONTH) <= end.get(Calendar.DAY_OF_MONTH))
+                && (((start.get(Calendar.HOUR_OF_DAY) <= end.get(Calendar.HOUR_OF_DAY)) && (start.get(Calendar.MINUTE) <= end.get(Calendar.MINUTE)))
+                || ((start.get(Calendar.HOUR_OF_DAY) < end.get(Calendar.HOUR_OF_DAY)) && (start.get(Calendar.MINUTE) >= end.get(Calendar.MINUTE))))) {
             res = true;
         } else {
             Toast.makeText(this, "開始日時より終了日時のほうが早くなっています", Toast.LENGTH_SHORT).show();
@@ -487,21 +541,22 @@ public class ReserveChangeActivity extends AppCompatActivity
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final Calendar calendar = Calendar.getInstance();
-            return new DatePickerDialog(getActivity(),
-                    new DatePickerDialog.OnDateSetListener() {
+            return new TimePickerDialog(getActivity(),
+                    new TimePickerDialog.OnTimeSetListener() {
                         @Override
-                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                            String date = getArguments().getString("time");
-                            if (date.contains("startTime")) {
-                                startTimeBtn.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            String time = getArguments().getString("time");
+                            Log.d("call", time);
+                            if (time.contains("startTime")) {
+                                startTimeBtn.setText(String.format("%02d：%02d", hourOfDay, minute));
                             } else {
-                                endTimeBtn.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+                                endTimeBtn.setText(String.format("%02d：%02d", hourOfDay, minute));
                             }
                         }
                     },
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH)
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE),
+                    true
             );
         }
     }

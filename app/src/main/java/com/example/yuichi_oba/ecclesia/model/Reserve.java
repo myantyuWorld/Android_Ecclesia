@@ -1,15 +1,14 @@
 package com.example.yuichi_oba.ecclesia.model;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
-import com.example.yuichi_oba.ecclesia.activity.ReserveActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity;
-import com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
+import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -33,12 +32,16 @@ public class Reserve implements Serializable {
   public static final int DATE = 2;
   public static final int HOUR = 3;
   public static final int MINUTE = 4;
+  public static final String SYANAI = "0";
+  public static final String SYAGAI = "1";
+  public static final String TRUE = "1";
+  public static final String FALSE = "false";
   //    private MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
   public static SQLiteDatabase db;
 
   public static final String Q_SAME_DAY_MEETING = "select * from t_reserve where re_startday = ? and room_id = ?";
   //*** Field ***//
-  private long id;                       //*** ID(long型)***//
+  private long id;                        //*** ID(long型)***//
   private String re_id;                   //*** 予約ID ***//
   private String re_name;                 //*** 概要 ***//
   private String re_startDay;             //*** 開始日時 ***//
@@ -216,20 +219,28 @@ public class Reserve implements Serializable {
     this.id = id;
   }
 
+  @Override
+  public String toString() {
+    return String.format("予約ID : %s 予約概要 : %s", this.re_id, this.re_name);
+  }
+
+  //*** ------------------------ ***//
+  //*** --- SELF MADE METHOD --- ***//
+  //*** ------------------------ ***//
   //*** --- SELF MADE METHOD --- 参加者優先度を計算するメソッド ***//
   public int retMemberPriority() {
     return 1;
   }
 
   //*** --- SELF MADE METHOD --- 会議の時間帯の重複をチェックするメソッド ***//
-  public boolean timeDuplicationCheck(Reserve r) {
+  public String timeDuplicationCheck(Reserve r) {
+    Util.easyLog("Reserve SELF MADE METHOD");
     Log.d("call", "call Reserve.timeDuplicateCheck()");
-    Log.d("call", r.getRe_startDay());
     //*** 引数の会議日と同じ会議をListで取得する ***//
     List<Reserve> list = getSameDayMeeting(r);
 
     //*** その日の同じ会議室で会議がない ***//
-    if (list.size() == 0) return true;        //*** 時間の重複なしを返す ***//
+    if (list.size() == 0) return TRUE;        //*** 時間の重複なしを返す ***//
 
     //*** 開始時刻からみて、同じ時間帯に会議があるかチェック ***//
     for (Reserve other : list) {
@@ -240,21 +251,26 @@ public class Reserve implements Serializable {
 
       Calendar startTime = new GregorianCalendar(starts[YEAR], starts[MONTH], starts[DATE], starts[HOUR], starts[MINUTE]);
       Calendar endTime = new GregorianCalendar(ends[YEAR], ends[MONTH], ends[DATE], ends[HOUR], ends[MINUTE]);
-      if (isPeriod(r, startTime, endTime)) {
-        //*** 時間の重複あり ***//
+      if (!isPeriod(r, startTime, endTime)) {
         Log.d("call", "時間の重複が発生：（暫定）処理を終了します");
         Log.d("call", "本来はここで、優先度チェックを行い、追い出し処理を行う");
-        //*** 本来はここで、優先度チェックを行い、追い出し処理を行う ***//
-        return false;
+        //*** 本来はここで、優先度チェックを行い、追い出し処理を行う priorityCheck()***//
+        if (priorityCheck(r, other)) {
+          //*** 優先度で「勝ち」==> 追い出し処理を行う eviction()***//
+//          r.eviction(other.getRe_id());
+          return other.getRe_id();  //*** 追い出し対象の、予約IDを返す ***//
+        }
+        //*** 時間の重複あり & 優先度のチェックでも負け***//
+        return FALSE;         //*** 予約ができない！を返す ***//
       }
     }
-    return true;
+    return TRUE;
   }
 
   //*** 引数の指定現在時刻が指定時間帯の範囲内かチェックするメソッド ***//
   private boolean isPeriod(Reserve r, Calendar startTime, Calendar endTime) {
+    Log.d("call", "call Reserve.isPeriod()");
     //*** 取ろうとしている予約の開始情報 ***//
-    Log.d("call", r.getRe_startDay());
     Calendar calStart = Calendar.getInstance();
     calStart.set(
         Integer.parseInt(r.getRe_startDay().split("/")[0]),   //*** year ***//
@@ -272,13 +288,20 @@ public class Reserve implements Serializable {
         Integer.parseInt(r.getRe_endTime().split("：")[0]), //*** hour ***//
         Integer.parseInt(r.getRe_endTime().split("：")[1])  //*** minute ***//
     );
+    Log.d("call", String.format("今からとる予約の、開始: %s", String.valueOf(calStart.getTime())));
+    Log.d("call", String.format("今からとる予約の、終了: %s", String.valueOf(calEnd.getTime())));
+    Log.d("call", String.format("過去の開始 %s", String.valueOf(startTime.getTime())));
+    Log.d("call", String.format("過去の終了 %s", String.valueOf(endTime.getTime())));
 
-    if (calStart.after(startTime) && calStart.before(endTime) || calEnd.after(startTime) && calEnd.before(endTime)) {
+
+    if (calStart.after(startTime) && calStart.before(endTime) && calEnd.after(startTime) && calEnd.before(endTime)) {
       //*** S ---- NOWSTART || NOWEND ---- E のパターン***//
+      Log.d("call", "//*** S ---- NOWSTART || NOWEND ---- E のパターン***// で重複");
       return false; //*** 重複あり ***//
     }
     if (calStart.before(startTime) && calEnd.after(endTime)) {
       //*** NOWSTART ---- S ---- E ---- NOWEND のパターン***//
+      Log.d("call", "//*** NOWSTART ---- S ---- E ---- NOWEND のパターン***// で重複");
       return false; //*** 重複あり ***//
     }
     return true;  //*** チェックに何も引っかからなかったら、True（重複なし）を返す ***//
@@ -287,24 +310,27 @@ public class Reserve implements Serializable {
   //***  ***//
   private int[] argsStartIntValue(Reserve o) {
     int[] ints = new int[5];
+    Log.d("call", String.format("他の、開始 %s %s", o.getRe_startDay(), o.getRe_startTime()));
 
     ints[0] = Integer.parseInt(o.getRe_startDay().split("/")[0]);
-    ints[0] = Integer.parseInt(o.getRe_startDay().split("/")[1]);
-    ints[0] = Integer.parseInt(o.getRe_startDay().split("/")[2]);
-    ints[0] = Integer.parseInt(o.getRe_startTime().split("：")[0]);
-    ints[0] = Integer.parseInt(o.getRe_startTime().split("：")[1]);
+    ints[1] = Integer.parseInt(o.getRe_startDay().split("/")[1]);
+    ints[2] = Integer.parseInt(o.getRe_startDay().split("/")[2]);
+    ints[3] = Integer.parseInt(o.getRe_startTime().split("：")[0]);
+    ints[4] = Integer.parseInt(o.getRe_startTime().split("：")[1]);
 
     return ints;
   }
+
   //***  ***//
   private int[] argsEndIntValue(Reserve o) {
     int[] ints = new int[5];
+    Log.d("call", String.format("他の、終了 %s %s", o.getRe_endDay(), o.getRe_endTime()));
 
     ints[0] = Integer.parseInt(o.getRe_endDay().split("/")[0]);
-    ints[0] = Integer.parseInt(o.getRe_endDay().split("/")[1]);
-    ints[0] = Integer.parseInt(o.getRe_endDay().split("/")[2]);
-    ints[0] = Integer.parseInt(o.getRe_endTime().split("：")[0]);
-    ints[0] = Integer.parseInt(o.getRe_endTime().split("：")[1]);
+    ints[1] = Integer.parseInt(o.getRe_endDay().split("/")[1]);
+    ints[2] = Integer.parseInt(o.getRe_endDay().split("/")[2]);
+    ints[3] = Integer.parseInt(o.getRe_endTime().split("：")[0]);
+    ints[4] = Integer.parseInt(o.getRe_endTime().split("：")[1]);
 
     return ints;
   }
@@ -337,49 +363,88 @@ public class Reserve implements Serializable {
     return list;
   }
 
-  //*** --- SELF MADE METHOD --- 優先度をチェックするメソッド ***//
-  public boolean priorityCheck(Reserve r) {
-    //*** 引数の会議日と同じ会議をListで取得する ***//
-    List<Reserve> list = getSameDayMeeting(r);
+  //*** --- SELF MADE METHOD --- 優先度をチェックするメソッド  ***//
+  //*** true : 勝ち false : 負け                            ***//
+  public boolean priorityCheck(Reserve r, Reserve o) {
+    //*** 自分が「社内利用」で 他が「社外利用」 ***//
+    if (r.getRe_switch().contains(SYANAI) && o.getRe_switch().contains(SYAGAI)) {
+      return false;
+    }
+    //*** 優先度値を比較する 自分 ＜ 他 ***//
+    Log.d("call", String.format("myPriority : %s", r.getRe_mem_priority()));
+    Log.d("call", String.format("otherPriority : %s", o.getRe_mem_priority()));
 
-    //***  ***//
-    // TODO: 2017/10/14  ヌルポ エラー
-//        for (Reserve other : list) {
-//            if (other.getRe_mem_priority() > r.getRe_mem_priority()) {
-//                return false;
-//            }
-//        }
+    if (r.getRe_mem_priority() < o.getRe_mem_priority()) {
+      return false;
+    }
     return true;
   }
 
   //*** --- SELF MADE METHOD --- 予約を確定するメソッド ***//
-  public int reserveCorrenct(Reserve reserve, float priorityAverage) {
+  public int reserveCorrenct(float priorityAverage) {
+    Log.d("call", "call Reserve.reserveCorrect()");
+    //*** 申請者の氏名－＞ 社員IDに変換して、予約インスタンスにセットする ***//
+    this.setRe_applicant(Util.returnEmpId(this.getRe_applicant()));
+    MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
 
-    ContentValues c = new ContentValues();
-    c.put("re_id", reserve.getRe_id());                 //***  ***//
-    c.put("re_overview", reserve.getRe_name());         //***  ***//
-    c.put("re_startday", reserve.getRe_startDay());     //***  ***//
-    c.put("re_endday", reserve.getRe_endDay());         //***  ***//
-    c.put("re_starttime", reserve.getRe_startTime());   //***  ***//
-    c.put("re_endtime", reserve.getRe_endTime());       //***  ***//
-    c.put("re_switch", reserve.getRe_switch());         //***  ***//
-    c.put("re_fixture", reserve.getRe_fixtures());      //***  ***//
-    c.put("re_remarks", reserve.getRe_remarks());       //***  ***//
-    c.put("re_priority", priorityAverage);              //***  ***//
-    c.put("com_id", "");                                //***  ***//
-    c.put("emp_id", reserve.getRe_applicant());         //***  ***//
-    c.put("room_id", reserve.getRe_room_id());          //***  ***//
-    c.put("pur_id", reserve.getRe_purpose_id());        //***  ***//
-    c.put("re_applicant", reserve.getRe_applicant());    //***  ***//
+    //*** 予約IDの最大値＋１を取得する ***//
+    String maxReId = Util.returnMaxReserveId();
+    db = helper.getWritableDatabase();
 
-    //***  ***//
-    MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
-    SQLiteDatabase db = helper.getWritableDatabase();
-    int rs = (int) db.insert("t_reserve", null, c);
-    db.close();
+    //*** 予約テーブルへのインサート ***//
+    Log.d("call", "予約テーブルへのインサート開始");
+    db.beginTransaction();
+    try {
+      try (SQLiteStatement st = db.compileStatement("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
+        st.bindString(1, maxReId);
+        st.bindString(2, this.getRe_name());
+        st.bindString(3, this.getRe_startDay());
+        st.bindString(4, this.getRe_endDay());
+        st.bindString(5, this.getRe_startTime());
+        st.bindString(6, this.getRe_endTime());
+        st.bindString(7, this.getRe_switch());
+        st.bindString(8, this.getRe_fixtures());
+        st.bindString(9, this.getRe_remarks());
+        st.bindString(10, String.valueOf(priorityAverage));
+        st.bindString(11, "company_name");
+        st.bindString(12, this.getRe_applicant());
+        st.bindString(13, this.getRe_room_id());
+        st.bindString(14, this.getRe_purpose_id());
+        st.bindString(15, this.getRe_applicant());
+        st.executeInsert();
+      }
+      db.setTransactionSuccessful();
+    } finally {
+      db.endTransaction();
+    }
+    Log.d("call", "予約テーブルへのインサート終了");
+
+    //*** 参加者テーブルへのインサート ***//
+    Log.d("call", "参加者テーブルへのインサート開始");
+    db.beginTransaction();
+    SQLiteStatement st = db.compileStatement("insert into t_member values (?, ?)");
+    for (Person m : this.getRe_member()) {
+      st.bindString(1, maxReId);
+      String mem_id = null;
+      //***  ***//
+      if (m instanceof Employee) {
+        mem_id = ((Employee) m).getEmp_id();
+        Log.d("call", String.format("社内mem_id : %s", mem_id));
+      }
+      //***  ***//
+      else if (m instanceof OutEmployee) {
+        mem_id = ((OutEmployee) m).getOut_id();
+        Log.d("call", String.format("社外mem_id : %s", mem_id));
+      }
+      st.bindString(2, mem_id);
+      st.executeInsert();
+    }
+    db.setTransactionSuccessful();
+    db.endTransaction();
+    Log.d("call", "参加者テーブルへのインサート終了");
 
 
-    return rs;
+    return 1;
   }
 
   //*** --- SELF MADE METHOD --- 予約をキャンセルするメソッド ***//
@@ -444,38 +509,51 @@ public class Reserve implements Serializable {
 //        SQLiteOpenHelper helper = new DB(ReserveCheckAcetInstance().getApplicationContext());
     MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getWritableDatabase();
+    //*** SQLでアップデートかける ***//
     db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
-        " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
-        " where re_id = ? ", new Object[]{re_name, re_startDay, re_endDay, re_startTime,
-        re_endTime, re_switch, re_fixtures, re_remarks, "会議優先度", re_room_id
-        , re_purpose_id, re_id});
+            " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
+            " where re_id = ? ", new Object[]{re_name, re_startDay, re_endDay, re_startTime,
+            re_endTime, re_switch, re_fixtures, re_remarks, re_mem_priority, re_room_id
+            , re_purpose_id, re_id});
+
+    re_member.forEach(person -> {
+      if (person instanceof Employee) {
+        db.execSQL("replace into t_member values(?, ?) ", new Object[]{re_id, Util.returnEmpId(person.getName())});
+      } else {
+        db.execSQL("replace into t_member values(?, ?)", new Object[]{re_id, Util.returnOutEmpId(person.getName())});
+      }
+    });
   }
 
   //*** --- SELF MADE METHOD --- 通知メールを送るメソッド ***//
   public void sentMail() {
 
-    }
-    //*** --- SELF MADE METHOD --- 追い出しを行うメソッド ***//
-    public void eviction(String re_id) {
-        MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
-        SQLiteDatabase db = helper.getWritableDatabase();
+  }
 
-        //*** 追い出し（DBから削除） ***//
-        db.rawQuery("delete from t_reserve where re_id = ?", new String[]{re_id});
+  //*** --- SELF MADE METHOD --- 追い出しを行うメソッド 引数：追い出し対象の予約ID***//
+  public void eviction(String otherReId) {
+    MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
+    SQLiteDatabase db = helper.getWritableDatabase();
 
-        //*** 追い出された側に通知 ***//
-        //*** 未記述 ***//
-    }
+    //*** 追い出し（ReserveTableから削除） ***//
+    db.rawQuery("delete from t_reserve where re_id = ?", new String[]{otherReId});
+    //*** 追い出し（memberTableから削除） ***//
+    db.rawQuery("delete from t_member where re_id = ?", new String[]{otherReId});
+  }
+
+  public static Reserve retReserveConfirm(String re_id) {
+
     MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
     SQLiteDatabase db = helper.getReadableDatabase();
     Cursor c = db.rawQuery("select * from v_reserve_member x \n" +
             " inner join m_room y on x.room_id = y.room_id\n" +
             " inner join t_emp as z on x.re_applicant = z.emp_id where re_id = ?",
         new String[]{re_id});
-//        List<String> list = new ArrayList<>();
+    //        List<String> list = new ArrayList<>();
 //        List<Employee> list = new ArrayList<>();
     List<Person> list = new ArrayList<>();
 
+    Reserve reserve = new Reserve();
     while (c.moveToNext()) {
       //*** 予約の共通部分 ***//
       reserve.setRe_name(c.getString(1));
@@ -489,7 +567,8 @@ public class Reserve implements Serializable {
       reserve.setRe_purpose_id(c.getString(18));
       reserve.setRe_purpose_name(c.getString(19));
       reserve.setRe_applicant(c.getString(26));
-      reserve.setRe_room_name(c.getString(22));
+      reserve.setRe_room_id(c.getString(22));
+      reserve.setRe_room_name(c.getString(23));
 
       reserve.setRe_id(re_id);
 
@@ -509,6 +588,7 @@ public class Reserve implements Serializable {
     c.close();
     //*** 社外者の参加者追加 ***//
     c = db.rawQuery("select * from v_reserve_out_member where re_id = ?", new String[]{re_id});
+
     while (c.moveToNext()) {
       // 18 company
       reserve.setRe_company(c.getString(18));
@@ -544,8 +624,5 @@ public class Reserve implements Serializable {
     return reserve;            //*** 予約情報を返す ***//
   }
 
-  @Override
-  public String toString() {
-    return String.format("予約ID : %s 予約概要 : %s", this.re_id, this.re_name);
-  }
+
 }

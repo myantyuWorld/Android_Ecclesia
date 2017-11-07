@@ -1,14 +1,21 @@
 package com.example.yuichi_oba.ecclesia.activity;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,12 +36,15 @@ import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
+import com.example.yuichi_oba.ecclesia.tools.AlarmReceiver;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 import com.example.yuichi_oba.ecclesia.view.TimeTableView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
@@ -51,6 +61,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
 public class ReserveListActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
 
+  public static final String Q_SELECT_TODAY_CONFERENCE = "select * from t_reserve where emp_id = ? and re_startday = ?";
   @SuppressLint("StaticFieldLeak")
   static TextView arl_txt_date;
   static TimeTableView arl_view_timetableView;
@@ -184,6 +195,7 @@ public class ReserveListActivity extends AppCompatActivity
 
 //    public static List<Reserve> reserveInfo;    // 予約情報記録クラスの変数   非同期エラーが起きるため使用禁止する！
 
+
   @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -265,8 +277,63 @@ public class ReserveListActivity extends AppCompatActivity
       @Override
       public void onClick(View v) {
         Toast.makeText(ReserveListActivity.this, arl_txt_date.getText().toString(), Toast.LENGTH_SHORT).show();
-        // TODO: 2017/10/04 自分の予約情報をもっているリストを一回クリアしないと、前の情報も描画されてしまう
+//         DO: 2017/10/04 自分の予約情報をもっているリストを一回クリアしないと、前の情報も描画されてしまう
         arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
+      }
+    });
+
+    /***
+     *
+     * 実験用：ステータス通知を出す隠し機能
+     * は、OK
+     * 次は、ボタン押下で、AlarmManagerで指定した日時にNotificationを送る実験
+     *
+
+     ***/
+    arl_btn_search.setOnLongClickListener(new View.OnLongClickListener() {
+      @Override
+      public boolean onLongClick(View v) {
+        Log.d("call", "call ReserveListActivity.onLongClick()");
+//        Toast.makeText(ReserveListActivity.this, "aaaaaaaaa", Toast.LENGTH_SHORT).show();
+//
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        intent.setData(Uri.parse("http://www.google.com/"));
+//
+//        PendingIntent pendingIntent = PendingIntent.getActivity(
+//            ReserveListActivity.getInstance().getApplicationContext(),
+//            0,
+//            intent,
+//            0
+//        );
+//
+//        Notification notification = new Notification.Builder(ReserveListActivity.getInstance().getApplicationContext())
+//            .setContentTitle("タイトル！")
+//            .setContentText("お知らせぜよ～～")
+//            .addAction(R.drawable.aaa, "決まりて：押し出し", pendingIntent)
+//            .setContentIntent(pendingIntent)
+//            .setSmallIcon(R.drawable.aaa)
+//            .setAutoCancel(true)
+//            .build();
+//
+//        NotificationManager nm = (NotificationManager)
+//            getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//        nm.notify(1000, notification);
+
+        //*** AlarmManagerで指定した日時にNotificationを送る実験 ***//
+        //*** 作品展の実演用に残しておく ***//
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.SECOND, 1);
+
+        Intent notificationIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        notificationIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(AlarmReceiver.NOTIFICATION_CONTENT, "会議開始10分前となりました");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        return false;
       }
     });
 
@@ -338,7 +405,7 @@ public class ReserveListActivity extends AppCompatActivity
   //*** 画面が表示・再表示されたらコールされる (画面遷移はここ！)***//
   @Override
   protected void onResume() {
-    Log.d("call", "ReserveListActivity->onResume()");
+    Util.easyLog("call ReserveListActivity->onResume()");
     super.onResume();
     arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
     arl_view_timetableView.thread_flg = true;
@@ -372,27 +439,10 @@ public class ReserveListActivity extends AppCompatActivity
           Reserve reserve = Reserve.retReserveConfirm(info[1]); //*** 特定した予約IDを基に、予約情報を検索 ***//
 
 //                    intent.putExtra("emp", employee); //*** 不要？ ***//
-<<<<<<< HEAD
           Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
           intent.putExtra("gamen", "1");          //*** どの画面からの遷移か ***//
           intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
-=======
-                    Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-                    intent.putExtra("gamen", "1");          //*** どの画面からの遷移か ***//
-                    intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
-                    intent.putExtra("employee", employee);
-
-                    startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
-                }
-                thCnt++;
-                try {
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
->>>>>>> syama/master
+          intent.putExtra("employee", employee);
 
           startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
         }
@@ -407,7 +457,19 @@ public class ReserveListActivity extends AppCompatActivity
 
     thread.start();
 
+    //*** アプリを立ち上げた日付の、会議をAlarmManagerに登録する ***//
+    Log.d("call", "---------------------------------------------------------");
+    Log.d("call", String.format("アプリを立ち上げた[%s] の日付の会議をAlarmManagerに登録していくよー", arl_txt_date.getText().toString()));
+    //*** onResume()は何度も呼ばれるので、最終的には、新規で、追加されたアプリ起動時の日付の会議”だけ”を ***//
+    //*** AlarmManager に  追加するロジックにしよう！***//
+
+    //*** AlarmManager登録メソッド ***//
+    registAlarmManager(arl_txt_date.getText().toString());
+
+    Log.d("call", "---------------------------------------------------------");
+
   }
+
 
   //*** SelfMadeMethod ***//
   //*** ウィジェットの初期化処理メソッド ***//
@@ -432,76 +494,34 @@ public class ReserveListActivity extends AppCompatActivity
     return instance;
   }
 
-  //    /***
-//     * アプリを立ち上げた社員の端末ＩＭＥＩを返すメソッド
-//     * @return 端末ＩＭＥＩ
-//     */
-//    public String getTerminalImei() {
-//        Log.d(TAG, "getTerminalImei()");
-//        TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-////        return manager.getDeviceId();
-//        return "352272080218786";   // 大馬 の 端末ＩＭＥＩ
-//    }
-//    private void getEmployeeInfo(String terminalImei) {
-//        Log.d(TAG, "getEmployeeInfo()");
-//
-//        // 端末ＩＭＥＩから社員ＩＤを取得する
-//        SQLiteOpenHelper helper = new DB(getApplicationContext());
-//        SQLiteDatabase db = helper.getReadableDatabase();
-//        Cursor c = db.rawQuery("select * from m_terminal where ter_id = ?", new String[]{terminalImei});
-//        if (c.moveToNext()) {
-//            // 端末ＩＭＥＩから社員ＩＤ取得が成功した
-//            employee.setEmp_id(c.getString(1));
-//        }
-//        c.close();
-//        SQLiteOpenHelper helper2 = new DB(getApplicationContext());
-//        SQLiteDatabase db2 = helper2.getReadableDatabase();
-//        Log.d(TAG, employee.getEmp_id());
-//        // 社員ＩＤが空またはＮＵＬＬでなければ次のロジックを実行する
-//        if (!employee.getEmp_id().isEmpty()) {
-//            c = db2.rawQuery("select * from t_emp where emp_id = ?",
-//                    new String[]{employee.getEmp_id()});
-//            if (c.moveToNext()) {
-//                // 社員ＩＤから社員情報を検索して、設定する
-//                employee.setEmp_name(c.getString(1));
-//                employee.setEmp_tel(c.getString(2));
-//                employee.setEmp_mailaddr(c.getString(3));
-//                employee.setDep_id(c.getString(4));
-//                employee.setPos_id(c.getString(5));
-//            } else {
-//                Log.d(TAG, "社員情報の取得に失敗しました");
-//            }
-//            c.close();
-//        }
-//        Log.d(TAG, employee.getEmp_id() + " : " + employee.getEmp_name());
-//    }
+  //*** アプリ起動時の会議を、AlarmManagerに登録するメソッド ***//
+  private void registAlarmManager(String today) {
+    //*** アプリ起動時の会議の件数、予約情報を取得する ***//
+    List<Reserve> reserves = new ArrayList<>();
+    Cursor c = db.rawQuery(Q_SELECT_TODAY_CONFERENCE, new String[]{employee.getEmp_id(), today});
+    while (c.moveToNext()) {
+      Reserve r = new Reserve();
+      r.setRe_id(c.getString(0));                                     //*** 予約ID ***//
+      r.setRe_name(c.getString(1));                                   //*** 概要 ***//
+      r.setRe_startDay(c.getString(2));                               //*** 開始日時 ***//
+      r.setRe_endDay(c.getString(3));                                 //*** 終了日時 ***//
+      r.setRe_startTime(c.getString(4));                              //*** 開始時刻 ***//
+      r.setRe_endTime(c.getString(5));                                //*** 終了時刻 ***//
+      r.setRe_switch(c.getString(6).contains("0") ? "社内" : "社外");   //*** 社内社外区分 ***//
+      r.setRe_room_id(c.getString(12));                               //*** 会議室ID ***//
+//      r.setRe_room_name(Util.returnRoomName(c.getString(12)));        //*** 会議室名 ***//
+      reserves.add(r);  //*** 会議インスタンス追加 ***//
+    }
+    c.close();
 
-//    public void getReserveInfo() {
-//        Log.d(TAG, "getReserveInfo()");
-//        // 参加者テーブルから、予約ＩＤを取得
-//        SQLiteOpenHelper helper = new DB(getApplicationContext());
-//        SQLiteDatabase db = helper.getReadableDatabase();
-//        String today = arl_txt_date.getText().toString();    // アプリ起動時の日付を取得（作品展用に来年の１月１７日を設定）
-//        Log.d("call", today);
-//
-//        // ***  アプリ起動時の日付で自分の参加会議を検索する *** //
-//        Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?",
-//                new String[]{employee.getEmp_id(), today});
-//        while (c.moveToNext()) {
-//            // その社員が参加した会議情報をリストに追加する
-//            ReserveInfo r = new ReserveInfo(
-//                    c.getString(0),
-//                    c.getString(1),
-//                    c.getString(2),
-//                    c.getString(3),
-//                    c.getString(4),
-//                    c.getString(5),
-//                    c.getString(6),
-//                    c.getString(12)
-//            );
-//            reserveInfo.add(r);
-//        }
-//        c.close();
-//    }
+    //*** 取得した会議リスト全件ループ ***//
+    reserves.forEach(r -> {
+      //*** AlarmManagerの登録 ***//
+
+    });
+
+
+
+  }
 
 }
