@@ -354,6 +354,8 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void onClick(View v){
 //                setReserveInfo();
+                String result = changeRes.timeDuplicationCheck(changeRes);
+
                 String member = "";
                 if (memberChange) {
                     member = " ";

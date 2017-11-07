@@ -653,6 +653,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
       ;
     } else {
       Log.d("call", "追い出し処理検知！追い出された予約情報を通知します");
+      Log.d("call", "追い出しされる予約IDは" + resultCode);
       notificationEviction(resultCode);
       reserve.eviction(resultCode);
     }
