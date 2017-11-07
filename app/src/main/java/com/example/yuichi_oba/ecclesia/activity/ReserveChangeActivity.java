@@ -72,7 +72,7 @@ public class ReserveChangeActivity extends AppCompatActivity
     Button editBtn;
     public static String[] changes ;
 //    List<Person> memberList = new ArrayList<>();
-    List<String> member = new ArrayList<>();
+    List<String> changeMember = new ArrayList<>();
 
     //*** メンバーに変更が生じたかの判定 ***//
     boolean memberChange = false;
@@ -136,18 +136,18 @@ public class ReserveChangeActivity extends AppCompatActivity
             }
 
             //*** メンバーリスト内容を破棄（同一のものが登録されるため） ***//
-            member.clear();
+            changeMember.clear();
             //*** メンバーリストを再度作成 ***//
             changeRes.getRe_member().forEach(per -> {
                 if (per instanceof Employee) {
-                    member.add("社内 : " + per.getName());
+                    changeMember.add("社内 : " + per.getName());
                 }
                 else {
 //                    member.add(changeRes.getRe_company() + " ： " + p.getName());
                     Log.d("change", "社外者");
                 }
             });
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, member);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, changeMember);
             members.setAdapter(adapter);
             memberChange = true;
         }
@@ -198,14 +198,14 @@ public class ReserveChangeActivity extends AppCompatActivity
 //        c.close();
         changeRes.getRe_member().forEach(p -> {
             if (p instanceof Employee) {
-                member.add("社内 : " + p.getName());
+                changeMember.add("社内 : " + p.getName());
             }
             else {
 //                member.add(changeRes.getRe_company() + " ： " + p.getName());
                 Log.d("changeMember", "社外者");
             }
         });
-        ArrayAdapter<String> memberdap = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, member);
+        ArrayAdapter<String> memberdap = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, changeMember);
         members.setAdapter(memberdap);
 
         c = db.rawQuery("select * from m_room", null);
