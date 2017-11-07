@@ -217,6 +217,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
           title = "早期退出完了";
           str = "早期退出が完了しました";
           break;
+//        case "change":
+//          title = "変更完了";
+//          str = "変更が完了しました";
+//          break;
       }
 
       return new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(str).setPositiveButton("OK", null).create();
