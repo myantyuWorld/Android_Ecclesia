@@ -366,14 +366,17 @@ public class Reserve implements Serializable {
   //*** --- SELF MADE METHOD --- 優先度をチェックするメソッド  ***//
   //*** true : 勝ち false : 負け                            ***//
   public boolean priorityCheck(Reserve r, Reserve o) {
+    Log.d("call", "call Reserve->priorityCheck()");
+
     //*** 自分が「社内利用」で 他が「社外利用」 ***//
     if (r.getRe_switch().contains(SYANAI) && o.getRe_switch().contains(SYAGAI)) {
       return false;
     }
     //*** 優先度値を比較する 自分 ＜ 他 ***//
-    Log.d("call", String.format("myPriority : %s", r.getRe_mem_priority()));
+    Log.d("call", String.format("myPriority : %s", r.getRe_mem_priority()));  // DO: 2017/11/07 こっちNULLで来ることがある
     Log.d("call", String.format("otherPriority : %s", o.getRe_mem_priority()));
 
+    // DO: 2017/11/07 初期データの会議に優先度つけていない？
     if (r.getRe_mem_priority() < o.getRe_mem_priority()) {
       return false;
     }

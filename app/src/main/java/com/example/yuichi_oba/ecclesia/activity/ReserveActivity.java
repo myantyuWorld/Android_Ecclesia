@@ -8,7 +8,9 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -257,6 +259,7 @@ public class ReserveActivity extends AppCompatActivity
   }
 
   //*** 開いたアクティビティ(AddMemberActivity)から何かしらの情報を受け取る ***//
+  @RequiresApi(api = Build.VERSION_CODES.N)
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     Log.d("call", "call ReserveActivity->onActivityResult()");
@@ -270,16 +273,23 @@ public class ReserveActivity extends AppCompatActivity
 
         //*** OKボタン押下で、戻ってきたときの処理 ***//
         if (resultCode == RESULT_OK) {
-          Object o = data.getSerializableExtra("member");
+          // DO: 2017/11/07 同じ人間を追加することを防ぐロジックの実装
+          Person o = (Person) data.getSerializableExtra("member");
           if (o instanceof Employee) {    //*** インスタンスが、Employeeクラスのインスタンス ***//
             Employee e = (Employee) o;
             //*** AddMemberActivity->405行目くらいで、その処理があります ***//
             Log.d("call", String.format("社内参加者の役職優先度 : %s", e.getPos_priority()));
-            member.add(e);
+            //*** 受け取った人間がすでに、リストに含まれているかcheckする ***//
+            if (!isMemberDuplicate(member, o)) {
+              member.add(e);
+            }
           } else {                        //*** インスタンスが、OutEmployeeクラスのインスタンス ***//
             OutEmployee e = (OutEmployee) o;
             Log.d("call", String.format("社外参加者 : %s", e.toString()));
-            member.add(e);
+            //*** 受け取った人間がすでに、リストに含まれているかcheckする ***//
+            if (!isMemberDuplicate(member, o)) {
+              member.add(e);
+            }
           }
 
           //*** 参加者を追加する ***//
@@ -288,7 +298,7 @@ public class ReserveActivity extends AppCompatActivity
             //*** 「社内」 ***//
             if (p instanceof Employee)
               list.add("社内 : " + p.getName());
-            //*** 「社外」 ***//
+              //*** 「社外」 ***//
             else if (p instanceof OutEmployee)
               list.add(((OutEmployee) p).getCom_name() + " : " + p.getName());
           });
@@ -308,6 +318,20 @@ public class ReserveActivity extends AppCompatActivity
       default:
         break;
     }
+  }
+
+  //*** 受け取った人間がリストに含まれているかチェックするメソッド true : 含まれる false : 含まれない ***//
+  @RequiresApi(api = Build.VERSION_CODES.N)
+  private boolean isMemberDuplicate(List<Person> member, Person o) {
+    Log.d("call", "call ReserveActivity->isMemberDuplicate()");
+    for (Person p : member) {
+      if (p.getName().contains(o.getName())) {
+        Log.d("call", "----- 参加者の重複を発見！");
+        return true;  //*** 含まれている旨を返す ***//
+      }
+    }
+
+    return false; //*** 含まれていない旨を返すs ***//
   }
 
   //*** 戻るボタン押下時の処理 ***//
@@ -558,6 +582,8 @@ public class ReserveActivity extends AppCompatActivity
     reserve.setRe_room_name((String) ar_sp_room.getSelectedItem());     //*** 会議室名 ***//
     reserve.setRe_fixtures(edFixture.getText().toString());             //*** 備品 ***//
     reserve.setRe_remarks(edRemark.getText().toString());               //*** 備考 ***//
+
+    // TODO: 2017/11/07 会議の優先度をセットするロジックの実装
 
     //*** エラー未検出ならば画面遷移処理を行う ***//
     Log.d("call", "画面遷移開始");

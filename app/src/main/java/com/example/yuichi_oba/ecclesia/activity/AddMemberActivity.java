@@ -7,8 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -367,10 +370,11 @@ public class AddMemberActivity extends AppCompatActivity
   }
 
   //*** --- SELF MADE METHOD --- 登録ボタン押下時の処理 ***//
+  @RequiresApi(api = Build.VERSION_CODES.N)
   public void onClickRegist(View view) {
     Log.d("call", "call onClickRegist()");
     //*** ひとつでもエラーが検出されたら、画面遷移させない ***//
-    // TODO: 2017/10/04 同じ人間を追加することを防ぐロジックの実装
+    // DO: 2017/10/04 同じ人間を追加することを防ぐロジックの実装
     if (!isBrankSpace()) {
       Log.d("call", "参加者追加アクティビティ エラー検出！ 登録はしません！");
       CautionDialog cautionDialog = new CautionDialog();
@@ -432,7 +436,7 @@ public class AddMemberActivity extends AppCompatActivity
       //*** ------------------------- ***//
       //*** 新規登録ラジオボタン選択時 ***//
       //*** ------------------------- ***//
-      // TODO: 2017/11/05 新規登録ならば、各項目の内容で、社内、社外テーブルへのインサート処理を行う
+      // DO: 2017/11/05 新規登録ならば、各項目の内容で、社内、社外テーブルへのインサート処理を行う
       case R.id.aam_rbt_new_regist:
         Log.d("call", "新規登録 radio button");
         //*** 各ウィジェットの情報を基に、参加者のインスタンスを生成 ***//
@@ -446,13 +450,27 @@ public class AddMemberActivity extends AppCompatActivity
               Util.returnDepartId(sp_depart.getSelectedItem().toString()),        //*** 部署ID ***//
               Util.returnPositionId(sp_position.getSelectedItem().toString()).posId     //*** 役職ID ***//
           );
+
           //*** 役職優先度のセット ***//
           t_emp.setPos_priority(Util.returnPositionId(sp_position.getSelectedItem().toString()).posPriority);
-
           Log.d("call", t_emp.toString());
+
+          //*** t_empへの新規登録 ***//
+          MyHelper helper = new MyHelper(getApplicationContext());
+          SQLiteDatabase db = helper.getWritableDatabase();
+
+          SQLiteStatement st = db.compileStatement("insert into t_emp values (?,?,?,?,?,?)");
+          st.bindString(1, t_emp.getEmp_id());
+          st.bindString(2, t_emp.getName());
+          st.bindString(3, t_emp.getTel());
+          st.bindString(4, t_emp.getMailaddr());
+          st.bindString(5, t_emp.getDep_id());
+          st.bindString(6, t_emp.getPos_id());
+          st.executeInsert();
+
           intent2.putExtra("member", t_emp);   //*** intent に セットする ***//
         } else {                                          //*** 社外者の場合 ***//
-          OutEmployee outEmployee = new OutEmployee(
+          OutEmployee out = new OutEmployee(
               returnMaxId(M_OUT_EMP),                     //*** 社外者テーブルのIDの最大値＋１を代入 ***//
               ed_name.getText().toString(),               //*** 氏名 ***//
               ed_tel.getText().toString(),                //*** 電話番号 ***//
@@ -462,9 +480,24 @@ public class AddMemberActivity extends AppCompatActivity
               "",                                         //*** 役職優先度 ***//
               aam_etxt_company.getText().toString()       //*** 会社名 ***//
           );
-          Log.d("call", outEmployee.toString());
+          Log.d("call", out.toString());
 
-          intent2.putExtra("member", outEmployee);   //*** intent に セットする ***//
+          MyHelper helper = new MyHelper(getApplicationContext());
+          SQLiteDatabase db = helper.getWritableDatabase();
+
+          SQLiteStatement st = db.compileStatement("insert into m_out values(?,?,?,?,?,?,?,?)");
+          st.bindString(1, out.getOut_id());
+          st.bindString(2, out.getName());
+          st.bindString(3, out.getTel());
+          st.bindString(4, out.getMailaddr());
+          st.bindString(5, out.getDep_name());
+          st.bindString(6, out.getPos_name());
+          st.bindString(7, "1");                //*** 役職優先度 暫定的に１とする ***//
+          st.bindString(8, out.getCom_name());
+          st.executeInsert();
+
+
+          intent2.putExtra("member", out);   //*** intent に セットする ***//
         }
         setResult(RESULT_OK, intent2);
         finish();
@@ -473,19 +506,21 @@ public class AddMemberActivity extends AppCompatActivity
     }
   }
 
+
+
   //*** --- SELF MADE METHOD --- 指定されたテーブルのIDの最大値＋１を返すメソッド ***//
   private String returnMaxId(String tblName) {
     MyHelper helper = new MyHelper(this);
     SQLiteDatabase db = helper.getReadableDatabase();
 
     String maxId = "";
-    Cursor c = db.rawQuery(String.format("SELECT * FROM %s", tblName), null);
+    Cursor c = db.rawQuery(String.format("SELECT max(emp_id) + 1 FROM %s", tblName), null);
     if (c.moveToNext()) {
       maxId = c.getString(0);
     }
     c.close();
 
-    return maxId;
+    return String.format("%04d", Integer.valueOf(maxId));  //*** (ex) 0041 ***//
   }
 
   //*** --- SELF MADE METHOD --- ウィジェットに空欄があるかチェックするメソッド ***//

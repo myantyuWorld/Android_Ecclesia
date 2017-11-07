@@ -41,6 +41,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
  * Created by Yuichi-Oba on 2017/08/28.
  */
 
+// TODO: 2017/11/07 タップした会議を正しく探索できていない？タップしたところと違う会議情報が表示されることがある
 public class TimeTableView extends View implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
   //*** 早期退出」オプション選択時の ダイアログフラグメントクラス ***//
@@ -597,17 +598,19 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
   @Override
   public void onLongPress(MotionEvent e) {
-    Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
+//    Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
     Log.d("call", "LongTouch");
 
-    //*** タップした会議の予約IDを求めて代入する ***//
-    String[] info = getSelectedReserve();
+    Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
 
-    //*** キャンセルダイアログの生成 ***//
-    CancelDialog cancelDialog = new CancelDialog();
-    Bundle bundle = new Bundle();
-    bundle.putString("info", info[0]);       //*** Bundle に予約IDを渡す ***//
-    cancelDialog.show(ReserveListActivity.getInstance().getFragmentManager(), "cancel");
+    //*** タップした会議の予約IDを求めて代入する ***//
+//    String[] info = getSelectedReserve();
+//
+//    //*** キャンセルダイアログの生成 ***//
+//    CancelDialog cancelDialog = new CancelDialog();
+//    Bundle bundle = new Bundle();
+//    bundle.putString("info", info[0]);       //*** Bundle に予約IDを渡す ***//
+//    cancelDialog.show(ReserveListActivity.getInstance().getFragmentManager(), "cancel");
   }
 
   @Override

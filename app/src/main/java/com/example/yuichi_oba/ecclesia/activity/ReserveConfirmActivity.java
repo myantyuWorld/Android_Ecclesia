@@ -344,7 +344,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
     Intent intent = getIntent();
     gamen = intent.getStringExtra("gamen").contains("0") ? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***//
 
-    // TODO: 2017/10/03 遷移元画面から、Reserveクラスのインスタンスをもらうよう修正する
     Log.d("call", "画面遷移元　" + gamen);
     //*** 画面遷移元によって、処理を分ける ***//
     if (gamen.contains("新規")) {    //*** 「新規」画面からの画面遷移 ***//
@@ -362,7 +361,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     instance = this;
 
 //    intent.getIntExtra("gamen", 1);
-    setReserveDetail(); //***  ***//
+    reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
 
     /***
      * レイアウト情報をマッピングする
