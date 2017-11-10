@@ -202,15 +202,15 @@ public class ReserveConfirmActivity extends AppCompatActivity
   public static class ResultDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-      String str = "", title = "";
+      String str = EMPTY, title = EMPTY;
       switch (getArguments().getString("result")) {
         case "ex":
-          title = "延長完了";
-          str = "延長が完了しました";
+          title = EX + COMPLETE;
+          str = EX + GA + RUNMESSAGE;
           break;
         case "ear":
-          title = "早期退出完了";
-          str = "早期退出が完了しました";
+          title = EARLY + COMPLETE;
+          str = EARLY + GA + RUNMESSAGE;
           break;
 //        case "change":
 //          title = "変更完了";

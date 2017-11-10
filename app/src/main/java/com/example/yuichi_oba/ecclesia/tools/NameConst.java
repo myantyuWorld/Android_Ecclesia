@@ -8,6 +8,8 @@ public class NameConst {
     public static final int MAX_HEIGHT = 1700;
     public static final int MAX_WIDTH = 1080;
     public static final int LINE_WIDGH = 20;
+
+    //*** 汎用 ***//
     public static final int ZERO = 0;
     public static final int ONE = 1;
     public static final int TWO = 2;
@@ -28,14 +30,15 @@ public class NameConst {
     public static final String FALSE = "false";
 
     public static final String CALL = "call";
-
+    public static final String BTNDAYFORMAT = "%04d/%02d/%02d";
 
     public static final String EX = "延長";
-    public static final String EARLY = "早期";
+    public static final String EARLY = "早期退出";
     public static final String CONFIRM = "確認";
     public static final String COMPLETE = "完了";
+    public static final String GA = "が";
     public static final String RUNQUESTION = "を実行しますか？";
-    public static final String RUNMESSAGE = "を実行しました";
+    public static final String RUNMESSAGE = "が完了しました";
     public static final String OK = "OK";
     public static final String IN = "社内";
     public static final String OUT = "社外";
@@ -46,6 +49,7 @@ public class NameConst {
     public static final String YYYY_MM_DD_HH_MM = "yyyy/MM/dd HH：mm";
     public static final String HH_MM = "HH：mm";
     public static final String SPACE = " ";
+    public static final String EMPTY = "";
 
     // yuichi
     public static final String TOKUBETSU = "0001";
