@@ -24,12 +24,18 @@ public class NameConst {
 
     public static final int REQUEST_CODE = 1;
 
+    public static final String TRUE = "1";
+    public static final String FALSE = "false";
+
+    public static final String CALL = "call";
+
 
     public static final String EX = "延長";
-    public static final String CONF = "確認";
-    public static final String KANRYO = "完了";
-    public static final String JIKKOUQUE = "を実行しますか？";
-    public static final String JIKKOU = "を実行しました";
+    public static final String EARLY = "早期";
+    public static final String CONFIRM = "確認";
+    public static final String COMPLETE = "完了";
+    public static final String RUNQUESTION = "を実行しますか？";
+    public static final String RUNMESSAGE = "を実行しました";
     public static final String OK = "OK";
     public static final String IN = "社内";
     public static final String OUT = "社外";

@@ -34,6 +34,8 @@ import com.example.yuichi_oba.ecclesia.tools.Util;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+
 public class AddMemberActivity extends AppCompatActivity
     implements MyInterface {
 
@@ -57,7 +59,7 @@ public class AddMemberActivity extends AppCompatActivity
           .setPositiveButton("はい", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
               // FIRE ZE MISSILES!
-              Log.d("call", "CautionDialog onclick!");
+              Log.d(CALL, "CautionDialog onclick!");
             }
           });
 
@@ -119,7 +121,7 @@ public class AddMemberActivity extends AppCompatActivity
 
     Intent in = getIntent();
     emp_id = in.getStringExtra("emp_id");
-    Log.d("call", "emp_id " + emp_id);
+    Log.d(CALL, "emp_id " + emp_id);
     /***
      * 各種Widgetの初期化処理
      */
@@ -187,7 +189,7 @@ public class AddMemberActivity extends AppCompatActivity
         Spinner spinner = (Spinner) adapterView;
         //*** 「会社名」:「氏名」を分割して、氏名のみ取得する ***//
         String name = spinner.getSelectedItem().toString().split(":")[1];
-        Log.d("call", name);
+        Log.d(CALL, name);
 
         //*** 履歴リストから、選択された人間と等しいインスタンスを探す ***//
         for (Person person : members) {
@@ -208,7 +210,7 @@ public class AddMemberActivity extends AppCompatActivity
     bt_cancel.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Log.d("call", "AddMemberActivity->finish()");
+        Log.d(CALL, "AddMemberActivity->finish()");
         finish();
       }
     });
@@ -234,7 +236,7 @@ public class AddMemberActivity extends AppCompatActivity
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //                Spinner s = (Spinner) parent;
 //                String depId = Util.returnDepartId(s.getSelectedItem().toString());
-//                Log.d("call", String.format("部署ＩＤ : %s", depId));
+//                Log.d(CALL, String.format("部署ＩＤ : %s", depId));
       }
 
       @Override
@@ -247,7 +249,7 @@ public class AddMemberActivity extends AppCompatActivity
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //                Spinner s = (Spinner) parent;
 //                String posId = Util.returnPositionId(s.getSelectedItem().toString());
-//                Log.d("call", String.format("役職ＩＤ : %s", posId));
+//                Log.d(CALL, String.format("役職ＩＤ : %s", posId));
 
       }
 
@@ -261,7 +263,7 @@ public class AddMemberActivity extends AppCompatActivity
   private void mappingWidget(Person p) {
     //*** 引数のクラスの型に応じた処理を行う ***//
     if (p instanceof Employee) {            //*** 社員クラスのインスタンスの場合 ***//
-      Log.d("call", p.toString());
+      Log.d(CALL, p.toString());
       aam_etxt_company.setText("社内");         //*** 会社名 ***//
       ed_name.setText(p.getName());       //*** 氏名 ***//
       ed_email.setText(p.getMailaddr());  //*** メールアドレス ***//
@@ -340,7 +342,7 @@ public class AddMemberActivity extends AppCompatActivity
       e.setPos_name(c.getString(16));     // 役職名
       e.setPos_priority(c.getString(17)); // 役職の優先度
 
-      Log.d("call", String.format("社員情報 : %s", e.toString()));    //***  ***//
+      Log.d(CALL, String.format("社員情報 : %s", e.toString()));    //***  ***//
 
       members.add(e);
       list.add("社内" + ":" + e.getName());
@@ -372,11 +374,11 @@ public class AddMemberActivity extends AppCompatActivity
   //*** --- SELF MADE METHOD --- 登録ボタン押下時の処理 ***//
   @RequiresApi(api = Build.VERSION_CODES.N)
   public void onClickRegist(View view) {
-    Log.d("call", "call onClickRegist()");
+    Log.d(CALL, "call onClickRegist()");
     //*** ひとつでもエラーが検出されたら、画面遷移させない ***//
     // DO: 2017/10/04 同じ人間を追加することを防ぐロジックの実装
     if (!isBrankSpace()) {
-      Log.d("call", "参加者追加アクティビティ エラー検出！ 登録はしません！");
+      Log.d(CALL, "参加者追加アクティビティ エラー検出！ 登録はしません！");
       CautionDialog cautionDialog = new CautionDialog();
       cautionDialog.show(getFragmentManager(), "aaaaa");
       return; //*** 処理を抜ける ***//
@@ -390,19 +392,19 @@ public class AddMemberActivity extends AppCompatActivity
       //*** 履歴検索ラジオボタン選択時 ***//
       //*** ------------------------- ***//
       case R.id.aam_rbt_history:
-        Log.d("call", "履歴検索 radio button ");
+        Log.d(CALL, "履歴検索 radio button ");
 
         //*** 選択されている社員情報をmembersから抜き取る ***//
         Intent intent = new Intent();
         Employee e = new Employee();
         OutEmployee o = new OutEmployee();
         String memName = sp_history.getSelectedItem().toString().split(":")[1]; //*** 社内[0]：大馬裕一[1] ***//
-        Log.d("call", memName);
+        Log.d(CALL, memName);
         members.forEach(d -> {
-          Log.d("call", d.toString());
+          Log.d(CALL, d.toString());
           //*** 選択されている社員名と同じ情報を発見 ***//
           if (d.getName().contains(memName)) {
-            Log.d("call", "選択されている社員と同じ情報をmembersから発見");
+            Log.d(CALL, "選択されている社員と同じ情報をmembersから発見");
             //*** 「社内の人間の場合」 ***//
             if (d instanceof Employee) {
               e.setEmp_id(((Employee) d).getEmp_id());
@@ -438,7 +440,7 @@ public class AddMemberActivity extends AppCompatActivity
       //*** ------------------------- ***//
       // DO: 2017/11/05 新規登録ならば、各項目の内容で、社内、社外テーブルへのインサート処理を行う
       case R.id.aam_rbt_new_regist:
-        Log.d("call", "新規登録 radio button");
+        Log.d(CALL, "新規登録 radio button");
         //*** 各ウィジェットの情報を基に、参加者のインスタンスを生成 ***//
         Intent intent2 = new Intent();
         if (aam_etxt_company.getText().toString().contains("")) {     //*** 社内の場合 ***//
@@ -453,7 +455,7 @@ public class AddMemberActivity extends AppCompatActivity
 
           //*** 役職優先度のセット ***//
           t_emp.setPos_priority(Util.returnPositionId(sp_position.getSelectedItem().toString()).posPriority);
-          Log.d("call", t_emp.toString());
+          Log.d(CALL, t_emp.toString());
 
           //*** t_empへの新規登録 ***//
           MyHelper helper = new MyHelper(getApplicationContext());
@@ -480,7 +482,7 @@ public class AddMemberActivity extends AppCompatActivity
               "",                                         //*** 役職優先度 ***//
               aam_etxt_company.getText().toString()       //*** 会社名 ***//
           );
-          Log.d("call", out.toString());
+          Log.d(CALL, out.toString());
 
           MyHelper helper = new MyHelper(getApplicationContext());
           SQLiteDatabase db = helper.getWritableDatabase();

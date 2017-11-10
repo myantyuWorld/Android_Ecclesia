@@ -48,6 +48,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+
 //import android.app.Dialog;
 
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
@@ -106,7 +108,7 @@ public class ReserveActivity extends AppCompatActivity
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
               String date = getArguments().getString("date");
-              Log.d("call", date);
+              Log.d(CALL, date);
               if (date.contains("sDay")) {
                 btStartDay.setText(String.format(FORMAT_DATE, year, month + 1, day));
                 btEndDay.setText(String.format(FORMAT_DATE, year, month + 1, day));    //*** 終了日時を開始日時でせっていする ***//
@@ -136,7 +138,7 @@ public class ReserveActivity extends AppCompatActivity
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
               String time = getArguments().getString("time");
-              Log.d("call", time);
+              Log.d(CALL, time);
               if (time.contains("sTime")) {
                 btStartTime.setText(String.format(FORMAT_TIME, hourOfDay, minute));
                 btEndTime.setText(String.format(FORMAT_TIME, hourOfDay + 1, minute)); //*** 終了日時を開始日時の60分後（暫定）で設定する ***//
@@ -253,7 +255,7 @@ public class ReserveActivity extends AppCompatActivity
     init(date, roomId);
 
     //*** 参加者をからにする ***//
-    Log.d("call", "参加者を殻にします");
+    Log.d(CALL, "参加者を殻にします");
     member.clear();
 
   }
@@ -262,7 +264,7 @@ public class ReserveActivity extends AppCompatActivity
   @RequiresApi(api = Build.VERSION_CODES.N)
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    Log.d("call", "call ReserveActivity->onActivityResult()");
+    Log.d(CALL, "call ReserveActivity->onActivityResult()");
     super.onActivityResult(requestCode, resultCode, data);
 
     switch (requestCode) {
@@ -278,14 +280,14 @@ public class ReserveActivity extends AppCompatActivity
           if (o instanceof Employee) {    //*** インスタンスが、Employeeクラスのインスタンス ***//
             Employee e = (Employee) o;
             //*** AddMemberActivity->405行目くらいで、その処理があります ***//
-            Log.d("call", String.format("社内参加者の役職優先度 : %s", e.getPos_priority()));
+            Log.d(CALL, String.format("社内参加者の役職優先度 : %s", e.getPos_priority()));
             //*** 受け取った人間がすでに、リストに含まれているかcheckする ***//
             if (!isMemberDuplicate(member, o)) {
               member.add(e);
             }
           } else {                        //*** インスタンスが、OutEmployeeクラスのインスタンス ***//
             OutEmployee e = (OutEmployee) o;
-            Log.d("call", String.format("社外参加者 : %s", e.toString()));
+            Log.d(CALL, String.format("社外参加者 : %s", e.toString()));
             //*** 受け取った人間がすでに、リストに含まれているかcheckする ***//
             if (!isMemberDuplicate(member, o)) {
               member.add(e);
@@ -323,10 +325,10 @@ public class ReserveActivity extends AppCompatActivity
   //*** 受け取った人間がリストに含まれているかチェックするメソッド true : 含まれる false : 含まれない ***//
   @RequiresApi(api = Build.VERSION_CODES.N)
   private boolean isMemberDuplicate(List<Person> member, Person o) {
-    Log.d("call", "call ReserveActivity->isMemberDuplicate()");
+    Log.d(CALL, "call ReserveActivity->isMemberDuplicate()");
     for (Person p : member) {
       if (p.getName().contains(o.getName())) {
-        Log.d("call", "----- 参加者の重複を発見！");
+        Log.d(CALL, "----- 参加者の重複を発見！");
         return true;  //*** 含まれている旨を返す ***//
       }
     }
@@ -554,16 +556,16 @@ public class ReserveActivity extends AppCompatActivity
 
   //*** --- SELF MADE METHOD --- 内容確認ボタン押下時の処理 ***//
   public void onClickReConfirm(View view) {
-    Log.d("call", "call onClickReConfirm()");
+    Log.d(CALL, "call onClickReConfirm()");
 
     //*** 参加者の人数が、会議室の最大人数以下か 0人ではないかどうかチェックする ***//
     //*** エディットテキストに空欄があるかチェック ***//
     //*** 開始終了日時・時刻に矛盾がないかチェック ***//
     if (!checkMemberCount() || !isBrankSpace() || !checkStartEnd()) {
-      Log.d("call", "予約アクティビティ エラー検出！ 画面遷移不可能");
+      Log.d(CALL, "予約アクティビティ エラー検出！ 画面遷移不可能");
       return;     //*** 処理を抜ける ***//
     }
-    Log.d("call", edOverView.getText().toString());
+    Log.d(CALL, edOverView.getText().toString());
     //*** 入力されている情報で、予約情報インスタンスを作る ***//
     Reserve reserve = new Reserve();
     reserve.setRe_id(Util.returnMaxReserveId());                        //*** 予約ID ***//
@@ -586,7 +588,7 @@ public class ReserveActivity extends AppCompatActivity
     // TODO: 2017/11/07 会議の優先度をセットするロジックの実装
 
     //*** エラー未検出ならば画面遷移処理を行う ***//
-    Log.d("call", "画面遷移開始");
+    Log.d(CALL, "画面遷移開始");
     Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
     intent.putExtra("gamen", "0");          //*** 予約確認画面への、「新規」予約での画面遷移 ***//
     intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
@@ -601,7 +603,7 @@ public class ReserveActivity extends AppCompatActivity
 
   //*** --- SELF MADE METHOD --- 参加者の人数が、会議室の最大人数以下かどうかチェックする ***//
   private boolean checkMemberCount() {
-    Log.d("call", "call checkMemberCount()");
+    Log.d(CALL, "call checkMemberCount()");
 
     Integer memberCount = sp_member.getAdapter().getCount();    //*** 参加者スピナーの長さを取得する ***//
     String ss = (String) ar_sp_room.getSelectedItem();             //*** 選択されている会議室名を取得 ***//
@@ -631,7 +633,7 @@ public class ReserveActivity extends AppCompatActivity
 
   //*** --- SELF MADE METHOD --- 開始終了日時・時刻に矛盾がないかチェックするメソッド ***//
   private boolean checkStartEnd() {
-    Log.d("call", "call checkStartEnd()");
+    Log.d(CALL, "call checkStartEnd()");
 
     Bundle bundle = new Bundle();
     //*** ”開始日時”など、未選択の状態かチェックする ***//
@@ -651,9 +653,9 @@ public class ReserveActivity extends AppCompatActivity
     //*** 開始が終了より遅いかなどの矛盾をチェックする ***//
     String sDay = btStartDay.getText().toString().split(REGEX_1)[1] + btStartDay.getText().toString().split(REGEX_1)[2];
     String eDay = btEndDay.getText().toString().split(REGEX_1)[1] + btEndDay.getText().toString().split(REGEX_1)[2];
-    Log.d("call", String.format("日時検査 --- %s : %s", sDay, eDay));
+    Log.d(CALL, String.format("日時検査 --- %s : %s", sDay, eDay));
     if (Integer.valueOf(sDay) > Integer.valueOf(eDay)) {    //*** 開始日時のほうが大きい -→ 異常 ***//
-      Log.d("call", "開始日時のほうが大きい矛盾発生");
+      Log.d(CALL, "開始日時のほうが大きい矛盾発生");
 
       //*** ダイアログに、どのエラー種別か渡す ***//
       bundle.putString("error", "date");
@@ -667,9 +669,9 @@ public class ReserveActivity extends AppCompatActivity
     //*** 開始が終了より遅いかなどの矛盾をチェックする ***//
     String sTime = btStartTime.getText().toString().split(REGEX)[0] + btStartTime.getText().toString().split(REGEX)[1];
     String eTime = btEndTime.getText().toString().split(REGEX)[0] + btEndTime.getText().toString().split(REGEX)[1];
-    Log.d("call", String.format("時刻検査 --- %s : %s", sTime, eTime));
+    Log.d(CALL, String.format("時刻検査 --- %s : %s", sTime, eTime));
     if (Integer.valueOf(sTime) > Integer.valueOf(eTime)) {  //*** 開始時刻のほうが大きい -→ 異常 ***//
-      Log.d("call", "開始時刻のほうが大きい矛盾発生");
+      Log.d(CALL, "開始時刻のほうが大きい矛盾発生");
 
       //*** ダイアログに、どのエラー種別か渡す ***//
       bundle.putString("error", "day");
@@ -685,10 +687,10 @@ public class ReserveActivity extends AppCompatActivity
 
   //*** --- SELF MADE METHOD --- ウィジェットに空欄があるかチェックするメソッド ***//
   public boolean isBrankSpace() {
-    Log.d("call", "call isBrankSpace()");
+    Log.d(CALL, "call isBrankSpace()");
 
     if (edOverView.getText().toString().isEmpty()) {         //*** 会議概要 ***//
-      Log.d("call", "空欄あり");
+      Log.d(CALL, "空欄あり");
       //*** ダイアログに、どのエラー種別か渡す ***//
       Bundle bundle = new Bundle();
       bundle.putString("error", "brank");

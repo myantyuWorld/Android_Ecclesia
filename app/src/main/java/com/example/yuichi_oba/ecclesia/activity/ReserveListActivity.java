@@ -47,7 +47,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 //import static com.example.yuichi_oba.ecclesia.activity.MyDialog.employee;
 
@@ -106,7 +106,7 @@ public class ReserveListActivity extends AppCompatActivity
     //*** SelfMadeMethod ***//
     //*** 端末IMEIを取得するメソッド ***//
     public void getTerminalImei() {
-      Log.d("call", "getTerminalImei()");
+      Log.d(CALL, "getTerminalImei()");
       TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 //        return manager.getDeviceId();
       // TODO: 2017/09/15 ハードコーディング!
@@ -116,7 +116,7 @@ public class ReserveListActivity extends AppCompatActivity
 
     //*** 社員を認証するメソッド ***//
     public String authEmployee() {
-      Log.d("call", "ReserveListActivity->authEmployee()");
+      Log.d(CALL, "ReserveListActivity->authEmployee()");
       String emp_id = "";
       Cursor c = db.rawQuery("select * from m_terminal where ter_id = ?", new String[]{this.imeiNumber});
 
@@ -130,7 +130,7 @@ public class ReserveListActivity extends AppCompatActivity
 
     //*** 認証済み社員を生成するメソッド ***//
     public Employee getEmployeeInfo() {
-      Log.d("call", TAG + "->getEmployeeInfo()");
+      Log.d(CALL, TAG + "->getEmployeeInfo()");
       String emp_id = authEmployee();
       if (!emp_id.isEmpty()) {
         // 社員ＩＤが空またはＮＵＬＬでなければ次のロジックを実行する
@@ -240,8 +240,8 @@ public class ReserveListActivity extends AppCompatActivity
 //        }
     /*** 社員ID と アプリ起動時の日付を渡して、描画する ***/
     arl_view_timetableView = (TimeTableView) this.findViewById(R.id.arl_view_timetable);
-    Log.d("call", employee.getEmp_id());
-    Log.d("call", arl_txt_date.getText().toString());
+    Log.d(CALL, employee.getEmp_id());
+    Log.d(CALL, arl_txt_date.getText().toString());
     arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
 
     arl_txt_date.setOnClickListener(new View.OnClickListener() {
@@ -293,7 +293,7 @@ public class ReserveListActivity extends AppCompatActivity
     arl_btn_search.setOnLongClickListener(new View.OnLongClickListener() {
       @Override
       public boolean onLongClick(View v) {
-        Log.d("call", "call ReserveListActivity.onLongClick()");
+        Log.d(CALL, "call ReserveListActivity.onLongClick()");
 //        Toast.makeText(ReserveListActivity.this, "aaaaaaaaa", Toast.LENGTH_SHORT).show();
 //
 //        Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -419,12 +419,12 @@ public class ReserveListActivity extends AppCompatActivity
           arl_view_timetableView.y = 0;
           thCnt = 0;
         }
-        Log.d("call", "Thread");
+        Log.d(CALL, "Thread");
         String[] info = arl_view_timetableView.getSelectedReserve();
-        Log.d("call", "info :: " + Arrays.toString(info));
+        Log.d(CALL, "info :: " + Arrays.toString(info));
         //*** 新規予約登録画面への遷移 ***//
         if (info[0].equals(NONE)) {
-          Log.d("call", "新規予約登録画面への遷移");
+          Log.d(CALL, "新規予約登録画面への遷移");
           Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
           //*** オブジェクト渡しがエラーのため、コメアウト ***//
 //                    intent.putExtra("emp", employee);                           //*** 社員インスタンスをインテント渡し ***//
@@ -435,7 +435,7 @@ public class ReserveListActivity extends AppCompatActivity
 
           startActivity(intent);  //*** 新規予約登録画面 ***//
         } else {
-          Log.d("call", "予約確認画面への遷移");
+          Log.d(CALL, "予約確認画面への遷移");
           Reserve reserve = Reserve.retReserveConfirm(info[1]); //*** 特定した予約IDを基に、予約情報を検索 ***//
 
 //                    intent.putExtra("emp", employee); //*** 不要？ ***//
@@ -458,15 +458,15 @@ public class ReserveListActivity extends AppCompatActivity
     thread.start();
 
     //*** アプリを立ち上げた日付の、会議をAlarmManagerに登録する ***//
-    Log.d("call", "---------------------------------------------------------");
-    Log.d("call", String.format("アプリを立ち上げた[%s] の日付の会議をAlarmManagerに登録していくよー", arl_txt_date.getText().toString()));
+    Log.d(CALL, "---------------------------------------------------------");
+    Log.d(CALL, String.format("アプリを立ち上げた[%s] の日付の会議をAlarmManagerに登録していくよー", arl_txt_date.getText().toString()));
     //*** onResume()は何度も呼ばれるので、最終的には、新規で、追加されたアプリ起動時の日付の会議”だけ”を ***//
     //*** AlarmManager に  追加するロジックにしよう！***//
 
     //*** AlarmManager登録メソッド ***//
     registAlarmManager(arl_txt_date.getText().toString());
 
-    Log.d("call", "---------------------------------------------------------");
+    Log.d(CALL, "---------------------------------------------------------");
 
   }
 
@@ -485,7 +485,7 @@ public class ReserveListActivity extends AppCompatActivity
     Object o = imei.getEmployeeInfo(); // 端末IMEIから、社員クラスのインスタンスを生成
     if (o != null) {
       employee = (Employee) o;
-      Log.d("call", employee.toString());
+      Log.d(CALL, employee.toString());
     }
   }
 

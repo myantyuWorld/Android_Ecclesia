@@ -15,6 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+
 public class Util {
 
   public static final int COLUMN_INDEX = 1;
@@ -42,11 +44,11 @@ public class Util {
    * @param args
    */
   public static void easyLog(String args) {
-    Log.d("call", "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/");
-    Log.d("call", "_/");
-    Log.d("call", "_/                   " + args);
-    Log.d("call", "_/");
-    Log.d("call", "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/");
+    Log.d(CALL, "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/");
+    Log.d(CALL, "_/");
+    Log.d(CALL, "_/                   " + args);
+    Log.d(CALL, "_/");
+    Log.d(CALL, "_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/");
   }
 
   /***
@@ -55,8 +57,8 @@ public class Util {
    * @return 検索した部署名（ヒットなしは 空文字を返す ）
    */
   public static String returnDepartName(String dep_id) {
-    Log.d("call", "call returnDepartName()");
-    Log.d("call", dep_id);
+    Log.d(CALL, "call returnDepartName()");
+    Log.d(CALL, dep_id);
     SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getReadableDatabase();
 
@@ -183,7 +185,7 @@ public class Util {
    * @return
    */
   public static String returnMaxReserveId() {
-    Log.d("call", "call Util.returnMaxReserveId()");
+    Log.d(CALL, "call Util.returnMaxReserveId()");
     SQLiteOpenHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getReadableDatabase();
 
@@ -192,11 +194,11 @@ public class Util {
     Cursor c = db.rawQuery("select max(re_id) + 1 from t_reserve", null);
     if (c.moveToNext()) {
       maxReserveId = c.getString(0);          //*** 検索結果の代入（ここでは、未だ０埋めされていない） ***//
-      Log.d("call", maxReserveId);
+      Log.d(CALL, maxReserveId);
     }
     c.close();
 
-    Log.d("call", String.format("新しい、予約ID : %04d", Integer.valueOf(maxReserveId)));
+    Log.d(CALL, String.format("新しい、予約ID : %04d", Integer.valueOf(maxReserveId)));
     return String.format("%04d", Integer.valueOf(maxReserveId));        //*** 書式指定付きで、０埋めして返す (ex: 0018) ***//
   }
 

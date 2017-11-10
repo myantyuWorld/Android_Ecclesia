@@ -47,12 +47,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -85,7 +80,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     // ダイアログを生成するメソッド
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-      Log.d("call", "call MemberConfirmDialog->onCreateDialog()");
+      Log.d(CALL, "call MemberConfirmDialog->onCreateDialog()");
       // 会議参加者データ
 //            CharSequence[] items = reserve.getRe_member().toArray(new CharSequence[reserve.getRe_member().size()]);
       CharSequence[] items;                       //***  ***//
@@ -336,7 +331,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
   //*** onCreate ***//
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    Log.d("call", "ReserveConfirmActivity->onCreate()");
+    Log.d(CALL, "ReserveConfirmActivity->onCreate()");
 
 //        helper = new DB(getApplicationContext());
 
@@ -344,7 +339,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     Intent intent = getIntent();
     gamen = intent.getStringExtra("gamen").contains("0") ? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***//
 
-    Log.d("call", "画面遷移元　" + gamen);
+    Log.d(CALL, "画面遷移元　" + gamen);
     //*** 画面遷移元によって、処理を分ける ***//
     if (gamen.contains("新規")) {    //*** 「新規」画面からの画面遷移 ***//
       employee = (Employee) intent.getSerializableExtra("emp");        //*** 社員情報の取得 ***//
@@ -498,7 +493,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
           //*** 次画面（ReserveChangeActivity）に予約インスタンスを渡す ***//
           intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
           intent.putExtra(KEYCHANGE, reserve);
-          Log.d("sent change Emp:", employee.toString());
+          Log.d(CALL, employee.toString());
           intent.putExtra("employee", employee);
 //                    intent.putExtra(KEYCHANGE, re_id);
           startActivity(intent);
@@ -511,7 +506,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
           //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
           intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
           intent.putExtra(KEYCHANGE, reserve);
-          Log.d("sent change Emp:", employee.toString());
+          Log.d(CALL, employee.toString());
           intent.putExtra("employee", employee);
           startActivity(intent);
         }
@@ -624,7 +619,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
   //*** --- SELF MADE METHOD --- 参加者確認ボタン押下時の処理 ***//
   public void onClickMemConfirm(View view) {
-    Log.d("call", "btn_confirm_member->onClick()");
+    Log.d(CALL, "btn_confirm_member->onClick()");
     //*** 参加者一覧ダイアログを表示する ***//
     MemberConfirmDialog dialog = new MemberConfirmDialog();
     dialog.show(getFragmentManager(), "confirm_a");
@@ -633,7 +628,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
   //*** --- SELF MADE METHOD --- 確定ボタン押下時の処理 ***//
   @RequiresApi(api = Build.VERSION_CODES.N)
   public void onClickKakutei(View view) {
-    Log.d("call", "call onClickKakutei");
+    Log.d(CALL, "call onClickKakutei");
 
     //*** 新規からの画面遷移でなければ、以降の処理は無効なので、戻る ***//
     if (gamen.contains("一覧")) {
@@ -644,22 +639,22 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     //*** 会議の重複をチェックする ***//
     String resultCode = reserve.timeDuplicationCheck(reserve);
-    if (resultCode.equals("false")) {
+    if (resultCode.equals(FALSE)) {
       //*** 重複あり ***//
-      Log.d("call", "時間の重複が発生！ 処理を抜けます");
+      Log.d(CALL, "時間の重複が発生！ 処理を抜けます");
       return;
-    } else if (resultCode.equals("1")) {    //*** trueの場合 -> "1"  falseの場合 -> "false"  trueは自分が勝った falseは自分が負けた ***//
-        Log.d("ReserveConfirmActivity", "時間重複チェックがtrueだからinsertできる");
+    } else if (resultCode.equals(TRUE)) {    //*** trueの場合 -> "1"  falseの場合 -> "false"  trueは自分が勝った falseは自分が負けた ***//
+        Log.d(CALL, "時間重複チェックがtrueだからinsertできる");
                                                //*** contains("true")となっていたため、どんな時もこのelse ifは通らなかったと思われる ***//
     } else {
-      Log.d("call", "追い出し処理検知！追い出された予約情報を通知します");
-      Log.d("call", "追い出しされる予約IDは" + resultCode);  //*** 現状、resultCodeには予約ＩＤではなく１が入ってきたりしている? ***//
+      Log.d(CALL, "追い出し処理検知！追い出された予約情報を通知します");
+      Log.d(CALL, "追い出しされる予約IDは" + resultCode);  //*** 現状、resultCodeには予約ＩＤではなく１が入ってきたりしている? ***//
                                                                 //*** 上記のelse ifを修正したため、"1"の場合はここにはこない筈 ***//
       notificationEviction(resultCode);
       reserve.eviction(resultCode);
     }
 
-    Log.d("call", "予約ID:" + reserve.getRe_id());
+    Log.d(CALL, "予約ID:" + reserve.getRe_id());
 
     //*** 時間の重複も、優先度チェックも何も必要なし＝＝＞ そのままインサートする ***//
     reserve.reserveCorrenct(setReserveDetail());      //*** 予約テーブル,参加者テーブル へのインサート ***//
@@ -720,7 +715,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
   //*** 追い出し通知を行うメソッド ***//
   private void notificationEviction(String otherReId) {
-    Log.d("call", "call ReserveConfirmActivity.notificationEviction()");
+    Log.d(CALL, "call ReserveConfirmActivity.notificationEviction()");
     Util.easyLog("追い出し検知！ ステータス通知発行！");
 
     //*** 通知で表示する追い出し対象の予約情報を取得する ***//

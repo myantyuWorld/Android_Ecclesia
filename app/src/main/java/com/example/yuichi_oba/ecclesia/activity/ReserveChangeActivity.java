@@ -47,12 +47,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ONE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 
@@ -557,7 +552,7 @@ public class ReserveChangeActivity extends AppCompatActivity
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                             String time = getArguments().getString("time");
-                            Log.d("call", time);
+                            Log.d(CALL, time);
                             if (time.contains("startTime")) {
                                 startTimeBtn.setText(String.format("%02d：%02d", hourOfDay, minute));
                             } else {
