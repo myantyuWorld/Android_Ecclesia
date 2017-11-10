@@ -48,17 +48,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-<<<<<<< HEAD
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ONE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
-=======
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
->>>>>>> syama/master
 
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 

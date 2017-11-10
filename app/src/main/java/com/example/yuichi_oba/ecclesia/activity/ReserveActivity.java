@@ -49,11 +49,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-<<<<<<< HEAD
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-=======
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
->>>>>>> syama/master
 
 //import android.app.Dialog;
 

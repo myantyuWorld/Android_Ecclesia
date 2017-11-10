@@ -35,11 +35,8 @@ import com.example.yuichi_oba.ecclesia.tools.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-=======
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
->>>>>>> syama/master
 
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 /*************************************************************************************

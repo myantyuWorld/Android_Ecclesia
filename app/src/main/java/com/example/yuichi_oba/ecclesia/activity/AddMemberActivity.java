@@ -34,11 +34,8 @@ import com.example.yuichi_oba.ecclesia.tools.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-=======
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
->>>>>>> syama/master
 
 public class AddMemberActivity extends AppCompatActivity
     implements MyInterface {
