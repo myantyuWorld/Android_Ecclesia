@@ -341,6 +341,7 @@ public class Reserve implements Serializable {
 
   //*** 引数の会議日と同じ会議をListで取得する ***//
   private List<Reserve> getSameDayMeeting(Reserve r) {
+    Log.d("getSameDayMeeting", "getSameDayMeeting突入");
 //    MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
     MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getReadableDatabase();
@@ -359,7 +360,7 @@ public class Reserve implements Serializable {
       reserve.setRe_purpose_id(c.getString(13));     //*** 会議目的ID ***//
       reserve.setRe_mem_priority(
           Integer.valueOf(c.getString(9)));      //*** 会議の優先度 ***//
-
+      Log.d("getSameDayMeeting", "取得した予約" + reserve.getRe_startDay());
       list.add(reserve);  //*** インスタンスをリストに追加 ***//
     }
     c.close();
