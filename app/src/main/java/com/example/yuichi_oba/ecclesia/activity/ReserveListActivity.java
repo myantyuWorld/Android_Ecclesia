@@ -317,6 +317,7 @@ public class ReserveListActivity extends AppCompatActivity
             case R.id.nav_rireki:
                 // Intentクラスのインスタンス生成し、画面遷移させる
                 intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
+                intent.putExtra("emproye", employee);
                 startActivity(intent);
                 break;
             // 「管理者認証」が選択されたとき

@@ -66,6 +66,7 @@ public class HistorySearchActivity extends AppCompatActivity
     public static final int GAIYOU = 1;
     public static final int ID = 0;
     public static final String Q_SELECT_HISTORY = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join m_out as a on y.mem_id = a.out_id inner join m_company as b on a.com_id = b.com_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id where x.emp_id = ?";
+    public static final String Q_TEST = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where x.emp_id = ? group by x.re_id";
     public static final String Q_SELECT_MEMBER = "select * from t_member where re_id = ?";
 
     SearchView searchView;
@@ -75,6 +76,7 @@ public class HistorySearchActivity extends AppCompatActivity
     ArrayList<Reserve> listItems;
     private MyHelper helper = new MyHelper(this);
     public static SQLiteDatabase db;
+    private Employee employee;
 
     //*** 社員・社外者の参加者を持つための、ポリモーフィズム使用のための、スーパクラスのリスト ***//
     public static List<Person> member = new ArrayList<>();
@@ -238,7 +240,8 @@ public class HistorySearchActivity extends AppCompatActivity
             ((TextView) convertView.findViewById(R.id.txt_date)).setText(item.getRe_startDay());
             ((TextView) convertView.findViewById(R.id.txt_overview)).setText(item.getRe_name());
             ((TextView) convertView.findViewById(R.id.txt_company)).setText(item.getRe_company());
-            ((TextView) convertView.findViewById(R.id.txt_member)).setText(item.getRe_mem());
+            ((TextView) convertView.findViewById(R.id.txt_member)).setText(String.format("%s,他 %d名",item.getRe_member().get(0).getName(),item.getRe_member().size()));
+            ///*** string.format("%s ,他 %d名",member.get(0).getname, ***//
             return convertView;
         }
 
@@ -279,6 +282,9 @@ public class HistorySearchActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "HistorySearchActivity->onCreate()");
+        Intent intent = getIntent();
+        employee = (Employee) intent.getSerializableExtra("emproye");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -298,7 +304,7 @@ public class HistorySearchActivity extends AppCompatActivity
         SQLiteDatabase db_list = helper.getReadableDatabase();
         db = helper.getReadableDatabase();
 
-        Cursor c = db.rawQuery(Q_SELECT_HISTORY, new String[]{"0001"});
+        Cursor c = db.rawQuery(Q_TEST, new String[]{employee.getEmp_id()});
         //会社用のデータベース
         ArrayList<Reserve> reserves = new ArrayList<>();
 
@@ -318,8 +324,8 @@ public class HistorySearchActivity extends AppCompatActivity
 
             //li.setRe_member(member);
 //            reserve.setRe_mem(c.getString(COM_MEMBER));
-            reserve.setRe_company(c.getString(26));
-            reserve.setRe_purpose_name(c.getString(28));
+            reserve.setRe_company(c.getString(30));
+            reserve.setRe_purpose_name(c.getString(25));
             Log.d("call", (c.getString(GAIYOU)) + " : " + c.getString(DAY) + " : " + c.getString(26) + " : " + c.getString(28) + " : " + c.getString(COM_MEMBER));
             // addするメソッドを書く
             reserves.add(reserve);
@@ -327,7 +333,7 @@ public class HistorySearchActivity extends AppCompatActivity
 
         c.close();
         reserves.forEach(r -> {
-            r.setRe_member(Util.retHistoryPesonsList("0001"));
+            r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
         });
         //リストに表示するデータを準備
 //        String pupose[] = {"定例会","商談"};
@@ -396,7 +402,7 @@ public class HistorySearchActivity extends AppCompatActivity
         //データベース検索(会社名)
         companiesy = new ArrayList<>();
         List<String> strings1 = new ArrayList<>();
-        Cursor cursor = db.rawQuery("select * from m_company", new String[]{});
+        Cursor cursor = db.rawQuery("select * from m_company",null);
         while (cursor.moveToNext()) {
             strings1.add(cursor.getString(1));
             Log.d("call", cursor.getString(1));
