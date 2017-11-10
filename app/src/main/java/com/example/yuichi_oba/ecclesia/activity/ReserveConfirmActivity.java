@@ -66,6 +66,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
 public class ReserveConfirmActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String NON_AUTH = "0";
     private MyHelper helper = new MyHelper(this);
     private static SQLiteDatabase db;
 
@@ -645,8 +646,6 @@ public class ReserveConfirmActivity extends AppCompatActivity
     public void onClickKakutei(View view) {
         Log.d("call", "call onClickKakutei");
 
-        // TODO: 2017/11/10 管理者認証済みなら、特権的に、何でもできちゃうロジックを実装せよ
-
         //*** 新規からの画面遷移でなければ、以降の処理は無効なので、戻る ***//
         if (gamen.contains("一覧")) {
             finish();
@@ -654,37 +653,42 @@ public class ReserveConfirmActivity extends AppCompatActivity
         }
         //*** --------------------------------------------------- ***//
 
-        //*** 会議の重複をチェックする ***//
-        String resultCode = reserve.timeDuplicationCheck(reserve);
-        if (resultCode.contains("false")) {
-            //*** 重複あり ***//
-            Log.d("call", "時間の重複が発生！ 処理を抜けます");
-            return;
-        } else if (resultCode.contains("true")) {
-            ;
-        } else {
-            Log.d("call", "追い出し処理検知！追い出された予約情報を通知します");
-            Log.d("call", "追い出しされる予約IDは" + resultCode);
-            notificationEviction(resultCode);
-            reserve.eviction(resultCode);
+
+        // TODO: 2017/11/10 管理者認証済みなら、特権的に、何でもできちゃうロジックを実装せよ
+        //***   管理者認証されていない --> 時間の重複、優先度のチェックを行う***//
+        if (authFlg.contains(NON_AUTH)) {
+            //*** 会議の重複をチェックする ***//
+            String resultCode = reserve.timeDuplicationCheck(reserve);
+            if (resultCode.contains("false")) {
+                //*** 重複あり ***//
+                Log.d("call", "時間の重複が発生！ 処理を抜けます");
+                return;
+            } else if (resultCode.contains("1")) {
+                ;
+            } else {
+                Log.d("call", "追い出し処理検知！追い出された予約情報を通知します");
+                Log.d("call", "追い出しされる予約IDは" + resultCode);
+                notificationEviction(resultCode);
+                reserve.eviction(resultCode);
+            }
+
+            Log.d("call", "予約ID:" + reserve.getRe_id());
+            //*** 時間の重複も、優先度チェックも何も必要なし＝＝＞ そのままインサートする ***//
+            reserve.reserveCorrenct(setReserveDetail());     //*** 予約テーブル,参加者テーブル へのインサート ***//
+            reserve = null;                                  //*** 予約を確定したので、reserveをnullにする ***//
         }
-
-        Log.d("call", "予約ID:" + reserve.getRe_id());
-
-        //*** 時間の重複も、優先度チェックも何も必要なし＝＝＞ そのままインサートする ***//
-        reserve.reserveCorrenct(setReserveDetail());      //*** 予約テーブル,参加者テーブル へのインサート ***//
-
-        //*** 予約を確定したので、reserveをnullにする ***//
-        reserve = null;
-
-        //*** 追い出しフラグが立っていたら、通知を発行する ***//
-        evictionFlg = true; //*** 実験用に、フラグを立てる ***//
-        // TODO: 2017/11/04 実験用 -----
-        if (evictionFlg) {
-            notificationEviction("0001"); //*** 通知発行メソッドコール ***//
-            evictionFlg = false;
+        //*** 管理者認証ずみ ***//
+        else {
+            //*** 追い出す会議だけ特定して、ヘッドアップ通知を行う ※時間重複も、優先度も関係なし ***//
+            String resultCode = reserve.timeDuplicationCheck(reserve);
+            if (!resultCode.contains("1") && !resultCode.contains("false")) {
+                notificationEviction(resultCode);            //*** 会議追い出し"通知"を行う ***//
+                reserve.eviction(resultCode);                //*** 会議の追い出しを行う ***//
+            }
+            //*** 会議をインサートする ***//
+            reserve.reserveCorrenct(setReserveDetail());
+            reserve = null;
         }
-        // TODO: 2017/11/04 ----- ここまで
 
         //*** 画面を殺す 結果を、ReserveActivityに返す ***//
         Intent intent = new Intent();
