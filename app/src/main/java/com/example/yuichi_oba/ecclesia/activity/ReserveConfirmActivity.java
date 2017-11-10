@@ -48,6 +48,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+<<<<<<< HEAD
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
@@ -55,6 +56,9 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
+=======
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+>>>>>>> syama/master
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -72,6 +76,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     //***  ***//
 //    public static Reserve reserve;
+<<<<<<< HEAD
     private Employee employee;
     public static String re_id;
     public static String gamen;
@@ -90,6 +95,26 @@ public class ReserveConfirmActivity extends AppCompatActivity
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             Log.d("call", "call MemberConfirmDialog->onCreateDialog()");
             // 会議参加者データ
+=======
+  private Employee employee;
+  public static String re_id;
+  public static String gamen;
+  public static Reserve reserve;
+  public static boolean evictionFlg = false;
+  private Button btn_confirm;
+  // 内部クラスからgetApplicationContextするためのやつ(普通にやるとno-staticで怒られる)
+  private static ReserveConfirmActivity instance = null;
+  // デバッグ用
+  private static final String TAG = ReserveConfirmActivity.class.getSimpleName();
+
+  //*** 会議参加者をリスト形式で出す、ダイアログフラグメントクラス ***//
+  public static class MemberConfirmDialog extends DialogFragment {
+    // ダイアログを生成するメソッド
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+      Log.d(CALL, "call MemberConfirmDialog->onCreateDialog()");
+      // 会議参加者データ
+>>>>>>> syama/master
 //            CharSequence[] items = reserve.getRe_member().toArray(new CharSequence[reserve.getRe_member().size()]);
             CharSequence[] items;                       //***  ***//
             List<String> list = new ArrayList<>();      //***  ***//
@@ -207,6 +232,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //    }
 //  }
 
+<<<<<<< HEAD
     public static class ResultDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -220,6 +246,21 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     title = "早期退出完了";
                     str = "早期退出が完了しました";
                     break;
+=======
+  public static class ResultDialog extends DialogFragment {
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+      String str = EMPTY, title = EMPTY;
+      switch (getArguments().getString("result")) {
+        case "ex":
+          title = EX + COMPLETE;
+          str = EX + GA + RUNMESSAGE;
+          break;
+        case "ear":
+          title = EARLY + COMPLETE;
+          str = EARLY + GA + RUNMESSAGE;
+          break;
+>>>>>>> syama/master
 //        case "change":
 //          title = "変更完了";
 //          str = "変更が完了しました";
@@ -336,10 +377,17 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     //*** 参加者をリスト形式で、表示するためのダイアログフラグメントクラス ***//
 
+<<<<<<< HEAD
     //*** onCreate ***//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "ReserveConfirmActivity->onCreate()");
+=======
+  //*** onCreate ***//
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    Log.d(CALL, "ReserveConfirmActivity->onCreate()");
+>>>>>>> syama/master
 
 //        helper = new DB(getApplicationContext());
 
@@ -347,11 +395,19 @@ public class ReserveConfirmActivity extends AppCompatActivity
         Intent intent = getIntent();
         gamen = intent.getStringExtra("gamen").contains("0") ? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***//
 
+<<<<<<< HEAD
         Log.d("call", "画面遷移元　" + gamen);
         //*** 画面遷移元によって、処理を分ける ***//
         if (gamen.contains("新規")) {    //*** 「新規」画面からの画面遷移 ***//
             employee = (Employee) intent.getSerializableExtra("emp");        //*** 社員情報の取得 ***//
             reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
+=======
+    Log.d(CALL, "画面遷移元　" + gamen);
+    //*** 画面遷移元によって、処理を分ける ***//
+    if (gamen.contains("新規")) {    //*** 「新規」画面からの画面遷移 ***//
+      employee = (Employee) intent.getSerializableExtra("emp");        //*** 社員情報の取得 ***//
+      reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
+>>>>>>> syama/master
 
         } else {                         //*** 「一覧」画面からの画面遷移 ***//
             reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
@@ -492,6 +548,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //        for (String day : startDay) {
 //
 //        }
+<<<<<<< HEAD
                 try {
                     //*** 変更しようとしている会議の開始時間をセット ***//
                     start.setTime(timeFormat.parse(reserve.getRe_startDay() + " " + reserve.getRe_startTime()));
@@ -507,6 +564,23 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     intent.putExtra(KEYCHANGE, reserve);
                     Log.d("sent change Emp:", employee.toString());
                     intent.putExtra("employee", employee);
+=======
+        try {
+          //*** 変更しようとしている会議の開始時間をセット ***//
+          start.setTime(timeFormat.parse(reserve.getRe_startDay() + " " + reserve.getRe_startTime()));
+        } catch (ParseException e) {
+          e.getStackTrace();
+          break;
+        }
+        //*** 変更しようとしている会議が現在日付・時刻に矛盾していないか ***//
+        if (cal.get(Calendar.YEAR) < start.get(Calendar.YEAR) || (cal.get(Calendar.YEAR) == start.get(Calendar.YEAR) && cal.get(Calendar.MONTH) < start.get(Calendar.MONTH))
+                || (cal.get(Calendar.YEAR) == start.get(Calendar.YEAR) && cal.get(Calendar.MONTH) == start.get(Calendar.MONTH) && cal.get(Calendar.DAY_OF_MONTH) <= start.get(Calendar.DAY_OF_MONTH))) {
+          //*** 次画面（ReserveChangeActivity）に予約インスタンスを渡す ***//
+          intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
+          intent.putExtra(KEYCHANGE, reserve);
+          Log.d(CALL, employee.toString());
+          intent.putExtra("employee", employee);
+>>>>>>> syama/master
 //                    intent.putExtra(KEYCHANGE, re_id);
                     startActivity(intent);
                 } else {
@@ -514,6 +588,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //                        @Override
 //                        public void onClick(DialogInterface dialog, int which) {}
 //                    }).create().show();
+<<<<<<< HEAD
                     Toast.makeText(this, "変更できる会議ではありません", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
                     intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
@@ -522,6 +597,16 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     intent.putExtra("employee", employee);
                     startActivity(intent);
                 }
+=======
+          Toast.makeText(this, "変更できる会議ではありません", Toast.LENGTH_SHORT).show();
+          //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
+          intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
+          intent.putExtra(KEYCHANGE, reserve);
+          Log.d(CALL, employee.toString());
+          intent.putExtra("employee", employee);
+          startActivity(intent);
+        }
+>>>>>>> syama/master
 //                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
                 break;
             // 「延長」が選択された
@@ -633,6 +718,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //        return instance;
 //    }
 
+<<<<<<< HEAD
     //*** --- SELF MADE METHOD --- 参加者確認ボタン押下時の処理 ***//
     public void onClickMemConfirm(View view) {
         Log.d("call", "btn_confirm_member->onClick()");
@@ -640,6 +726,61 @@ public class ReserveConfirmActivity extends AppCompatActivity
         MemberConfirmDialog dialog = new MemberConfirmDialog();
         dialog.show(getFragmentManager(), "confirm_a");
     }
+=======
+  //*** --- SELF MADE METHOD --- 参加者確認ボタン押下時の処理 ***//
+  public void onClickMemConfirm(View view) {
+    Log.d(CALL, "btn_confirm_member->onClick()");
+    //*** 参加者一覧ダイアログを表示する ***//
+    MemberConfirmDialog dialog = new MemberConfirmDialog();
+    dialog.show(getFragmentManager(), "confirm_a");
+  }
+
+  //*** --- SELF MADE METHOD --- 確定ボタン押下時の処理 ***//
+  @RequiresApi(api = Build.VERSION_CODES.N)
+  public void onClickKakutei(View view) {
+    Log.d(CALL, "call onClickKakutei");
+
+    //*** 新規からの画面遷移でなければ、以降の処理は無効なので、戻る ***//
+    if (gamen.contains("一覧")) {
+      finish();
+      return;
+    }
+    //*** --------------------------------------------------- ***//
+
+    //*** 会議の重複をチェックする ***//
+    String resultCode = reserve.timeDuplicationCheck(reserve);
+    if (resultCode.equals(FALSE)) {
+      //*** 重複あり ***//
+      Log.d(CALL, "時間の重複が発生！ 処理を抜けます");
+      return;
+    } else if (resultCode.equals(TRUE)) {    //*** trueの場合 -> "1"  falseの場合 -> "false"  trueは自分が勝った falseは自分が負けた ***//
+        Log.d(CALL, "時間重複チェックがtrueだからinsertできる");
+                                               //*** contains("true")となっていたため、どんな時もこのelse ifは通らなかったと思われる ***//
+    } else {
+      Log.d(CALL, "追い出し処理検知！追い出された予約情報を通知します");
+      Log.d(CALL, "追い出しされる予約IDは" + resultCode);  //*** 現状、resultCodeには予約ＩＤではなく１が入ってきたりしている? ***//
+                                                                //*** 上記のelse ifを修正したため、"1"の場合はここにはこない筈 ***//
+      notificationEviction(resultCode);
+      reserve.eviction(resultCode);
+    }
+
+    Log.d(CALL, "予約ID:" + reserve.getRe_id());
+
+    //*** 時間の重複も、優先度チェックも何も必要なし＝＝＞ そのままインサートする ***//
+    reserve.reserveCorrenct(setReserveDetail());      //*** 予約テーブル,参加者テーブル へのインサート ***//
+
+    //*** 予約を確定したので、reserveをnullにする ***//
+    reserve = null;
+
+    //*** 追い出しフラグが立っていたら、通知を発行する ***//
+//    evictionFlg = true; //*** 実験用に、フラグを立てる ***//
+//    // TODO: 2017/11/04 実験用 -----
+//    if (evictionFlg) {
+//      notificationEviction("0001"); //*** 通知発行メソッドコール ***//
+//      evictionFlg = false;
+//    }
+    // TODO: 2017/11/04 ----- ここまで
+>>>>>>> syama/master
 
     //*** --- SELF MADE METHOD --- 確定ボタン押下時の処理 ***//
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -731,6 +872,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
         //*** 参加者の優先度合計の平均を算出してその値を返す ***//
         return sumPriority / reserve.getRe_member().size();
     }
+<<<<<<< HEAD
 
     //*** 追い出し通知を行うメソッド ***//
     private void notificationEviction(String otherReId) {
@@ -781,5 +923,33 @@ public class ReserveConfirmActivity extends AppCompatActivity
         Notification notification = builder.build();
         NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
         manager.notify(123, notification);
+=======
+    //*** 参加者の優先度合計の平均を算出してその値を返す ***//
+    return sumPriority / reserve.getRe_member().size();
+  }
+
+  //*** 追い出し通知を行うメソッド ***//
+  private void notificationEviction(String otherReId) {
+    Log.d(CALL, "call ReserveConfirmActivity.notificationEviction()");
+    Util.easyLog("追い出し検知！ ステータス通知発行！");
+
+    //*** 通知で表示する追い出し対象の予約情報を取得する ***//
+    db = helper.getWritableDatabase();
+    Cursor c = db.rawQuery("select * from v_reserve_member where re_id = ?", new String[]{otherReId});
+    Reserve r = new Reserve();
+    if (c.moveToNext()) {
+      //*** 追い出し対象の予約インスタンスを生成 ***//
+      r.setRe_id(otherReId);         //*** 予約ID ***//
+      r.setRe_name(c.getString(1));           //*** 概要 ***//
+      r.setRe_startDay(c.getString(2));       //*** 開始日時 ***//
+      r.setRe_endDay(c.getString(3));         //*** 終了日時 ***//
+      r.setRe_startTime(c.getString(4));      //*** 開始時刻 ***//
+      r.setRe_endTime(c.getString(5));        //*** 終了時刻 ***/
+      r.setRe_switch(c.getString(6));         //*** 社内社外区分 ***//
+      r.setRe_fixtures(c.getString(7));       //*** 備品 ***//
+      r.setRe_remarks(c.getString(8));        //*** 備考 ***//
+      r.setRe_room_id(c.getString(10));       //*** 会議室ID ***//
+      r.setRe_purpose_name(c.getString(19));  //*** 会議目的名 ***//
+>>>>>>> syama/master
     }
 }

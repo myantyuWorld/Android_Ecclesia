@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
+
 /**
  * Created by yuichi_develop on 2017/11/06.
  */
@@ -19,7 +21,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    Log.d("call", "call AlramReceiver.onReceive()");
+    Log.d(CALL, "call AlramReceiver.onReceive()");
     NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
     int id = intent.getIntExtra(NOTIFICATION_ID, 0);
     String content = intent.getStringExtra(NOTIFICATION_CONTENT);

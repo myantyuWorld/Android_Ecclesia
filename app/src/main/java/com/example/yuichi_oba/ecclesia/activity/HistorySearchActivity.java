@@ -35,7 +35,11 @@ import com.example.yuichi_oba.ecclesia.tools.Util;
 import java.util.ArrayList;
 import java.util.List;
 
+<<<<<<< HEAD
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
+=======
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+>>>>>>> syama/master
 
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 /*************************************************************************************
@@ -266,7 +270,7 @@ public class HistorySearchActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("call", "HistorySearchActivity->onCreate()");
+        Log.d(CALL, "HistorySearchActivity->onCreate()");
         super.onCreate(savedInstanceState);
         //*** 管理者認証済みだったら、テーマを変更する ***//
         if (Util.isAuthAdmin(authFlg)) {
@@ -311,7 +315,7 @@ public class HistorySearchActivity extends AppCompatActivity
             p.setName(c_list.getString(COM_MEMBER));
             li.setRe_company(c_list.getString(26));
             li.setRe_purpose_name(c_list.getString(28));
-            Log.d("call", (c_list.getString(GAIYOU)) + " : " + c_list.getString(DAY) + " : " + c_list.getString(26) + " : " + c_list.getString(28) + " : " + c_list.getString(COM_MEMBER));
+            Log.d(CALL, (c_list.getString(GAIYOU)) + " : " + c_list.getString(DAY) + " : " + c_list.getString(26) + " : " + c_list.getString(28) + " : " + c_list.getString(COM_MEMBER));
             // addするメソッドを書く
             listItems.add(li);
         }
@@ -349,13 +353,13 @@ public class HistorySearchActivity extends AppCompatActivity
             Purpose p = new Purpose();
             p.setPur_id(c.getString(0));
             p.setPur_name(c.getString(1));
-            Log.d("call", c.getString(0) + " : " + c.getString(1));
+            Log.d(CALL, c.getString(0) + " : " + c.getString(1));
             purpose.add(p);
         }
         c.close();
 
         for(String s:strings){
-            Log.d("call",s);
+            Log.d(CALL,s);
         }
         //スピナーを取得
         Spinner sp = (Spinner) findViewById(R.id.ahs_sp_purpose);
@@ -372,7 +376,7 @@ public class HistorySearchActivity extends AppCompatActivity
 
                 Toast.makeText(HistorySearchActivity.this,String.format("選択目的 : %s",sp.getSelectedItem()),
                         Toast.LENGTH_SHORT).show();
-                Log.d("call","");
+                Log.d(CALL,"");
             }
             //項目が選択されなかったときの処理(今は空)
             @Override
@@ -385,7 +389,7 @@ public class HistorySearchActivity extends AppCompatActivity
         Cursor cursor = db.rawQuery("select * from m_company", new String[]{});
         while (cursor.moveToNext()) {
             strings1.add(cursor.getString(1));
-            Log.d("call",cursor.getString(1));
+            Log.d(CALL,cursor.getString(1));
         }
 
         //スピナーを取得
@@ -394,7 +398,7 @@ public class HistorySearchActivity extends AppCompatActivity
         ArrayAdapter<String> adapter_com = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item,strings1);
         sp_company.setAdapter(adapter_com);
-        Log.d("call", "");
+        Log.d(CALL, "");
         //スピナーに対してのイベントリスナーを登録
         sp_company.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -422,7 +426,7 @@ public class HistorySearchActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //*** 中身はまだ考え中 ***//
-                Log.d("call","履歴確認画面への遷移");
+                Log.d(CALL,"履歴確認画面への遷移");
 
         //        Reserve reserve = Reserve.retReserveConfirm(re_id);
                 CharSequence msg = ((TextView) view).getText();
@@ -448,7 +452,7 @@ public class HistorySearchActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                Toast.makeText(HistorySearchActivity.this, adapter1.getItem(position).toString(), Toast.LENGTH_SHORT).show();
-                Log.d("call", adapter1.getItem(position).toString());
+                Log.d(CALL, adapter1.getItem(position).toString());
 
 
             }
