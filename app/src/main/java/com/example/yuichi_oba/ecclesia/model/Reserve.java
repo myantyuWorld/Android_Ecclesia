@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 /**
  * Created by Yuichi-Oba on 2017/09/15.
@@ -34,8 +34,6 @@ public class Reserve implements Serializable {
   public static final int MINUTE = 4;
   public static final String SYANAI = "0";
   public static final String SYAGAI = "1";
-  public static final String TRUE = "1";
-  public static final String FALSE = "false";
   //    private MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
   public static SQLiteDatabase db;
 
@@ -235,25 +233,29 @@ public class Reserve implements Serializable {
   //*** --- SELF MADE METHOD --- 会議の時間帯の重複をチェックするメソッド ***//
   public String timeDuplicationCheck(Reserve r) {
     Util.easyLog("Reserve SELF MADE METHOD");
-    Log.d("call", "call Reserve.timeDuplicateCheck()");
+    Log.d(CALL, "call Reserve.timeDuplicateCheck()");
     //*** 引数の会議日と同じ会議をListで取得する ***//
     List<Reserve> list = getSameDayMeeting(r);
 
     //*** その日の同じ会議室で会議がない ***//
     if (list.size() == 0) return TRUE;        //*** 時間の重複なしを返す ***//
+                                                //***  ***/
 
     //*** 開始時刻からみて、同じ時間帯に会議があるかチェック ***//
-    for (Reserve other : list) {
+    for (Reserve other : list) {      //*** 同じ日付の会議リストをループ ***//
       //*** 同じ時間帯かチェック ***//
       // (year, month, date, hour, minute) monthの範囲は0-11で1月は0
-      int[] starts = argsStartIntValue(other);    //***  ***//
-      int[] ends = argsEndIntValue(other);        //***  ***//
+      int[] starts = argsStartIntValue(other);    //*** 同じ日付の会議の開始時刻 ***//
+      int[] ends = argsEndIntValue(other);        //*** 同じ日付の会議の終了時刻 ***//
 
       Calendar startTime = new GregorianCalendar(starts[YEAR], starts[MONTH], starts[DATE], starts[HOUR], starts[MINUTE]);
       Calendar endTime = new GregorianCalendar(ends[YEAR], ends[MONTH], ends[DATE], ends[HOUR], ends[MINUTE]);
+      Log.d("timeDuplicationCheck", "startTime:" + startTime.get(Calendar.YEAR) + "/" + startTime.get(Calendar.MONTH) + "/" + startTime.get(Calendar.DAY_OF_MONTH));
+      Log.d("timeDuplicationCheck", "endTime:" + endTime.get(Calendar.YEAR) + "/" + endTime.get(Calendar.MONTH) + "/" + endTime.get(Calendar.DAY_OF_MONTH));
+
       if (!isPeriod(r, startTime, endTime)) {
-        Log.d("call", "時間の重複が発生：（暫定）処理を終了します");
-        Log.d("call", "本来はここで、優先度チェックを行い、追い出し処理を行う");
+        Log.d(CALL, "時間の重複が発生：（暫定）処理を終了します");
+        Log.d(CALL, "本来はここで、優先度チェックを行い、追い出し処理を行う");
         //*** 本来はここで、優先度チェックを行い、追い出し処理を行う priorityCheck()***//
         if (priorityCheck(r, other)) {
           //*** 優先度で「勝ち」==> 追い出し処理を行う eviction()***//
@@ -269,7 +271,7 @@ public class Reserve implements Serializable {
 
   //*** 引数の指定現在時刻が指定時間帯の範囲内かチェックするメソッド ***//
   private boolean isPeriod(Reserve r, Calendar startTime, Calendar endTime) {
-    Log.d("call", "call Reserve.isPeriod()");
+    Log.d(CALL, "call Reserve.isPeriod()");
     //*** 取ろうとしている予約の開始情報 ***//
     Calendar calStart = Calendar.getInstance();
     calStart.set(
@@ -288,20 +290,20 @@ public class Reserve implements Serializable {
         Integer.parseInt(r.getRe_endTime().split("：")[0]), //*** hour ***//
         Integer.parseInt(r.getRe_endTime().split("：")[1])  //*** minute ***//
     );
-    Log.d("call", String.format("今からとる予約の、開始: %s", String.valueOf(calStart.getTime())));
-    Log.d("call", String.format("今からとる予約の、終了: %s", String.valueOf(calEnd.getTime())));
-    Log.d("call", String.format("過去の開始 %s", String.valueOf(startTime.getTime())));
-    Log.d("call", String.format("過去の終了 %s", String.valueOf(endTime.getTime())));
+    Log.d(CALL, String.format("今からとる予約の、開始: %s", String.valueOf(calStart.getTime())));
+    Log.d(CALL, String.format("今からとる予約の、終了: %s", String.valueOf(calEnd.getTime())));
+    Log.d(CALL, String.format("過去の開始 %s", String.valueOf(startTime.getTime())));
+    Log.d(CALL, String.format("過去の終了 %s", String.valueOf(endTime.getTime())));
 
 
     if (calStart.after(startTime) && calStart.before(endTime) && calEnd.after(startTime) && calEnd.before(endTime)) {
       //*** S ---- NOWSTART || NOWEND ---- E のパターン***//
-      Log.d("call", "//*** S ---- NOWSTART || NOWEND ---- E のパターン***// で重複");
+      Log.d(CALL, "//*** S ---- NOWSTART || NOWEND ---- E のパターン***// で重複");
       return false; //*** 重複あり ***//
     }
     if (calStart.before(startTime) && calEnd.after(endTime)) {
       //*** NOWSTART ---- S ---- E ---- NOWEND のパターン***//
-      Log.d("call", "//*** NOWSTART ---- S ---- E ---- NOWEND のパターン***// で重複");
+      Log.d(CALL, "//*** NOWSTART ---- S ---- E ---- NOWEND のパターン***// で重複");
       return false; //*** 重複あり ***//
     }
     return true;  //*** チェックに何も引っかからなかったら、True（重複なし）を返す ***//
@@ -310,7 +312,7 @@ public class Reserve implements Serializable {
   //***  ***//
   private int[] argsStartIntValue(Reserve o) {
     int[] ints = new int[5];
-    Log.d("call", String.format("他の、開始 %s %s", o.getRe_startDay(), o.getRe_startTime()));
+    Log.d(CALL, String.format("他の、開始 %s %s", o.getRe_startDay(), o.getRe_startTime()));
 
     ints[0] = Integer.parseInt(o.getRe_startDay().split("/")[0]);
     ints[1] = Integer.parseInt(o.getRe_startDay().split("/")[1]);
@@ -324,7 +326,7 @@ public class Reserve implements Serializable {
   //***  ***//
   private int[] argsEndIntValue(Reserve o) {
     int[] ints = new int[5];
-    Log.d("call", String.format("他の、終了 %s %s", o.getRe_endDay(), o.getRe_endTime()));
+    Log.d(CALL, String.format("他の、終了 %s %s", o.getRe_endDay(), o.getRe_endTime()));
 
     ints[0] = Integer.parseInt(o.getRe_endDay().split("/")[0]);
     ints[1] = Integer.parseInt(o.getRe_endDay().split("/")[1]);
@@ -337,7 +339,9 @@ public class Reserve implements Serializable {
 
   //*** 引数の会議日と同じ会議をListで取得する ***//
   private List<Reserve> getSameDayMeeting(Reserve r) {
-    MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
+    Log.d("getSameDayMeeting", "getSameDayMeeting突入");
+//    MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
+    MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getReadableDatabase();
     Cursor c = db.rawQuery(
         Q_SAME_DAY_MEETING,
@@ -347,14 +351,14 @@ public class Reserve implements Serializable {
     while (c.moveToNext()) {
       //*** 予約のインスタンスを生成 ***//
       Reserve reserve = new Reserve();
-      reserve.setRe_startDay(c.getString(2));        //*** 開始日時 ***//
-      reserve.setRe_endDay(c.getString(3));          //*** 終了日時 ***//
+      reserve.setRe_startDay(c.getString(2));        //*** 開始日 ***//
+      reserve.setRe_endDay(c.getString(3));          //*** 終了日 ***//
       reserve.setRe_startTime(c.getString(4));       //*** 開始時刻 ***//
       reserve.setRe_endTime(c.getString(5));         //*** 終了時刻 ***//
       reserve.setRe_purpose_id(c.getString(13));     //*** 会議目的ID ***//
       reserve.setRe_mem_priority(
           Integer.valueOf(c.getString(9)));      //*** 会議の優先度 ***//
-
+      Log.d("getSameDayMeeting", "取得した予約" + reserve.getRe_startDay());
       list.add(reserve);  //*** インスタンスをリストに追加 ***//
     }
     c.close();
@@ -366,15 +370,17 @@ public class Reserve implements Serializable {
   //*** --- SELF MADE METHOD --- 優先度をチェックするメソッド  ***//
   //*** true : 勝ち false : 負け                            ***//
   public boolean priorityCheck(Reserve r, Reserve o) {
+    Log.d(CALL, "call Reserve->priorityCheck()");
+
     //*** 自分が「社内利用」で 他が「社外利用」 ***//
     if (r.getRe_switch().contains(SYANAI) && o.getRe_switch().contains(SYAGAI)) {
       return false;
     }
     //*** 優先度値を比較する 自分 ＜ 他 ***//
-    Log.d("call", String.format("myPriority : %s", r.getRe_mem_priority()));  // TODO: 2017/11/07 こっちNULLで来ることがある
-    Log.d("call", String.format("otherPriority : %s", o.getRe_mem_priority()));
+    Log.d(CALL, String.format("myPriority : %s", r.getRe_mem_priority()));  // DO: 2017/11/07 こっちNULLで来ることがある
+    Log.d(CALL, String.format("otherPriority : %s", o.getRe_mem_priority()));
 
-    // TODO: 2017/11/07 初期データの会議に優先度つけていない？
+    // DO: 2017/11/07 初期データの会議に優先度つけていない？
     if (r.getRe_mem_priority() < o.getRe_mem_priority()) {
       return false;
     }
@@ -383,7 +389,7 @@ public class Reserve implements Serializable {
 
   //*** --- SELF MADE METHOD --- 予約を確定するメソッド ***//
   public int reserveCorrenct(float priorityAverage) {
-    Log.d("call", "call Reserve.reserveCorrect()");
+    Log.d(CALL, "call Reserve.reserveCorrect()");
     //*** 申請者の氏名－＞ 社員IDに変換して、予約インスタンスにセットする ***//
     this.setRe_applicant(Util.returnEmpId(this.getRe_applicant()));
     MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
@@ -393,7 +399,7 @@ public class Reserve implements Serializable {
     db = helper.getWritableDatabase();
 
     //*** 予約テーブルへのインサート ***//
-    Log.d("call", "予約テーブルへのインサート開始");
+    Log.d(CALL, "予約テーブルへのインサート開始");
     db.beginTransaction();
     try {
       try (SQLiteStatement st = db.compileStatement("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
@@ -418,10 +424,10 @@ public class Reserve implements Serializable {
     } finally {
       db.endTransaction();
     }
-    Log.d("call", "予約テーブルへのインサート終了");
+    Log.d(CALL, "予約テーブルへのインサート終了");
 
     //*** 参加者テーブルへのインサート ***//
-    Log.d("call", "参加者テーブルへのインサート開始");
+    Log.d(CALL, "参加者テーブルへのインサート開始");
     db.beginTransaction();
     SQLiteStatement st = db.compileStatement("insert into t_member values (?, ?)");
     for (Person m : this.getRe_member()) {
@@ -430,19 +436,19 @@ public class Reserve implements Serializable {
       //***  ***//
       if (m instanceof Employee) {
         mem_id = ((Employee) m).getEmp_id();
-        Log.d("call", String.format("社内mem_id : %s", mem_id));
+        Log.d(CALL, String.format("社内mem_id : %s", mem_id));
       }
       //***  ***//
       else if (m instanceof OutEmployee) {
         mem_id = ((OutEmployee) m).getOut_id();
-        Log.d("call", String.format("社外mem_id : %s", mem_id));
+        Log.d(CALL, String.format("社外mem_id : %s", mem_id));
       }
       st.bindString(2, mem_id);
       st.executeInsert();
     }
     db.setTransactionSuccessful();
     db.endTransaction();
-    Log.d("call", "参加者テーブルへのインサート終了");
+    Log.d(CALL, "参加者テーブルへのインサート終了");
 
 
     return 1;

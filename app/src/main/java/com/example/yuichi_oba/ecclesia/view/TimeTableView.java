@@ -29,18 +29,13 @@ import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.MAX_WIDTH;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ROOM_A;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ROOM_B;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ROOM_C;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.TOKUBETSU;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 /**
  * Created by Yuichi-Oba on 2017/08/28.
  */
 
+// TODO: 2017/11/07 タップした会議を正しく探索できていない？タップしたところと違う会議情報が表示されることがある
 public class TimeTableView extends View implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
   //*** 早期退出」オプション選択時の ダイアログフラグメントクラス ***//
@@ -82,7 +77,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             public void onClick(DialogInterface dialog, int which) {
               //*** Bundle で渡された引数を取得する ***//
               String re_id = savedInstanceState.getString("re_id");
-              Log.d("call", "引数で渡された予約ID : " + re_id);
+              Log.d(CALL, "引数で渡された予約ID : " + re_id);
 
               //*** 予約のキャンセル処理を行う ***//
               SQLiteOpenHelper helper = new MyHelper(getContext());
@@ -90,7 +85,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
               //*** 予約レコードの削除を行うSQL実行 ***//
               int result = db.delete("t_reserve", "re_id = ?", new String[]{re_id});
-              Log.d("call", "処理件数 : " + result);
+              Log.d(CALL, "処理件数 : " + result);
             }
           })
           .setNegativeButton("Cancel", null)
@@ -157,7 +152,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
   //*** 描画するメソッド ***//
   @Override
   protected void onDraw(Canvas c) {
-    Log.d("call", "TimeTableView->onDraw()");
+    Log.d(CALL, "TimeTableView->onDraw()");
 
     //*** 特別ABC列の色の描画 ***//
     // l t r b
@@ -212,7 +207,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     for (Reserve r : reserveOther) {
       String sTime = r.getRe_startTime();
       String eTime = r.getRe_endTime();
-      Log.d("call", String.format("%s startTime : %s endTime : %s", r.getId(), sTime, eTime));
+      Log.d(CALL, String.format("%s startTime : %s endTime : %s", r.getId(), sTime, eTime));
 
       String room_id = r.getRe_room_id();
 
@@ -338,7 +333,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
   //*** Paintクラスの初期化処理メソッド ***//
   private void init() {
-    Log.d("call", "call TimeTableView->init()");
+    Log.d(CALL, "call TimeTableView->init()");
 
 
     reserveInfo = new ArrayList<>();    //***  ***//
@@ -423,12 +418,12 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     switch (e.getAction()) {
       case MotionEvent.ACTION_UP:
 //            case MotionEvent.ACTION_DOWN:
-        Log.d("call", "TimeTableView->onTouchEvent()");
+        Log.d(CALL, "TimeTableView->onTouchEvent()");
         // タップした座標を取得する
         x = e.getX();
         y = e.getY();
-        Log.d("call", e.getX() + " : " + e.getY());
-        Log.d("call", String.valueOf(x) + " : " + String.valueOf(y));
+        Log.d(CALL, e.getX() + " : " + e.getY());
+        Log.d(CALL, String.valueOf(x) + " : " + String.valueOf(y));
         break;
     }
     if (detector.onTouchEvent(e)) return true;
@@ -438,7 +433,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
   //*** 再描画を行うメソッド ***//
   public void reView(String emp_id, String date) {
-    Log.d("call", "TimeTableView->reView()");
+    Log.d(CALL, "TimeTableView->reView()");
     //*** 前の情報をいったんクリアする ***//
     reserveInfo.clear();
     reserveOther.clear();
@@ -466,7 +461,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
 
       reserveInfo.add(r);
-      Log.d("call", c.getString(2) + " : " + c.getString(3));
+      Log.d(CALL, c.getString(2) + " : " + c.getString(3));
     }
     c.close();
 
@@ -497,26 +492,26 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
   //*** タップした会議の予約ＩＤを返すメソッド ***//
   public String[] getSelectedReserve() {
-    Log.d("call", "TimeTableView->getSelectedReserve()");
+    Log.d(CALL, "TimeTableView->getSelectedReserve()");
     //
     String roomId = "";                         //*** 押された会議室の区分 ***//
-    Log.d("call", String.valueOf(thread_flg));
+    Log.d(CALL, String.valueOf(thread_flg));
 //        thread_flg = true;
     while (thread_flg) {
       float wX = 216;
       // タッチされたか
       if (isTouched()) {
         if (x > wX && x < 2 * wX) {
-          Log.d("call", "tokubetu");
+          Log.d(CALL, "tokubetu");
           roomId = TOKUBETSU;
         } else if (x > 2 * wX && x < 3 * wX) {
-          Log.d("call", "roomA");
+          Log.d(CALL, "roomA");
           roomId = ROOM_A;
         } else if (x > 3 * wX && x < 4 * wX) {
-          Log.d("call", "roomB");
+          Log.d(CALL, "roomB");
           roomId = ROOM_B;
         } else if (x > 4 * wX && x < 5 * wX) {
-          Log.d("call", "roomC");
+          Log.d(CALL, "roomC");
           roomId = ROOM_C;
         }
         // roomId と y座標を基に、どの会議がタップされたかを返す
@@ -525,7 +520,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
           if (r.getCoop() != null && r.getCoop()[1] < y && r.getCoop()[3] > y) {
             // 特定した
             if (roomId.equals(r.getRe_room_id())) {
-              Log.d("call", "会議を特定した！  " + r.getRe_room_id());
+              Log.d(CALL, "会議を特定した！  " + r.getRe_room_id());
               thread_flg = false;
 //                            return r.getRe_id();        //*** 特定した会議室予約IDを返す ***//
               //*** 特定した会議室IDと、会議室IDを返す ***//
@@ -541,7 +536,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
           if (r.getCoop() != null && r.getCoop()[1] < y && r.getCoop()[3] > y) {
             // 特定した
             if (roomId.equals(r.getRe_room_id())) {
-              Log.d("call", "会議を特定した！  " + r.getRe_room_id());
+              Log.d(CALL, "会議を特定した！  " + r.getRe_room_id());
               thread_flg = false;
 //                            return r.getRe_id();        //*** 特定した会議室予約IDを返す ***//
               //*** 特定した会議室IDと、会議室IDを返す ***//
@@ -550,23 +545,23 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             cnt++;
           }
         }
-        Log.d("call", "cnt :: " + String.valueOf(cnt));
-        Log.d("call", roomId);
+        Log.d(CALL, "cnt :: " + String.valueOf(cnt));
+        Log.d(CALL, roomId);
         if (cnt > 0) {
-          Log.d("call", "新規会議の登録ロジック開");
+          Log.d(CALL, "新規会議の登録ロジック開");
           return new String[]{NONE, roomId};    //*** 新規予約であることを返す ***//
         }
 //                x = 0;
 //                y = 0;
       }
     }
-    Log.d("call", "Re_id : " + roomId);
+    Log.d(CALL, "Re_id : " + roomId);
     return new String[]{NONE, roomId};    //*** 新規予約であることを返す ***//
   }
 
   //*** x y の値を基に、ユーザがタッチしたのか否かを返すメソッド ***//
   public boolean isTouched() {
-//        Log.d("call", "call TimeTableView->isTouched()");
+//        Log.d(CALL, "call TimeTableView->isTouched()");
     if (x != 0 && y != 0) {
       return true;
     }
@@ -575,7 +570,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
   @Override
   public boolean onDown(MotionEvent e) {
-    Log.d("call", "onDown");
+    Log.d(CALL, "onDown");
     return true;
   }
 
@@ -586,7 +581,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
   @Override
   public boolean onSingleTapUp(MotionEvent e) {
-    Log.d("call", "onSingleTapUp!");
+    Log.d(CALL, "onSingleTapUp!");
     return true;
   }
 
@@ -598,7 +593,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
   @Override
   public void onLongPress(MotionEvent e) {
 //    Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
-    Log.d("call", "LongTouch");
+    Log.d(CALL, "LongTouch");
 
     Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
 
@@ -614,25 +609,25 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
   @Override
   public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-    Log.d("call", "onFling");
+    Log.d(CALL, "onFling");
     return false;
   }
 
   @Override
   public boolean onSingleTapConfirmed(MotionEvent e) {
-    Log.d("call", "onSingleTapConfirmed");
+    Log.d(CALL, "onSingleTapConfirmed");
     return false;
   }
 
   @Override
   public boolean onDoubleTap(MotionEvent e) {
-    Log.d("call", "onDoubleTap");
+    Log.d(CALL, "onDoubleTap");
     return false;
   }
 
   @Override
   public boolean onDoubleTapEvent(MotionEvent e) {
-    Log.d("call", "onDoubleTapEvent");
+    Log.d(CALL, "onDoubleTapEvent");
     return false;
   }
 }

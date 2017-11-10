@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+
 /**
  * Created by yuichi_develop on 2017/10/28.
  */
@@ -240,7 +242,7 @@ public class MyHelper extends SQLiteOpenHelper {
 
         Cursor c = db.rawQuery("select * from m_admin", null);
         if (c.moveToNext()) {
-            Log.d("call", c.getString(0));
+            Log.d(CALL, c.getString(0));
         }
         c.close();
 

@@ -19,12 +19,19 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.dialog.AdminLogOut;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
+import com.example.yuichi_oba.ecclesia.model.OutEmployee;
+import com.example.yuichi_oba.ecclesia.model.Person;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
 
 public class ReserveCheckActivity extends AppCompatActivity
@@ -41,6 +48,10 @@ implements NavigationView.OnNavigationItemSelectedListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //*** 管理者認証済みだったら、テーマを変更する ***//
+        if (Util.isAuthAdmin(authFlg)) {
+            setTheme(R.style.SecondTheme);
+        }
         setContentView(R.layout.activity_reserve_check);
 
         instance = this;
@@ -108,6 +119,10 @@ implements NavigationView.OnNavigationItemSelectedListener{
                 AuthDialog authDialog = new AuthDialog();
                 authDialog.show(getFragmentManager(), "aaa");
                 break;
+            //*** 「管理者ログアウト」が選択されたとき ***//
+            case R.id.nav_admin_logout:
+                AdminLogOut adminLogOut = new AdminLogOut();
+                adminLogOut.show(getFragmentManager(), "adminLogOut");
 
         }
         if (intent != null) {
@@ -122,6 +137,22 @@ implements NavigationView.OnNavigationItemSelectedListener{
     //*** SelfMadeMethod ***//
     //*** 実際にDBの予約情報を書き換える ***//
     public void reserveChange() {
+
+        int sum = 0;
+        //*** 参加者の優先度の合計を算出する ***//
+        for (Person person : checkRes.getRe_member()) {
+            if (person instanceof Employee) {
+                //*** 社員クラスであれば社員でキャストし優先度を取得 ***//
+                sum += Integer.valueOf(((Employee) person).getPos_priority());
+            } else if (person instanceof OutEmployee) {
+                //*** 社外者クラスであれば社外者でキャストし優先度を取得 ***//
+                sum += Integer.valueOf(((OutEmployee) person).getPos_priority());
+            }
+        }
+        //*** 参加者の優先度の平均をセッターでセット ***//
+        checkRes.setRe_mem_priority(sum / checkRes.getRe_member().size());
+
+
         //*** 必要なインスタンスを用意 ***//
         SQLiteDatabase db = helper.getWritableDatabase();
         //*** トランザクション開始 ***//
@@ -131,7 +162,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
         db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
                 " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
                 " where re_id = ? ", new Object[]{checkRes.getRe_name(), checkRes.getRe_startDay(), checkRes.getRe_endDay(), checkRes.getRe_startTime(),
-                checkRes.getRe_endTime(), checkRes.getRe_switch(), checkRes.getRe_fixtures(), checkRes.getRe_remarks(), "会議優先度", checkRes.getRe_room_id()
+                checkRes.getRe_endTime(), checkRes.getRe_switch(), checkRes.getRe_fixtures(), checkRes.getRe_remarks(), checkRes.getRe_mem_priority(), checkRes.getRe_room_id()
                 , checkRes.getRe_purpose_id(), checkRes.getRe_id()});
 
         checkRes.getRe_member().forEach(person -> {
@@ -146,6 +177,15 @@ implements NavigationView.OnNavigationItemSelectedListener{
         //*** トランザクション終了 ***//
 //        db.endTransaction();
 
+        //*** 変更完了ダイアログ ***//
+//        ReserveConfirmActivity.ResultDialog resultDialog = new ReserveConfirmActivity.ResultDialog();
+//        Bundle bundle = new Bundle();
+//        bundle.putString("result", "change");
+//        resultDialog.setArguments(bundle);
+//        resultDialog.show(getFragmentManager(), "change");
+        ChangeResultDialog changeResultDialog = new ChangeResultDialog();
+        changeResultDialog.show(getFragmentManager(), "change");
+
         //*** 予約一覧へ画面遷移を行う ***//
         Intent intent = new Intent(getApplicationContext(), ReserveListActivity.class);
         startActivity(intent);
@@ -157,8 +197,13 @@ implements NavigationView.OnNavigationItemSelectedListener{
 
     public void onClickMemConfirm(View view) {
         //*** 参加者一覧ダイアログを表示する ***//
-        ReserveConfirmActivity.MemberConfirmDialog dialog = new ReserveConfirmActivity.MemberConfirmDialog();
-        dialog.show(getFragmentManager(), "confirm_a");
+//        ReserveConfirmActivity.MemberConfirmDialog dialog = new ReserveConfirmActivity.MemberConfirmDialog();
+//        dialog.show(getFragmentManager(), "confirm_a");
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("checkRes", checkRes);
+        ChangeMemberConfirmDialog dialog = new ChangeMemberConfirmDialog();
+        dialog.setArguments(bundle);
+        dialog.show(getFragmentManager(), "member");
     }
 
     //*** 変更成功通知ダイアログ ***//
@@ -176,6 +221,40 @@ implements NavigationView.OnNavigationItemSelectedListener{
         public void onPause() {
             super.onPause();
             dismiss();
+        }
+    }
+
+    public static class ChangeMemberConfirmDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            CharSequence[] items;
+            List<String> list = new ArrayList<>();
+
+            //*** 本処理から渡された予約クラスを取得 ***//
+            Reserve memberRes = (Reserve) getArguments().getSerializable("checkRes");
+
+            //*** メンバーのループ ***//
+            for (Person person : memberRes.getRe_member()) {
+                if (person instanceof Employee) {
+                    list.add(String.format("社内 : %s", person.getName()));
+                } else if (person instanceof OutEmployee) {
+                    list.add(String.format("%s : %s", ((OutEmployee) person).getCom_name(), person.getName()));     //***  ***//
+                }
+            }
+            items = (CharSequence[]) list.toArray(new CharSequence[list.size()]);
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle("会議参加者一覧")
+                    .setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    })
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    })
+                    .create();
         }
     }
 }

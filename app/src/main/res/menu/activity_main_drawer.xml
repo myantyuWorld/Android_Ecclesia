@@ -18,8 +18,13 @@
         <menu>
             <item
                 android:id="@+id/nav_admin_auth"
-                android:title="管理者認証" />
+                android:title="管理者ログイン" />
+            <item
+                android:id="@+id/nav_admin_logout"
+                android:title="管理者ログアウト" />
         </menu>
+
+
     </item>
 
 </menu>

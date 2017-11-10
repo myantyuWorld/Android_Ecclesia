@@ -133,6 +133,6 @@ public class Employee extends Person implements Serializable {
     @Override
     public String toString() {
         //*** ＩＤ 氏名 役職ＩＤ 部署ＩＤ を返す ***//
-        return String.format("%s : %s : %s : %s", getEmp_id(), getName(), getPos_id(), getDep_id());
+        return String.format("社員ID %s : 社員名 %s : 役職ID %s : 部署ID %s", getEmp_id(), getName(), getPos_id(), getDep_id());
     }
 }
