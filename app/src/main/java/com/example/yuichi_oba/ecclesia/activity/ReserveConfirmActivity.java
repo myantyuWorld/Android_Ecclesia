@@ -644,11 +644,11 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     //*** 会議の重複をチェックする ***//
     String resultCode = reserve.timeDuplicationCheck(reserve);
-    if (resultCode.contains("false")) {
+    if (resultCode.equals("false")) {
       //*** 重複あり ***//
       Log.d("call", "時間の重複が発生！ 処理を抜けます");
       return;
-    } else if (resultCode.contains("1")) {    //*** trueの場合 -> "1"  falseの場合 -> "false"  trueは自分が勝った falseは自分が負けた ***//
+    } else if (resultCode.equals("1")) {    //*** trueの場合 -> "1"  falseの場合 -> "false"  trueは自分が勝った falseは自分が負けた ***//
         Log.d("ReserveConfirmActivity", "時間重複チェックがtrueだからinsertできる");
                                                //*** contains("true")となっていたため、どんな時もこのelse ifは通らなかったと思われる ***//
     } else {
