@@ -34,6 +34,8 @@ import com.example.yuichi_oba.ecclesia.tools.Util;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
+
 public class AddMemberActivity extends AppCompatActivity
     implements MyInterface {
 
@@ -115,6 +117,10 @@ public class AddMemberActivity extends AppCompatActivity
   protected void onCreate(Bundle savedInstanceState) {
     Util.easyLog("AddMemberActivity->onCreate() 参加者の追加を行う画面");
     super.onCreate(savedInstanceState);
+      //*** 管理者認証済みだったら、テーマを変更する ***//
+      if (Util.isAuthAdmin(authFlg)) {
+          setTheme(R.style.SecondTheme);
+      }
     setContentView(R.layout.activity_add_member);
 
     Intent in = getIntent();

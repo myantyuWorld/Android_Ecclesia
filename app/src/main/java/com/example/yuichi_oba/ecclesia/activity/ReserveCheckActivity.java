@@ -14,12 +14,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.dialog.AdminLogOut;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.OutEmployee;
@@ -31,6 +31,7 @@ import com.example.yuichi_oba.ecclesia.tools.Util;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
 
 public class ReserveCheckActivity extends AppCompatActivity
@@ -47,6 +48,10 @@ implements NavigationView.OnNavigationItemSelectedListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //*** 管理者認証済みだったら、テーマを変更する ***//
+        if (Util.isAuthAdmin(authFlg)) {
+            setTheme(R.style.SecondTheme);
+        }
         setContentView(R.layout.activity_reserve_check);
 
         instance = this;
@@ -114,6 +119,10 @@ implements NavigationView.OnNavigationItemSelectedListener{
                 AuthDialog authDialog = new AuthDialog();
                 authDialog.show(getFragmentManager(), "aaa");
                 break;
+            //*** 「管理者ログアウト」が選択されたとき ***//
+            case R.id.nav_admin_logout:
+                AdminLogOut adminLogOut = new AdminLogOut();
+                adminLogOut.show(getFragmentManager(), "adminLogOut");
 
         }
         if (intent != null) {

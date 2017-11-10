@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 
 /**
@@ -54,6 +56,12 @@ public class AuthDialog extends DialogFragment {
                             // ログイン成功
                             Log.d("call", "ログイン成功");
                             // TODO: 2017/10/04 ログイン成功で、アプリのテーマを変更するロジックの実装  基本は青だから、逆の赤系？
+
+                            //*** 管理者認証ダイアログの結果を、ReserveListActivityに返す ***//
+                            ReserveListActivity.getInstance().onReturnValue("1");
+                            Intent intent = new Intent(ReserveListActivity.getInstance().getApplicationContext(), ReserveListActivity.class);
+                            startActivity(intent);
+
                         }
                         // ログイン失敗
                         else {

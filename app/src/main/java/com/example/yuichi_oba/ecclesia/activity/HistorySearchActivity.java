@@ -26,12 +26,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.dialog.AdminLogOut;
 import com.example.yuichi_oba.ecclesia.model.Person;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
+import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
 
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 /*************************************************************************************
@@ -264,6 +268,10 @@ public class HistorySearchActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "HistorySearchActivity->onCreate()");
         super.onCreate(savedInstanceState);
+        //*** 管理者認証済みだったら、テーマを変更する ***//
+        if (Util.isAuthAdmin(authFlg)) {
+            setTheme(R.style.SecondTheme);
+        }
         setContentView(R.layout.activity_history_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -497,6 +505,11 @@ public class HistorySearchActivity extends AppCompatActivity
                 intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
                 break;
             case R.id.nav_admin_auth:
+                break;
+            //*** 「管理者ログアウト」が選択されたとき ***//
+            case R.id.nav_admin_logout:
+                AdminLogOut adminLogOut = new AdminLogOut();
+                adminLogOut.show(getFragmentManager(), "adminLogOut");
 //                AuthDialog authDialog = new AuthDialog();
 //                authDialog.show(getFragmentManager(), "aaa");
 //                break;

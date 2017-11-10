@@ -32,6 +32,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.dialog.AdminLogOut;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.OutEmployee;
@@ -47,6 +48,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
@@ -367,6 +369,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
      * レイアウト情報をマッピングする
      */
     super.onCreate(savedInstanceState);
+    //*** 管理者認証済みだったら、テーマを変更する ***//
+    if (Util.isAuthAdmin(authFlg)) {
+      setTheme(R.style.SecondTheme);
+    }
     setContentView(R.layout.activity_reserve_confirm);
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
@@ -605,6 +611,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
         AuthDialog authDialog = new AuthDialog();
         authDialog.show(getFragmentManager(), "aaa");
         break;
+      //*** 「管理者ログアウト」が選択されたとき ***//
+      case R.id.nav_admin_logout:
+        AdminLogOut adminLogOut = new AdminLogOut();
+        adminLogOut.show(getFragmentManager(), "adminLogOut");
 
     }
     // 画面遷移する

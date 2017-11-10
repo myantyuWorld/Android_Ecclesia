@@ -9,6 +9,10 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.example.yuichi_oba.ecclesia.tools.Util;
+
+import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
+
 /**
  * Created by Yuichi-Oba on 2017/09/08.
  */
@@ -53,7 +57,11 @@ public class AddMemberView extends View {
         p_txt.setColor(Color.BLACK);
 
         p_daimei = new Paint();
-        p_daimei.setColor(Color.GREEN);
+//        p_daimei.setColor(Color.GREEN);
+        p_daimei.setColor(Color.parseColor("#303f9f"));     //*** 青系 ***//
+        if (Util.isAuthAdmin(authFlg)) {
+            p_daimei.setColor(Color.parseColor("#e91e63")); //*** 赤系 ***//
+        }
         p_daimei.setStyle(Paint.Style.FILL);
         p_daimei.setStrokeWidth(10);
 
