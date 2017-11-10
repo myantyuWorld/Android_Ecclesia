@@ -241,16 +241,20 @@ public class Reserve implements Serializable {
 
     //*** その日の同じ会議室で会議がない ***//
     if (list.size() == 0) return TRUE;        //*** 時間の重複なしを返す ***//
+                                                //***  ***/
 
     //*** 開始時刻からみて、同じ時間帯に会議があるかチェック ***//
-    for (Reserve other : list) {
+    for (Reserve other : list) {      //*** 同じ日付の会議リストをループ ***//
       //*** 同じ時間帯かチェック ***//
       // (year, month, date, hour, minute) monthの範囲は0-11で1月は0
-      int[] starts = argsStartIntValue(other);    //***  ***//
-      int[] ends = argsEndIntValue(other);        //***  ***//
+      int[] starts = argsStartIntValue(other);    //*** 同じ日付の会議の開始時刻 ***//
+      int[] ends = argsEndIntValue(other);        //*** 同じ日付の会議の終了時刻 ***//
 
       Calendar startTime = new GregorianCalendar(starts[YEAR], starts[MONTH], starts[DATE], starts[HOUR], starts[MINUTE]);
       Calendar endTime = new GregorianCalendar(ends[YEAR], ends[MONTH], ends[DATE], ends[HOUR], ends[MINUTE]);
+      Log.d("timeDuplicationCheck", "startTime:" + startTime.get(Calendar.YEAR) + "/" + startTime.get(Calendar.MONTH) + "/" + startTime.get(Calendar.DAY_OF_MONTH));
+      Log.d("timeDuplicationCheck", "endTime:" + endTime.get(Calendar.YEAR) + "/" + endTime.get(Calendar.MONTH) + "/" + endTime.get(Calendar.DAY_OF_MONTH));
+
       if (!isPeriod(r, startTime, endTime)) {
         Log.d("call", "時間の重複が発生：（暫定）処理を終了します");
         Log.d("call", "本来はここで、優先度チェックを行い、追い出し処理を行う");
@@ -337,7 +341,8 @@ public class Reserve implements Serializable {
 
   //*** 引数の会議日と同じ会議をListで取得する ***//
   private List<Reserve> getSameDayMeeting(Reserve r) {
-    MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
+//    MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
+    MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getReadableDatabase();
     Cursor c = db.rawQuery(
         Q_SAME_DAY_MEETING,
@@ -347,8 +352,8 @@ public class Reserve implements Serializable {
     while (c.moveToNext()) {
       //*** 予約のインスタンスを生成 ***//
       Reserve reserve = new Reserve();
-      reserve.setRe_startDay(c.getString(2));        //*** 開始日時 ***//
-      reserve.setRe_endDay(c.getString(3));          //*** 終了日時 ***//
+      reserve.setRe_startDay(c.getString(2));        //*** 開始日 ***//
+      reserve.setRe_endDay(c.getString(3));          //*** 終了日 ***//
       reserve.setRe_startTime(c.getString(4));       //*** 開始時刻 ***//
       reserve.setRe_endTime(c.getString(5));         //*** 終了時刻 ***//
       reserve.setRe_purpose_id(c.getString(13));     //*** 会議目的ID ***//

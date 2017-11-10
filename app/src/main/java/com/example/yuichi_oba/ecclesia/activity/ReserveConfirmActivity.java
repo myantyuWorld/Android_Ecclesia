@@ -648,11 +648,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
       //*** 重複あり ***//
       Log.d("call", "時間の重複が発生！ 処理を抜けます");
       return;
-    } else if (resultCode.contains("true")) {
-      ;
+    } else if (resultCode.contains("1")) {    //*** trueの場合 -> "1"  falseの場合 -> "false"  trueは自分が勝った falseは自分が負けた ***//
+      ;                                         //*** contains("true")となっていたため、どんな時もこのelse ifは通らなかったと思われる ***//
     } else {
       Log.d("call", "追い出し処理検知！追い出された予約情報を通知します");
-      Log.d("call", "追い出しされる予約IDは" + resultCode);
+      Log.d("call", "追い出しされる予約IDは" + resultCode);  //*** 現状、resultCodeには予約ＩＤではなく１が入ってきたりしている? ***//
+                                                                //*** 上記のelse ifを修正したため、"1"の場合はここにはこない筈 ***//
       notificationEviction(resultCode);
       reserve.eviction(resultCode);
     }
