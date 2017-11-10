@@ -649,7 +649,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
       Log.d("call", "時間の重複が発生！ 処理を抜けます");
       return;
     } else if (resultCode.contains("1")) {    //*** trueの場合 -> "1"  falseの場合 -> "false"  trueは自分が勝った falseは自分が負けた ***//
-      ;                                         //*** contains("true")となっていたため、どんな時もこのelse ifは通らなかったと思われる ***//
+        Log.d("ReserveConfirmActivity", "時間重複チェックがtrueだからinsertできる");
+                                               //*** contains("true")となっていたため、どんな時もこのelse ifは通らなかったと思われる ***//
     } else {
       Log.d("call", "追い出し処理検知！追い出された予約情報を通知します");
       Log.d("call", "追い出しされる予約IDは" + resultCode);  //*** 現状、resultCodeには予約ＩＤではなく１が入ってきたりしている? ***//
@@ -667,12 +668,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
     reserve = null;
 
     //*** 追い出しフラグが立っていたら、通知を発行する ***//
-    evictionFlg = true; //*** 実験用に、フラグを立てる ***//
-    // TODO: 2017/11/04 実験用 -----
-    if (evictionFlg) {
-      notificationEviction("0001"); //*** 通知発行メソッドコール ***//
-      evictionFlg = false;
-    }
+//    evictionFlg = true; //*** 実験用に、フラグを立てる ***//
+//    // TODO: 2017/11/04 実験用 -----
+//    if (evictionFlg) {
+//      notificationEviction("0001"); //*** 通知発行メソッドコール ***//
+//      evictionFlg = false;
+//    }
     // TODO: 2017/11/04 ----- ここまで
 
     //*** 画面を殺す 結果を、ReserveActivityに返す ***//
