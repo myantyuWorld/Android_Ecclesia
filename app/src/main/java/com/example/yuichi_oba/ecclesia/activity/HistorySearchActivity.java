@@ -311,21 +311,24 @@ public class HistorySearchActivity extends AppCompatActivity
         while (c.moveToNext()) {
 
             Reserve reserve = new Reserve();
-            reserve.setRe_applicant("aaa");
-            reserve.setRe_switch("0");
-            reserve.setRe_room_name("aaa");// TODO: 2017/11/07 ちゃんとしたデータとすること！
-            reserve.setRe_fixtures("aaa");
-            reserve.setRe_remarks("aaa");
+            reserve.setRe_startTime(c.getString(4));
+            reserve.setRe_endTime(c.getString(5));
+            reserve.setRe_applicant(c.getString(18));
+            reserve.setRe_switch(c.getString(6));
+            reserve.setRe_room_name(c.getString(27));// TODO: 2017/11/07 ちゃんとしたデータとすること！
+            reserve.setRe_fixtures(c.getString(7));
+            reserve.setRe_remarks(c.getString(8));
             reserve.setRe_id(c.getString(0));
             reserve.setRe_name(c.getString(GAIYOU));
             reserve.setRe_startDay(c.getString(DAY));
+            reserve.setRe_endDay(c.getString(3));
             //*** 社員名をセット(まだ実行してないので未確認。) ***//
 //            p.setName(c_list.getString(COM_MEMBER));
 
             //li.setRe_member(member);
 //            reserve.setRe_mem(c.getString(COM_MEMBER));
             reserve.setRe_company(c.getString(30));
-            reserve.setRe_purpose_name(c.getString(25));
+            reserve.setRe_purpose_name(c.getString(24));
             Log.d("call", (c.getString(GAIYOU)) + " : " + c.getString(DAY) + " : " + c.getString(26) + " : " + c.getString(28) + " : " + c.getString(COM_MEMBER));
             // addするメソッドを書く
             reserves.add(reserve);
