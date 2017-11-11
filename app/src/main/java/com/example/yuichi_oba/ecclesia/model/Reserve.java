@@ -547,10 +547,10 @@ public class Reserve implements Serializable {
     MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getWritableDatabase();
 
-    //*** 追い出し（ReserveTableから削除） ***//
-    db.rawQuery("delete from t_reserve where re_id = ?", new String[]{otherReId});
     //*** 追い出し（memberTableから削除） ***//
     db.rawQuery("delete from t_member where re_id = ?", new String[]{otherReId});
+    //*** 追い出し（ReserveTableから削除） ***//
+    db.rawQuery("delete from t_reserve where re_id = ?", new String[]{otherReId});
   }
 
   public static Reserve retReserveConfirm(String re_id) {
