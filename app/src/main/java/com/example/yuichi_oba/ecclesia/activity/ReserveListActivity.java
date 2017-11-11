@@ -456,18 +456,14 @@ public class ReserveListActivity extends AppCompatActivity
         }
       }
     });
+    thread.start();
     //*** アプリを立ち上げた日付の、会議をAlarmManagerに登録する ***//
     Log.d(CALL, "---------------------------------------------------------");
-    Log.d(CALL, String.format("アプリを立ち上げた[%s] の日付の会議をAlarmManagerに登録していくよー", arl_txt_date.getText().
-
-        toString()));
-
+    Log.d(CALL, String.format("アプリを立ち上げた[%s] の日付の会議をAlarmManagerに登録していくよー", arl_txt_date.getText().toString()));
     //*** onResume()は何度も呼ばれるので、最終的には、新規で、追加されたアプリ起動時の日付の会議”だけ”を ***//
     //*** AlarmManager に  追加するロジックにしよう！***//
     //*** AlarmManager登録メソッド ***//
-    registAlarmManager(arl_txt_date.getText().
-
-        toString());
+    registAlarmManager(arl_txt_date.getText().toString());
     Log.d(CALL, "---------------------------------------------------------");
   }
 
@@ -494,38 +490,38 @@ public class ReserveListActivity extends AppCompatActivity
     return instance;
   }
 
-//*** アプリ起動時の会議を、AlarmManagerに登録するメソッド ***//
-    private void registAlarmManager (String today){
-      //*** アプリ起動時の会議の件数、予約情報を取得する ***//
-      List<Reserve> reserves = new ArrayList<>();
-      Cursor c = db.rawQuery(Q_SELECT_TODAY_CONFERENCE, new String[]{employee.getEmp_id(), today});
-      while (c.moveToNext()) {
-        Reserve r = new Reserve();
-        r.setRe_id(c.getString(0));                                     //*** 予約ID ***//
-        r.setRe_name(c.getString(1));                                   //*** 概要 ***//
-        r.setRe_startDay(c.getString(2));                               //*** 開始日時 ***//
-        r.setRe_endDay(c.getString(3));                                 //*** 終了日時 ***//
-        r.setRe_startTime(c.getString(4));                              //*** 開始時刻 ***//
-        r.setRe_endTime(c.getString(5));                                //*** 終了時刻 ***//
-        r.setRe_switch(c.getString(6).contains("0") ? "社内" : "社外");   //*** 社内社外区分 ***//
-        r.setRe_room_id(c.getString(12));                               //*** 会議室ID ***//
+  //*** アプリ起動時の会議を、AlarmManagerに登録するメソッド ***//
+  private void registAlarmManager(String today) {
+    //*** アプリ起動時の会議の件数、予約情報を取得する ***//
+    List<Reserve> reserves = new ArrayList<>();
+    Cursor c = db.rawQuery(Q_SELECT_TODAY_CONFERENCE, new String[]{employee.getEmp_id(), today});
+    while (c.moveToNext()) {
+      Reserve r = new Reserve();
+      r.setRe_id(c.getString(0));                                     //*** 予約ID ***//
+      r.setRe_name(c.getString(1));                                   //*** 概要 ***//
+      r.setRe_startDay(c.getString(2));                               //*** 開始日時 ***//
+      r.setRe_endDay(c.getString(3));                                 //*** 終了日時 ***//
+      r.setRe_startTime(c.getString(4));                              //*** 開始時刻 ***//
+      r.setRe_endTime(c.getString(5));                                //*** 終了時刻 ***//
+      r.setRe_switch(c.getString(6).contains("0") ? "社内" : "社外");   //*** 社内社外区分 ***//
+      r.setRe_room_id(c.getString(12));                               //*** 会議室ID ***//
 //      r.setRe_room_name(Util.returnRoomName(c.getString(12)));        //*** 会議室名 ***//
-        reserves.add(r);  //*** 会議インスタンス追加 ***//
-      }
-      c.close();
+      reserves.add(r);  //*** 会議インスタンス追加 ***//
+    }
+    c.close();
 
-      //*** 取得した会議リスト全件ループ ***//
+    //*** 取得した会議リスト全件ループ ***//
 //    reserves.forEach(r -> {
 //      //*** AlarmManagerの登録 ***//
 //
 //    });
 
 
-    }
-
-    public void onReturnValue (String authFlg){
-      this.authFlg = authFlg;
-    }
-
   }
+
+  public void onReturnValue(String authFlg) {
+    this.authFlg = authFlg;
+  }
+
+}
 
