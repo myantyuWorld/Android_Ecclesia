@@ -49,12 +49,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -72,24 +67,24 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     //***  ***//
 //    public static Reserve reserve;
-    private Employee employee;
-    public static String re_id;
-    public static String gamen;
-    public static Reserve reserve;
-    public static boolean evictionFlg = false;
-    private Button btn_confirm;
-    // 内部クラスからgetApplicationContextするためのやつ(普通にやるとno-staticで怒られる)
-    private static ReserveConfirmActivity instance = null;
-    // デバッグ用
-    private static final String TAG = ReserveConfirmActivity.class.getSimpleName();
+  private Employee employee;
+  public static String re_id;
+  public static String gamen;
+  public static Reserve reserve;
+  public static boolean evictionFlg = false;
+  private Button btn_confirm;
+  // 内部クラスからgetApplicationContextするためのやつ(普通にやるとno-staticで怒られる)
+  private static ReserveConfirmActivity instance = null;
+  // デバッグ用
+  private static final String TAG = ReserveConfirmActivity.class.getSimpleName();
 
-    //*** 会議参加者をリスト形式で出す、ダイアログフラグメントクラス ***//
-    public static class MemberConfirmDialog extends DialogFragment {
-        // ダイアログを生成するメソッド
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            Log.d("call", "call MemberConfirmDialog->onCreateDialog()");
-            // 会議参加者データ
+  //*** 会議参加者をリスト形式で出す、ダイアログフラグメントクラス ***//
+  public static class MemberConfirmDialog extends DialogFragment {
+    // ダイアログを生成するメソッド
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+      Log.d(CALL, "call MemberConfirmDialog->onCreateDialog()");
+      // 会議参加者データ
 //            CharSequence[] items = reserve.getRe_member().toArray(new CharSequence[reserve.getRe_member().size()]);
             CharSequence[] items;                       //***  ***//
             List<String> list = new ArrayList<>();      //***  ***//
@@ -207,24 +202,24 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //    }
 //  }
 
-    public static class ResultDialog extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            String str = "", title = "";
-            switch (getArguments().getString("result")) {
-                case "ex":
-                    title = "延長完了";
-                    str = "延長が完了しました";
-                    break;
-                case "ear":
-                    title = "早期退出完了";
-                    str = "早期退出が完了しました";
-                    break;
+  public static class ResultDialog extends DialogFragment {
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+      String str = EMPTY, title = EMPTY;
+      switch (getArguments().getString("result")) {
+        case "ex":
+          title = EX + COMPLETE;
+          str = EX + GA + RUNMESSAGE;
+          break;
+        case "ear":
+          title = EARLY + COMPLETE;
+          str = EARLY + GA + RUNMESSAGE;
+          break;
 //        case "change":
 //          title = "変更完了";
 //          str = "変更が完了しました";
 //          break;
-            }
+        }
 
             return new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(str).setPositiveButton("OK", null).create();
         }
@@ -339,7 +334,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     //*** onCreate ***//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("call", "ReserveConfirmActivity->onCreate()");
+        Log.d(CALL, "ReserveConfirmActivity->onCreate()");
 
 //        helper = new DB(getApplicationContext());
 
@@ -347,7 +342,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
         Intent intent = getIntent();
         gamen = intent.getStringExtra("gamen").contains("0") ? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***//
 
-        Log.d("call", "画面遷移元　" + gamen);
+
+        Log.d(CALL, "画面遷移元　" + gamen);
         //*** 画面遷移元によって、処理を分ける ***//
         if (gamen.contains("新規")) {    //*** 「新規」画面からの画面遷移 ***//
             employee = (Employee) intent.getSerializableExtra("emp");        //*** 社員情報の取得 ***//
@@ -358,8 +354,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
             employee = (Employee) intent.getSerializableExtra("employee");
             Log.d("Emp in Confirm:", employee.toString());
 
-//      btn_confirm = (Button) findViewById(R.id.arconfirm_btn_mem_confirm);    //*** 参加者確認ボタン ***//
-//      btn_confirm.setText("戻る");
+//          btn_confirm = (Button) findViewById(R.id.arconfirm_btn_mem_confirm);    //*** 参加者確認ボタン ***//
+//          btn_confirm.setText("戻る");
         }
         instance = this;
 
@@ -493,36 +489,36 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //
 //        }
                 try {
-                    //*** 変更しようとしている会議の開始時間をセット ***//
-                    start.setTime(timeFormat.parse(reserve.getRe_startDay() + " " + reserve.getRe_startTime()));
+                  //*** 変更しようとしている会議の開始時間をセット ***//
+                  start.setTime(timeFormat.parse(reserve.getRe_startDay() + " " + reserve.getRe_startTime()));
                 } catch (ParseException e) {
-                    e.getStackTrace();
-                    break;
+                  e.getStackTrace();
+                  break;
                 }
                 //*** 変更しようとしている会議が現在日付・時刻に矛盾していないか ***//
                 if (cal.get(Calendar.YEAR) < start.get(Calendar.YEAR) || (cal.get(Calendar.YEAR) == start.get(Calendar.YEAR) && cal.get(Calendar.MONTH) < start.get(Calendar.MONTH))
                         || (cal.get(Calendar.YEAR) == start.get(Calendar.YEAR) && cal.get(Calendar.MONTH) == start.get(Calendar.MONTH) && cal.get(Calendar.DAY_OF_MONTH) <= start.get(Calendar.DAY_OF_MONTH))) {
-                    //*** 次画面（ReserveChangeActivity）に予約インスタンスを渡す ***//
-                    intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
-                    intent.putExtra(KEYCHANGE, reserve);
-                    Log.d("sent change Emp:", employee.toString());
-                    intent.putExtra("employee", employee);
-//                    intent.putExtra(KEYCHANGE, re_id);
-                    startActivity(intent);
+                  //*** 次画面（ReserveChangeActivity）に予約インスタンスを渡す ***//
+                  intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
+                  intent.putExtra(KEYCHANGE, reserve);
+                  Log.d(CALL, employee.toString());
+                  intent.putExtra("employee", employee);
+        //                    intent.putExtra(KEYCHANGE, re_id);
+                  startActivity(intent);
                 } else {
-//                    builder.setTitle("変更不可能").setMessage("変更できる会議ではありません").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {}
-//                    }).create().show();
-                    Toast.makeText(this, "変更できる会議ではありません", Toast.LENGTH_SHORT).show();
-                    //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
-                    intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
-                    intent.putExtra(KEYCHANGE, reserve);
-                    Log.d("sent change Emp:", employee.toString());
-                    intent.putExtra("employee", employee);
-                    startActivity(intent);
+        //                    builder.setTitle("変更不可能").setMessage("変更できる会議ではありません").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        //                        @Override
+        //                        public void onClick(DialogInterface dialog, int which) {}
+        //                    }).create().show();
+                  Toast.makeText(this, "変更できる会議ではありません", Toast.LENGTH_SHORT).show();
+                  //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
+                  intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
+                  intent.putExtra(KEYCHANGE, reserve);
+                  Log.d(CALL, employee.toString());
+                  intent.putExtra("employee", employee);
+                  startActivity(intent);
                 }
-//                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
+    //                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
                 break;
             // 「延長」が選択された
             case R.id.option_extention:
@@ -633,18 +629,18 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //        return instance;
 //    }
 
-    //*** --- SELF MADE METHOD --- 参加者確認ボタン押下時の処理 ***//
-    public void onClickMemConfirm(View view) {
-        Log.d("call", "btn_confirm_member->onClick()");
-        //*** 参加者一覧ダイアログを表示する ***//
-        MemberConfirmDialog dialog = new MemberConfirmDialog();
-        dialog.show(getFragmentManager(), "confirm_a");
-    }
+  //*** --- SELF MADE METHOD --- 参加者確認ボタン押下時の処理 ***//
+  public void onClickMemConfirm(View view) {
+    Log.d(CALL, "btn_confirm_member->onClick()");
+    //*** 参加者一覧ダイアログを表示する ***//
+    MemberConfirmDialog dialog = new MemberConfirmDialog();
+    dialog.show(getFragmentManager(), "confirm_a");
+  }
 
     //*** --- SELF MADE METHOD --- 確定ボタン押下時の処理 ***//
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onClickKakutei(View view) {
-        Log.d("call", "call onClickKakutei");
+        Log.d(CALL, "call onClickKakutei");
 
         //*** 新規からの画面遷移でなければ、以降の処理は無効なので、戻る ***//
         if (gamen.contains("一覧")) {
@@ -661,18 +657,18 @@ public class ReserveConfirmActivity extends AppCompatActivity
             String resultCode = reserve.timeDuplicationCheck(reserve);
             if (resultCode.contains("false")) {
                 //*** 重複あり ***//
-                Log.d("call", "時間の重複が発生！ 処理を抜けます");
+                Log.d(CALL, "時間の重複が発生！ 処理を抜けます");
                 return;
             } else if (resultCode.contains("1")) {
                 ;
             } else {
-                Log.d("call", "追い出し処理検知！追い出された予約情報を通知します");
-                Log.d("call", "追い出しされる予約IDは" + resultCode);
+                Log.d(CALL, "追い出し処理検知！追い出された予約情報を通知します");
+                Log.d(CALL, "追い出しされる予約IDは" + resultCode);
                 notificationEviction(resultCode);
                 reserve.eviction(resultCode);
             }
 
-            Log.d("call", "予約ID:" + reserve.getRe_id());
+            Log.d(CALL, "予約ID:" + reserve.getRe_id());
             //*** 時間の重複も、優先度チェックも何も必要なし＝＝＞ そのままインサートする ***//
             reserve.reserveCorrenct(setReserveDetail());     //*** 予約テーブル,参加者テーブル へのインサート ***//
             reserve = null;                                  //*** 予約を確定したので、reserveをnullにする ***//
@@ -681,7 +677,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
         else {
             //*** 追い出す会議だけ特定して、ヘッドアップ通知を行う ※時間重複も、優先度も関係なし ***//
             String resultCode = reserve.timeDuplicationCheck(reserve);
-            if (!resultCode.contains("1") && !resultCode.contains("false")) {
+            if (!resultCode.equals(TRUE) && !resultCode.equals(FALSE)) {
                 notificationEviction(resultCode);            //*** 会議追い出し"通知"を行う ***//
                 reserve.eviction(resultCode);                //*** 会議の追い出しを行う ***//
             }

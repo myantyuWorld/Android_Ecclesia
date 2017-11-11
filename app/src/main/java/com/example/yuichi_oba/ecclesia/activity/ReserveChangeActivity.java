@@ -49,12 +49,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ONE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 
@@ -241,7 +236,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             public void onClick(View view) {
                 // ここで、参加者
                 Intent intent = new Intent(getApplicationContext(), AddMemberActivity.class);
-                Log.d("changeEmp:", employee.getEmp_id());
+                Log.d(CALL, employee.getEmp_id());
                 intent.putExtra("emp_id", employee.getEmp_id());
                 startActivityForResult(intent, 1);
             }
@@ -362,9 +357,9 @@ public class ReserveChangeActivity extends AppCompatActivity
 //                setReserveInfo();
                 String result = changeRes.timeDuplicationCheck(changeRes);
 
-                String member = "";
+                String member = EMPTY;
                 if (memberChange) {
-                    member = " ";
+                    member = SPACE;
                 }
                 //*** 変更後の予約情報をViewで扱う配列に格納 ***//
                 changes = new String[]{changeRes.getRe_name(), changeRes.getRe_purpose_name(), changeRes.getRe_startDay() + SPACE + changeRes.getRe_startTime(), changeRes.getRe_endDay() + SPACE + changeRes.getRe_endTime(),
@@ -544,9 +539,9 @@ public class ReserveChangeActivity extends AppCompatActivity
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                             String date = getArguments().getString("date");
                             if (date.contains("startDay")) {
-                                startDayBtn.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+                                startDayBtn.setText(String.format(BTNDAYFORMAT, year, month + ONE, day));
                             } else {
-                                endDayBtn.setText(String.format("%04d/%02d/%02d", year, month + 1, day));
+                                endDayBtn.setText(String.format(BTNDAYFORMAT, year, month + ONE, day));
                             }
                         }
                     },
@@ -567,7 +562,7 @@ public class ReserveChangeActivity extends AppCompatActivity
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                             String time = getArguments().getString("time");
-                            Log.d("call", time);
+                            Log.d(CALL, time);
                             if (time.contains("startTime")) {
                                 startTimeBtn.setText(String.format("%02d：%02d", hourOfDay, minute));
                             } else {
