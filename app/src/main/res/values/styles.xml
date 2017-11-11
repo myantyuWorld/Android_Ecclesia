@@ -1,4 +1,4 @@
-<resources>
+<resources>e
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -17,4 +17,13 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+    <!-- Second Theme-->
+    <style name="SecondTheme" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="colorPrimary">#f06292</item>
+        <item name="colorPrimaryDark">#e91e63</item>
+        <item name="colorAccent">#42a5f5</item>
+    </style>
+
 </resources>
+

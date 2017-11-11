@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -15,7 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
+
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 /**
  * Created by Yuichi-Oba on 2017/07/21.
@@ -38,11 +42,11 @@ public class AuthDialog extends DialogFragment {
                 .setPositiveButton("認証", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.d("call", "認証");
+                        Log.d(CALL, "認証");
                         EditText id = (EditText) layout.findViewById(R.id.dia_empId);
                         EditText pass = (EditText) layout.findViewById(R.id.dia_empPass);
 
-                        Log.d("call", id.getText().toString() + " : " + pass.getText().toString());
+                        Log.d(CALL, id.getText().toString() + " : " + pass.getText().toString());
                         /***
                          * ここで、管理者認証を行い、良ければ、管理者画面に遷移するといっても、管理者画面はなし・・・
                          */
@@ -52,8 +56,14 @@ public class AuthDialog extends DialogFragment {
                                 new String[]{id.getText().toString(), pass.getText().toString()});
                         if (c.moveToNext()) {
                             // ログイン成功
-                            Log.d("call", "ログイン成功");
+                            Log.d(CALL, "ログイン成功");
                             // TODO: 2017/10/04 ログイン成功で、アプリのテーマを変更するロジックの実装  基本は青だから、逆の赤系？
+
+                            //*** 管理者認証ダイアログの結果を、ReserveListActivityに返す ***//
+                            ReserveListActivity.getInstance().onReturnValue("1");
+                            Intent intent = new Intent(ReserveListActivity.getInstance().getApplicationContext(), ReserveListActivity.class);
+                            startActivity(intent);
+
                         }
                         // ログイン失敗
                         else {

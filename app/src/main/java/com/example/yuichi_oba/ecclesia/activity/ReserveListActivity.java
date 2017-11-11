@@ -498,17 +498,13 @@ import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -526,6 +522,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
+import com.example.yuichi_oba.ecclesia.dialog.AdminLogOut;
 import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
@@ -540,7 +537,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 //import static com.example.yuichi_oba.ecclesia.activity.MyDialog.employee;
 
@@ -564,6 +561,7 @@ public class ReserveListActivity extends AppCompatActivity
   //    private DB helper;
   private MyHelper helper;
   public static SQLiteDatabase db;
+  public static String authFlg = "0";      //*** 管理者認証フラグ ***//
 
   public static final int EMP_NAME = 1;
   public static final int EMP_TEL = 2;
@@ -599,7 +597,7 @@ public class ReserveListActivity extends AppCompatActivity
     //*** SelfMadeMethod ***//
     //*** 端末IMEIを取得するメソッド ***//
     public void getTerminalImei() {
-      Log.d("call", "getTerminalImei()");
+      Log.d(CALL, "getTerminalImei()");
       TelephonyManager manager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 //        return manager.getDeviceId();
       // TODO: 2017/09/15 ハードコーディング!
@@ -609,7 +607,7 @@ public class ReserveListActivity extends AppCompatActivity
 
     //*** 社員を認証するメソッド ***//
     public String authEmployee() {
-      Log.d("call", "ReserveListActivity->authEmployee()");
+      Log.d(CALL, "ReserveListActivity->authEmployee()");
       String emp_id = "";
       Cursor c = db.rawQuery("select * from m_terminal where ter_id = ?", new String[]{this.imeiNumber});
 
@@ -623,7 +621,7 @@ public class ReserveListActivity extends AppCompatActivity
 
     //*** 認証済み社員を生成するメソッド ***//
     public Employee getEmployeeInfo() {
-      Log.d("call", TAG + "->getEmployeeInfo()");
+      Log.d(CALL, TAG + "->getEmployeeInfo()");
       String emp_id = authEmployee();
       if (!emp_id.isEmpty()) {
         // 社員ＩＤが空またはＮＵＬＬでなければ次のロジックを実行する
@@ -702,8 +700,13 @@ public class ReserveListActivity extends AppCompatActivity
     /*** 各ウィジェットの初期化処理 && 社員情報の取得 ***/
     init();
 
-    setContentView(R.layout.activity_main);
+
     super.onCreate(savedInstanceState);
+    //*** 管理者認証済みだったら、テーマを変更する ***//
+    if (Util.isAuthAdmin(authFlg)) {
+      setTheme(R.style.SecondTheme);
+    }
+    setContentView(R.layout.activity_main);
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
@@ -733,8 +736,8 @@ public class ReserveListActivity extends AppCompatActivity
 //        }
     /*** 社員ID と アプリ起動時の日付を渡して、描画する ***/
     arl_view_timetableView = (TimeTableView) this.findViewById(R.id.arl_view_timetable);
-    Log.d("call", employee.getEmp_id());
-    Log.d("call", arl_txt_date.getText().toString());
+    Log.d(CALL, employee.getEmp_id());
+    Log.d(CALL, arl_txt_date.getText().toString());
     arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
 
     arl_txt_date.setOnClickListener(new View.OnClickListener() {
@@ -786,7 +789,7 @@ public class ReserveListActivity extends AppCompatActivity
     arl_btn_search.setOnLongClickListener(new View.OnLongClickListener() {
       @Override
       public boolean onLongClick(View v) {
-        Log.d("call", "call ReserveListActivity.onLongClick()");
+        Log.d(CALL, "call ReserveListActivity.onLongClick()");
 //        Toast.makeText(ReserveListActivity.this, "aaaaaaaaa", Toast.LENGTH_SHORT).show();
 //
 //        Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -886,12 +889,12 @@ public class ReserveListActivity extends AppCompatActivity
         AuthDialog authDialog = new AuthDialog();
         authDialog.show(getFragmentManager(), "aaa");
         break;
+      //*** 「管理者ログアウト」が選択されたとき ***//
+      case R.id.nav_admin_logout:
+        AdminLogOut adminLogOut = new AdminLogOut();
+        adminLogOut.show(getFragmentManager(), "adminLogOut");
 
     }
-
-    // ようわからん(笑) ＝＝＞ HCPには書かんでいいよ
-    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-    drawer.closeDrawer(GravityCompat.START);
     return true;
   }
 
@@ -912,26 +915,25 @@ public class ReserveListActivity extends AppCompatActivity
           arl_view_timetableView.y = 0;
           thCnt = 0;
         }
-        Log.d("call", "Thread");
+        Log.d(CALL, "Thread");
         String[] info = arl_view_timetableView.getSelectedReserve();
-        Log.d("call", "info :: " + Arrays.toString(info));
+        Log.d(CALL, "info :: " + Arrays.toString(info));
         //*** 新規予約登録画面への遷移 ***//
         if (info[0].equals(NONE)) {
-          Log.d("call", "新規予約登録画面への遷移");
+          Log.d(CALL, "新規予約登録画面への遷移");
           Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
           //*** オブジェクト渡しがエラーのため、コメアウト ***//
-//                    intent.putExtra("emp", employee);                           //*** 社員インスタンスをインテント渡し ***//
+          //                    intent.putExtra("emp", employee);                           //*** 社員インスタンスをインテント渡し ***//
           intent.putExtra("emp_id", employee.getEmp_id());
-
           intent.putExtra("date", arl_txt_date.getText().toString()); //*** 選択されている日付をインテント渡し ***//
           intent.putExtra("roomId", info[1]);                         //*** 会議室IDを渡す ***//
 
           startActivity(intent);  //*** 新規予約登録画面 ***//
         } else {
-          Log.d("call", "予約確認画面への遷移");
+          Log.d(CALL, "予約確認画面への遷移");
           Reserve reserve = Reserve.retReserveConfirm(info[1]); //*** 特定した予約IDを基に、予約情報を検索 ***//
 
-//                    intent.putExtra("emp", employee); //*** 不要？ ***//
+          //                    intent.putExtra("emp", employee); //*** 不要？ ***//
           Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
           intent.putExtra("gamen", "1");          //*** どの画面からの遷移か ***//
           intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
@@ -947,25 +949,24 @@ public class ReserveListActivity extends AppCompatActivity
         }
       }
     });
-
-    thread.start();
-
     //*** アプリを立ち上げた日付の、会議をAlarmManagerに登録する ***//
-    Log.d("call", "---------------------------------------------------------");
-    Log.d("call", String.format("アプリを立ち上げた[%s] の日付の会議をAlarmManagerに登録していくよー", arl_txt_date.getText().toString()));
+    Log.d(CALL, "---------------------------------------------------------");
+    Log.d(CALL, String.format("アプリを立ち上げた[%s] の日付の会議をAlarmManagerに登録していくよー", arl_txt_date.getText().
+
+        toString()));
+
     //*** onResume()は何度も呼ばれるので、最終的には、新規で、追加されたアプリ起動時の日付の会議”だけ”を ***//
     //*** AlarmManager に  追加するロジックにしよう！***//
-
     //*** AlarmManager登録メソッド ***//
-    registAlarmManager(arl_txt_date.getText().toString());
+    registAlarmManager(arl_txt_date.getText().
 
-    Log.d("call", "---------------------------------------------------------");
-
+        toString());
+    Log.d(CALL, "---------------------------------------------------------");
   }
 
 
   //*** SelfMadeMethod ***//
-  //*** ウィジェットの初期化処理メソッド ***//
+//*** ウィジェットの初期化処理メソッド ***//
   private void init() {
     Log.d(TAG, "init()");
 
@@ -973,12 +974,11 @@ public class ReserveListActivity extends AppCompatActivity
     // IMEIクラスのインスタンスを生成
     Imei imei = new Imei();
     imei.getTerminalImei(); // 端末IMEIを取得する
-
     // 社員情報の設定
     Object o = imei.getEmployeeInfo(); // 端末IMEIから、社員クラスのインスタンスを生成
     if (o != null) {
       employee = (Employee) o;
-      Log.d("call", employee.toString());
+      Log.d(CALL, employee.toString());
     }
   }
 
@@ -987,35 +987,43 @@ public class ReserveListActivity extends AppCompatActivity
     return instance;
   }
 
-  //*** アプリ起動時の会議を、AlarmManagerに登録するメソッド ***//
-  private void registAlarmManager(String today) {
-    //*** アプリ起動時の会議の件数、予約情報を取得する ***//
-    List<Reserve> reserves = new ArrayList<>();
-    Cursor c = db.rawQuery(Q_SELECT_TODAY_CONFERENCE, new String[]{employee.getEmp_id(), today});
-    while (c.moveToNext()) {
-      Reserve r = new Reserve();
-      r.setRe_id(c.getString(0));                                     //*** 予約ID ***//
-      r.setRe_name(c.getString(1));                                   //*** 概要 ***//
-      r.setRe_startDay(c.getString(2));                               //*** 開始日時 ***//
-      r.setRe_endDay(c.getString(3));                                 //*** 終了日時 ***//
-      r.setRe_startTime(c.getString(4));                              //*** 開始時刻 ***//
-      r.setRe_endTime(c.getString(5));                                //*** 終了時刻 ***//
-      r.setRe_switch(c.getString(6).contains("0") ? "社内" : "社外");   //*** 社内社外区分 ***//
-      r.setRe_room_id(c.getString(12));                               //*** 会議室ID ***//
+//*** アプリ起動時の会議を、AlarmManagerに登録するメソッド ***//
+    private void registAlarmManager (String today){
+      //*** アプリ起動時の会議の件数、予約情報を取得する ***//
+      List<Reserve> reserves = new ArrayList<>();
+      Cursor c = db.rawQuery(Q_SELECT_TODAY_CONFERENCE, new String[]{employee.getEmp_id(), today});
+      while (c.moveToNext()) {
+        Reserve r = new Reserve();
+        r.setRe_id(c.getString(0));                                     //*** 予約ID ***//
+        r.setRe_name(c.getString(1));                                   //*** 概要 ***//
+        r.setRe_startDay(c.getString(2));                               //*** 開始日時 ***//
+        r.setRe_endDay(c.getString(3));                                 //*** 終了日時 ***//
+        r.setRe_startTime(c.getString(4));                              //*** 開始時刻 ***//
+        r.setRe_endTime(c.getString(5));                                //*** 終了時刻 ***//
+        r.setRe_switch(c.getString(6).contains("0") ? "社内" : "社外");   //*** 社内社外区分 ***//
+        r.setRe_room_id(c.getString(12));                               //*** 会議室ID ***//
 //      r.setRe_room_name(Util.returnRoomName(c.getString(12)));        //*** 会議室名 ***//
-      reserves.add(r);  //*** 会議インスタンス追加 ***//
-    }
-    c.close();
+        reserves.add(r);  //*** 会議インスタンス追加 ***//
+      }
+      c.close();
 
-    //*** 取得した会議リスト全件ループ ***//
+      //*** 取得した会議リスト全件ループ ***//
 //    reserves.forEach(r -> {
 //      //*** AlarmManagerの登録 ***//
 //
 //    });
 
 
+    }
+
+    public void onReturnValue (String authFlg){
+      this.authFlg = authFlg;
+    }
 
   }
 
+<<<<<<< HEAD
 }
 >>>>>>> b0427707bf88dce94e53514e6359566f221124c0
+=======
+>>>>>>> master/master

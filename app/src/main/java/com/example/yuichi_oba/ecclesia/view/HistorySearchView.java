@@ -9,6 +9,10 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.example.yuichi_oba.ecclesia.tools.Util;
+
+import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
+
 /**
  * Created by Yuichi-Oba on 2017/09/23.
  */
@@ -52,7 +56,11 @@ public class HistorySearchView extends View {
 
         p_title2 = new Paint();
         p_title2.setStyle(Paint.Style.FILL);
-        p_title2.setColor(Color.parseColor("#4169e1"));
+        p_title2.setColor(Color.parseColor("#4169e1"));         //*** 青系 ***//
+        if (Util.isAuthAdmin(authFlg)){
+            p_title2.setColor(Color.parseColor("#e91e63"));     //*** 赤系 ***//
+        }
+
 
     }
     //*** 描画メソッド ***//
