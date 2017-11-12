@@ -655,12 +655,13 @@ public class ReserveConfirmActivity extends AppCompatActivity
     if (authFlg.contains(NON_AUTH)) {
       //*** 会議の重複をチェックする ***//
       String resultCode = reserve.timeDuplicationCheck(reserve);
-      if (resultCode.contains("false")) {
+      if (resultCode.equals(FALSE)) {
         //*** 重複あり ***//
         Log.d(CALL, "時間の重複が発生！ 処理を抜けます");
+        Toast.makeText(this, "予約不可能です", Toast.LENGTH_SHORT).show();
         return;
-      } else if (resultCode.contains("1")) {
-        ;
+      } else if (resultCode.equals(TRUE)) {
+        Log.d(CALL, "重複チェックTRUEで追い出しを行わない");
       } else {
         Log.d(CALL, "追い出し処理検知！追い出された予約情報を通知します");
         Log.d(CALL, "追い出しされる予約IDは" + resultCode);

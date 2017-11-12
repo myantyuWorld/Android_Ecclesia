@@ -238,7 +238,10 @@ public class Reserve implements Serializable {
     List<Reserve> list = getSameDayMeeting(r);
 
     //*** その日の同じ会議室で会議がない ***//
-    if (list.size() == 0) return TRUE;        //*** 時間の重複なしを返す ***//
+    if (list.size() == 0) {
+      Log.d(CALL, "会議の重複ナッシング");
+      return TRUE;        //*** 時間の重複なしを返す ***//
+    }
                                                 //***  ***/
 
     //*** 開始時刻からみて、同じ時間帯に会議があるかチェック ***//
@@ -272,6 +275,7 @@ public class Reserve implements Serializable {
   }
 
   //*** 引数の指定現在時刻が指定時間帯の範囲内かチェックするメソッド ***//
+  //*** ここがうまく動いていないのか？ ***//
   private boolean isPeriod(Reserve r, Calendar startTime, Calendar endTime) {
     Log.d(CALL, "call Reserve.isPeriod()");
     //*** 取ろうとしている予約の開始情報 ***//
