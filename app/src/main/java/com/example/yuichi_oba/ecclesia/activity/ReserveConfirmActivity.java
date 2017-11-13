@@ -207,6 +207,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     }
 
     //*** 延長オプション選択時の ダイアログフラグメントクラス ***//
+    //*** 結果ダイアログが即出る 見た目をもうちょっとマシに ***//
     public static class ExtentionDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -225,50 +226,42 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //                                SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
                             MyHelper helper = new MyHelper(instance.getApplicationContext());
                             SQLiteDatabase db = helper.getWritableDatabase();
-                            //*** トランザクション開始 ***//
-//                                db.beginTransaction();
-                            //*** 延長情報をDBへ投げるために用意 ***//
-//                                ContentValues con = new ContentValues();
-              //*** 延長による終了時刻を計算 ***//
-              SimpleDateFormat endFor = new SimpleDateFormat(HH_MM);
-              Calendar excal = Calendar.getInstance();
-              Log.d(CALL, "現在の終了時刻：" + reserve.getRe_endTime());
-              //*** フォーマットで変換をかけてCalenderにセット ***//
-              try {
-                excal.setTime(endFor.parse(reserve.getRe_endTime()));
-//                Log.d(CALL, "" + endFor.parse(reserve.getRe_endTime()));
-              } catch (ParseException e) {
-                e.getStackTrace();
-              }
-              //*** セットされたCalenderに延長時間を加算する ***//
-              excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
-              //*** CalenderをDateに変換 ***//
-              Date exDate = excal.getTime();
-              //*** DateをフォーマットにかけてStringに変換 ***//
-              exTime = endFor.format(exDate);
-              Log.d(CALL, "延長時間：" + exTime);
-              //*** コミットみたいな感じ ***//
-//                                db.setTransactionSuccessful();
-                            //*** トランザクション終了 ***//
-//                                db.endTransaction();
+                            //*** 延長による終了時刻を計算 ***//
+                            SimpleDateFormat endFor = new SimpleDateFormat(HH_MM);
+                            Calendar excal = Calendar.getInstance();
+                            Log.d(CALL, "現在の終了時刻：" + reserve.getRe_endTime());
+                            //*** フォーマットで変換をかけてCalenderにセット ***//
+                            try {
+                              excal.setTime(endFor.parse(reserve.getRe_endTime()));
+              //                Log.d(CALL, "" + endFor.parse(reserve.getRe_endTime()));
+                            } catch (ParseException e) {
+                              e.getStackTrace();
+                            }
+                            //*** セットされたCalenderに延長時間を加算する ***//
+                            excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
+                            //*** CalenderをDateに変換 ***//
+                            Date exDate = excal.getTime();
+                            //*** DateをフォーマットにかけてStringに変換 ***//
+                            exTime = endFor.format(exDate);
+                            Log.d(CALL, "延長時間：" + exTime);
+                            //*** reserveの時間に対する書き換えが必要 ***//
+                            db.execSQL("insert into t_extension values(?,?,?,?,?)",
+                                                  new Object[]{reserve.getRe_id(),
+                                                          reserve.getRe_startDay(),
+                                                          reserve.getRe_startTime(),
+                                                          reserve.getRe_endDay(),
+                                                          reserve.getRe_endTime()});
 
-              db.execSQL("insert into t_extension values(?,?,?,?,?)",
-                                    new Object[]{reserve.getRe_id(),
-                                            reserve.getRe_startDay(),
-                                            reserve.getRe_startTime(),
-                                            reserve.getRe_endDay(),
-                                            reserve.getRe_endTime()});
+                                              reserve.endTimeExtention(exTime);
 
-//                                reserve.endTimeExtention(exTime);
-              
-              db.close();
-              helper.close();
-            }
-          }).setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-          }).create();
+                            db.close();
+                            helper.close();
+                          }
+                        }).setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                          @Override
+                          public void onClick(DialogInterface dialog, int which) {
+                          }
+                        }).create();
     }
 
         @Override
