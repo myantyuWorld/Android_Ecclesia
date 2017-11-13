@@ -52,6 +52,10 @@ import java.util.List;
 // _/_/ 利用履歴を検索するアクティビティ
 // _/_/
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+// TODO: 2017/11/13 かいしゃスピナーの会社、履歴にあるかいしゃのみにするロジックの実装 
+// TODO: 2017/11/13 会社名、参加者の文字位置、文字サイズの調整 
+// TODO: 2017/11/13 ぎちぎちで見づらいので、レイアウトの調整
+// TODO: 2017/11/13 メソッド分割
 public class HistorySearchActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
