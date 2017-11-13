@@ -253,8 +253,8 @@ public class Reserve implements Serializable {
 
       Calendar startTime = new GregorianCalendar(starts[YEAR], starts[MONTH], starts[DATE], starts[HOUR], starts[MINUTE]);
       Calendar endTime = new GregorianCalendar(ends[YEAR], ends[MONTH], ends[DATE], ends[HOUR], ends[MINUTE]);
-      Log.d("timeDuplicationCheck", "startTime:" + startTime.get(Calendar.YEAR) + "/" + startTime.get(Calendar.MONTH) + "/" + startTime.get(Calendar.DAY_OF_MONTH));
-      Log.d("timeDuplicationCheck", "endTime:" + endTime.get(Calendar.YEAR) + "/" + endTime.get(Calendar.MONTH) + "/" + endTime.get(Calendar.DAY_OF_MONTH));
+      Log.d(CALL, "startTime:" + startTime.get(Calendar.YEAR) + "/" + startTime.get(Calendar.MONTH) + "/" + startTime.get(Calendar.DAY_OF_MONTH));
+      Log.d(CALL, "endTime:" + endTime.get(Calendar.YEAR) + "/" + endTime.get(Calendar.MONTH) + "/" + endTime.get(Calendar.DAY_OF_MONTH));
 
       if (!isPeriod(r, startTime, endTime)) {
         Log.d(CALL, "時間の重複が発生：（暫定）処理を終了します");
@@ -310,6 +310,10 @@ public class Reserve implements Serializable {
     if (calStart.before(startTime) && calEnd.after(endTime)) {
       //*** NOWSTART ---- S ---- E ---- NOWEND のパターン***//
       Log.d(CALL, "//*** NOWSTART ---- S ---- E ---- NOWEND のパターン***// で重複");
+      return false; //*** 重複あり ***//
+    }
+    if ((calStart.after(startTime) && calStart.before(endTime)) || (calEnd.after(startTime) && calEnd.before(endTime))) {
+      Log.d(CALL, "start endの一方が重なっていたパターン");
       return false; //*** 重複あり ***//
     }
     return true;  //*** チェックに何も引っかからなかったら、True（重複なし）を返す ***//
