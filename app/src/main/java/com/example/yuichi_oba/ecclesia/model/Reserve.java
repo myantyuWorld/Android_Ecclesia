@@ -30,243 +30,242 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
 
 public class Reserve implements Serializable {
 
-    public static final int YEAR = 0;
-    public static final int MONTH = 1;
-    public static final int DATE = 2;
-    public static final int HOUR = 3;
-    public static final int MINUTE = 4;
-    public static final String SYANAI = "0";
-    public static final String SYAGAI = "1";
-    //    private MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
-    public static SQLiteDatabase db;
+  public static final int YEAR = 0;
+  public static final int MONTH = 1;
+  public static final int DATE = 2;
+  public static final int HOUR = 3;
+  public static final int MINUTE = 4;
+  public static final String SYANAI = "0";
+  public static final String SYAGAI = "1";
+  //    private MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
+  public static SQLiteDatabase db;
 
-    public static final String Q_SAME_DAY_MEETING = "select * from t_reserve where re_startday = ? and room_id = ?";
-    private static final String Q_SELECT_TEST = "select * from v_reserve_member x inner join m_room y on x.room_id = y.room_id inner join t_emp as z on x.re_applicant = z.emp_id where re_id = ?";
+  public static final String Q_SAME_DAY_MEETING = "select * from t_reserve where re_startday = ? and room_id = ?";
+  private static final String Q_SELECT_TEST = "select * from v_reserve_member x inner join m_room y on x.room_id = y.room_id inner join t_emp as z on x.re_applicant = z.emp_id where re_id = ?";
+  //*** Field ***//
+  private long id;                        //*** ID(long型)***//
+  private String re_id;                   //*** 予約ID ***//
+  private String re_name;                 //*** 概要 ***//
+  private String re_startDay;             //*** 開始日時 ***//
+  private String re_startTime;            //*** 開始時刻 ***//
+  private String re_endDay;               //*** 終了日時 ***//
+  private String re_endTime;              //*** 終了時刻 ***//
+  private String re_fixtures;             //*** 備品 ***//
+  private String re_remarks;              //*** 備考 ***//
+  private String re_switch;               //*** 社内/社外区分 0 社内 1 社外***//
+  private String re_company;              //*** 参加する会社名 ***//
+  private Integer re_mem_priority;        //*** 参加者全員の平均の優先度 ***//
+  private String re_purpose_id;           //*** 会議目的ID ***//
+  private String re_purpose_name;         //*** 会議目的名 ***//
+  private String re_applicant;            //*** 申請者 ***//
+  private String re_room_id;              //*** 会議室ID ***//
+  private String re_room_name;            //*** 会議室名 ***//
 
-    //*** Field ***//
-    private long id;                        //*** ID(long型)***//
-    private String re_id;                   //*** 予約ID ***//
-    private String re_name;                 //*** 概要 ***//
-    private String re_startDay;             //*** 開始日時 ***//
-    private String re_startTime;            //*** 開始時刻 ***//
-    private String re_endDay;               //*** 終了日時 ***//
-    private String re_endTime;              //*** 終了時刻 ***//
-    private String re_fixtures;             //*** 備品 ***//
-    private String re_remarks;              //*** 備考 ***//
-    private String re_switch;               //*** 社内/社外区分 0 社内 1 社外***//
-    private String re_company;              //*** 参加する会社名 ***//
-    private Integer re_mem_priority;        //*** 参加者全員の平均の優先度 ***//
-    private String re_purpose_id;           //*** 会議目的ID ***//
-    private String re_purpose_name;         //*** 会議目的名 ***//
-    private String re_applicant;            //*** 申請者 ***//
-    private String re_room_id;              //*** 会議室ID ***//
-    private String re_room_name;            //*** 会議室名 ***//
+  //    private List<Employee> re_member;
+  private List<Person> re_member;         //*** 参加者を保持するための、ポリモー使用のリスト ***//
+  private float[] coop;                   //*** 予約情報の座標情報を保持するfloat型配列 ***//
 
-    //    private List<Employee> re_member;
-    private List<Person> re_member;         //*** 参加者を保持するための、ポリモー使用のリスト ***//
-    private float[] coop;                   //*** 予約情報の座標情報を保持するfloat型配列 ***//
+  public Reserve() {
+  }
 
-    public Reserve() {
+  //*** GetterSetter ***//
+  public String getRe_id() {
+    return re_id;
+  }
+
+  public void setRe_id(String re_id) {
+    this.re_id = re_id;
+  }
+
+  public String getRe_name() {
+    return re_name;
+  }
+
+  public void setRe_name(String re_name) {
+    this.re_name = re_name;
+  }
+
+  public String getRe_startDay() {
+    return re_startDay;
+  }
+
+  public void setRe_startDay(String re_startDay) {
+    this.re_startDay = re_startDay;
+  }
+
+  public String getRe_startTime() {
+    return re_startTime;
+  }
+
+  public void setRe_startTime(String re_startTime) {
+    this.re_startTime = re_startTime;
+  }
+
+  public String getRe_endDay() {
+    return re_endDay;
+  }
+
+  public void setRe_endDay(String re_endDay) {
+    this.re_endDay = re_endDay;
+  }
+
+  public String getRe_endTime() {
+    return re_endTime;
+  }
+
+  public void setRe_endTime(String re_endTime) {
+    this.re_endTime = re_endTime;
+  }
+
+  public String getRe_fixtures() {
+    return re_fixtures;
+  }
+
+  public void setRe_fixtures(String re_fixtures) {
+    this.re_fixtures = re_fixtures;
+  }
+
+  public String getRe_remarks() {
+    return re_remarks;
+  }
+
+  public void setRe_remarks(String re_remarks) {
+    this.re_remarks = re_remarks;
+  }
+
+  public String getRe_switch() {
+    return re_switch;
+  }
+
+  public void setRe_switch(String re_switch) {
+    this.re_switch = re_switch;
+  }
+
+  public Integer getRe_mem_priority() {
+    return re_mem_priority;
+  }
+
+  public void setRe_mem_priority(Integer re_mem_priority) {
+    this.re_mem_priority = re_mem_priority;
+  }
+
+  public String getRe_purpose_id() {
+    return re_purpose_id;
+  }
+
+  public void setRe_purpose_id(String re_purpose_id) {
+    this.re_purpose_id = re_purpose_id;
+  }
+
+  public String getRe_purpose_name() {
+    return re_purpose_name;
+  }
+
+  public void setRe_purpose_name(String re_purpose_name) {
+    this.re_purpose_name = re_purpose_name;
+  }
+
+  public String getRe_applicant() {
+    return re_applicant;
+  }
+
+  public void setRe_applicant(String re_applicant) {
+    this.re_applicant = re_applicant;
+  }
+
+  public String getRe_room_id() {
+    return re_room_id;
+  }
+
+  public void setRe_room_id(String re_room_id) {
+    this.re_room_id = re_room_id;
+  }
+
+  public float[] getCoop() {
+    return coop;
+  }
+
+  public void setCoop(float[] coop) {
+    this.coop = coop;
+  }
+
+  public String getRe_company() {
+    return re_company;
+  }
+
+  public void setRe_company(String re_company) {
+    this.re_company = re_company;
+  }
+
+  public List<Person> getRe_member() {
+    return re_member;
+  }
+
+  public void setRe_member(List<Person> re_member) {
+    this.re_member = re_member;
+  }
+
+  public String getRe_room_name() {
+    return re_room_name;
+  }
+
+  public void setRe_room_name(String re_room_name) {
+    this.re_room_name = re_room_name;
+  }
+
+  public long getId() {
+    return id;
+  }
+
+  public void setId(long id) {
+    this.id = id;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("予約ID : %s 予約概要 : %s", this.re_id, this.re_name);
+  }
+
+  //*** ------------------------ ***//
+  //*** --- SELF MADE METHOD --- ***//
+  //*** ------------------------ ***//
+  //*** --- SELF MADE METHOD --- 参加者優先度を計算するメソッド ***//
+  public int retMemberPriority() {
+    return 1;
+  }
+
+  //*** --- SELF MADE METHOD --- 会議の時間帯の重複をチェックするメソッド ***//
+  public String timeDuplicationCheck(Reserve r) {
+    Util.easyLog("Reserve SELF MADE METHOD");
+    Log.d(CALL, "call Reserve.timeDuplicateCheck()");
+    //*** 引数の会議日と同じ会議をListで取得する ***//
+    List<Reserve> list = getSameDayMeeting(r);
+
+    //*** その日の同じ会議室で会議がない ***//
+    if (list.size() == 0) {
+      Log.d(CALL, "会議の重複ナッシング");
+      return TRUE;        //*** 時間の重複なしを返す ***//
     }
+                                                //***  ***/
 
-    //*** GetterSetter ***//
-    public String getRe_id() {
-        return re_id;
-    }
+    //*** 開始時刻からみて、同じ時間帯に会議があるかチェック ***//
+    for (Reserve other : list) {      //*** 同じ日付の会議リストをループ ***//
+      //*** 同じ時間帯かチェック ***//
+      // (year, month, date, hour, minute) monthの範囲は0-11で1月は0
+      int[] starts = argsStartIntValue(other);    //*** 同じ日付の会議の開始時刻 ***//
+      int[] ends = argsEndIntValue(other);        //*** 同じ日付の会議の終了時刻 ***//
 
-    public void setRe_id(String re_id) {
-        this.re_id = re_id;
-    }
+      Calendar startTime = new GregorianCalendar(starts[YEAR], starts[MONTH], starts[DATE], starts[HOUR], starts[MINUTE]);
+      Calendar endTime = new GregorianCalendar(ends[YEAR], ends[MONTH], ends[DATE], ends[HOUR], ends[MINUTE]);
+      Log.d(CALL, "startTime:" + startTime.get(Calendar.YEAR) + "/" + startTime.get(Calendar.MONTH) + "/" + startTime.get(Calendar.DAY_OF_MONTH));
+      Log.d(CALL, "endTime:" + endTime.get(Calendar.YEAR) + "/" + endTime.get(Calendar.MONTH) + "/" + endTime.get(Calendar.DAY_OF_MONTH));
 
-    public String getRe_name() {
-        return re_name;
-    }
-
-    public void setRe_name(String re_name) {
-        this.re_name = re_name;
-    }
-
-    public String getRe_startDay() {
-        return re_startDay;
-    }
-
-    public void setRe_startDay(String re_startDay) {
-        this.re_startDay = re_startDay;
-    }
-
-    public String getRe_startTime() {
-        return re_startTime;
-    }
-
-    public void setRe_startTime(String re_startTime) {
-        this.re_startTime = re_startTime;
-    }
-
-    public String getRe_endDay() {
-        return re_endDay;
-    }
-
-    public void setRe_endDay(String re_endDay) {
-        this.re_endDay = re_endDay;
-    }
-
-    public String getRe_endTime() {
-        return re_endTime;
-    }
-
-    public void setRe_endTime(String re_endTime) {
-        this.re_endTime = re_endTime;
-    }
-
-    public String getRe_fixtures() {
-        return re_fixtures;
-    }
-
-    public void setRe_fixtures(String re_fixtures) {
-        this.re_fixtures = re_fixtures;
-    }
-
-    public String getRe_remarks() {
-        return re_remarks;
-    }
-
-    public void setRe_remarks(String re_remarks) {
-        this.re_remarks = re_remarks;
-    }
-
-    public String getRe_switch() {
-        return re_switch;
-    }
-
-    public void setRe_switch(String re_switch) {
-        this.re_switch = re_switch;
-    }
-
-    public Integer getRe_mem_priority() {
-        return re_mem_priority;
-    }
-
-    public void setRe_mem_priority(Integer re_mem_priority) {
-        this.re_mem_priority = re_mem_priority;
-    }
-
-    public String getRe_purpose_id() {
-        return re_purpose_id;
-    }
-
-    public void setRe_purpose_id(String re_purpose_id) {
-        this.re_purpose_id = re_purpose_id;
-    }
-
-    public String getRe_purpose_name() {
-        return re_purpose_name;
-    }
-
-    public void setRe_purpose_name(String re_purpose_name) {
-        this.re_purpose_name = re_purpose_name;
-    }
-
-    public String getRe_applicant() {
-        return re_applicant;
-    }
-
-    public void setRe_applicant(String re_applicant) {
-        this.re_applicant = re_applicant;
-    }
-
-    public String getRe_room_id() {
-        return re_room_id;
-    }
-
-    public void setRe_room_id(String re_room_id) {
-        this.re_room_id = re_room_id;
-    }
-
-    public float[] getCoop() {
-        return coop;
-    }
-
-    public void setCoop(float[] coop) {
-        this.coop = coop;
-    }
-
-    public String getRe_company() {
-        return re_company;
-    }
-
-    public void setRe_company(String re_company) {
-        this.re_company = re_company;
-    }
-
-    public List<Person> getRe_member() {
-        return re_member;
-    }
-
-    public void setRe_member(List<Person> re_member) {
-        this.re_member = re_member;
-    }
-
-    public String getRe_room_name() {
-        return re_room_name;
-    }
-
-    public void setRe_room_name(String re_room_name) {
-        this.re_room_name = re_room_name;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("予約ID : %s 予約概要 : %s", this.re_id, this.re_name);
-    }
-
-    //*** ------------------------ ***//
-    //*** --- SELF MADE METHOD --- ***//
-    //*** ------------------------ ***//
-    //*** --- SELF MADE METHOD --- 参加者優先度を計算するメソッド ***//
-    public int retMemberPriority() {
-        return 1;
-    }
-
-    //*** --- SELF MADE METHOD --- 会議の時間帯の重複をチェックするメソッド ***//
-    public String timeDuplicationCheck(Reserve r) {
-        Util.easyLog("Reserve SELF MADE METHOD");
-        Log.d(CALL, "call Reserve.timeDuplicateCheck()");
-        //*** 引数の会議日と同じ会議をListで取得する ***//
-        List<Reserve> list = getSameDayMeeting(r);
-
-        //*** その日の同じ会議室で会議がない ***//
-        if (list.size() == 0) {
-            Log.d(CALL, "会議の重複ナッシング");
-            return TRUE;        //*** 時間の重複なしを返す ***//
-        }
-        //***  ***/
-
-        //*** 開始時刻からみて、同じ時間帯に会議があるかチェック ***//
-        for (Reserve other : list) {      //*** 同じ日付の会議リストをループ ***//
-            //*** 同じ時間帯かチェック ***//
-            // (year, month, date, hour, minute) monthの範囲は0-11で1月は0
-            int[] starts = argsStartIntValue(other);    //*** 同じ日付の会議の開始時刻 ***//
-            int[] ends = argsEndIntValue(other);        //*** 同じ日付の会議の終了時刻 ***//
-
-            Calendar startTime = new GregorianCalendar(starts[YEAR], starts[MONTH], starts[DATE], starts[HOUR], starts[MINUTE]);
-            Calendar endTime = new GregorianCalendar(ends[YEAR], ends[MONTH], ends[DATE], ends[HOUR], ends[MINUTE]);
-            Log.d(CALL, "startTime:" + startTime.get(Calendar.YEAR) + "/" + startTime.get(Calendar.MONTH) + "/" + startTime.get(Calendar.DAY_OF_MONTH));
-            Log.d(CALL, "endTime:" + endTime.get(Calendar.YEAR) + "/" + endTime.get(Calendar.MONTH) + "/" + endTime.get(Calendar.DAY_OF_MONTH));
-
-            if (!isPeriod(r, startTime, endTime)) {
-                Log.d(CALL, "時間の重複が発生：（暫定）処理を終了します");
-                Log.d(CALL, "本来はここで、優先度チェックを行い、追い出し処理を行う");
-                //*** 本来はここで、優先度チェックを行い、追い出し処理を行う priorityCheck()***//
-                if (priorityCheck(r, other)) {
-                    //*** 優先度で「勝ち」==> 追い出し処理を行う eviction()***//
+      if (!isPeriod(r, startTime, endTime)) {
+        Log.d(CALL, "時間の重複が発生：（暫定）処理を終了します");
+        Log.d(CALL, "本来はここで、優先度チェックを行い、追い出し処理を行う");
+        //*** 本来はここで、優先度チェックを行い、追い出し処理を行う priorityCheck()***//
+        if (priorityCheck(r, other)) {
+          //*** 優先度で「勝ち」==> 追い出し処理を行う eviction()***//
 //          r.eviction(other.getRe_id());
                     Log.d(CALL, other.getRe_id());
                     return other.getRe_id();  //*** 追い出し対象の、予約IDを返す ***//
@@ -278,83 +277,82 @@ public class Reserve implements Serializable {
         return TRUE;
     }
 
+  //*** 引数の指定現在時刻が指定時間帯の範囲内かチェックするメソッド ***//
+  //*** ここがうまく動いていないのか？ ***//
+  private boolean isPeriod(Reserve r, Calendar startTime, Calendar endTime) {
+    Log.d(CALL, "call Reserve.isPeriod()");
+    //*** 取ろうとしている予約の開始情報 ***//
+    Calendar calStart = Calendar.getInstance();
+    calStart.set(
+        Integer.parseInt(r.getRe_startDay().split("/")[0]),   //*** year ***//
+        Integer.parseInt(r.getRe_startDay().split("/")[1]),   //*** month ***//
+        Integer.parseInt(r.getRe_startDay().split("/")[2]),   //*** date ***//
+        Integer.parseInt(r.getRe_startTime().split("：")[0]), //*** hour ***//
+        Integer.parseInt(r.getRe_startTime().split("：")[1])  //*** minute ***//
+    );
+    //*** 取ろうとしている予約の終了情報 ***//
+    Calendar calEnd = Calendar.getInstance();
+    calEnd.set(
+        Integer.parseInt(r.getRe_endDay().split("/")[0]),   //*** year ***//
+        Integer.parseInt(r.getRe_endDay().split("/")[1]),   //*** month ***//
+        Integer.parseInt(r.getRe_endDay().split("/")[2]),   //*** date ***//
+        Integer.parseInt(r.getRe_endTime().split("：")[0]), //*** hour ***//
+        Integer.parseInt(r.getRe_endTime().split("：")[1])  //*** minute ***//
+    );
+    Log.d(CALL, String.format("今からとる予約の、開始: %s", String.valueOf(calStart.getTime())));
+    Log.d(CALL, String.format("今からとる予約の、終了: %s", String.valueOf(calEnd.getTime())));
+    Log.d(CALL, String.format("過去の開始 %s", String.valueOf(startTime.getTime())));
+    Log.d(CALL, String.format("過去の終了 %s", String.valueOf(endTime.getTime())));
 
-    //*** 引数の指定現在時刻が指定時間帯の範囲内かチェックするメソッド ***//
-//*** ここがうまく動いていないのか？ ***//
-    private boolean isPeriod(Reserve r, Calendar startTime, Calendar endTime) {
-        Log.d(CALL, "call Reserve.isPeriod()");
-        //*** 取ろうとしている予約の開始情報 ***//
-        Calendar calStart = Calendar.getInstance();
-        calStart.set(
-                Integer.parseInt(r.getRe_startDay().split("/")[0]),   //*** year ***//
-                Integer.parseInt(r.getRe_startDay().split("/")[1]),   //*** month ***//
-                Integer.parseInt(r.getRe_startDay().split("/")[2]),   //*** date ***//
-                Integer.parseInt(r.getRe_startTime().split("：")[0]), //*** hour ***//
-                Integer.parseInt(r.getRe_startTime().split("：")[1])  //*** minute ***//
-        );
-        //*** 取ろうとしている予約の終了情報 ***//
-        Calendar calEnd = Calendar.getInstance();
-        calEnd.set(
-                Integer.parseInt(r.getRe_endDay().split("/")[0]),   //*** year ***//
-                Integer.parseInt(r.getRe_endDay().split("/")[1]),   //*** month ***//
-                Integer.parseInt(r.getRe_endDay().split("/")[2]),   //*** date ***//
-                Integer.parseInt(r.getRe_endTime().split("：")[0]), //*** hour ***//
-                Integer.parseInt(r.getRe_endTime().split("：")[1])  //*** minute ***//
-        );
-        Log.d(CALL, String.format("今からとる予約の、開始: %s", String.valueOf(calStart.getTime())));
-        Log.d(CALL, String.format("今からとる予約の、終了: %s", String.valueOf(calEnd.getTime())));
-        Log.d(CALL, String.format("過去の開始 %s", String.valueOf(startTime.getTime())));
-        Log.d(CALL, String.format("過去の終了 %s", String.valueOf(endTime.getTime())));
 
-
-        if (calStart.after(startTime) && calStart.before(endTime) && calEnd.after(startTime) && calEnd.before(endTime)) {
-            //*** S ---- NOWSTART || NOWEND ---- E のパターン***//
-            Log.d(CALL, "//*** S ---- NOWSTART || NOWEND ---- E のパターン***// で重複");
-            return false; //*** 重複あり ***//
-        }
-        if (calStart.before(startTime) && calEnd.after(endTime)) {
-            //*** NOWSTART ---- S ---- E ---- NOWEND のパターン***//
-            Log.d(CALL, "//*** NOWSTART ---- S ---- E ---- NOWEND のパターン***// で重複");
-            return false; //*** 重複あり ***//
-        }
-        if ((calStart.after(startTime) && calStart.before(endTime)) || (calEnd.after(startTime) && calEnd.before(endTime))) {
-            Log.d(CALL, "start endの一方が重なっていたパターン");
-            return false; //*** 重複あり ***//
-        }
-        return true;  //*** チェックに何も引っかからなかったら、True（重複なし）を返す ***//
+    if (calStart.after(startTime) && calStart.before(endTime) && calEnd.after(startTime) && calEnd.before(endTime)) {
+      //*** S ---- NOWSTART || NOWEND ---- E のパターン***//
+      Log.d(CALL, "//*** S ---- NOWSTART || NOWEND ---- E のパターン***// で重複");
+      return false; //*** 重複あり ***//
     }
-
-    //***  ***//
-    private int[] argsStartIntValue(Reserve o) {
-        int[] ints = new int[5];
-        Log.d(CALL, String.format("他の、開始 %s %s", o.getRe_startDay(), o.getRe_startTime()));
-
-        ints[0] = Integer.parseInt(o.getRe_startDay().split("/")[0]);
-        ints[1] = Integer.parseInt(o.getRe_startDay().split("/")[1]);
-        ints[2] = Integer.parseInt(o.getRe_startDay().split("/")[2]);
-        ints[3] = Integer.parseInt(o.getRe_startTime().split("：")[0]);
-        ints[4] = Integer.parseInt(o.getRe_startTime().split("：")[1]);
-
-        return ints;
+    if (calStart.before(startTime) && calEnd.after(endTime)) {
+      //*** NOWSTART ---- S ---- E ---- NOWEND のパターン***//
+      Log.d(CALL, "//*** NOWSTART ---- S ---- E ---- NOWEND のパターン***// で重複");
+      return false; //*** 重複あり ***//
     }
-
-    //***  ***//
-    private int[] argsEndIntValue(Reserve o) {
-        int[] ints = new int[5];
-        Log.d(CALL, String.format("他の、終了 %s %s", o.getRe_endDay(), o.getRe_endTime()));
-
-        ints[0] = Integer.parseInt(o.getRe_endDay().split("/")[0]);
-        ints[1] = Integer.parseInt(o.getRe_endDay().split("/")[1]);
-        ints[2] = Integer.parseInt(o.getRe_endDay().split("/")[2]);
-        ints[3] = Integer.parseInt(o.getRe_endTime().split("：")[0]);
-        ints[4] = Integer.parseInt(o.getRe_endTime().split("：")[1]);
-
-        return ints;
+    if ((calStart.after(startTime) && calStart.before(endTime)) || (calEnd.after(startTime) && calEnd.before(endTime))) {
+      Log.d(CALL, "start endの一方が重なっていたパターン");
+      return false; //*** 重複あり ***//
     }
+    return true;  //*** チェックに何も引っかからなかったら、True（重複なし）を返す ***//
+  }
 
-    //*** 引数の会議日と同じ会議をListで取得する ***//
-    private List<Reserve> getSameDayMeeting(Reserve r) {
-        Log.d("getSameDayMeeting", "getSameDayMeeting突入");
+  //***  ***//
+  private int[] argsStartIntValue(Reserve o) {
+    int[] ints = new int[5];
+    Log.d(CALL, String.format("他の、開始 %s %s", o.getRe_startDay(), o.getRe_startTime()));
+
+    ints[0] = Integer.parseInt(o.getRe_startDay().split("/")[0]);
+    ints[1] = Integer.parseInt(o.getRe_startDay().split("/")[1]);
+    ints[2] = Integer.parseInt(o.getRe_startDay().split("/")[2]);
+    ints[3] = Integer.parseInt(o.getRe_startTime().split("：")[0]);
+    ints[4] = Integer.parseInt(o.getRe_startTime().split("：")[1]);
+
+    return ints;
+  }
+
+  //***  ***//
+  private int[] argsEndIntValue(Reserve o) {
+    int[] ints = new int[5];
+    Log.d(CALL, String.format("他の、終了 %s %s", o.getRe_endDay(), o.getRe_endTime()));
+
+    ints[0] = Integer.parseInt(o.getRe_endDay().split("/")[0]);
+    ints[1] = Integer.parseInt(o.getRe_endDay().split("/")[1]);
+    ints[2] = Integer.parseInt(o.getRe_endDay().split("/")[2]);
+    ints[3] = Integer.parseInt(o.getRe_endTime().split("：")[0]);
+    ints[4] = Integer.parseInt(o.getRe_endTime().split("：")[1]);
+
+    return ints;
+  }
+
+  //*** 引数の会議日と同じ会議をListで取得する ***//
+  private List<Reserve> getSameDayMeeting(Reserve r) {
+    Log.d("getSameDayMeeting", "getSameDayMeeting突入");
 //    MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
         MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
         SQLiteDatabase db = helper.getReadableDatabase();
