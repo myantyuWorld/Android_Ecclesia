@@ -351,6 +351,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     } else {                         //*** 「一覧」画面からの画面遷移 ***//
       reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
+        Log.d("call", reserve.toString());
       employee = (Employee) intent.getSerializableExtra("employee");
       Log.d("Emp in Confirm:", employee.toString());
 
@@ -657,11 +658,11 @@ public class ReserveConfirmActivity extends AppCompatActivity
       String resultCode = reserve.timeDuplicationCheck(reserve);
       if (resultCode.equals(FALSE)) {
         //*** 重複あり ***//
-        Log.d(CALL, "時間の重複が発生！ 処理を抜けます");
+        Log.d(CALL, "時間の重複が発生！ 優先度も負けたパターン:処理を抜けます");
         Toast.makeText(this, "予約不可能です", Toast.LENGTH_SHORT).show();
         return;
       } else if (resultCode.equals(TRUE)) {
-        Log.d(CALL, "重複チェックTRUEで追い出しを行わない");
+        Log.d(CALL, "(重複なし)で追い出しを行わない");
       } else {
         Log.d(CALL, "追い出し処理検知！追い出された予約情報を通知します");
         Log.d(CALL, "追い出しされる予約IDは" + resultCode);
