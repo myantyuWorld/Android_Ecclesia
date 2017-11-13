@@ -122,7 +122,7 @@ public class MyHelper extends SQLiteOpenHelper {
     public static String Q_INSERT_TERMINAL = "INSERT INTO `m_terminal` (ter_id,emp_id) VALUES ('0','0002'),  " +
             " ('1','9999'),  " +
             " ('353608065049143','0001');";
-    public static String Q_INSERT_RESERVE = "INSERT INTO `t_reserve` (re_id,re_overview,re_startday,re_endday,re_starttime,re_endtime,re_switch,re_fixture,re_remarks,re_priority,com_id,emp_id,room_id,pur_id,re_applicant) VALUES ('0001','新規プロジェクト報告','2018/01/17','2018/01/17','08：00','09：00',1,'プロジェクタ','なし',7,'0001','0002','0001','0001','0002'),  " +
+    public static String Q_INSERT_RESERVE = "INSERT INTO `t_reserve` (re_id,re_overview,re_startday,re_endday,re_starttime,re_endtime,re_switch,re_fixture,re_remarks,re_priority,com_id,emp_id,room_id,pur_id,re_applicant) VALUES ('0001','新規プロジェクト報告','2018/01/17','2018/01/17','08：00','09：00',1,'プロジェクタ','なし',1,'0001','0002','0001','0001','0002'),  " +
             " ('0002','進捗の会議','2018/01/17','2018/01/17','08：00','10：30',1,'プロジェクタ','なし',5,'0002','0002','0002','0002','0002'),  " +
             " ('0003','パンフレット説明','2018/01/17','2018/01/17','11：00','13：30',1,'プロジェクタ','なし',4,'0003','0001','0003','0003','0001'),  " +
             " ('0004','売り込み','2018/01/17','2018/01/17','08：00','09：00',0,'プロジェクタ','なし',6,'0000','0002','0004','0003','0002'),  " +

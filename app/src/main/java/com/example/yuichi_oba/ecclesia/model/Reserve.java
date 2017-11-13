@@ -19,7 +19,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
 
 /**
  * Created by Yuichi-Oba on 2017/09/15.
@@ -34,11 +37,12 @@ public class Reserve implements Serializable {
     public static final int MINUTE = 4;
     public static final String SYANAI = "0";
     public static final String SYAGAI = "1";
-    private static final String Q_SELECT_TEST = "select * from v_reserve_member x inner join m_room y on x.room_id = y.room_id inner join t_emp as z on x.re_applicant = z.emp_id where re_id = ?";
     //    private MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
     public static SQLiteDatabase db;
 
     public static final String Q_SAME_DAY_MEETING = "select * from t_reserve where re_startday = ? and room_id = ?";
+    private static final String Q_SELECT_TEST = "select * from v_reserve_member x inner join m_room y on x.room_id = y.room_id inner join t_emp as z on x.re_applicant = z.emp_id where re_id = ?";
+
     //*** Field ***//
     private long id;                        //*** ID(long型)***//
     private String re_id;                   //*** 予約ID ***//
@@ -220,7 +224,7 @@ public class Reserve implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("予約ID : %s 予約概要 : %s, 予約優先度 : %d", this.re_id, this.re_name, this.re_mem_priority);
+        return String.format("予約ID : %s 予約概要 : %s", this.re_id, this.re_name);
     }
 
     //*** ------------------------ ***//
@@ -254,8 +258,8 @@ public class Reserve implements Serializable {
 
             Calendar startTime = new GregorianCalendar(starts[YEAR], starts[MONTH], starts[DATE], starts[HOUR], starts[MINUTE]);
             Calendar endTime = new GregorianCalendar(ends[YEAR], ends[MONTH], ends[DATE], ends[HOUR], ends[MINUTE]);
-            Log.d("timeDuplicationCheck", "startTime:" + startTime.get(Calendar.YEAR) + "/" + startTime.get(Calendar.MONTH) + "/" + startTime.get(Calendar.DAY_OF_MONTH));
-            Log.d("timeDuplicationCheck", "endTime:" + endTime.get(Calendar.YEAR) + "/" + endTime.get(Calendar.MONTH) + "/" + endTime.get(Calendar.DAY_OF_MONTH));
+            Log.d(CALL, "startTime:" + startTime.get(Calendar.YEAR) + "/" + startTime.get(Calendar.MONTH) + "/" + startTime.get(Calendar.DAY_OF_MONTH));
+            Log.d(CALL, "endTime:" + endTime.get(Calendar.YEAR) + "/" + endTime.get(Calendar.MONTH) + "/" + endTime.get(Calendar.DAY_OF_MONTH));
 
             if (!isPeriod(r, startTime, endTime)) {
                 Log.d(CALL, "時間の重複が発生：（暫定）処理を終了します");
@@ -275,8 +279,9 @@ public class Reserve implements Serializable {
         return TRUE;
     }
 
+
     //*** 引数の指定現在時刻が指定時間帯の範囲内かチェックするメソッド ***//
-    //*** ここがうまく動いていないのか？ ***//
+//*** ここがうまく動いていないのか？ ***//
     private boolean isPeriod(Reserve r, Calendar startTime, Calendar endTime) {
         Log.d(CALL, "call Reserve.isPeriod()");
         //*** 取ろうとしている予約の開始情報 ***//
@@ -311,6 +316,10 @@ public class Reserve implements Serializable {
         if (calStart.before(startTime) && calEnd.after(endTime)) {
             //*** NOWSTART ---- S ---- E ---- NOWEND のパターン***//
             Log.d(CALL, "//*** NOWSTART ---- S ---- E ---- NOWEND のパターン***// で重複");
+            return false; //*** 重複あり ***//
+        }
+        if ((calStart.after(startTime) && calStart.before(endTime)) || (calEnd.after(startTime) && calEnd.before(endTime))) {
+            Log.d(CALL, "start endの一方が重なっていたパターン");
             return false; //*** 重複あり ***//
         }
         return true;  //*** チェックに何も引っかからなかったら、True（重複なし）を返す ***//
@@ -376,7 +385,8 @@ public class Reserve implements Serializable {
     }
 
     //*** --- SELF MADE METHOD --- 優先度をチェックするメソッド  ***//
-    //*** true : 勝ち false : 負け                            ***//
+//*** true : 勝ち false : 負け                            ***//
+    // TODO: 2017/11/13 会議目的優先度をみて、おなじなら、メンバーの優先度見るロジックのじっそう
     public boolean priorityCheck(Reserve r, Reserve o) {
         Log.d(CALL, "call Reserve->priorityCheck()");
 
@@ -546,6 +556,7 @@ public class Reserve implements Serializable {
     }
 
     //*** --- SELF MADE METHOD --- 追い出しを行うメソッド 引数：追い出し対象の予約ID***//
+    // TODO: 2017/11/13 削除できていない
     public void eviction(String otherReId) {
         Log.d(CALL, "call Reserve.eviction()");
         Log.d(CALL, String.format("%s の 会議を削除します", otherReId));
@@ -553,12 +564,17 @@ public class Reserve implements Serializable {
         SQLiteDatabase db = helper.getWritableDatabase();
 
         //*** 追い出し（memberTableから削除） ***//
-        db.rawQuery("delete from t_member where re_id = ?", new String[]{otherReId});
+        Cursor cursor = db.rawQuery("delete from t_member where re_id = ?", new String[]{otherReId});
+        cursor.moveToFirst();
         //*** 追い出し（ReserveTableから削除） ***//
-        db.rawQuery("delete from t_reserve where re_id = ?", new String[]{otherReId});
+        cursor = db.rawQuery("delete from t_reserve where re_id = ?", new String[]{otherReId});
+        cursor.moveToFirst();
+
+        cursor.close();
+
     }
 
-    // TODO: 2017/11/13 かいぎ優先度をかえすSQLにへんこうする 
+    // TODO: 2017/11/13 かいぎ優先度をかえすSQLにへんこうする
     public static Reserve retReserveConfirm(String re_id) {
 
         MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
