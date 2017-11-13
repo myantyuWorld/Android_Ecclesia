@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -31,8 +32,9 @@ import com.example.yuichi_oba.ecclesia.tools.Util;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity.NON_AUTH;
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 public class ReserveCheckActivity extends AppCompatActivity
 implements NavigationView.OnNavigationItemSelectedListener{
@@ -81,22 +83,43 @@ implements NavigationView.OnNavigationItemSelectedListener{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //*** 時間帯の被りをチェック ***//
-//                checkRes.timeDuplicationCheck();
-//                MyHelper helper = new MyHelper(getApplicationContext());
-//                SQLiteDatabase db = helper.getWritableDatabase();
-//                Cursor cursor = db.rawQuery("select * from t_reserve where room_id = ? and re_starttime", new String[]{checkRes.getRe_room_id()});
-//                while (cursor.moveToNext()) {
-//
-//
-//                }
-                //*** 優先度チェック ***//
-//                    checkRes.priorityCheck();
-                //*** 追い出し ***//
-//                checkRes.eviction();
-                //*** 追い出し（DBから削除） ***//
-//                db.rawQuery("delete from t_reserve where re_id = ?", new String[]{checkRes.getRe_id()});
+                if (authFlg.contains(NON_AUTH)) {
+                    //*** 会議の重複をチェックする ***//
+                    String resultCode = checkRes.timeDuplicationCheck(checkRes);
+                    if (resultCode.equals(FALSE)) {
+                        //*** 重複あり ***//
+                        Log.d(CALL, "時間の重複が発生！ 優先度も負けたパターン:処理を抜けます");
+//                        Toast.makeText(this, "予約不可能です", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (resultCode.equals(TRUE)) {
+                        Log.d(CALL, "(重複なし)で追い出しを行わない");
+                    } else {
+                        Log.d(CALL, "追い出し処理検知！追い出された予約情報を通知します");
+                        Log.d(CALL, "追い出しされる予約IDは" + resultCode);
+//                        notificationEviction(resultCode);
+                        checkRes.eviction(resultCode);
+                    }
 
+                    Log.d(CALL, "予約ID:" + checkRes.getRe_id());
+                    //*** 時間の重複も、優先度チェックも何も必要なし＝＝＞ そのままインサートする ***//
+//                    checkRes.reserveCorrenct(setReserveDetail());     //*** 予約テーブル,参加者テーブル へのインサート ***//
+                    checkRes.reserveEdit(setReserveDetail());
+                    checkRes = null;                                  //*** 予約を確定したので、reserveをnullにする ***//
+                }
+                //*** 管理者認証ずみ ***//
+                else {
+                    //*** 追い出す会議だけ特定して、ヘッドアップ通知を行う ※時間重複も、優先度も関係なし ***//
+                    String resultCode = checkRes.timeDuplicationCheck(checkRes);
+                    Log.d(CALL, resultCode);
+                    if (!resultCode.equals(TRUE) && !resultCode.equals(FALSE)) {
+//                        notificationEviction(resultCode);            //*** 会議追い出し"通知"を行う ***//
+                        checkRes.eviction(resultCode);                //*** 会議の追い出しを行う ***//
+                    }
+                    //*** 会議をインサートする ***//
+//                    checkRes.reserveCorrenct(setReserveDetail());
+                    checkRes.reserveEdit(setReserveDetail());
+                    checkRes = null;
+                }
                 reserveChange();
             }
         });
@@ -138,40 +161,40 @@ implements NavigationView.OnNavigationItemSelectedListener{
     //*** 実際にDBの予約情報を書き換える ***//
     public void reserveChange() {
 
-        int sum = 0;
-        //*** 参加者の優先度の合計を算出する ***//
-        for (Person person : checkRes.getRe_member()) {
-            if (person instanceof Employee) {
-                //*** 社員クラスであれば社員でキャストし優先度を取得 ***//
-                sum += Integer.valueOf(((Employee) person).getPos_priority());
-            } else if (person instanceof OutEmployee) {
-                //*** 社外者クラスであれば社外者でキャストし優先度を取得 ***//
-                sum += Integer.valueOf(((OutEmployee) person).getPos_priority());
-            }
-        }
-        //*** 参加者の優先度の平均をセッターでセット ***//
-        checkRes.setRe_mem_priority(sum / checkRes.getRe_member().size());
-
-
-        //*** 必要なインスタンスを用意 ***//
-        SQLiteDatabase db = helper.getWritableDatabase();
-        //*** トランザクション開始 ***//
-//        db.beginTransaction();
-
-        //*** SQLでアップデートかける ***//
-        db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
-                " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
-                " where re_id = ? ", new Object[]{checkRes.getRe_name(), checkRes.getRe_startDay(), checkRes.getRe_endDay(), checkRes.getRe_startTime(),
-                checkRes.getRe_endTime(), checkRes.getRe_switch(), checkRes.getRe_fixtures(), checkRes.getRe_remarks(), checkRes.getRe_mem_priority(), checkRes.getRe_room_id()
-                , checkRes.getRe_purpose_id(), checkRes.getRe_id()});
-
-        checkRes.getRe_member().forEach(person -> {
-            if (person instanceof Employee) {
-                db.execSQL("replace into t_member values(?, ?) ", new Object[]{checkRes.getRe_id(), Util.returnEmpId(person.getName())});
-            } else {
-                db.execSQL("replace into t_member values(?, ?)", new Object[]{checkRes.getRe_id(), Util.returnOutEmpId(person.getName())});
-            }
-        });
+//        int sum = 0;
+//        //*** 参加者の優先度の合計を算出する ***//
+//        for (Person person : checkRes.getRe_member()) {
+//            if (person instanceof Employee) {
+//                //*** 社員クラスであれば社員でキャストし優先度を取得 ***//
+//                sum += Integer.valueOf(((Employee) person).getPos_priority());
+//            } else if (person instanceof OutEmployee) {
+//                //*** 社外者クラスであれば社外者でキャストし優先度を取得 ***//
+//                sum += Integer.valueOf(((OutEmployee) person).getPos_priority());
+//            }
+//        }
+//        //*** 参加者の優先度の平均をセッターでセット ***//
+//        checkRes.setRe_mem_priority(sum / checkRes.getRe_member().size());
+//
+//
+//        //*** 必要なインスタンスを用意 ***//
+//        SQLiteDatabase db = helper.getWritableDatabase();
+//        //*** トランザクション開始 ***//
+////        db.beginTransaction();
+//
+//        //*** SQLでアップデートかける ***//
+//        db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
+//                " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
+//                " where re_id = ? ", new Object[]{checkRes.getRe_name(), checkRes.getRe_startDay(), checkRes.getRe_endDay(), checkRes.getRe_startTime(),
+//                checkRes.getRe_endTime(), checkRes.getRe_switch(), checkRes.getRe_fixtures(), checkRes.getRe_remarks(), checkRes.getRe_mem_priority(), checkRes.getRe_room_id()
+//                , checkRes.getRe_purpose_id(), checkRes.getRe_id()});
+//
+//        checkRes.getRe_member().forEach(person -> {
+//            if (person instanceof Employee) {
+//                db.execSQL("replace into t_member values(?, ?) ", new Object[]{checkRes.getRe_id(), Util.returnEmpId(person.getName())});
+//            } else {
+//                db.execSQL("replace into t_member values(?, ?)", new Object[]{checkRes.getRe_id(), Util.returnOutEmpId(person.getName())});
+//            }
+//        });
         //*** コミットをかける ***//
 //        db.setTransactionSuccessful();
         //*** トランザクション終了 ***//
@@ -256,5 +279,29 @@ implements NavigationView.OnNavigationItemSelectedListener{
                     })
                     .create();
         }
+    }
+
+    private float setReserveDetail() {
+        //*** 会議目的IDをセットする ***//
+        String purName = checkRes.getRe_purpose_name();  //***  ***//
+        String purId = Util.returnPurposeId(purName);   //*** 会議目的名を ***//
+        checkRes.setRe_purpose_id(purId);
+
+
+        //*** 会議参加者の優先度を計算する ***//
+        Integer sumPriority = 0;
+
+        //*** 参加者の優先度の合計を算出する ***//
+        for (Person p : checkRes.getRe_member()) {
+            if (p instanceof Employee) {                //*** 社員クラス ***//
+                //***  ***//
+                sumPriority += Integer.valueOf(((Employee) p).getPos_priority());
+            } else if (p instanceof OutEmployee) {      //*** 社外者クラス ***//
+                //***  ***//
+                sumPriority += Integer.valueOf(((OutEmployee) p).getPos_priority());
+            }
+        }
+        //*** 参加者の優先度合計の平均を算出してその値を返す ***//
+        return sumPriority / checkRes.getRe_member().size();
     }
 }
