@@ -423,6 +423,8 @@ public class HistorySearchActivity extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Spinner sp = (Spinner) parent;
+                //選択したspinnerの文字列を取得
+                //String posi = (String) sp_company.getSelectedItem();
                 //スピナーに対しての処理
                 Toast.makeText(HistorySearchActivity.this, String.format("選択会社名 : %s", sp.getSelectedItem()), Toast.LENGTH_SHORT).show();
             }
@@ -454,9 +456,6 @@ public class HistorySearchActivity extends AppCompatActivity
 
 
                 //*** 予約IDを特定 ***//
-
-
-                //*** 予約のインスタンスを生成 ***//
                 intent.putExtra("reserve",(Reserve) adapter1.getItem(position));
                 //*** intent.puextra(xxx)する ***//
                 intent.putExtra("gamen", "2");
