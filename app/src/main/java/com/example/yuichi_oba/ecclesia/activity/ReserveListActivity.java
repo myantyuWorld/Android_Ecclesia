@@ -290,10 +290,8 @@ public class ReserveListActivity extends AppCompatActivity
      *
 
      ***/
-    arl_btn_search.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        Log.d(CALL, "call ReserveListActivity.onLongClick()");
+    arl_btn_search.setOnLongClickListener(v -> {
+      Log.d(CALL, "call ReserveListActivity.onLongClick()");
 //        Toast.makeText(ReserveListActivity.this, "aaaaaaaaa", Toast.LENGTH_SHORT).show();
 //
 //        Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -320,21 +318,20 @@ public class ReserveListActivity extends AppCompatActivity
 //
 //        nm.notify(1000, notification);
 
-        //*** AlarmManagerで指定した日時にNotificationを送る実験 ***//
-        //*** 作品展の実演用に残しておく ***//
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.SECOND, 1);
+      //*** AlarmManagerで指定した日時にNotificationを送る実験 ***//
+      //*** 作品展の実演用に残しておく ***//
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTimeInMillis(System.currentTimeMillis());
+      calendar.add(Calendar.SECOND, 1);
 
-        Intent notificationIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-        notificationIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, 1);
-        notificationIntent.putExtra(AlarmReceiver.NOTIFICATION_CONTENT, "会議開始10分前となりました");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+      Intent notificationIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+      notificationIntent.putExtra(AlarmReceiver.NOTIFICATION_ID, 1);
+      notificationIntent.putExtra(AlarmReceiver.NOTIFICATION_CONTENT, "会議開始10分前となりました");
+      PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        return false;
-      }
+      AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+      alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+      return false;
     });
 
 
@@ -411,47 +408,45 @@ public class ReserveListActivity extends AppCompatActivity
     arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
     arl_view_timetableView.thread_flg = true;
 
-    Thread thread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        if (thCnt != 0) {
-          arl_view_timetableView.thread_flg = true;
-          arl_view_timetableView.x = 0;
-          arl_view_timetableView.y = 0;
-          thCnt = 0;
-        }
-        Log.d(CALL, "Thread");
-        String[] info = arl_view_timetableView.getSelectedReserve();
-        Log.d(CALL, "info :: " + Arrays.toString(info));
-        //*** 新規予約登録画面への遷移 ***//
-        if (info[0].equals(NONE)) {
-          Log.d(CALL, "新規予約登録画面への遷移");
-          Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
-          //*** オブジェクト渡しがエラーのため、コメアウト ***//
-          //                    intent.putExtra("emp", employee);                           //*** 社員インスタンスをインテント渡し ***//
-          intent.putExtra("emp_id", employee.getEmp_id());
-          intent.putExtra("date", arl_txt_date.getText().toString()); //*** 選択されている日付をインテント渡し ***//
-          intent.putExtra("roomId", info[1]);                         //*** 会議室IDを渡す ***//
+    Thread thread = new Thread(() -> {
+      if (thCnt != 0) {
+        arl_view_timetableView.thread_flg = true;
+        arl_view_timetableView.x = 0;
+        arl_view_timetableView.y = 0;
+        thCnt = 0;
+      }
+      Log.d(CALL, "Thread");
+      String[] info = arl_view_timetableView.getSelectedReserve();
+      Log.d(CALL, "info :: " + Arrays.toString(info));
+      //*** 新規予約登録画面への遷移 ***//
+      if (info[0].equals(NONE)) {
+        Log.d(CALL, "新規予約登録画面への遷移");
+        Intent intent = new Intent(getApplicationContext(), ReserveActivity.class);
+        //*** オブジェクト渡しがエラーのため、コメアウト ***//
+        //                    intent.putExtra("emp", employee);                           //*** 社員インスタンスをインテント渡し ***//
+        intent.putExtra("emp_id", employee.getEmp_id());
+        intent.putExtra("date", arl_txt_date.getText().toString()); //*** 選択されている日付をインテント渡し ***//
+        intent.putExtra("roomId", info[1]);                         //*** 会議室IDを渡す ***//
 
-          startActivity(intent);  //*** 新規予約登録画面 ***//
-        } else {
-          Log.d(CALL, "予約確認画面への遷移");
-          Reserve reserve = Reserve.retReserveConfirm(info[1]); //*** 特定した予約IDを基に、予約情報を検索 ***//
+        startActivity(intent);  //*** 新規予約登録画面 ***//
+      } else {
+        Log.d(CALL, "予約確認画面への遷移");
+        Reserve reserve = Reserve.retReserveConfirm(info[0]); //*** 特定した予約IDを基に、予約情報を検索 ***//
+        Log.d(CALL, reserve.toString());
 
-          //                    intent.putExtra("emp", employee); //*** 不要？ ***//
-          Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
-          intent.putExtra("gamen", "1");          //*** どの画面からの遷移か ***//
-          intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
-          intent.putExtra("employee", employee);
+        //                    intent.putExtra("emp", employee); //*** 不要？ ***//
+        Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+        intent.putExtra("gamen", "1");          //*** どの画面からの遷移か ***//
+        intent.putExtra("reserve", reserve);    //*** 予約情報のインスタンス ***//
+        intent.putExtra("employee", employee);
 
-          startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
-        }
-        thCnt++;
-        try {
-          Thread.sleep(20);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
+        startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
+      }
+      thCnt++;
+      try {
+        Thread.sleep(20);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
       }
     });
     thread.start();
