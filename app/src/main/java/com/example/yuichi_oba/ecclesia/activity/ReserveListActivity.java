@@ -55,6 +55,9 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // TODO: 2017/09/19  長押し対応は無理か？ 一覧での、タップは反応するが、長押しには反応しない・・・
 //*** オブジェクト渡しのはいし OK ***//
+// TODO: 2017/11/13 新規登録した会議をタップすると、purName がnullで落ちる
+// TODO: 2017/11/13 赤は、自分、白は他人を説明するようなCanvasの追加？わかりにくい
+// TODO: 2017/11/13 会議優先度がないと、わかりにくい
 public class ReserveListActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -247,13 +250,10 @@ public class ReserveListActivity extends AppCompatActivity
     Log.d(CALL, arl_txt_date.getText().toString());
     arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
 
-    arl_txt_date.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        Log.d(TAG, "arl_txt_date click!");
-        MyDialog d = new MyDialog();
-        d.show(getFragmentManager(), "dateDialog");
-      }
+    arl_txt_date.setOnClickListener(view -> {
+      Log.d(TAG, "arl_txt_date click!");
+      MyDialog d = new MyDialog();
+      d.show(getFragmentManager(), "dateDialog");
     });
 
     /*** 予約情報リストの同期エラーがでるため、コメアウトします ***/
@@ -276,13 +276,10 @@ public class ReserveListActivity extends AppCompatActivity
 //            }
 //        });
     Button arl_btn_search = (Button) findViewById(R.id.arl_btn_search);
-    arl_btn_search.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Toast.makeText(ReserveListActivity.this, arl_txt_date.getText().toString(), Toast.LENGTH_SHORT).show();
+    arl_btn_search.setOnClickListener(v -> {
+      Toast.makeText(ReserveListActivity.this, arl_txt_date.getText().toString(), Toast.LENGTH_SHORT).show();
 //         DO: 2017/10/04 自分の予約情報をもっているリストを一回クリアしないと、前の情報も描画されてしまう
-        arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
-      }
+      arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
     });
 
     /***

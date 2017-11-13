@@ -461,13 +461,15 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
 
       reserveInfo.add(r);
-      Log.d(CALL, c.getString(2) + " : " + c.getString(3));
+      Log.d(CALL,"取得した自分の参加会議 " + c.getString(0) + " : " +  c.getString(2) + " : " + c.getString(3));
     }
     c.close();
 
     //*** 他人の参加会議の検索 ***//
+    // TODO: 2017/11/13 group by re_idで予約IDでくくる
     c = db.rawQuery("select * from v_reserve_member where mem_id <> ? and re_startday = ?", new String[]{emp_id, date});
     while (c.moveToNext()) {
+
       Reserve r = new Reserve();
       r.setRe_id(c.getString(RE_ID));
       r.setRe_name(c.getString(1));
@@ -485,6 +487,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
 
       reserveOther.add(r);
+      Log.d(CALL,"取得した他人の参加会議 " + c.getString(0) + " : " +  c.getString(2) + " : " + c.getString(3));
     }
     c.close();
     invalidate();

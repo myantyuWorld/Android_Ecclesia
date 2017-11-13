@@ -223,7 +223,7 @@ public class Reserve implements Serializable {
 
   @Override
   public String toString() {
-    return String.format("予約ID : %s 予約概要 : %s", this.re_id, this.re_name);
+    return String.format("予約ID : %s 予約概要 : %s, 会議優先度 : %d", this.re_id, this.re_name, this.getRe_mem_priority());
   }
 
   //*** ------------------------ ***//
