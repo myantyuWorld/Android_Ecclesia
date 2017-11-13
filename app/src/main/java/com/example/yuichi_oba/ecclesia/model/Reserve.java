@@ -268,7 +268,6 @@ public class Reserve implements Serializable {
                 if (priorityCheck(r, other)) {
                     //*** 優先度で「勝ち」==> 追い出し処理を行う eviction()***//
 //          r.eviction(other.getRe_id());
-                    // TODO: 2017/11/11 追い出しの予約IDを返せていない？
                     Log.d(CALL, other.getRe_id());
                     return other.getRe_id();  //*** 追い出し対象の、予約IDを返す ***//
                 }
@@ -556,7 +555,6 @@ public class Reserve implements Serializable {
     }
 
     //*** --- SELF MADE METHOD --- 追い出しを行うメソッド 引数：追い出し対象の予約ID***//
-    // TODO: 2017/11/13 削除できていない
     public void eviction(String otherReId) {
         Log.d(CALL, "call Reserve.eviction()");
         Log.d(CALL, String.format("%s の 会議を削除します", otherReId));
@@ -574,7 +572,6 @@ public class Reserve implements Serializable {
 
     }
 
-    // TODO: 2017/11/13 かいぎ優先度をかえすSQLにへんこうする
     public static Reserve retReserveConfirm(String re_id) {
 
         MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());

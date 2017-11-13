@@ -58,8 +58,6 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 // _/_/ 予約変更を行うアクティビティ
 // _/_/
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-// TODO: 2017/09/19 予約の内容を変更した箇所を、色変える処理の実装
-// TODO: 2017/09/19 参加者をさらに追加しようとした際のロジックの実装
 public class ReserveChangeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
