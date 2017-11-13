@@ -120,7 +120,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
                     checkRes.reserveEdit(setReserveDetail());
                     checkRes = null;
                 }
-//                reserveChange();
+                reserveChange();
             }
         });
     }
@@ -161,40 +161,40 @@ implements NavigationView.OnNavigationItemSelectedListener{
     //*** 実際にDBの予約情報を書き換える ***//
     public void reserveChange() {
 
-        int sum = 0;
-        //*** 参加者の優先度の合計を算出する ***//
-        for (Person person : checkRes.getRe_member()) {
-            if (person instanceof Employee) {
-                //*** 社員クラスであれば社員でキャストし優先度を取得 ***//
-                sum += Integer.valueOf(((Employee) person).getPos_priority());
-            } else if (person instanceof OutEmployee) {
-                //*** 社外者クラスであれば社外者でキャストし優先度を取得 ***//
-                sum += Integer.valueOf(((OutEmployee) person).getPos_priority());
-            }
-        }
-        //*** 参加者の優先度の平均をセッターでセット ***//
-        checkRes.setRe_mem_priority(sum / checkRes.getRe_member().size());
-
-
-        //*** 必要なインスタンスを用意 ***//
-        SQLiteDatabase db = helper.getWritableDatabase();
-        //*** トランザクション開始 ***//
-//        db.beginTransaction();
-
-        //*** SQLでアップデートかける ***//
-        db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
-                " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
-                " where re_id = ? ", new Object[]{checkRes.getRe_name(), checkRes.getRe_startDay(), checkRes.getRe_endDay(), checkRes.getRe_startTime(),
-                checkRes.getRe_endTime(), checkRes.getRe_switch(), checkRes.getRe_fixtures(), checkRes.getRe_remarks(), checkRes.getRe_mem_priority(), checkRes.getRe_room_id()
-                , checkRes.getRe_purpose_id(), checkRes.getRe_id()});
-
-        checkRes.getRe_member().forEach(person -> {
-            if (person instanceof Employee) {
-                db.execSQL("replace into t_member values(?, ?) ", new Object[]{checkRes.getRe_id(), Util.returnEmpId(person.getName())});
-            } else {
-                db.execSQL("replace into t_member values(?, ?)", new Object[]{checkRes.getRe_id(), Util.returnOutEmpId(person.getName())});
-            }
-        });
+//        int sum = 0;
+//        //*** 参加者の優先度の合計を算出する ***//
+//        for (Person person : checkRes.getRe_member()) {
+//            if (person instanceof Employee) {
+//                //*** 社員クラスであれば社員でキャストし優先度を取得 ***//
+//                sum += Integer.valueOf(((Employee) person).getPos_priority());
+//            } else if (person instanceof OutEmployee) {
+//                //*** 社外者クラスであれば社外者でキャストし優先度を取得 ***//
+//                sum += Integer.valueOf(((OutEmployee) person).getPos_priority());
+//            }
+//        }
+//        //*** 参加者の優先度の平均をセッターでセット ***//
+//        checkRes.setRe_mem_priority(sum / checkRes.getRe_member().size());
+//
+//
+//        //*** 必要なインスタンスを用意 ***//
+//        SQLiteDatabase db = helper.getWritableDatabase();
+//        //*** トランザクション開始 ***//
+////        db.beginTransaction();
+//
+//        //*** SQLでアップデートかける ***//
+//        db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
+//                " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
+//                " where re_id = ? ", new Object[]{checkRes.getRe_name(), checkRes.getRe_startDay(), checkRes.getRe_endDay(), checkRes.getRe_startTime(),
+//                checkRes.getRe_endTime(), checkRes.getRe_switch(), checkRes.getRe_fixtures(), checkRes.getRe_remarks(), checkRes.getRe_mem_priority(), checkRes.getRe_room_id()
+//                , checkRes.getRe_purpose_id(), checkRes.getRe_id()});
+//
+//        checkRes.getRe_member().forEach(person -> {
+//            if (person instanceof Employee) {
+//                db.execSQL("replace into t_member values(?, ?) ", new Object[]{checkRes.getRe_id(), Util.returnEmpId(person.getName())});
+//            } else {
+//                db.execSQL("replace into t_member values(?, ?)", new Object[]{checkRes.getRe_id(), Util.returnOutEmpId(person.getName())});
+//            }
+//        });
         //*** コミットをかける ***//
 //        db.setTransactionSuccessful();
         //*** トランザクション終了 ***//
