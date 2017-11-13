@@ -19,7 +19,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
 
 /**
  * Created by Yuichi-Oba on 2017/09/15.
@@ -380,7 +383,8 @@ public class Reserve implements Serializable {
     }
 
     //*** --- SELF MADE METHOD --- 優先度をチェックするメソッド  ***//
-    //*** true : 勝ち false : 負け                            ***//
+//*** true : 勝ち false : 負け                            ***//
+    // TODO: 2017/11/13 会議目的優先度をみて、おなじなら、メンバーの優先度見るロジックのじっそう
     public boolean priorityCheck(Reserve r, Reserve o) {
         Log.d(CALL, "call Reserve->priorityCheck()");
 
@@ -550,6 +554,7 @@ public class Reserve implements Serializable {
     }
 
     //*** --- SELF MADE METHOD --- 追い出しを行うメソッド 引数：追い出し対象の予約ID***//
+    // TODO: 2017/11/13 削除できていない
     public void eviction(String otherReId) {
         Log.d(CALL, "call Reserve.eviction()");
         Log.d(CALL, String.format("%s の 会議を削除します", otherReId));
@@ -557,12 +562,17 @@ public class Reserve implements Serializable {
         SQLiteDatabase db = helper.getWritableDatabase();
 
         //*** 追い出し（memberTableから削除） ***//
-        db.rawQuery("delete from t_member where re_id = ?", new String[]{otherReId});
+        Cursor cursor = db.rawQuery("delete from t_member where re_id = ?", new String[]{otherReId});
+        cursor.moveToFirst();
         //*** 追い出し（ReserveTableから削除） ***//
-        db.rawQuery("delete from t_reserve where re_id = ?", new String[]{otherReId});
+        cursor = db.rawQuery("delete from t_reserve where re_id = ?", new String[]{otherReId});
+        cursor.moveToFirst();
+
+        cursor.close();
+
     }
 
-    // TODO: 2017/11/13 かいぎ優先度をかえすSQLにへんこうする 
+    // TODO: 2017/11/13 かいぎ優先度をかえすSQLにへんこうする
     public static Reserve retReserveConfirm(String re_id) {
 
         MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
