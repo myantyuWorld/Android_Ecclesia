@@ -279,7 +279,7 @@ public class HistorySearchActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("call", "HistorySearchActivity->onCreate()");
         Intent intent = getIntent();
-        employee = (Employee) intent.getSerializableExtra("emproye");
+        employee = (Employee) intent.getSerializableExtra("employee");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_search);
@@ -456,6 +456,7 @@ public class HistorySearchActivity extends AppCompatActivity
                 intent.putExtra("reserve",(Reserve) adapter1.getItem(position));
                 //*** intent.puextra(xxx)する ***//
                 intent.putExtra("gamen", "2");
+                intent.putExtra("employee", employee);
                 //*** 予約確認画面へ画面遷移 ***//
                 startActivity(intent);
 
