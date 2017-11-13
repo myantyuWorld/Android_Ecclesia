@@ -26,7 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
-import com.example.yuichi_oba.ecclesia.dialog.AdminLogOut;
+import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.Person;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
@@ -35,10 +35,8 @@ import com.example.yuichi_oba.ecclesia.tools.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
-
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
+
 /*************************************************************************************
  *
  *                                  Hint!
@@ -54,6 +52,10 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 // _/_/ 利用履歴を検索するアクティビティ
 // _/_/
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+// TODO: 2017/11/13 かいしゃスピナーの会社、履歴にあるかいしゃのみにするロジックの実装 
+// TODO: 2017/11/13 会社名、参加者の文字位置、文字サイズの調整 
+// TODO: 2017/11/13 ぎちぎちで見づらいので、レイアウトの調整
+// TODO: 2017/11/13 メソッド分割
 public class HistorySearchActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -63,6 +65,9 @@ public class HistorySearchActivity extends AppCompatActivity
     public static final int DAY = 2;
     public static final int GAIYOU = 1;
     public static final int ID = 0;
+    public static final String Q_SELECT_HISTORY = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join m_out as a on y.mem_id = a.out_id inner join m_company as b on a.com_id = b.com_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id where x.emp_id = ?";
+    public static final String Q_TEST = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where x.emp_id = ? group by x.re_id";
+    public static final String Q_SELECT_MEMBER = "select * from t_member where re_id = ?";
 
     SearchView searchView;
     ListView listView;
@@ -71,6 +76,11 @@ public class HistorySearchActivity extends AppCompatActivity
     ArrayList<Reserve> listItems;
     private MyHelper helper = new MyHelper(this);
     public static SQLiteDatabase db;
+    private Employee employee;
+
+    //*** 社員・社外者の参加者を持つための、ポリモーフィズム使用のための、スーパクラスのリスト ***//
+    public static List<Person> member = new ArrayList<>();
+
 
     //    private class ListItem {
 //        private long id;
@@ -127,6 +137,7 @@ public class HistorySearchActivity extends AppCompatActivity
     private class Purpose {
         private String pur_id;
         private String pur_name;
+
         public String getPur_id() {
             return pur_id;
         }
@@ -144,6 +155,7 @@ public class HistorySearchActivity extends AppCompatActivity
         }
 
     }
+
     private class Company {
         private String com_id;
         private String com_name;
@@ -165,7 +177,7 @@ public class HistorySearchActivity extends AppCompatActivity
         }
     }
 
-    private class MyListAdapter extends BaseAdapter{
+    private class MyListAdapter extends BaseAdapter {
         private Context context;
         private ArrayList<Reserve> data = null;
         private int resource = 0;
@@ -187,6 +199,7 @@ public class HistorySearchActivity extends AppCompatActivity
         public void setItemList(ArrayList<Reserve> data) {
             this.data = data;
         }
+
         //データの個数を取得
         @Override
         public int getCount() {
@@ -227,7 +240,8 @@ public class HistorySearchActivity extends AppCompatActivity
             ((TextView) convertView.findViewById(R.id.txt_date)).setText(item.getRe_startDay());
             ((TextView) convertView.findViewById(R.id.txt_overview)).setText(item.getRe_name());
             ((TextView) convertView.findViewById(R.id.txt_company)).setText(item.getRe_company());
-//           ((TextView) convertView.findViewById(R.id.txt_member)).setText(p_item.getName());
+            ((TextView) convertView.findViewById(R.id.txt_member)).setText(String.format("%s,他 %d名",item.getRe_member().get(0).getName(),item.getRe_member().size()));
+            ///*** string.format("%s ,他 %d名",member.get(0).getname, ***//
             return convertView;
         }
 
@@ -267,12 +281,11 @@ public class HistorySearchActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(CALL, "HistorySearchActivity->onCreate()");
+        Log.d("call", "HistorySearchActivity->onCreate()");
+        Intent intent = getIntent();
+        employee = (Employee) intent.getSerializableExtra("employee");
+
         super.onCreate(savedInstanceState);
-        //*** 管理者認証済みだったら、テーマを変更する ***//
-        if (Util.isAuthAdmin(authFlg)) {
-            setTheme(R.style.SecondTheme);
-        }
         setContentView(R.layout.activity_history_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -291,33 +304,40 @@ public class HistorySearchActivity extends AppCompatActivity
         SQLiteDatabase db_list = helper.getReadableDatabase();
         db = helper.getReadableDatabase();
 
-        Cursor c_list = db.rawQuery("select * from  t_reserve x" +
-                " inner join t_member y on x.re_id = y.re_id" +
-                " inner join m_out as a on y.mem_id = a.out_id" +
-                " inner join m_company as b on a.com_id = b.com_id" +
-                " inner join m_purpose as p on p.pur_id = x.pur_id"+
-                " inner join m_room as c on c.room_id = x.room_id"+
-                " where x.re_id = ?",new String[]{"0003"});
-
+        Cursor c = db.rawQuery(Q_TEST, new String[]{employee.getEmp_id()});
         //会社用のデータベース
-        while (c_list.moveToNext()) {
-            Reserve li = new Reserve();
-            Person p = new Person();
+        ArrayList<Reserve> reserves = new ArrayList<>();
 
-            //*** 今後必要になるためコメントアウト ***//
-//            li.setId(c_list.getLong(ID));
-            li.setRe_name(c_list.getString(GAIYOU));
-            li.setRe_startDay(c_list.getString(DAY));
+        while (c.moveToNext()) {
+
+            Reserve reserve = new Reserve();
+            reserve.setRe_startTime(c.getString(4));
+            reserve.setRe_endTime(c.getString(5));
+            reserve.setRe_applicant(c.getString(18));
+            reserve.setRe_switch(c.getString(6));
+            reserve.setRe_room_name(c.getString(27));
+            reserve.setRe_fixtures(c.getString(7));
+            reserve.setRe_remarks(c.getString(8));
+            reserve.setRe_id(c.getString(0));
+            reserve.setRe_name(c.getString(GAIYOU));
+            reserve.setRe_startDay(c.getString(DAY));
+            reserve.setRe_endDay(c.getString(3));
             //*** 社員名をセット(まだ実行してないので未確認。) ***//
-            p.setName(c_list.getString(COM_MEMBER));
-            li.setRe_company(c_list.getString(26));
-            li.setRe_purpose_name(c_list.getString(28));
-            Log.d(CALL, (c_list.getString(GAIYOU)) + " : " + c_list.getString(DAY) + " : " + c_list.getString(26) + " : " + c_list.getString(28) + " : " + c_list.getString(COM_MEMBER));
-            // addするメソッドを書く
-            listItems.add(li);
-        }
-        c_list.close();
+//            p.setName(c_list.getString(COM_MEMBER));
 
+            //li.setRe_member(member);
+//            reserve.setRe_mem(c.getString(COM_MEMBER));
+            reserve.setRe_company(c.getString(30));
+            reserve.setRe_purpose_name(c.getString(24));
+            Log.d("call", (c.getString(GAIYOU)) + " : " + c.getString(DAY) + " : " + c.getString(26) + " : " + c.getString(28) + " : " + c.getString(COM_MEMBER));
+            // addするメソッドを書く
+            reserves.add(reserve);
+        }
+
+        c.close();
+        reserves.forEach(r -> {
+            r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
+        });
         //リストに表示するデータを準備
 //        String pupose[] = {"定例会","商談"};
 //        String date[] = {"2017/02/20","2018/01/31"};
@@ -342,27 +362,27 @@ public class HistorySearchActivity extends AppCompatActivity
 
 
         //データベース検索
-        purpose= new ArrayList<>();
+        purpose = new ArrayList<>();
         List<String> strings = new ArrayList<>();
-        Cursor c = db.rawQuery("select * from m_purpose", new String[]{});
+        c = db.rawQuery("select * from m_purpose", new String[]{});
         while (c.moveToNext()) {
             strings.add(c.getString(1));
             Purpose p = new Purpose();
             p.setPur_id(c.getString(0));
             p.setPur_name(c.getString(1));
-            Log.d(CALL, c.getString(0) + " : " + c.getString(1));
+            Log.d("call", c.getString(0) + " : " + c.getString(1));
             purpose.add(p);
         }
         c.close();
 
-        for(String s:strings){
-            Log.d(CALL,s);
+        for (String s : strings) {
+            Log.d("call", s);
         }
         //スピナーを取得
         Spinner sp = (Spinner) findViewById(R.id.ahs_sp_purpose);
         //
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item,strings);
+                android.R.layout.simple_spinner_dropdown_item, strings);
         sp.setAdapter(adapter);
         //スピナーに対してのイベントリスナーを登録
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -371,42 +391,45 @@ public class HistorySearchActivity extends AppCompatActivity
                 Spinner sp = (Spinner) parent;
                 //選択項目を取得し、その値で検索をする？それとトースト表示
 
-                Toast.makeText(HistorySearchActivity.this,String.format("選択目的 : %s",sp.getSelectedItem()),
+                Toast.makeText(HistorySearchActivity.this, String.format("選択目的 : %s", sp.getSelectedItem()),
                         Toast.LENGTH_SHORT).show();
-                Log.d(CALL,"");
+                Log.d("call", "");
             }
+
             //項目が選択されなかったときの処理(今は空)
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         //データベース検索(会社名)
         companiesy = new ArrayList<>();
         List<String> strings1 = new ArrayList<>();
-        Cursor cursor = db.rawQuery("select * from m_company", new String[]{});
+        Cursor cursor = db.rawQuery("select * from m_company",null);
         while (cursor.moveToNext()) {
             strings1.add(cursor.getString(1));
-            Log.d(CALL,cursor.getString(1));
+            Log.d("call", cursor.getString(1));
         }
 
         //スピナーを取得
         Spinner sp_company = (Spinner) findViewById(R.id.ahs_sp_company);
         //adapterを宣言
         ArrayAdapter<String> adapter_com = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item,strings1);
+                android.R.layout.simple_spinner_dropdown_item, strings1);
         sp_company.setAdapter(adapter_com);
-        Log.d(CALL, "");
+        Log.d("call", "");
         //スピナーに対してのイベントリスナーを登録
         sp_company.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Spinner sp = (Spinner) parent;
                 //スピナーに対しての処理
-                Toast.makeText(HistorySearchActivity.this,String.format("選択会社名 : %s",sp.getSelectedItem()),Toast.LENGTH_SHORT).show();
+                Toast.makeText(HistorySearchActivity.this, String.format("選択会社名 : %s", sp.getSelectedItem()), Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
 
@@ -414,7 +437,7 @@ public class HistorySearchActivity extends AppCompatActivity
 
         final MyListAdapter adapter1 = new MyListAdapter(this);
         listView = (ListView) findViewById(R.id.ahs_lis_history);
-        adapter1.setItemList(listItems);
+        adapter1.setItemList(reserves);
         listView.setAdapter(adapter1);
 
 
@@ -423,40 +446,32 @@ public class HistorySearchActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //*** 中身はまだ考え中 ***//
-                Log.d(CALL,"履歴確認画面への遷移");
+                Log.d("call", "履歴確認画面への遷移");
 
-        //        Reserve reserve = Reserve.retReserveConfirm(re_id);
-                CharSequence msg = ((TextView) view).getText();
-                Toast.makeText(HistorySearchActivity.this,
-                        String.format("選択したのは%s",msg.toString()),Toast.LENGTH_SHORT).show();
-                //*** 予約IDを特定 ***//
-
-                //*** 予約のインスタンスを生成 ***//
-
-                //*** intent.puextra(xxx)する ***//
 
                 //*** 画面遷移のインテント作成中
-                Intent intent = new Intent(getApplicationContext(),ReserveConfirmActivity.class);
-                intent.putExtra("gamen",1);           //*** どの画面からの遷移か(履歴検索)***//
-                //*** アクティビティを起動 ***//
+                Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+
+
+                //*** 予約IDを特定 ***//
+
+
+                //*** 予約のインスタンスを生成 ***//
+                intent.putExtra("reserve",(Reserve) adapter1.getItem(position));
+                //*** intent.puextra(xxx)する ***//
+                intent.putExtra("gamen", "2");
+                intent.putExtra("employee", employee);
+                //*** 予約確認画面へ画面遷移 ***//
                 startActivity(intent);
+
             }
         });
 
         //フィルタ機能を有効化
         listView.setTextFilterEnabled(true);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(HistorySearchActivity.this, adapter1.getItem(position).toString(), Toast.LENGTH_SHORT).show();
-                Log.d(CALL, adapter1.getItem(position).toString());
-
-
-            }
-        });
 
         //serchviewの検索ボックスに入力された時の処理
-        searchView  = (SearchView) findViewById(R.id.ahs_sea_freeword);
+        searchView = (SearchView) findViewById(R.id.ahs_sea_freeword);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -506,11 +521,6 @@ public class HistorySearchActivity extends AppCompatActivity
                 intent = new Intent(getApplicationContext(), HistorySearchActivity.class);
                 break;
             case R.id.nav_admin_auth:
-                break;
-            //*** 「管理者ログアウト」が選択されたとき ***//
-            case R.id.nav_admin_logout:
-                AdminLogOut adminLogOut = new AdminLogOut();
-                adminLogOut.show(getFragmentManager(), "adminLogOut");
 //                AuthDialog authDialog = new AuthDialog();
 //                authDialog.show(getFragmentManager(), "aaa");
 //                break;
