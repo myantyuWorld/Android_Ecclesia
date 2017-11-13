@@ -260,7 +260,7 @@ public class Reserve implements Serializable {
       Log.d(CALL, "startTime:" + startTime.get(Calendar.YEAR) + "/" + startTime.get(Calendar.MONTH) + "/" + startTime.get(Calendar.DAY_OF_MONTH));
       Log.d(CALL, "endTime:" + endTime.get(Calendar.YEAR) + "/" + endTime.get(Calendar.MONTH) + "/" + endTime.get(Calendar.DAY_OF_MONTH));
 
-      if (!isPeriod(r, startTime, endTime)) {
+      if (!r.getRe_id().equals(other.getRe_id()) && !isPeriod(r, startTime, endTime)) {
         Log.d(CALL, "時間の重複が発生：（暫定）処理を終了します");
         Log.d(CALL, "本来はここで、優先度チェックを行い、追い出し処理を行う");
         //*** 本来はここで、優先度チェックを行い、追い出し処理を行う priorityCheck()***//
@@ -387,6 +387,8 @@ public class Reserve implements Serializable {
     // TODO: 2017/11/13 会議目的優先度をみて、おなじなら、メンバーの優先度見るロジックのじっそう
     public boolean priorityCheck(Reserve r, Reserve o) {
         Log.d(CALL, "call Reserve->priorityCheck()");
+        Log.d(CALL, "自分の予約ID：" + r.getRe_id());
+        Log.d(CALL, "相手の予約ID：" + o.getRe_id());
 
         //*** 自分が「社内利用」で 他が「社外利用」 ***//
         if (r.getRe_switch().contains(SYANAI) && o.getRe_switch().contains(SYAGAI)) {
@@ -527,7 +529,7 @@ public class Reserve implements Serializable {
     }
 
     //*** --- SELF MADE METHOD --- 予約を変更するメソッド ***//
-    public void reserveEdit() {
+    public void reserveEdit(float priorityAverage) {
         //*** 必要なインスタンスを用意 ***//
 //        SQLiteOpenHelper helper = new DB(ReserveCheckAcetInstance().getApplicationContext());
         MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
@@ -536,7 +538,7 @@ public class Reserve implements Serializable {
         db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
                 " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
                 " where re_id = ? ", new Object[]{re_name, re_startDay, re_endDay, re_startTime,
-                re_endTime, re_switch, re_fixtures, re_remarks, re_mem_priority, re_room_id
+                re_endTime, re_switch, re_fixtures, re_remarks, priorityAverage, re_room_id
                 , re_purpose_id, re_id});
 
         re_member.forEach(person -> {
