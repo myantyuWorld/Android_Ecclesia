@@ -405,7 +405,7 @@ public class HistorySearchActivity extends AppCompatActivity
         //データベース検索(会社名)
         companiesy = new ArrayList<>();
         List<String> strings1 = new ArrayList<>();
-        Cursor cursor = db.rawQuery("select * from m_company",null);
+        Cursor cursor = db.rawQuery(Q_TEST, new String[]{employee.getEmp_id()});
         while (cursor.moveToNext()) {
             strings1.add(cursor.getString(1));
             Log.d("call", cursor.getString(1));
