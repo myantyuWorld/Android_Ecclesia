@@ -170,7 +170,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 //          break;
             }
 
-            return new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(str).setPositiveButton("OK", null).create();
+            return new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(str).setPositiveButton(OK, null).create();
         }
     }
 
@@ -190,8 +190,58 @@ public class ReserveConfirmActivity extends AppCompatActivity
                             //*** スピナーで選択された延長時間を代入 ***//
                             Spinner spTime = (Spinner) layout.findViewById(R.id.extentionDia_time);
                             exTime = spTime.getSelectedItem().toString();
-                            //*** メソッドによる延長処理 ***//
+                            //*** 延長による終了時刻を計算 ***//
+                            SimpleDateFormat endDayTimeFor = new SimpleDateFormat(YYYY_MM_DD_HH_MM);
+                            SimpleDateFormat endTimeFor = new SimpleDateFormat(HH_MM);
+                            SimpleDateFormat endDayFor = new SimpleDateFormat(YYYY_MM_DD);
+                            Calendar excal = Calendar.getInstance();
+                            Log.d(CALL, "現在の終了時間：" + reserve.getRe_endTime());
+                            //*** フォーマットで変換をかけてCalenderにセット ***//
+                            try {
+                                excal.setTime(endDayTimeFor.parse(reserve.getRe_endDay() + SPACE + reserve.getRe_endTime()));
+                            } catch (ParseException e) {
+                                e.getStackTrace();
+                                Log.d(CALL, "Parse失敗");
+                            }
+                            //*** セットされたCalenderに延長時間を加算する ***//
+                            excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
+                            //*** CalenderをDateに変換 ***//
+                            Date exDate = excal.getTime();
+                            //*** DateをフォーマットにかけてStringに変換 ***//
+                            exTime = endTimeFor.format(exDate);
+                            Log.d(CALL, "延長時間：" + exTime);
+
+                            //*** 延長による開始終了時間の書き換え ***//
+                            reserve.setRe_startDay(reserve.getRe_endDay());
+                            reserve.setRe_startTime(reserve.getRe_endTime());
+                            reserve.setRe_endDay(endDayFor.format(excal.getTime()));
+                            reserve.setRe_endTime(exTime);
+                            Log.d(CALL, "延長開始日：" + reserve.getRe_startDay());
+                            Log.d(CALL, "延長終了日：" + reserve.getRe_endDay());
+                            Log.d(CALL, "延長開始時刻：" + reserve.getRe_startTime());
+                            Log.d(CALL, "延長終了時刻：" + reserve.getRe_endTime());
+
+                            //*** 延長による追い出し処理 ***//
+                            String checkResult = reserve.timeDuplicationCheck(reserve);
+                            if (checkResult.equals(FALSE)) {
+                                Log.d(CALL, "重複発生 優先度も負け");
+                                return;
+                            } else if (checkResult.equals(TRUE)) {
+                                Log.d(CALL, "重複なし 追い出し処理を行わない");
+                            } else {
+                                Log.d(CALL, "追い出しされる予約IDは" + checkResult);
+                                reserve.eviction(checkResult);
+                            }
+
+                            //*** メソッドによる延長insert ***//
                             reserve.endTimeExtention(exTime);
+
+                            //*** 延長完了ダイアログの表示 ***//
+                            Bundle diaBundle = new Bundle();
+                            diaBundle.putString("result", "ex");
+                            ResultDialog resultDialog = new ResultDialog();
+                            resultDialog.setArguments(diaBundle);
+                            resultDialog.show(getFragmentManager(), "ex");
                           }
                         }).setNegativeButton(CANCEL, new DialogInterface.OnClickListener() {
                           @Override
@@ -421,10 +471,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     ExtentionDialog extentionDialog = new ExtentionDialog();
                     extentionDialog.show(getFragmentManager(), KEYEX);
 
-                    diaBundle.putString("result", "ex");
-                    ResultDialog resultDialog = new ResultDialog();
-                    resultDialog.setArguments(diaBundle);
-                    resultDialog.show(getFragmentManager(), "ex");
+//                    diaBundle.putString("result", "ex");
+//                    ResultDialog resultDialog = new ResultDialog();
+//                    resultDialog.setArguments(diaBundle);
+//                    resultDialog.show(getFragmentManager(), "ex");
                 } else {
 //                    builder.setTitle("延長不可能").setMessage("延長できる会議ではありません").setPositiveButton("OK", new DialogInterface.OnClickListener() {
 //                        @Override
@@ -435,10 +485,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     ExtentionDialog extentionDialog = new ExtentionDialog();
                     extentionDialog.show(getFragmentManager(), KEYEX);
 
-                    diaBundle.putString("result", "ex");
-                    ResultDialog resultDialog = new ResultDialog();
-                    resultDialog.setArguments(diaBundle);
-                    resultDialog.show(getFragmentManager(), "ex");
+//                    diaBundle.putString("result", "ex");
+//                    ResultDialog resultDialog = new ResultDialog();
+//                    resultDialog.setArguments(diaBundle);
+//                    resultDialog.show(getFragmentManager(), "ex");
                 }
 
 //        ExtentionDialog extentionDialog = new ExtentionDialog();

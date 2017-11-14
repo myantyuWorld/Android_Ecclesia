@@ -101,10 +101,8 @@ implements NavigationView.OnNavigationItemSelectedListener{
                     }
 
                     Log.d(CALL, "予約ID:" + checkRes.getRe_id());
-                    //*** 時間の重複も、優先度チェックも何も必要なし＝＝＞ そのままインサートする ***//
-//                    checkRes.reserveCorrenct(setReserveDetail());     //*** 予約テーブル,参加者テーブル へのインサート ***//
                     checkRes.reserveEdit(setReserveDetail());
-                    checkRes = null;                                  //*** 予約を確定したので、reserveをnullにする ***//
+                    checkRes = null;
                 }
                 //*** 管理者認証ずみ ***//
                 else {
