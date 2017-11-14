@@ -393,14 +393,25 @@ public class Reserve implements Serializable {
     if (r.getRe_switch().contains(SYANAI) && o.getRe_switch().contains(SYAGAI)) {
       return false;
     }
-    //*** 優先度値を比較する 自分 ＜ 他 ***//
-    Log.d(CALL, String.format("myPriority : %s", r.getRe_mem_priority()));  // DO: 2017/11/07 こっちNULLで来ることがある
-    Log.d(CALL, String.format("otherPriority : %s", o.getRe_mem_priority()));
+    //*** 会議目的で、勝敗を判定する ***//
+    int myPurPriority = Util.returnPurposePriority(r.getRe_purpose_id());
+    int otherPurPriority = Util.returnPurposePriority(o.getRe_purpose_id());
 
-    // DO: 2017/11/07 初期データの会議に優先度つけていない？
-    if (r.getRe_mem_priority() < o.getRe_mem_priority()) {
+    if (myPurPriority < otherPurPriority) {
       return false;
+    } else if (myPurPriority > otherPurPriority) {
+      return true;
+    } else {
+      //*** 会議目的優先度が同じ ==> 優先度値を比較する 自分 ＜ 他 ***//
+      Log.d(CALL, String.format("myPriority : %s", r.getRe_mem_priority()));  // DO: 2017/11/07 こっちNULLで来ることがある
+      Log.d(CALL, String.format("otherPriority : %s", o.getRe_mem_priority()));
+
+      // DO: 2017/11/07 初期データの会議に優先度つけていない？
+      if (r.getRe_mem_priority() < o.getRe_mem_priority()) {
+        return false;
+      }
     }
+    //*** 会議目的優先度が同じ ***//
     return true;
   }
 
@@ -446,6 +457,7 @@ public class Reserve implements Serializable {
 
     //*** 参加者テーブルへのインサート ***//
     Log.d(CALL, "参加者テーブルへのインサート開始");
+    db = helper.getWritableDatabase();
     db.beginTransaction();
     // TODO: 2017/11/13 ここで、本当にt_memberインサートしている？？
     SQLiteStatement st = db.compileStatement("insert into t_member values (?, ?)");
