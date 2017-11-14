@@ -407,7 +407,7 @@ public class HistorySearchActivity extends AppCompatActivity
         List<String> strings1 = new ArrayList<>();
         Cursor cursor = db.rawQuery(Q_TEST, new String[]{employee.getEmp_id()});
         while (cursor.moveToNext()) {
-            strings1.add(cursor.getString(1));
+            strings1.add(cursor.getString(30));
             Log.d("call", cursor.getString(1));
         }
 

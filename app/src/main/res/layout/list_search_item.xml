@@ -16,19 +16,21 @@
         android:id="@+id/txt_purpose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="90dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="7dp"
         android:text="aaa"
+        android:textSize="11sp"
         android:textAlignment="center"
-        android:typeface="monospace" />
+        android:typeface="monospace"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/txt_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="aaa"
+        android:textSize="11sp"
         android:textAlignment="textEnd"
         android:typeface="monospace"
         android:layout_marginEnd="16dp"
@@ -56,7 +58,8 @@
         android:layout_marginBottom="4dp"
         android:layout_marginTop="0dp"
         android:text="aaa"
-        android:textAlignment="textStart"
+        android:textAlignment="gravity"
+        android:textSize="11sp"
         android:typeface="monospace" />
 
     <TextView
@@ -68,6 +71,7 @@
         android:layout_alignEnd="@+id/txt_overview"
         android:text="aaa"
         android:textAlignment="textEnd"
+        android:textSize="11sp"
         android:typeface="monospace" />
 
 </RelativeLayout>
