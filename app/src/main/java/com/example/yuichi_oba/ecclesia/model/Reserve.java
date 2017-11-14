@@ -550,6 +550,9 @@ public class Reserve implements Serializable {
         db.execSQL("replace into t_member values(?, ?)", new Object[]{re_id, Util.returnOutEmpId(person.getName())});
       }
     });
+
+    db.close();
+    helper.close();
   }
 
   //*** --- SELF MADE METHOD --- 通知メールを送るメソッド ***//

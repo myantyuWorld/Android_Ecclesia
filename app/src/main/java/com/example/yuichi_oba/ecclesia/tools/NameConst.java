@@ -10,6 +10,7 @@ public class NameConst {
     public static final int LINE_WIDGH = 20;
 
     //*** 汎用 ***//
+    public static final int MINUSONE = -1;
     public static final int ZERO = 0;
     public static final int ONE = 1;
     public static final int TWO = 2;

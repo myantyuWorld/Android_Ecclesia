@@ -132,7 +132,14 @@ public class ReserveConfirmActivity extends AppCompatActivity
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             //*** メソッドによる早期退出 ***//
-                            reserve.earlyExit();
+//                            reserve.earlyExit();
+
+                            //*** 早期退出完了ダイアログを出す ***//
+                            Bundle diaBundle = new Bundle();
+                            diaBundle.putString("result", "ear");
+                            ResultDialog resultDialog = new ResultDialog();
+                            resultDialog.setArguments(diaBundle);
+                            resultDialog.show(getFragmentManager(), "ear");
                         }
                     })
                     .setNegativeButton(CANCEL, new DialogInterface.OnClickListener() {
@@ -380,43 +387,22 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     break;
                 }
                 //*** 退出しようとしている会議が現在日付・時刻に矛盾していないか ***//
-                if (((cal.get(Calendar.YEAR) == start.get(Calendar.YEAR)) || (cal.get(Calendar.YEAR) == end.get(Calendar.YEAR)))
-                        && ((cal.get(Calendar.MONTH) == start.get(Calendar.MONTH)) || (cal.get(Calendar.MONTH) == end.get(Calendar.MONTH)))
-                        && ((cal.get(Calendar.DAY_OF_MONTH) == start.get(Calendar.DAY_OF_MONTH)) || (cal.get(Calendar.DAY_OF_MONTH) == end.get(Calendar.DAY_OF_MONTH)))
-                        && (((cal.get(Calendar.HOUR_OF_DAY)) <= end.get(Calendar.HOUR_OF_DAY) && (cal.get(Calendar.MINUTE) < end.get(Calendar.MINUTE)))
-                        || (cal.get(Calendar.HOUR_OF_DAY) < end.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) > end.get(Calendar.MINUTE)))) {
+                //*** 会議の最中であるか、自分が参加している会議かの判定 ***//
+                if (cal.after(start) && cal.before(end) && reserve.getRe_member().indexOf(employee.getEmp_id()) != MINUSONE) {
                     //*** 早期退出ダイアログを表示 ***//
                     EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
                     earlyOutDialog.show(getFragmentManager(), "out");
-
-                    diaBundle.putString("result", "ear");
-                    ResultDialog resultDialog = new ResultDialog();
-                    resultDialog.setArguments(diaBundle);
-                    resultDialog.show(getFragmentManager(), "ear");
                 } else {
-//                    builder.setTitle("早期退出不可能").setMessage("早期退出できる会議ではありません").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {}
-//                    }).create().show();
                     Toast.makeText(this, "早期退出できる会議ではありません", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
-//                    EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
-//                    earlyOutDialog.show(getFragmentManager(), "out");
-//                    builder.setTitle("早期退出完了")
-//                            .setMessage("早期退出が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                }
-//                            }).create().show();
+                    EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
+                    earlyOutDialog.show(getFragmentManager(), "out");
                 }
                 break;
             // 「予約変更」が選択された
             case R.id.option_reserveChange:
                 re_id = reserve.getRe_id();
                 String[] startDay = reserve.getRe_startDay().split("/");
-//        for (String day : startDay) {
-//
-//        }
                 try {
                     //*** 変更しようとしている会議の開始時間をセット ***//
                     start.setTime(timeFormat.parse(reserve.getRe_startDay() + " " + reserve.getRe_startTime()));
@@ -425,20 +411,15 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     break;
                 }
                 //*** 変更しようとしている会議が現在日付・時刻に矛盾していないか ***//
-                if (cal.get(Calendar.YEAR) < start.get(Calendar.YEAR) || (cal.get(Calendar.YEAR) == start.get(Calendar.YEAR) && cal.get(Calendar.MONTH) < start.get(Calendar.MONTH))
-                        || (cal.get(Calendar.YEAR) == start.get(Calendar.YEAR) && cal.get(Calendar.MONTH) == start.get(Calendar.MONTH) && cal.get(Calendar.DAY_OF_MONTH) <= start.get(Calendar.DAY_OF_MONTH))) {
+                //*** まだ始まっていない会議かの判定 ***//
+                if (cal.before(start)) {
                     //*** 次画面（ReserveChangeActivity）に予約インスタンスを渡す ***//
                     intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
                     intent.putExtra(KEYCHANGE, reserve);
                     Log.d(CALL, employee.toString());
                     intent.putExtra("employee", employee);
-                    //                    intent.putExtra(KEYCHANGE, re_id);
                     startActivity(intent);
                 } else {
-                    //                    builder.setTitle("変更不可能").setMessage("変更できる会議ではありません").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    //                        @Override
-                    //                        public void onClick(DialogInterface dialog, int which) {}
-                    //                    }).create().show();
                     Toast.makeText(this, "変更できる会議ではありません", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
                     intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
@@ -451,49 +432,26 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 break;
             // 「延長」が選択された
             case R.id.option_extention:
-
                 try {
                     //*** 延長を試みる会議の開始終了時刻をセット ***//
-                    start.setTime(timeFormat.parse(reserve.getRe_startDay() + " " + reserve.getRe_startTime()));
-                    end.setTime(timeFormat.parse(reserve.getRe_endDay() + " " + reserve.getRe_endTime()));
+                    start.setTime(timeFormat.parse(reserve.getRe_startDay() + SPACE + reserve.getRe_startTime()));
+                    end.setTime(timeFormat.parse(reserve.getRe_endDay() + SPACE + reserve.getRe_endTime()));
                 } catch (ParseException e) {
                     e.getStackTrace();
                     break;
                 }
                 //*** 延長しようとしている会議が現在日付・時刻に矛盾していないか ***//
-                if (((cal.get(Calendar.YEAR) == start.get(Calendar.YEAR)) || (cal.get(Calendar.YEAR) == end.get(Calendar.YEAR)))
-                        && ((cal.get(Calendar.MONTH) == start.get(Calendar.MONTH)) || (cal.get(Calendar.MONTH) == end.get(Calendar.MONTH)))
-                        && ((cal.get(Calendar.DAY_OF_MONTH) == start.get(Calendar.DAY_OF_MONTH)) || (cal.get(Calendar.DAY_OF_MONTH) == end.get(Calendar.DAY_OF_MONTH)))
-                        && (((cal.get(Calendar.HOUR_OF_DAY)) <= end.get(Calendar.HOUR_OF_DAY) && (cal.get(Calendar.MINUTE) < end.get(Calendar.MINUTE)))
-                        || (cal.get(Calendar.HOUR_OF_DAY) < end.get(Calendar.HOUR_OF_DAY)) && (cal.get(Calendar.MINUTE) > end.get(Calendar.MINUTE)))) {
+                //*** 会議の最中かどうか、自分が参加している会議かの判定 ***//
+                if (cal.after(start) && cal.before(end) && reserve.getRe_member().indexOf(employee.getEmp_id()) != MINUSONE) {
                     //*** 延長ダイアログを表示 ***//
-
                     ExtentionDialog extentionDialog = new ExtentionDialog();
                     extentionDialog.show(getFragmentManager(), KEYEX);
-
-//                    diaBundle.putString("result", "ex");
-//                    ResultDialog resultDialog = new ResultDialog();
-//                    resultDialog.setArguments(diaBundle);
-//                    resultDialog.show(getFragmentManager(), "ex");
                 } else {
-//                    builder.setTitle("延長不可能").setMessage("延長できる会議ではありません").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {}
-//                    }).create().show();
                     Toast.makeText(this, "延長ができる会議ではありません", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
                     ExtentionDialog extentionDialog = new ExtentionDialog();
                     extentionDialog.show(getFragmentManager(), KEYEX);
-
-//                    diaBundle.putString("result", "ex");
-//                    ResultDialog resultDialog = new ResultDialog();
-//                    resultDialog.setArguments(diaBundle);
-//                    resultDialog.show(getFragmentManager(), "ex");
                 }
-
-//        ExtentionDialog extentionDialog = new ExtentionDialog();
-//        extentionDialog.show(getFragmentManager(), KEYEX);
-
                 break;
         }
         // 選択された結果（項目）を返す
