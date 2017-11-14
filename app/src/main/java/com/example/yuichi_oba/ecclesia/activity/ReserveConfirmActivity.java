@@ -131,27 +131,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     .setPositiveButton(OK, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-//                            Toast.makeText(getActivity(), "早期退出", Toast.LENGTH_SHORT).show();
-                            //*** 必要なインスタンスを用意 ***//
-//                            SQLiteOpenHelper helper = new DB(instanceApplicationContext());
-                            MyHelper helper = new MyHelper(instance.getApplicationContext());
-                            SQLiteDatabase db = helper.getWritableDatabase();
-                            //*** トランザクション開始 ***//
-//                            db.beginTransaction();
-                            //*** DBへ更新をかけるために用意 ***//
-//                            ContentValues con = new ContentValues();
-                            //*** 現在時刻取得 ***//
-                            Date ealDate = new Date();
-                            //*** フォ－マットを用意 ***//
-                            SimpleDateFormat ealFor = new SimpleDateFormat(HH_MM);
-                            //*** 現在時刻をフォーマットにかけてStringへ変換 ***//
-                            String ealTime = ealFor.format(ealDate);
-                            //*** 早期退出による終了時刻をセット ***//
-//                            con.put("re_endTime", ealTime);
-                            Log.d(CALL, "早期退出した時刻" + ealTime);
-
-                            db.execSQL("update t_reserve set re_endtime = ? where re_id = ?", new Object[]{ealTime, re_id});
-//                            reserve.earlyExit();
+                            //*** メソッドによる早期退出 ***//
+                            reserve.earlyExit();
                         }
                     })
                     .setNegativeButton(CANCEL, new DialogInterface.OnClickListener() {

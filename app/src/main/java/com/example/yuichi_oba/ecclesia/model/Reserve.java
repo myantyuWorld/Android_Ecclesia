@@ -496,7 +496,7 @@ public class Reserve implements Serializable {
 
   //*** --- SELF MADE METHOD --- 早期退出するメソッド ***//
   public void earlyExit() {
-//        SQLiteOpenHelper helper = new DB(ReserveConfirmActivity.getInstance().getApplicationContext());
+    //*** DBインスタンス用意 ***//
     MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getWritableDatabase();
     //*** 現在時刻取得 ***//
@@ -505,9 +505,12 @@ public class Reserve implements Serializable {
     SimpleDateFormat ealFor = new SimpleDateFormat(HH_MM);
     //*** 現在時刻をフォーマットにかけてStringへ変換 ***//
     String ealTime = ealFor.format(ealDate);
-    Log.d("ealTIme", ealTime);
+    Log.d(CALL, "早期退出した時刻：" + ealTime);
 
     db.execSQL("update t_reserve set re_endtime = ? where re_id = ?", new Object[]{ealTime, re_id});
+    //*** 各種クローズ ***//
+    db.close();
+    helper.close();
   }
 
   //*** --- SELF MADE METHOD --- 終了時間を延長するメソッド ***//
