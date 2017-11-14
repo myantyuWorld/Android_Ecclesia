@@ -459,6 +459,7 @@ public class Reserve implements Serializable {
     Log.d(CALL, "参加者テーブルへのインサート開始");
     db = helper.getWritableDatabase();
     db.beginTransaction();
+
     // TODO: 2017/11/13 ここで、本当にt_memberインサートしている？？
     SQLiteStatement st = db.compileStatement("insert into t_member values (?, ?)");
     for (Person m : this.getRe_member()) {
