@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
@@ -22,7 +23,10 @@ import java.util.List;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;;
 
 /**
  * Created by Yuichi-Oba on 2017/09/15.
@@ -509,36 +513,49 @@ public class Reserve implements Serializable {
   //*** --- SELF MADE METHOD --- 終了時間を延長するメソッド ***//
   public void endTimeExtention(String exTime) {
     //*** 必要なインスタンス類を用意 ***//
-//        SQLiteOpenHelper helper = new DB(ReserveConfirmActivity.getInstance().getApplicationContext());
-//        MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
-//        SQLiteDatabase db = helper.getWritableDatabase();
     MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
     db = helper.getWritableDatabase();
     //*** 延長による終了時刻を計算 ***//
-    SimpleDateFormat endFor = new SimpleDateFormat(HH_MM);
+    SimpleDateFormat endDayTimeFor = new SimpleDateFormat(YYYY_MM_DD_HH_MM);
+    SimpleDateFormat endTimeFor = new SimpleDateFormat(HH_MM);
+    SimpleDateFormat endDayFor = new SimpleDateFormat(YYYY_MM_DD);
     Calendar excal = Calendar.getInstance();
-    Log.d("nowEnd", re_endTime);
+    Log.d(CALL, "現在の終了時間：" + re_endTime);
     //*** フォーマットで変換をかけてCalenderにセット ***//
     try {
-      excal.setTime(endFor.parse(re_endTime));
-      Log.d("changeTime", String.valueOf(endFor.parse(re_endTime)));
+      excal.setTime(endDayTimeFor.parse(re_endDay + SPACE + re_endTime));
+//      Log.d(CALL, "延長時間" + String.valueOf(endFor.parse(re_endTime)));
     } catch (ParseException e) {
       e.getStackTrace();
+      Log.d(CALL, "Parse失敗");
     }
     //*** セットされたCalenderに延長時間を加算する ***//
     excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
     //*** CalenderをDateに変換 ***//
     Date exDate = excal.getTime();
     //*** DateをフォーマットにかけてStringに変換 ***//
-    exTime = endFor.format(exDate);
-    Log.d("exTIme", exTime);
+    exTime = endTimeFor.format(exDate);
+    Log.d(CALL, "延長時間：" + exTime);
+
+    //*** 延長による開始終了時間の書き換え ***//
+    re_startDay = re_endDay;
+    re_startTime = re_endTime;
+    re_endDay = endDayFor.format(excal.getTime());
+    re_endTime = exTime;
+    Log.d(CALL, "延長開始日：" + re_startDay);
+    Log.d(CALL, "延長終了日：" + re_endDay);
+    Log.d(CALL, "延長開始時刻：" + re_startTime);
+    Log.d(CALL, "延長終了時刻：" + re_endTime);
 
     db.execSQL("insert into t_extension values(?,?,?,?,?)",
         new Object[]{re_id,
             re_startDay,
-            re_startTime,
             re_endDay,
+            re_startTime,
             re_endTime});
+
+    db.close();
+    helper.close();
   }
 
   //*** --- SELF MADE METHOD --- 予約を変更するメソッド ***//

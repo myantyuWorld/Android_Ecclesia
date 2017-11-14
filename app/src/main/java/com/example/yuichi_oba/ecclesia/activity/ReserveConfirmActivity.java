@@ -49,20 +49,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.COMPLETE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.EARLY;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.EMPTY;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.GA;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.RUNMESSAGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -139,9 +126,9 @@ public class ReserveConfirmActivity extends AppCompatActivity
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new AlertDialog.Builder(getActivity())
-                    .setTitle("早期退出")
-                    .setMessage("早期退出しますか？")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setTitle(EARLY)
+                    .setMessage(EARLY + RUNQUESTION)
+                    .setPositiveButton(OK, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
 //                            Toast.makeText(getActivity(), "早期退出", Toast.LENGTH_SHORT).show();
@@ -161,13 +148,13 @@ public class ReserveConfirmActivity extends AppCompatActivity
                             String ealTime = ealFor.format(ealDate);
                             //*** 早期退出による終了時刻をセット ***//
 //                            con.put("re_endTime", ealTime);
-                            Log.d("ealTIme", ealTime);
+                            Log.d(CALL, "早期退出した時刻" + ealTime);
 
                             db.execSQL("update t_reserve set re_endtime = ? where re_id = ?", new Object[]{ealTime, re_id});
 //                            reserve.earlyExit();
                         }
                     })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(CANCEL, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                         }
@@ -189,11 +176,11 @@ public class ReserveConfirmActivity extends AppCompatActivity
       switch (getArguments().getString("result")) {
         case "ex":
           title = EX + COMPLETE;
-          str = EX + GA + RUNMESSAGE;
+          str = EX + RUNMESSAGE;
           break;
         case "ear":
           title = EARLY + COMPLETE;
-          str = EARLY + GA + RUNMESSAGE;
+          str = EARLY + RUNMESSAGE;
           break;
 
 //        case "change":
@@ -218,46 +205,14 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     .setPositiveButton(EX, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            String exTime = "";
+                            String exTime;
                             //*** スピナーで選択された延長時間を代入 ***//
                             Spinner spTime = (Spinner) layout.findViewById(R.id.extentionDia_time);
                             exTime = spTime.getSelectedItem().toString();
-                            //*** 必要なインスタンス類を用意 ***//
-//                                SQLiteOpenHelper helper = new DB(instance.getApplicationContext());
-                            MyHelper helper = new MyHelper(instance.getApplicationContext());
-                            SQLiteDatabase db = helper.getWritableDatabase();
-                            //*** 延長による終了時刻を計算 ***//
-                            SimpleDateFormat endFor = new SimpleDateFormat(HH_MM);
-                            Calendar excal = Calendar.getInstance();
-                            Log.d(CALL, "現在の終了時刻：" + reserve.getRe_endTime());
-                            //*** フォーマットで変換をかけてCalenderにセット ***//
-                            try {
-                              excal.setTime(endFor.parse(reserve.getRe_endTime()));
-              //                Log.d(CALL, "" + endFor.parse(reserve.getRe_endTime()));
-                            } catch (ParseException e) {
-                              e.getStackTrace();
-                            }
-                            //*** セットされたCalenderに延長時間を加算する ***//
-                            excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
-                            //*** CalenderをDateに変換 ***//
-                            Date exDate = excal.getTime();
-                            //*** DateをフォーマットにかけてStringに変換 ***//
-                            exTime = endFor.format(exDate);
-                            Log.d(CALL, "延長時間：" + exTime);
-                            //*** reserveの時間に対する書き換えが必要 ***//
-                            db.execSQL("insert into t_extension values(?,?,?,?,?)",
-                                                  new Object[]{reserve.getRe_id(),
-                                                          reserve.getRe_startDay(),
-                                                          reserve.getRe_startTime(),
-                                                          reserve.getRe_endDay(),
-                                                          reserve.getRe_endTime()});
-
-                                              reserve.endTimeExtention(exTime);
-
-                            db.close();
-                            helper.close();
+                            //*** メソッドによる延長処理 ***//
+                            reserve.endTimeExtention(exTime);
                           }
-                        }).setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                        }).setNegativeButton(CANCEL, new DialogInterface.OnClickListener() {
                           @Override
                           public void onClick(DialogInterface dialog, int which) {
                           }
