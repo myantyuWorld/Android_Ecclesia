@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.R;
@@ -187,6 +188,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final RelativeLayout layout = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.extention_dialog, null);
+            TextView endTime = (TextView) layout.findViewById(R.id.dia_endTime);
+            endTime.setText(reserve.getRe_endTime());
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             return builder.setTitle(EX)
                     .setView(layout)
