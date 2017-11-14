@@ -41,7 +41,7 @@ public class OverView extends View {
   protected void onDraw(Canvas c) {
 
     //*** l t r b ***//
-    c.drawRect(0, 0, 1078, 200, p_line);
+    c.drawRect(0, 0, 1500, 200, p_line);
 
     int x = 30;
     int round = 10;
