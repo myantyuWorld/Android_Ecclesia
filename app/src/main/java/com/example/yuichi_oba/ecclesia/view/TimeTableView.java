@@ -157,10 +157,10 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     //*** 特別ABC列の色の描画 ***//
     // l t r b
 
-    c.drawRect(216, 3, 432, 2000, tokubetsu);
-    c.drawRect(432, 3, 648, 2000, roomA);
-    c.drawRect(648, 3, 864, 2000, roomB);
-    c.drawRect(864, 3, 1078, 2000, roomC);
+    c.drawRect(216, 3, 432, 2200, tokubetsu);
+    c.drawRect(432, 3, 648, 2200, roomA);
+    c.drawRect(648, 3, 864, 2200, roomB);
+    c.drawRect(864, 3, 1078, 2200, roomC);
 
 
     timeFloats = new float[24];
@@ -188,7 +188,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     // 時間割の枠の描画
     onDrawTimeTable(c);
     // 時間の文字の描画 text x y paint
-    for (int i = 0, j = 150; i < 24; i++) {
+    for (int i = 0, j = 150; i <= 24; i++) {
       String time = String.format("%02d:00", i);
       c.drawText(time, 100, j, p_txtTime);
       j += Y_HEIGHT * 2;
