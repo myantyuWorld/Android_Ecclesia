@@ -30,18 +30,17 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
 
 public class Reserve implements Serializable {
 
-  public static final int YEAR = 0;
-  public static final int MONTH = 1;
-  public static final int DATE = 2;
-  public static final int HOUR = 3;
-  public static final int MINUTE = 4;
-  public static final String SYANAI = "0";
-  public static final String SYAGAI = "1";
+  private static final String Q_SAME_DAY_MEETING = "select * from t_reserve where re_startday = ? and room_id = ?";
+  private static final String Q_SELECT_TEST = "select * from v_reserve_member x inner join m_room y on x.room_id = y.room_id inner join t_emp as z on x.re_applicant = z.emp_id where re_id = ?";
+  private static final int YEAR = 0;
+  private static final int MONTH = 1;
+  private static final int DATE = 2;
+  private static final int HOUR = 3;
+  private static final int MINUTE = 4;
+  private static final String SYANAI = "0";
+  private static final String SYAGAI = "1";
   //    private MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
   public static SQLiteDatabase db;
-
-  public static final String Q_SAME_DAY_MEETING = "select * from t_reserve where re_startday = ? and room_id = ?";
-  private static final String Q_SELECT_TEST = "select * from v_reserve_member x inner join m_room y on x.room_id = y.room_id inner join t_emp as z on x.re_applicant = z.emp_id where re_id = ?";
   //*** Field ***//
   private long id;                        //*** ID(long型)***//
   private String re_id;                   //*** 予約ID ***//
@@ -384,7 +383,7 @@ public class Reserve implements Serializable {
   //*** --- SELF MADE METHOD --- 優先度をチェックするメソッド  ***//
 //*** true : 勝ち false : 負け                            ***//
   // TODO: 2017/11/13 会議目的優先度をみて、おなじなら、メンバーの優先度見るロジックのじっそう
-  public boolean priorityCheck(Reserve r, Reserve o) {
+  private boolean priorityCheck(Reserve r, Reserve o) {
     Log.d(CALL, "call Reserve->priorityCheck()");
     Log.d(CALL, "自分の予約ID：" + r.getRe_id());
     Log.d(CALL, "相手の予約ID：" + o.getRe_id());
