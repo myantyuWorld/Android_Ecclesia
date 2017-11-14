@@ -67,6 +67,7 @@ public class HistorySearchActivity extends AppCompatActivity
     public static final int ID = 0;
     public static final String Q_SELECT_HISTORY = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join m_out as a on y.mem_id = a.out_id inner join m_company as b on a.com_id = b.com_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id where x.emp_id = ?";
     public static final String Q_TEST = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where x.emp_id = ? group by x.re_id";
+    public static final String Q_COMPANY = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where x.emp_id = ? group by x.com_id";
     public static final String Q_SELECT_MEMBER = "select * from t_member where re_id = ?";
 
     SearchView searchView;
@@ -405,7 +406,7 @@ public class HistorySearchActivity extends AppCompatActivity
         //データベース検索(会社名)
         companiesy = new ArrayList<>();
         List<String> strings1 = new ArrayList<>();
-        Cursor cursor = db.rawQuery(Q_TEST, new String[]{employee.getEmp_id()});
+        Cursor cursor = db.rawQuery(Q_COMPANY, new String[]{employee.getEmp_id()});
         while (cursor.moveToNext()) {
             strings1.add(cursor.getString(30));
             Log.d("call", cursor.getString(1));
@@ -423,8 +424,10 @@ public class HistorySearchActivity extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Spinner sp = (Spinner) parent;
+                // TODO: 2017/11/14 スピナーに指定なし追加（デフォルト）？
                 //選択したspinnerの文字列を取得
-                //String posi = (String) sp_company.getSelectedItem();
+                String posi = (String) sp_company.getSelectedItem();
+                Log.d("call",posi);
                 //スピナーに対しての処理
                 Toast.makeText(HistorySearchActivity.this, String.format("選択会社名 : %s", sp.getSelectedItem()), Toast.LENGTH_SHORT).show();
             }

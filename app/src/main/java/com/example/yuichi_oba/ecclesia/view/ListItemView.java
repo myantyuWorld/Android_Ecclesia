@@ -96,5 +96,4 @@ public class ListItemView extends View {
         p_title.setStrokeWidth(10);
         p_title.setColor(Color.LTGRAY);
     }
-
 }
