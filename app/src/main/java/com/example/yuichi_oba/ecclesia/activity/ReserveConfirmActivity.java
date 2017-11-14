@@ -132,7 +132,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             //*** メソッドによる早期退出 ***//
-//                            reserve.earlyExit();
+                            reserve.earlyExit();
 
                             //*** 早期退出完了ダイアログを出す ***//
                             Bundle diaBundle = new Bundle();
