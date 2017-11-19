@@ -67,7 +67,19 @@ public class HistorySearchActivity extends AppCompatActivity
     public static final int ID = 0;
     public static final String Q_SELECT_HISTORY = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join m_out as a on y.mem_id = a.out_id inner join m_company as b on a.com_id = b.com_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id where x.emp_id = ?";
     public static final String Q_TEST = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where x.emp_id = ? group by x.re_id";
+    public static final String Q_COMPANY = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where x.emp_id = ? group by x.com_id";
     public static final String Q_SELECT_MEMBER = "select * from t_member where re_id = ?";
+    public static final int STARTTIME = 4;
+    public static final int ENDTIME = 5;
+    public static final int APPLICANT = 18;
+    public static final int SWITCH = 6;
+    public static final int ROOMNAME = 27;
+    public static final int FIXTURES = 7;
+    public static final int REMARKS = 8;
+    public static final int RE_ID = 0;
+    public static final int ENDDAY = 3;
+    public static final int COMPANY = 30;
+    public static final int PURPOSE = 24;
 
     SearchView searchView;
     ListView listView;
@@ -311,25 +323,19 @@ public class HistorySearchActivity extends AppCompatActivity
         while (c.moveToNext()) {
 
             Reserve reserve = new Reserve();
-            reserve.setRe_startTime(c.getString(4));
-            reserve.setRe_endTime(c.getString(5));
-            reserve.setRe_applicant(c.getString(18));
-            reserve.setRe_switch(c.getString(6));
-            reserve.setRe_room_name(c.getString(27));
-            reserve.setRe_fixtures(c.getString(7));
-            reserve.setRe_remarks(c.getString(8));
-            reserve.setRe_id(c.getString(0));
+            reserve.setRe_startTime(c.getString(STARTTIME));
+            reserve.setRe_endTime(c.getString(ENDTIME));
+            reserve.setRe_applicant(c.getString(APPLICANT));
+            reserve.setRe_switch(c.getString(SWITCH));
+            reserve.setRe_room_name(c.getString(ROOMNAME));
+            reserve.setRe_fixtures(c.getString(FIXTURES));
+            reserve.setRe_remarks(c.getString(REMARKS));
+            reserve.setRe_id(c.getString(RE_ID));
             reserve.setRe_name(c.getString(GAIYOU));
             reserve.setRe_startDay(c.getString(DAY));
-            reserve.setRe_endDay(c.getString(3));
-            //*** 社員名をセット(まだ実行してないので未確認。) ***//
-//            p.setName(c_list.getString(COM_MEMBER));
-
-            //li.setRe_member(member);
-//            reserve.setRe_mem(c.getString(COM_MEMBER));
-            reserve.setRe_company(c.getString(30));
-            reserve.setRe_purpose_name(c.getString(24));
-            Log.d("call", (c.getString(GAIYOU)) + " : " + c.getString(DAY) + " : " + c.getString(26) + " : " + c.getString(28) + " : " + c.getString(COM_MEMBER));
+            reserve.setRe_endDay(c.getString(ENDDAY));
+            reserve.setRe_company(c.getString(COMPANY));
+            reserve.setRe_purpose_name(c.getString(PURPOSE));
             // addするメソッドを書く
             reserves.add(reserve);
         }
@@ -405,9 +411,9 @@ public class HistorySearchActivity extends AppCompatActivity
         //データベース検索(会社名)
         companiesy = new ArrayList<>();
         List<String> strings1 = new ArrayList<>();
-        Cursor cursor = db.rawQuery("select * from m_company",null);
+        Cursor cursor = db.rawQuery(Q_COMPANY, new String[]{employee.getEmp_id()});
         while (cursor.moveToNext()) {
-            strings1.add(cursor.getString(1));
+            strings1.add(cursor.getString(30));
             Log.d("call", cursor.getString(1));
         }
 
@@ -423,6 +429,10 @@ public class HistorySearchActivity extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Spinner sp = (Spinner) parent;
+                // TODO: 2017/11/14 スピナーに指定なし追加（デフォルト）？
+                //選択したspinnerの文字列を取得
+                String posi = (String) sp_company.getSelectedItem();
+                Log.d("call",posi);
                 //スピナーに対しての処理
                 Toast.makeText(HistorySearchActivity.this, String.format("選択会社名 : %s", sp.getSelectedItem()), Toast.LENGTH_SHORT).show();
             }
@@ -454,9 +464,6 @@ public class HistorySearchActivity extends AppCompatActivity
 
 
                 //*** 予約IDを特定 ***//
-
-
-                //*** 予約のインスタンスを生成 ***//
                 intent.putExtra("reserve",(Reserve) adapter1.getItem(position));
                 //*** intent.puextra(xxx)する ***//
                 intent.putExtra("gamen", "2");
