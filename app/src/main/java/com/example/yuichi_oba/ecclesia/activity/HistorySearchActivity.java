@@ -190,18 +190,11 @@ public class HistorySearchActivity extends AppCompatActivity
     }
 
     private class MyListAdapter extends BaseAdapter {
+
         private Context context;
         private ArrayList<Reserve> data = null;
         private int resource = 0;
         private LayoutInflater inflater = null;
-
-//        public MyListAdapter(Context context, ArrayList<ListItem> listdata, int resource) {
-//            this.context = context;
-//            this.data = listdata;
-//            this.resource = resource;
-//            this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        }
-
 
         public MyListAdapter(Context context) {
             this.context = context;
@@ -212,19 +205,19 @@ public class HistorySearchActivity extends AppCompatActivity
             this.data = data;
         }
 
-        //データの個数を取得
+        //*** データの個数を取得 ***//
         @Override
         public int getCount() {
             return data.size();
         }
 
-        //指定された項目を取得
+        //*** 指定された項目を取得 ***//
         @Override
         public Object getItem(int position) {
             return data.get(position);
         }
 
-        //指定された項目を識別するためのID値を取得
+        //*** 指定された項目を識別するためのID値を取得 ***//
         @Override
         public long getItemId(int position) {
             return 0;
@@ -233,27 +226,12 @@ public class HistorySearchActivity extends AppCompatActivity
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = inflater.inflate(R.layout.list_search_item, parent, false);
-
-//            Activity activity = (Activity) context;
             Reserve item = (Reserve) getItem(position);
-            //*** 会社メンバーセットのクラス呼び出し(エラーが発生しているのでコメント) ***//
-//            Person p_item = (Person) getItem(position);
-
-//************************************************************************************************
-//            初回かどうか確認
-//            if (convertView == null) {
-//                //Layoutを取得
-//                convertView = activity.getLayoutInflater().inflate(resource, null);
-//            }
-//            ((RelativeLayout)convertView).findViewById(R.id.customview).invalidate();
-//************************************************************************************************
-
             ((TextView) convertView.findViewById(R.id.txt_purpose)).setText(item.getRe_purpose_name());
             ((TextView) convertView.findViewById(R.id.txt_date)).setText(item.getRe_startDay());
             ((TextView) convertView.findViewById(R.id.txt_overview)).setText(item.getRe_name());
             ((TextView) convertView.findViewById(R.id.txt_company)).setText(item.getRe_company());
             ((TextView) convertView.findViewById(R.id.txt_member)).setText(String.format("%s,他 %d名",item.getRe_member().get(0).getName(),item.getRe_member().size()));
-            ///*** string.format("%s ,他 %d名",member.get(0).getname, ***//
             return convertView;
         }
 
@@ -296,32 +274,27 @@ public class HistorySearchActivity extends AppCompatActivity
         Log.d("call", "HistorySearchActivity->onCreate()");
         Intent intent = getIntent();
         employee = (Employee) intent.getSerializableExtra("employee");
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        //データベースを準備
+        //*** データベースを準備 ***//
         listItems = new ArrayList<>();
         SQLiteDatabase db_list = helper.getReadableDatabase();
         db = helper.getReadableDatabase();
-
+        //*** SQLで指定したデータを設定 ***//
         Cursor c = db.rawQuery(Q_TEST, new String[]{employee.getEmp_id()});
-        //会社用のデータベース
+        //*** 会社用のデータベース ***//
         ArrayList<Reserve> reserves = new ArrayList<>();
-
+        //*** データベースにある情報だけループを回す ***//
         while (c.moveToNext()) {
-
             Reserve reserve = new Reserve();
             reserve.setRe_startTime(c.getString(STARTTIME));
             reserve.setRe_endTime(c.getString(ENDTIME));
@@ -336,7 +309,7 @@ public class HistorySearchActivity extends AppCompatActivity
             reserve.setRe_endDay(c.getString(ENDDAY));
             reserve.setRe_company(c.getString(COMPANY));
             reserve.setRe_purpose_name(c.getString(PURPOSE));
-            // addするメソッドを書く
+            //*** reservesにaddする ***//
             reserves.add(reserve);
         }
 
@@ -344,28 +317,6 @@ public class HistorySearchActivity extends AppCompatActivity
         reserves.forEach(r -> {
             r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
         });
-        //リストに表示するデータを準備
-//        String pupose[] = {"定例会","商談"};
-//        String date[] = {"2017/02/20","2018/01/31"};
-//        String gaiyou[] = {"内定懇談会","Ecclesiaの売り込み"};
-//        String company[] = {"株式会社ostraca","株式会社トミー"};
-//        String companyMember[] = {"xxxx様","yyyy様"};
-
-
-        //配列の内容をListItemオブジェクトに詰め替え
-//        final ArrayList<ListItem> list = new ArrayList<>();
-//        for (int i = 0; i < pupose.length; i++)
-//        {
-//            ListItem item = new ListItem();
-//            item.setId((new Random()).nextLong());
-//            item.setPurpose(pupose[i]);
-//            item.setDate(date[i]);
-//            item.setGaiyou(gaiyou[i]);
-//            item.setCompany(company[i]);
-//            item.setCompanyMember(companyMember[i]);
-//            list.add(item);
-//        }
-
 
         //データベース検索
         purpose = new ArrayList<>();
@@ -380,23 +331,21 @@ public class HistorySearchActivity extends AppCompatActivity
             purpose.add(p);
         }
         c.close();
-
         for (String s : strings) {
             Log.d("call", s);
         }
-        //スピナーを取得
+        //*** スピナーを取得 ***//
         Spinner sp = (Spinner) findViewById(R.id.ahs_sp_purpose);
-        //
+        //*** スピナーのリストを設定 ***//
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item, strings);
         sp.setAdapter(adapter);
-        //スピナーに対してのイベントリスナーを登録
+        //*** スピナーに対してのイベントリスナーを登録 ***//
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Spinner sp = (Spinner) parent;
                 //選択項目を取得し、その値で検索をする？それとトースト表示
-
                 Toast.makeText(HistorySearchActivity.this, String.format("選択目的 : %s", sp.getSelectedItem()),
                         Toast.LENGTH_SHORT).show();
                 Log.d("call", "");
@@ -436,7 +385,6 @@ public class HistorySearchActivity extends AppCompatActivity
                 //スピナーに対しての処理
                 Toast.makeText(HistorySearchActivity.this, String.format("選択会社名 : %s", sp.getSelectedItem()), Toast.LENGTH_SHORT).show();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -444,7 +392,6 @@ public class HistorySearchActivity extends AppCompatActivity
 
 
         //*** ListItemとレイアウトとを関連付け ***//
-
         final MyListAdapter adapter1 = new MyListAdapter(this);
         listView = (ListView) findViewById(R.id.ahs_lis_history);
         adapter1.setItemList(reserves);
@@ -458,16 +405,16 @@ public class HistorySearchActivity extends AppCompatActivity
                 //*** 中身はまだ考え中 ***//
                 Log.d("call", "履歴確認画面への遷移");
 
-
                 //*** 画面遷移のインテント作成中
                 Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
 
-
                 //*** 予約IDを特定 ***//
                 intent.putExtra("reserve",(Reserve) adapter1.getItem(position));
+
                 //*** intent.puextra(xxx)する ***//
                 intent.putExtra("gamen", "2");
                 intent.putExtra("employee", employee);
+
                 //*** 予約確認画面へ画面遷移 ***//
                 startActivity(intent);
 

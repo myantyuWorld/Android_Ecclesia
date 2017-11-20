@@ -6,11 +6,11 @@
 
     <view
         android:id="@+id/customview"
+        class="com.example.yuichi_oba.ecclesia.view.ListItemView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        class="com.example.yuichi_oba.ecclesia.view.ListItemView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
     <TextView
         android:id="@+id/txt_purpose"
@@ -19,7 +19,7 @@
         android:layout_marginStart="72dp"
         android:layout_marginTop="7dp"
         android:text="aaa"
-        android:textSize="11sp"
+        android:textSize="12sp"
         android:textAlignment="center"
         android:typeface="monospace"
         android:layout_alignParentTop="true"
@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="aaa"
-        android:textSize="11sp"
+        android:textSize="13sp"
         android:textAlignment="textEnd"
         android:typeface="monospace"
         android:layout_marginEnd="16dp"
