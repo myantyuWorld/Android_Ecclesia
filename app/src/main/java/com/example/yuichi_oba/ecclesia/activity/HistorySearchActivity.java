@@ -385,7 +385,6 @@ public class HistorySearchActivity extends AppCompatActivity
                 //*** スピナーイベントの処理（よくわからん） ***//
 //                reserves.forEach(reserve -> {
 //                    if (reserve.getRe_company().equals(posi)) {
-//                        listView = (ListView) findViewById(R.id.ahs_lis_history);
 //
 //                    }
 //                });
