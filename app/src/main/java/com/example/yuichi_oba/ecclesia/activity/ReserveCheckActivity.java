@@ -101,10 +101,8 @@ implements NavigationView.OnNavigationItemSelectedListener{
                     }
 
                     Log.d(CALL, "予約ID:" + checkRes.getRe_id());
-                    //*** 時間の重複も、優先度チェックも何も必要なし＝＝＞ そのままインサートする ***//
-//                    checkRes.reserveCorrenct(setReserveDetail());     //*** 予約テーブル,参加者テーブル へのインサート ***//
                     checkRes.reserveEdit(setReserveDetail());
-                    checkRes = null;                                  //*** 予約を確定したので、reserveをnullにする ***//
+                    checkRes = null;
                 }
                 //*** 管理者認証ずみ ***//
                 else {
@@ -207,7 +205,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
 //        resultDialog.setArguments(bundle);
 //        resultDialog.show(getFragmentManager(), "change");
         ChangeResultDialog changeResultDialog = new ChangeResultDialog();
-        changeResultDialog.show(getFragmentManager(), "change");
+        changeResultDialog.show(getFragmentManager(), KEYCHANGE);
 
         //*** 予約一覧へ画面遷移を行う ***//
         Intent intent = new Intent(getApplicationContext(), ReserveListActivity.class);
@@ -233,8 +231,8 @@ implements NavigationView.OnNavigationItemSelectedListener{
     public static class ChangeResultDialog extends DialogFragment{
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return new AlertDialog.Builder(getActivity()).setTitle("変更完了")
-                    .setMessage("変更が完了しました").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            return new AlertDialog.Builder(getActivity()).setTitle(RESERVECHANGE + COMPLETE)
+                    .setMessage(RESERVECHANGE + RUNMESSAGE).setPositiveButton(OK, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) { }
                     }).create();

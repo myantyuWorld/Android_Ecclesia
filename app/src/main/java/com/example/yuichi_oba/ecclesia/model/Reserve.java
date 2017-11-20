@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
@@ -22,7 +23,10 @@ import java.util.List;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;;
 
 /**
  * Created by Yuichi-Oba on 2017/09/15.
@@ -492,7 +496,7 @@ public class Reserve implements Serializable {
 
   //*** --- SELF MADE METHOD --- 早期退出するメソッド ***//
   public void earlyExit() {
-//        SQLiteOpenHelper helper = new DB(ReserveConfirmActivity.getInstance().getApplicationContext());
+    //*** DBインスタンス用意 ***//
     MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getWritableDatabase();
     //*** 現在時刻取得 ***//
@@ -501,44 +505,29 @@ public class Reserve implements Serializable {
     SimpleDateFormat ealFor = new SimpleDateFormat(HH_MM);
     //*** 現在時刻をフォーマットにかけてStringへ変換 ***//
     String ealTime = ealFor.format(ealDate);
-    Log.d("ealTIme", ealTime);
+    Log.d(CALL, "早期退出した時刻：" + ealTime);
 
     db.execSQL("update t_reserve set re_endtime = ? where re_id = ?", new Object[]{ealTime, re_id});
+    //*** 各種クローズ ***//
+    db.close();
+    helper.close();
   }
 
   //*** --- SELF MADE METHOD --- 終了時間を延長するメソッド ***//
   public void endTimeExtention(String exTime) {
     //*** 必要なインスタンス類を用意 ***//
-//        SQLiteOpenHelper helper = new DB(ReserveConfirmActivity.getInstance().getApplicationContext());
-//        MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
-//        SQLiteDatabase db = helper.getWritableDatabase();
     MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
     db = helper.getWritableDatabase();
-    //*** 延長による終了時刻を計算 ***//
-    SimpleDateFormat endFor = new SimpleDateFormat(HH_MM);
-    Calendar excal = Calendar.getInstance();
-    Log.d("nowEnd", re_endTime);
-    //*** フォーマットで変換をかけてCalenderにセット ***//
-    try {
-      excal.setTime(endFor.parse(re_endTime));
-      Log.d("changeTime", String.valueOf(endFor.parse(re_endTime)));
-    } catch (ParseException e) {
-      e.getStackTrace();
-    }
-    //*** セットされたCalenderに延長時間を加算する ***//
-    excal.add(Calendar.MINUTE, Integer.parseInt(exTime));
-    //*** CalenderをDateに変換 ***//
-    Date exDate = excal.getTime();
-    //*** DateをフォーマットにかけてStringに変換 ***//
-    exTime = endFor.format(exDate);
-    Log.d("exTIme", exTime);
 
     db.execSQL("insert into t_extension values(?,?,?,?,?)",
         new Object[]{re_id,
             re_startDay,
-            re_startTime,
             re_endDay,
+            re_startTime,
             re_endTime});
+
+    db.close();
+    helper.close();
   }
 
   //*** --- SELF MADE METHOD --- 予約を変更するメソッド ***//
@@ -561,6 +550,9 @@ public class Reserve implements Serializable {
         db.execSQL("replace into t_member values(?, ?)", new Object[]{re_id, Util.returnOutEmpId(person.getName())});
       }
     });
+
+    db.close();
+    helper.close();
   }
 
   //*** --- SELF MADE METHOD --- 通知メールを送るメソッド ***//

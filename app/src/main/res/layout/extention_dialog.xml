@@ -9,7 +9,7 @@
         android:id="@+id/extentionDia_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
+        android:layout_marginStart="12dp"
         android:entries="@array/sp_exTime"
         android:layout_alignBottom="@+id/textView8"
         android:layout_toEndOf="@+id/textView8" />
@@ -54,9 +54,9 @@
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="分"
-        android:textSize="24sp"
         android:layout_alignTop="@+id/extentionDia_time"
-        android:layout_toEndOf="@+id/extentionDia_time" />
+        android:layout_toEndOf="@+id/extentionDia_time"
+        android:text="分"
+        android:textSize="18sp" />
 
 </RelativeLayout>
