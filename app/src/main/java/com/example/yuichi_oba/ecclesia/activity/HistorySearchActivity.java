@@ -382,6 +382,14 @@ public class HistorySearchActivity extends AppCompatActivity
                 //選択したspinnerの文字列を取得
                 String posi = (String) sp_company.getSelectedItem();
                 Log.d("call",posi);
+                //*** スピナーイベントの処理（よくわからん） ***//
+//                reserves.forEach(reserve -> {
+//                    if (reserve.getRe_company().equals(posi)) {
+//                        listView = (ListView) findViewById(R.id.ahs_lis_history);
+//
+//                    }
+//                });
+                Log.d("call", String.valueOf(reserves.get(1).getRe_company()));
                 //スピナーに対しての処理
                 Toast.makeText(HistorySearchActivity.this, String.format("選択会社名 : %s", sp.getSelectedItem()), Toast.LENGTH_SHORT).show();
             }
