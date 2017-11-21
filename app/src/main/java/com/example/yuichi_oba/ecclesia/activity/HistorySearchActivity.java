@@ -69,7 +69,8 @@ public class HistorySearchActivity extends AppCompatActivity
     public static final String Q_TEST = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where x.emp_id = ? group by x.re_id";
     public static final String Q_COMPANY = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where x.emp_id = ? group by x.com_id";
     public static final String Q_SELECT_MEMBER = "select * from t_member where re_id = ?";
-    public static final String Q_H_SPINNER = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where b.com_name = ? AND x.emp_id = ? group by x.re_id";
+    public static final String Q_PURPOSE = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where x.emp_id = ? group by x.pur_id";
+    public static final String Q_H_SPINNER = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where  x.emp_id = ? AND b.com_name = ? AND p.pur_name = ? group by x.re_id";
     public static final int STARTTIME = 4;
     public static final int ENDTIME = 5;
     public static final int APPLICANT = 18;
@@ -330,13 +331,13 @@ public class HistorySearchActivity extends AppCompatActivity
         //データベース検索
         purpose = new ArrayList<>();
         List<String> strings = new ArrayList<>();
-        c = db.rawQuery("select * from m_purpose", new String[]{});
+        c = db.rawQuery(Q_PURPOSE, new String[]{employee.getEmp_id()});
         while (c.moveToNext()) {
             strings.add(c.getString(1));
             Purpose p = new Purpose();
-            p.setPur_id(c.getString(0));
-            p.setPur_name(c.getString(1));
-            Log.d("call", c.getString(0) + " : " + c.getString(1));
+            p.setPur_id(c.getString(13));
+            p.setPur_name(c.getString(24));
+            Log.d("call", c.getString(0) + " : " + c.getString(24) + " : " + c.getString(13));
             purpose.add(p);
         }
         c.close();
@@ -344,13 +345,13 @@ public class HistorySearchActivity extends AppCompatActivity
             Log.d("call", s);
         }
         //*** スピナーを取得 ***//
-        Spinner sp = (Spinner) findViewById(R.id.ahs_sp_purpose);
+        Spinner sp_purpose = (Spinner) findViewById(R.id.ahs_sp_purpose);
         //*** スピナーのリストを設定 ***//
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item, strings);
-        sp.setAdapter(adapter);
+        sp_purpose.setAdapter(adapter);
         //*** スピナーに対してのイベントリスナーを登録 ***//
-        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        sp_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Spinner sp = (Spinner) parent;
@@ -390,14 +391,18 @@ public class HistorySearchActivity extends AppCompatActivity
                 // TODO: 2017/11/14 スピナーに指定なし追加（デフォルト）？
                 //選択したspinnerの文字列を取得
                 String posi = (String) sp_company.getSelectedItem();
+                String purpose_name = (String) sp_purpose.getSelectedItem();
                 Log.d("call2",posi);
+                Log.d("call2", purpose_name);
                 //*** スピナーイベントの処理（よくわからん） ***//
                         SQLiteDatabase db_list = helper.getReadableDatabase();
                         db = helper.getReadableDatabase();
                         //*** SQLで指定したデータを設定 ***//
-                Cursor c = db.rawQuery(Q_H_SPINNER, new String[]{posi,employee.getEmp_id()});
+                Cursor c = db.rawQuery(Q_H_SPINNER, new String[]{employee.getEmp_id(),posi,purpose_name});
                 ArrayList<Reserve> list = new ArrayList<>();
+                int target = 0;
                         while (c.moveToNext()) {
+                            target++;
                             Reserve reserve = new Reserve();
                             reserve.setRe_startTime(c.getString(STARTTIME));
                             reserve.setRe_endTime(c.getString(ENDTIME));
@@ -421,6 +426,7 @@ public class HistorySearchActivity extends AppCompatActivity
                             r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
                         });
                 //*** アダプターにアイテムリストをセット ***//
+                Log.d("call2", String.valueOf(target));
                 listView.setAdapter(adapter1);
                 //スピナーに対しての処理
                 Toast.makeText(HistorySearchActivity.this, String.format("選択会社名 : %s", sp.getSelectedItem()), Toast.LENGTH_SHORT).show();
