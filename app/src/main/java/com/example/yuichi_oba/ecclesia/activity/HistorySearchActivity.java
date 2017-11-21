@@ -69,6 +69,7 @@ public class HistorySearchActivity extends AppCompatActivity
     public static final String Q_TEST = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where x.emp_id = ? group by x.re_id";
     public static final String Q_COMPANY = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where x.emp_id = ? group by x.com_id";
     public static final String Q_SELECT_MEMBER = "select * from t_member where re_id = ?";
+    public static final String Q_H_SPINNER = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where b.com_name = ? AND x.emp_id = ? group by x.re_id";
     public static final int STARTTIME = 4;
     public static final int ENDTIME = 5;
     public static final int APPLICANT = 18;
@@ -318,6 +319,14 @@ public class HistorySearchActivity extends AppCompatActivity
             r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
         });
 
+
+        //*** ListItemとレイアウトとを関連付け ***//
+        final MyListAdapter adapter1 = new MyListAdapter(this);
+        listView = (ListView) findViewById(R.id.ahs_lis_history);
+        //*** アダプターにアイテムリストをセット ***//
+//        adapter1.setItemList(reserves);
+//        listView.setAdapter(adapter1);
+
         //データベース検索
         purpose = new ArrayList<>();
         List<String> strings = new ArrayList<>();
@@ -381,14 +390,38 @@ public class HistorySearchActivity extends AppCompatActivity
                 // TODO: 2017/11/14 スピナーに指定なし追加（デフォルト）？
                 //選択したspinnerの文字列を取得
                 String posi = (String) sp_company.getSelectedItem();
-                Log.d("call",posi);
+                Log.d("call2",posi);
                 //*** スピナーイベントの処理（よくわからん） ***//
-//                reserves.forEach(reserve -> {
-//                    if (reserve.getRe_company().equals(posi)) {
-//
-//                    }
-//                });
-                Log.d("call", String.valueOf(reserves.get(1).getRe_company()));
+                        SQLiteDatabase db_list = helper.getReadableDatabase();
+                        db = helper.getReadableDatabase();
+                        //*** SQLで指定したデータを設定 ***//
+                Cursor c = db.rawQuery(Q_H_SPINNER, new String[]{posi,employee.getEmp_id()});
+                ArrayList<Reserve> list = new ArrayList<>();
+                        while (c.moveToNext()) {
+                            Reserve reserve = new Reserve();
+                            reserve.setRe_startTime(c.getString(STARTTIME));
+                            reserve.setRe_endTime(c.getString(ENDTIME));
+                            reserve.setRe_applicant(c.getString(APPLICANT));
+                            reserve.setRe_switch(c.getString(SWITCH));
+                            reserve.setRe_room_name(c.getString(ROOMNAME));
+                            reserve.setRe_fixtures(c.getString(FIXTURES));
+                            reserve.setRe_remarks(c.getString(REMARKS));
+                            reserve.setRe_id(c.getString(RE_ID));
+                            reserve.setRe_name(c.getString(GAIYOU));
+                            reserve.setRe_startDay(c.getString(DAY));
+                            reserve.setRe_endDay(c.getString(ENDDAY));
+                            reserve.setRe_company(c.getString(COMPANY));
+                            reserve.setRe_purpose_name(c.getString(PURPOSE));
+                            //*** reservesにaddする ***//
+                            list.add(reserve);
+                        }
+                        adapter1.setItemList(list);
+                        c.close();
+                        list.forEach(r -> {
+                            r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
+                        });
+                //*** アダプターにアイテムリストをセット ***//
+                listView.setAdapter(adapter1);
                 //スピナーに対しての処理
                 Toast.makeText(HistorySearchActivity.this, String.format("選択会社名 : %s", sp.getSelectedItem()), Toast.LENGTH_SHORT).show();
             }
@@ -399,10 +432,11 @@ public class HistorySearchActivity extends AppCompatActivity
 
 
         //*** ListItemとレイアウトとを関連付け ***//
-        final MyListAdapter adapter1 = new MyListAdapter(this);
-        listView = (ListView) findViewById(R.id.ahs_lis_history);
-        adapter1.setItemList(reserves);
-        listView.setAdapter(adapter1);
+//        final MyListAdapter adapter1 = new MyListAdapter(this);
+//        listView = (ListView) findViewById(R.id.ahs_lis_history);
+//        //*** アダプターにアイテムリストをセット ***//
+//        adapter1.setItemList(reserves);
+//        listView.setAdapter(adapter1);
 
 
         //*** リスト項目をタップした時の処理を定義 ***//
