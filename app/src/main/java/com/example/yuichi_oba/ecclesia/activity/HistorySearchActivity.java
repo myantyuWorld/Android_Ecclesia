@@ -348,6 +348,7 @@ public class HistorySearchActivity extends AppCompatActivity
         //*** スピナーのリストを設定 ***//
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item, strings);
+        //*** 目的スピナーにアダプターをセット ***//
         sp_purpose.setAdapter(adapter);
         //*** スピナーに対してのイベントリスナーを登録 ***//
         sp_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -390,7 +391,6 @@ public class HistorySearchActivity extends AppCompatActivity
                 });
                 //*** アダプターにアイテムリストをセット ***//
                 listView.setAdapter(adapter1);
-
                 //選択項目を取得し、その値で検索をする？それとトースト表示
                 Toast.makeText(HistorySearchActivity.this, String.format("選択目的 : %s", sp.getSelectedItem()),
                         Toast.LENGTH_SHORT).show();
