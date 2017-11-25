@@ -56,7 +56,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 // TODO: 2017/09/19  長押し対応は無理か？ 一覧での、タップは反応するが、長押しには反応しない・・・
 //*** オブジェクト渡しのはいし OK ***//
 // TODO: 2017/11/13 新規登録した会議をタップすると、purName がnullで落ちる
-// TODO: 2017/11/13 赤は、自分、白は他人を説明するようなCanvasの追加？わかりにくい
+// DO: 2017/11/13 赤は、自分、白は他人を説明するようなCanvasの追加？わかりにくい
 // TODO: 2017/11/13 会議優先度がないと、わかりにくい
 public class ReserveListActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
