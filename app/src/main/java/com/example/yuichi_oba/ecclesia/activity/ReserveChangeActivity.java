@@ -175,13 +175,18 @@ public class ReserveChangeActivity extends AppCompatActivity
         SQLiteDatabase db = helper.getReadableDatabase();
         List<String> purpose = new ArrayList<>();
         Cursor c = db.rawQuery("select * from m_purpose", null);
+        int index = ZERO;
         //*** スピナー内容セット ***//
         while (c.moveToNext()) {
             purpose.add(c.getString(ONE));
+            if (changeRes.getRe_purpose_name().equals(c.getString(ONE))) {
+                index = c.getPosition();
+            }
         }
         c.close();
         ArrayAdapter<String> adapter_purpose = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, purpose);
         sp_purpose.setAdapter(adapter_purpose);
+        sp_purpose.setSelection(index);
 
 
         //*** 参加者スピナー ***//
