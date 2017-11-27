@@ -451,6 +451,7 @@ public class Reserve implements Serializable {
         st.bindString(15, this.getRe_applicant());
         Log.d(CALL, st.toString());
         st.executeInsert();
+        // TODO: 2017/11/25 予約のインサーと情報をadbで確認すること
       }
       db.setTransactionSuccessful();
     } finally {
@@ -585,6 +586,7 @@ public class Reserve implements Serializable {
     MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
     SQLiteDatabase db = helper.getReadableDatabase();
     // TODO: 2017/11/13 v_reserve_member に新規登録した会議がない？
+    // TODO: 2017/11/25 新規に予約したのち、一覧から選択すると、nullでおちる、adbに入って、チェックすること
     Cursor c = db.rawQuery(Q_SELECT_TEST,
         new String[]{re_id});
     //        List<String> list = new ArrayList<>();
