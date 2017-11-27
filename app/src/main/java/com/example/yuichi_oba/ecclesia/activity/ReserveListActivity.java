@@ -63,8 +63,8 @@ public class ReserveListActivity extends AppCompatActivity
 
   public static final String Q_SELECT_TODAY_CONFERENCE = "select * from t_reserve where emp_id = ? and re_startday = ?";
   @SuppressLint("StaticFieldLeak")
-  static TextView arl_txt_date;
-  static TimeTableView arl_view_timetableView;
+  public static TextView arl_txt_date;
+  public static TimeTableView arl_view_timetableView;
   public static Employee employee;
   private int thCnt = 0;
   public static ReserveListActivity instance = null;

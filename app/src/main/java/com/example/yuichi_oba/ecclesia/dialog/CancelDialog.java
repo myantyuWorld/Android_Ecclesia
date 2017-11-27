@@ -4,9 +4,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
+import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
 /**
@@ -31,6 +35,18 @@ public class CancelDialog extends DialogFragment {
                         String re_id = getArguments().getString("re_id");
                         Log.d("call", re_id);
 
+                        SQLiteOpenHelper helper = new MyHelper(getContext());
+                        SQLiteDatabase db = helper.getWritableDatabase();
+                        //*** 該当データの、予約テーブルの削除 ***//
+//                        db.execSQL("delete from t_reserve where re_id = ?", new Object[]{re_id});
+                        int result = db.delete("t_reserve", "re_id = ?", new String[]{re_id});
+                        Log.d("call", "削除件数 : " + result);
+                        //*** 該当データの、参加者テーブルの削除 ***//
+
+
+
+                        //*** 画面の再描画を行う ***//
+                        ReserveListActivity.arl_view_timetableView.reView(ReserveListActivity.employee.getEmp_id(), ReserveListActivity.arl_txt_date.getText().toString());
 
                     }
 
