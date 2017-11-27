@@ -50,7 +50,30 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.CANCEL;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.COMPLETE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.EARLY;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.EMPTY;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEAR;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYOUT;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYRESULT;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYSMALLEX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.MINUSONE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.M_THIRTY;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.OK;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.RUNMESSAGE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.RUNQUESTION;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.SQL_ALREADY_EXTENSION_CHECK;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -186,7 +209,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     //*** 延長オプション選択時の ダイアログフラグメントクラス ***//
     //*** 結果ダイアログが即出る 見た目をもうちょっとマシに ***//
-    public static class ExtentionDialog extends DialogFragment {
+    public static class ExtensionDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final RelativeLayout layout = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.extention_dialog, null);
@@ -459,8 +482,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 if (cal.after(start) && cal.before(end) && reserve.getRe_member().indexOf(employee.getEmp_id()) != MINUSONE) {
                     if (!cursor.moveToNext()) {
                         //*** 延長ダイアログを表示 ***//
-                        ExtentionDialog extentionDialog = new ExtentionDialog();
-                        extentionDialog.show(getFragmentManager(), KEYEX);
+                        ExtensionDialog extensionDialog = new ExtensionDialog();
+                        extensionDialog.show(getFragmentManager(), KEYEX);
                     } else {
                         Toast.makeText(this, "既に延長されています", Toast.LENGTH_SHORT).show();
                     }
@@ -469,8 +492,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
                     if (!cursor.moveToNext()) {
                         //*** 延長ダイアログを表示 ***//
-                        ExtentionDialog extentionDialog = new ExtentionDialog();
-                        extentionDialog.show(getFragmentManager(), KEYEX);
+                        ExtensionDialog extensionDialog = new ExtensionDialog();
+                        extensionDialog.show(getFragmentManager(), KEYEX);
                     } else {
                         Toast.makeText(this, "既に延長されています", Toast.LENGTH_SHORT).show();
                     }
