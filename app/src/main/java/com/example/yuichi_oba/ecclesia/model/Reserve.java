@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
@@ -12,7 +11,6 @@ import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,10 +21,9 @@ import java.util.List;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;;
+
+;
 
 /**
  * Created by Yuichi-Oba on 2017/09/15.
@@ -429,34 +426,39 @@ public class Reserve implements Serializable {
     String maxReId = Util.returnMaxReserveId();
     db = helper.getWritableDatabase();
 
+    Log.d("call", String.format("新規予約の会議目的ID :  %s ", this.getRe_purpose_id()));
+
     //*** 予約テーブルへのインサート ***//
     Log.d(CALL, "予約テーブルへのインサート開始");
-    db.beginTransaction();
-    try {
-      try (SQLiteStatement st = db.compileStatement("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
-        st.bindString(1, maxReId);
-        st.bindString(2, this.getRe_name());
-        st.bindString(3, this.getRe_startDay());
-        st.bindString(4, this.getRe_endDay());
-        st.bindString(5, this.getRe_startTime());
-        st.bindString(6, this.getRe_endTime());
-        st.bindString(7, this.getRe_switch());
-        st.bindString(8, this.getRe_fixtures());
-        st.bindString(9, this.getRe_remarks());
-        st.bindString(10, String.valueOf(priorityAverage));
-        st.bindString(11, "company_name");
-        st.bindString(12, this.getRe_applicant());
-        st.bindString(13, this.getRe_room_id());
-        st.bindString(14, this.getRe_purpose_id());
-        st.bindString(15, this.getRe_applicant());
-        Log.d(CALL, st.toString());
-        st.executeInsert();
-        // TODO: 2017/11/25 予約のインサーと情報をadbで確認すること
-      }
-      db.setTransactionSuccessful();
-    } finally {
-      db.endTransaction();
-    }
+    insertReserve(maxReId, priorityAverage);
+
+//    db.beginTransaction();
+//    try {
+//      try (SQLiteStatement st = db.compileStatement("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
+//        st.bindString(1, maxReId);
+//        st.bindString(2, this.getRe_name());
+//        st.bindString(3, this.getRe_startDay());
+//        st.bindString(4, this.getRe_endDay());
+//        st.bindString(5, this.getRe_startTime());
+//        st.bindString(6, this.getRe_endTime());
+//        st.bindString(7, this.getRe_switch());
+//        st.bindString(8, this.getRe_fixtures());
+//        st.bindString(9, this.getRe_remarks());
+//        st.bindString(10, String.valueOf(priorityAverage));
+//        st.bindString(11, "company_name");
+//        st.bindString(12, this.getRe_applicant());
+//        st.bindString(13, this.getRe_room_id());
+//        st.bindString(14, this.getRe_purpose_id());
+//        st.bindString(15, this.getRe_applicant());
+//        Log.d(CALL, st.toString());
+//        Log.d("call", "new purpose id : " + this.getRe_purpose_id());
+//        st.executeInsert();
+//        // DO: 2017/11/25 予約のインサーと情報をadbで確認すること
+//      }
+//      db.setTransactionSuccessful();
+//    } finally {
+//      db.endTransaction();
+//    }
     Log.d(CALL, "予約テーブルへのインサート終了");
 
     //*** 参加者テーブルへのインサート ***//
@@ -464,7 +466,7 @@ public class Reserve implements Serializable {
     db = helper.getWritableDatabase();
     db.beginTransaction();
 
-    // TODO: 2017/11/13 ここで、本当にt_memberインサートしている？？
+    // DO: 2017/11/13 ここで、本当にt_memberインサートしている？？
     SQLiteStatement st = db.compileStatement("insert into t_member values (?, ?)");
     for (Person m : this.getRe_member()) {
       st.bindString(1, maxReId);
@@ -488,6 +490,31 @@ public class Reserve implements Serializable {
 
 
     return 1;
+  }
+
+  private void insertReserve(String maxId, float priorityAverage) {
+    Log.d("call", "insertReserve() call ");
+    Log.d("call", "new purpose id : " + this.getRe_purpose_id());
+    Log.d("call", "emp id :" + this.getRe_applicant());
+    db.execSQL(
+            "insert into t_reserve (re_id, re_overview, re_startday, re_endday, re_starttime, re_endtime, re_switch, re_fixture, re_remarks, re_priority, com_id, emp_id, room_id, pur_id, re_applicant) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);",
+            new Object[]{
+                    maxId,
+                    this.getRe_name(),
+                    this.getRe_startDay(),
+                    this.getRe_endDay(),
+                    this.getRe_startTime(),
+                    this.getRe_endTime(),
+                    Integer.valueOf(this.getRe_switch()),
+                    this.getRe_fixtures(),
+                    this.getRe_remarks(),
+                    priorityAverage,
+                    "0001",
+                    this.getRe_applicant(),
+                    this.getRe_room_id(),
+                    this.getRe_purpose_id(),
+                    this.getRe_applicant()
+            });
   }
 
   //*** --- SELF MADE METHOD --- 予約をキャンセルするメソッド ***//

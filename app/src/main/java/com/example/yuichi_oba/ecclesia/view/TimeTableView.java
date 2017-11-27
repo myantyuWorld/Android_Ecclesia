@@ -1,10 +1,6 @@
 package com.example.yuichi_oba.ecclesia.view;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -23,13 +19,21 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
+import com.example.yuichi_oba.ecclesia.dialog.CancelDialog;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.MAX_WIDTH;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ROOM_A;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ROOM_B;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ROOM_C;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.TOKUBETSU;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 
 /**
  * Created by Yuichi-Oba on 2017/08/28.
@@ -66,32 +70,32 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 //        }
 //    }
 
-  public static class CancelDialog extends DialogFragment {
-    @Override
-    public Dialog onCreateDialog(final Bundle savedInstanceState) {
-      return new AlertDialog.Builder(getActivity())
-          .setTitle("予約のキャンセル")
-          .setMessage("本当にこの予約をキャンセルしますか？")
-          .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              //*** Bundle で渡された引数を取得する ***//
-              String re_id = savedInstanceState.getString("re_id");
-              Log.d(CALL, "引数で渡された予約ID : " + re_id);
-
-              //*** 予約のキャンセル処理を行う ***//
-              SQLiteOpenHelper helper = new MyHelper(getContext());
-              SQLiteDatabase db = helper.getWritableDatabase();
-
-              //*** 予約レコードの削除を行うSQL実行 ***//
-              int result = db.delete("t_reserve", "re_id = ?", new String[]{re_id});
-              Log.d(CALL, "処理件数 : " + result);
-            }
-          })
-          .setNegativeButton("Cancel", null)
-          .show();
-    }
-  }
+//  public static class CancelDialog extends DialogFragment {
+//    @Override
+//    public Dialog onCreateDialog(final Bundle savedInstanceState) {
+//      return new AlertDialog.Builder(getActivity())
+//          .setTitle("予約のキャンセル")
+//          .setMessage("本当にこの予約をキャンセルしますか？")
+//          .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//              //*** Bundle で渡された引数を取得する ***//
+//              String re_id = savedInstanceState.getString("re_id");
+//              Log.d(CALL, "引数で渡された予約ID : " + re_id);
+//
+//              //*** 予約のキャンセル処理を行う ***//
+//              SQLiteOpenHelper helper = new MyHelper(getContext());
+//              SQLiteDatabase db = helper.getWritableDatabase();
+//
+//              //*** 予約レコードの削除を行うSQL実行 ***//
+//              int result = db.delete("t_reserve", "re_id = ?", new String[]{re_id});
+//              Log.d(CALL, "処理件数 : " + result);
+//            }
+//          })
+//          .setNegativeButton("Cancel", null)
+//          .show();
+//    }
+//  }
 
 
   public static final int Y_HEIGHT = 40;
@@ -131,7 +135,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
   public boolean thread_flg;
   private List<Reserve> reserveInfo;      //*** 自分の会議記録用リスト ***//
   private List<Reserve> reserveOther;     //*** 他人の会議記録用リスト ***//
-
+  private boolean longPressLfg = false;
   //*** Constractor ***//
   public TimeTableView(Context context) {
     super(context);
@@ -415,6 +419,11 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
   //*** 画面タッチ時のイベント ***//
   @Override
   public boolean onTouchEvent(MotionEvent e) {
+
+    Log.d("call", "call onTouchEvent()");
+//      x = e.getX();
+//      y = e.getY();
+
     switch (e.getAction()) {
       case MotionEvent.ACTION_UP:
 //            case MotionEvent.ACTION_DOWN:
@@ -499,7 +508,9 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     //
     String roomId = "";                         //*** 押された会議室の区分 ***//
     Log.d(CALL, String.valueOf(thread_flg));
-//        thread_flg = true;
+//        thread_flg = true;]
+
+
     while (thread_flg) {
       float wX = 216;
       // タッチされたか
@@ -525,9 +536,13 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             if (roomId.equals(r.getRe_room_id())) {
               Log.d(CALL, "会議を特定した！  " + r.getRe_room_id());
               thread_flg = false;
+                if (longPressLfg) {
+                    thread_flg = true;
+                    return new String[]{r.getRe_id(), roomId, "long"};
+                }
 //                            return r.getRe_id();        //*** 特定した会議室予約IDを返す ***//
               //*** 特定した会議室IDと、会議室IDを返す ***//
-              return new String[]{r.getRe_id(), roomId};
+              return new String[]{r.getRe_id(), roomId, "itiran"};
 
             }
             cnt++;
@@ -541,9 +556,13 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             if (roomId.equals(r.getRe_room_id())) {
               Log.d(CALL, "会議を特定した！  " + r.getRe_room_id());
               thread_flg = false;
+                if (longPressLfg) {
+                    thread_flg = true;
+                    return new String[]{r.getRe_id(), roomId, "long"};
+                }
 //                            return r.getRe_id();        //*** 特定した会議室予約IDを返す ***//
               //*** 特定した会議室IDと、会議室IDを返す ***//
-              return new String[]{r.getRe_id(), roomId};
+              return new String[]{r.getRe_id(), roomId, "itiran"};
             }
             cnt++;
           }
@@ -574,6 +593,8 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
   @Override
   public boolean onDown(MotionEvent e) {
     Log.d(CALL, "onDown");
+
+
     return true;
   }
 
@@ -598,7 +619,22 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 //    Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
     Log.d(CALL, "LongTouch");
 
+    // TODO: 2017/11/27 ロングタップした予約IDの特定
+    longPressLfg = true;
+      x = e.getX();
+      y = e.getY();
+    Log.d("call", String.valueOf(x));
+    Log.d("call", String.valueOf(y));
+
+      String re_id = getSelectedReserve()[0];
+      Log.d("call", "tokutei kaigi : " + re_id);
+
+    Bundle bundle = new Bundle();
+    bundle.putString("re_id", re_id);
     Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
+    CancelDialog cancelDialog = new CancelDialog();
+    cancelDialog.setArguments(bundle);
+    cancelDialog.show(ReserveListActivity.getInstance().getFragmentManager(), "aaaaa");
 
     //*** タップした会議の予約IDを求めて代入する ***//
 //    String[] info = getSelectedReserve();

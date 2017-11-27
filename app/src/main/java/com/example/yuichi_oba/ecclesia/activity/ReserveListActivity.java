@@ -22,7 +22,6 @@ import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -44,7 +43,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
 
 //import static com.example.yuichi_oba.ecclesia.activity.MyDialog.employee;
 
@@ -63,8 +63,8 @@ public class ReserveListActivity extends AppCompatActivity
 
   public static final String Q_SELECT_TODAY_CONFERENCE = "select * from t_reserve where emp_id = ? and re_startday = ?";
   @SuppressLint("StaticFieldLeak")
-  static TextView arl_txt_date;
-  static TimeTableView arl_view_timetableView;
+  public static TextView arl_txt_date;
+  public static TimeTableView arl_view_timetableView;
   public static Employee employee;
   private int thCnt = 0;
   public static ReserveListActivity instance = null;
@@ -429,7 +429,7 @@ public class ReserveListActivity extends AppCompatActivity
         intent.putExtra("roomId", info[1]);                         //*** 会議室IDを渡す ***//
 
         startActivity(intent);  //*** 新規予約登録画面 ***//
-      } else {
+      } else if (info[2].equals("itiran")) {
         Log.d(CALL, "予約確認画面への遷移");
         Reserve reserve = Reserve.retReserveConfirm(info[0]); //*** 特定した予約IDを基に、予約情報を検索 ***//
         Log.d(CALL, reserve.toString());
@@ -441,6 +441,8 @@ public class ReserveListActivity extends AppCompatActivity
         intent.putExtra("employee", employee);
 
         startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
+      } else {
+        arl_view_timetableView.thread_flg = true;
       }
       thCnt++;
       try {
