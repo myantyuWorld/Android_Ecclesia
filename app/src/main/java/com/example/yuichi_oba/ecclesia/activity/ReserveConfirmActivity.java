@@ -50,30 +50,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.CANCEL;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.COMPLETE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.EARLY;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.EMPTY;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEAR;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYOUT;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYRESULT;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYSMALLEX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.MINUSONE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.M_THIRTY;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.OK;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.RUNMESSAGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.RUNQUESTION;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SQL_ALREADY_EXTENSION_CHECK;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
