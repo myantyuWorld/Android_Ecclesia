@@ -441,6 +441,8 @@ public class ReserveListActivity extends AppCompatActivity
         intent.putExtra("employee", employee);
 
         startActivity(intent);  //*** 予約確認画面への画面遷移 ***//
+      } else {
+        arl_view_timetableView.thread_flg = true;
       }
       thCnt++;
       try {

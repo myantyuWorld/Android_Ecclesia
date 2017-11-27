@@ -30,6 +30,8 @@ public class CancelDialog extends DialogFragment {
                         Log.d("call", "cancel dialog ok selected!");
                         String re_id = getArguments().getString("re_id");
                         Log.d("call", re_id);
+
+
                     }
 
                 })
