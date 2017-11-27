@@ -214,12 +214,17 @@ public class ReserveChangeActivity extends AppCompatActivity
 
         c = db.rawQuery("select * from m_room", null);
         List<String> rooms = new ArrayList<>();
+        int roomIndex = ZERO;
         while (c.moveToNext()) {
-            rooms.add(c.getString(1));
+            rooms.add(c.getString(ONE));
+            if (changeRes.getRe_room_name().equals(c.getString(ONE))) {
+                roomIndex = c.getPosition();
+            }
         }
         c.close();
         ArrayAdapter<String> roomadapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, rooms);
         room.setAdapter(roomadapter);
+        room.setSelection(roomIndex);
 
 //        changeRes = Reserve.retReserveConfirm(re_id);
 
