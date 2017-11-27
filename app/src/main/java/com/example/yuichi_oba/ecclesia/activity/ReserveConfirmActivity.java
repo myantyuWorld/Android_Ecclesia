@@ -106,7 +106,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialogInterface, int i) {
                         }
                     })
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(OK, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                         }
@@ -138,10 +138,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
                             //*** 早期退出完了ダイアログを出す ***//
                             Bundle diaBundle = new Bundle();
-                            diaBundle.putString("result", "ear");
+                            diaBundle.putString(KEYRESULT, KEYEAR);
                             ResultDialog resultDialog = new ResultDialog();
                             resultDialog.setArguments(diaBundle);
-                            resultDialog.show(getFragmentManager(), "ear");
+                            resultDialog.show(getFragmentManager(), KEYEAR);
                         }
                     })
                     .setNegativeButton(CANCEL, new DialogInterface.OnClickListener() {
@@ -164,12 +164,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       String str = EMPTY, title = EMPTY;
-      switch (getArguments().getString("result")) {
-        case "ex":
+      switch (getArguments().getString(KEYRESULT)) {
+        case KEYSMALLEX:
           title = EX + COMPLETE;
           str = EX + RUNMESSAGE;
           break;
-        case "ear":
+        case KEYEAR:
           title = EARLY + COMPLETE;
           str = EARLY + RUNMESSAGE;
           break;
@@ -250,10 +250,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
                             //*** 延長完了ダイアログの表示 ***//
                             Bundle diaBundle = new Bundle();
-                            diaBundle.putString("result", "ex");
+                            diaBundle.putString(KEYRESULT, KEYSMALLEX);
                             ResultDialog resultDialog = new ResultDialog();
                             resultDialog.setArguments(diaBundle);
-                            resultDialog.show(getFragmentManager(), "ex");
+                            resultDialog.show(getFragmentManager(), KEYSMALLEX);
                           }
                         }).setNegativeButton(CANCEL, new DialogInterface.OnClickListener() {
                           @Override
@@ -396,12 +396,12 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 if (cal.after(start) && cal.before(end) && reserve.getRe_member().indexOf(employee.getEmp_id()) != MINUSONE) {
                     //*** 早期退出ダイアログを表示 ***//
                     EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
-                    earlyOutDialog.show(getFragmentManager(), "out");
+                    earlyOutDialog.show(getFragmentManager(), KEYOUT);
                 } else {
                     Toast.makeText(this, "本番では早期退出禁止", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
                     EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
-                    earlyOutDialog.show(getFragmentManager(), "out");
+                    earlyOutDialog.show(getFragmentManager(), KEYOUT);
                 }
                 break;
             // 「予約変更」が選択された

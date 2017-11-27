@@ -47,8 +47,12 @@ public class NameConst {
     public static final String CANCEL = "キャンセル";
 
     public static final String KEYEX = "EX"; // 受け渡し用キー
+    public static final String KEYRESULT = "result";
+    public static final String KEYEAR = "ear";
+    public static final String KEYSMALLEX = "ex";
     public static final String KEYCHECK = "Check";
     public static final String KEYCHANGE = "Change";
+    public static final String KEYOUT = "out";
     public static final String YYYY_MM_DD_HH_MM = "yyyy/MM/dd HH：mm";
     public static final String HH_MM = "HH：mm";
     public static final String SPACE = " ";
@@ -63,4 +67,12 @@ public class NameConst {
 
     // SQL
     public static final String SQL_ALREADY_EXTENSION_CHECK = "select * from t_extension where re_id = ?";
+    public static final String SQL_EARLY_OUT_EXTENSION = "update t_extension set ex_endtime = ? where re_id = ?";
+    public static final String SQL_EARLY_OUT_RESERVE = "update t_reserve set re_endtime = ? where re_id = ?";
+    public static final String SQL_EXTENSION_INSERT = "insert into t_extension values(?,?,?,?,?)";
+    public static final String SQL_MEMBER_REPLACE = "replace into t_member values(?, ?)";
+    public static final String SQL_RESERVE_UPDATE =
+            "update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
+            " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
+            " where re_id = ? ";
 }

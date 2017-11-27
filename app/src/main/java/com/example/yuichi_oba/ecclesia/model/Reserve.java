@@ -19,11 +19,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SQL_ALREADY_EXTENSION_CHECK;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 ;
 
@@ -512,9 +508,9 @@ public class Reserve implements Serializable {
     Cursor cursor = db2.rawQuery(SQL_ALREADY_EXTENSION_CHECK, new String[]{re_id});
     //*** 延長の有無でupdateするテーブルを分ける ***//
     if (cursor.moveToNext()) {
-      db.execSQL("update t_extension set ex_endtime = ? where re_id = ?", new Object[]{ealTime, re_id});
+      db.execSQL(SQL_EARLY_OUT_EXTENSION, new Object[]{ealTime, re_id});
     } else {
-      db.execSQL("update t_reserve set re_endtime = ? where re_id = ?", new Object[]{ealTime, re_id});
+      db.execSQL(SQL_EARLY_OUT_RESERVE, new Object[]{ealTime, re_id});
     }
     //*** 各種クローズ ***//
     db2.close();
@@ -529,7 +525,7 @@ public class Reserve implements Serializable {
     MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
     db = helper.getWritableDatabase();
 
-    db.execSQL("insert into t_extension values(?,?,?,?,?)",
+    db.execSQL(SQL_EXTENSION_INSERT,
         new Object[]{re_id,
             re_startDay,
             re_endDay,
@@ -547,17 +543,15 @@ public class Reserve implements Serializable {
     MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getWritableDatabase();
     //*** SQLでアップデートかける ***//
-    db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
-        " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
-        " where re_id = ? ", new Object[]{re_name, re_startDay, re_endDay, re_startTime,
+    db.execSQL(SQL_RESERVE_UPDATE, new Object[]{re_name, re_startDay, re_endDay, re_startTime,
         re_endTime, re_switch, re_fixtures, re_remarks, priorityAverage, re_room_id
         , re_purpose_id, re_id});
 
     re_member.forEach(person -> {
       if (person instanceof Employee) {
-        db.execSQL("replace into t_member values(?, ?) ", new Object[]{re_id, Util.returnEmpId(person.getName())});
+        db.execSQL(SQL_MEMBER_REPLACE, new Object[]{re_id, Util.returnEmpId(person.getName())});
       } else {
-        db.execSQL("replace into t_member values(?, ?)", new Object[]{re_id, Util.returnOutEmpId(person.getName())});
+        db.execSQL(SQL_MEMBER_REPLACE, new Object[]{re_id, Util.returnOutEmpId(person.getName())});
       }
     });
 
