@@ -42,7 +42,7 @@ public class CancelDialog extends DialogFragment {
                         int result = db.delete("t_reserve", "re_id = ?", new String[]{re_id});
                         Log.d("call", "削除件数 : " + result);
                         //*** 該当データの、参加者テーブルの削除 ***//
-
+                        // TODO: 2017/11/27 予約キャンセル後の、参加者テーブルの削除の実装
 
 
                         //*** 画面の再描画を行う ***//
