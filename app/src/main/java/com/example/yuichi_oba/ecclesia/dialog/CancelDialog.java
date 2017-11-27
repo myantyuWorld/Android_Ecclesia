@@ -36,6 +36,7 @@ public class CancelDialog extends DialogFragment {
             Log.d("call", "cancel dialog ok selected!");
             String re_id = getArguments().getString("re_id");
             Log.d("call", re_id);
+            // TODO: 2017/11/27 キャンセルしようとする人間が、予約者または管理者のみ削除できるロジックの実装
 
             SQLiteOpenHelper helper = new MyHelper(getContext());
             SQLiteDatabase db = helper.getWritableDatabase();
@@ -44,7 +45,7 @@ public class CancelDialog extends DialogFragment {
             int rs_reserve = db.delete("t_reserve", "re_id = ?", new String[]{re_id});
             Log.d("call", "予約テーブルの削除件数 : " + rs_reserve);
             //*** 該当データの、参加者テーブルの削除 ***//
-            // TODO: 2017/11/27 予約キャンセル後の、参加者テーブルの削除の実装
+            // DO: 2017/11/27 予約キャンセル後の、参加者テーブルの削除の実装
             int rs_member = db.delete("t_member", "re_id = ?", new String[]{re_id});
             Log.d("call", "参加者テーブルの削除件数 : " + rs_member);
 
