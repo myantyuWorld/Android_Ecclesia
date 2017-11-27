@@ -136,6 +136,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
   private List<Reserve> reserveInfo;      //*** 自分の会議記録用リスト ***//
   private List<Reserve> reserveOther;     //*** 他人の会議記録用リスト ***//
   private boolean longPressLfg = false;
+
   //*** Constractor ***//
   public TimeTableView(Context context) {
     super(context);
@@ -470,7 +471,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
 
       reserveInfo.add(r);
-      Log.d(CALL,"取得した自分の参加会議 " + c.getString(0) + " : " +  c.getString(2) + " : " + c.getString(3));
+      Log.d(CALL, "取得した自分の参加会議 " + c.getString(0) + " : " + c.getString(2) + " : " + c.getString(3));
     }
     c.close();
 
@@ -496,7 +497,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
 
       reserveOther.add(r);
-      Log.d(CALL,"取得した他人の参加会議 " + c.getString(0) + " : " +  c.getString(2) + " : " + c.getString(3));
+      Log.d(CALL, "取得した他人の参加会議 " + c.getString(0) + " : " + c.getString(2) + " : " + c.getString(3));
     }
     c.close();
     invalidate();
@@ -536,10 +537,10 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             if (roomId.equals(r.getRe_room_id())) {
               Log.d(CALL, "会議を特定した！  " + r.getRe_room_id());
               thread_flg = false;
-                if (longPressLfg) {
-                    thread_flg = true;
-                    return new String[]{r.getRe_id(), roomId, "long"};
-                }
+              if (longPressLfg) {
+                thread_flg = true;
+                return new String[]{r.getRe_id(), roomId, "long"};
+              }
 //                            return r.getRe_id();        //*** 特定した会議室予約IDを返す ***//
               //*** 特定した会議室IDと、会議室IDを返す ***//
               return new String[]{r.getRe_id(), roomId, "itiran"};
@@ -556,10 +557,10 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
             if (roomId.equals(r.getRe_room_id())) {
               Log.d(CALL, "会議を特定した！  " + r.getRe_room_id());
               thread_flg = false;
-                if (longPressLfg) {
-                    thread_flg = true;
-                    return new String[]{r.getRe_id(), roomId, "long"};
-                }
+              if (longPressLfg) {
+                thread_flg = true;
+                return new String[]{r.getRe_id(), roomId, "long"};
+              }
 //                            return r.getRe_id();        //*** 特定した会議室予約IDを返す ***//
               //*** 特定した会議室IDと、会議室IDを返す ***//
               return new String[]{r.getRe_id(), roomId, "itiran"};
@@ -600,12 +601,15 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
   @Override
   public void onShowPress(MotionEvent e) {
-
+//    x = e.getX();
+//    y = e.getY();
   }
 
   @Override
   public boolean onSingleTapUp(MotionEvent e) {
     Log.d(CALL, "onSingleTapUp!");
+    x = e.getX();
+    y = e.getY();
     return true;
   }
 
@@ -621,17 +625,17 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
     // TODO: 2017/11/27 ロングタップした予約IDの特定
     longPressLfg = true;
-      x = e.getX();
-      y = e.getY();
+    x = e.getX();
+    y = e.getY();
     Log.d("call", String.valueOf(x));
     Log.d("call", String.valueOf(y));
 
-      String re_id = getSelectedReserve()[0];
-      Log.d("call", "tokutei kaigi : " + re_id);
+    String re_id = getSelectedReserve()[0];
+    Log.d("call", "tokutei kaigi : " + re_id);
 
     Bundle bundle = new Bundle();
     bundle.putString("re_id", re_id);
-    Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
+//    Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
     CancelDialog cancelDialog = new CancelDialog();
     cancelDialog.setArguments(bundle);
     cancelDialog.show(ReserveListActivity.getInstance().getFragmentManager(), "aaaaa");
