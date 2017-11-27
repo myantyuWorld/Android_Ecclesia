@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity;
+import com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
@@ -18,10 +19,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 ;
 
@@ -426,39 +424,34 @@ public class Reserve implements Serializable {
     String maxReId = Util.returnMaxReserveId();
     db = helper.getWritableDatabase();
 
-    Log.d("call", String.format("新規予約の会議目的ID :  %s ", this.getRe_purpose_id()));
-
     //*** 予約テーブルへのインサート ***//
     Log.d(CALL, "予約テーブルへのインサート開始");
-    insertReserve(maxReId, priorityAverage);
-
-//    db.beginTransaction();
-//    try {
-//      try (SQLiteStatement st = db.compileStatement("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
-//        st.bindString(1, maxReId);
-//        st.bindString(2, this.getRe_name());
-//        st.bindString(3, this.getRe_startDay());
-//        st.bindString(4, this.getRe_endDay());
-//        st.bindString(5, this.getRe_startTime());
-//        st.bindString(6, this.getRe_endTime());
-//        st.bindString(7, this.getRe_switch());
-//        st.bindString(8, this.getRe_fixtures());
-//        st.bindString(9, this.getRe_remarks());
-//        st.bindString(10, String.valueOf(priorityAverage));
-//        st.bindString(11, "company_name");
-//        st.bindString(12, this.getRe_applicant());
-//        st.bindString(13, this.getRe_room_id());
-//        st.bindString(14, this.getRe_purpose_id());
-//        st.bindString(15, this.getRe_applicant());
-//        Log.d(CALL, st.toString());
-//        Log.d("call", "new purpose id : " + this.getRe_purpose_id());
-//        st.executeInsert();
-//        // DO: 2017/11/25 予約のインサーと情報をadbで確認すること
-//      }
-//      db.setTransactionSuccessful();
-//    } finally {
-//      db.endTransaction();
-//    }
+    db.beginTransaction();
+    try {
+      try (SQLiteStatement st = db.compileStatement("insert into t_reserve values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")) {
+        st.bindString(1, maxReId);
+        st.bindString(2, this.getRe_name());
+        st.bindString(3, this.getRe_startDay());
+        st.bindString(4, this.getRe_endDay());
+        st.bindString(5, this.getRe_startTime());
+        st.bindString(6, this.getRe_endTime());
+        st.bindString(7, this.getRe_switch());
+        st.bindString(8, this.getRe_fixtures());
+        st.bindString(9, this.getRe_remarks());
+        st.bindString(10, String.valueOf(priorityAverage));
+        st.bindString(11, "company_name");
+        st.bindString(12, this.getRe_applicant());
+        st.bindString(13, this.getRe_room_id());
+        st.bindString(14, this.getRe_purpose_id());
+        st.bindString(15, this.getRe_applicant());
+        Log.d(CALL, st.toString());
+        st.executeInsert();
+        // TODO: 2017/11/25 予約のインサーと情報をadbで確認すること
+      }
+      db.setTransactionSuccessful();
+    } finally {
+      db.endTransaction();
+    }
     Log.d(CALL, "予約テーブルへのインサート終了");
 
     //*** 参加者テーブルへのインサート ***//
@@ -466,7 +459,7 @@ public class Reserve implements Serializable {
     db = helper.getWritableDatabase();
     db.beginTransaction();
 
-    // DO: 2017/11/13 ここで、本当にt_memberインサートしている？？
+    // TODO: 2017/11/13 ここで、本当にt_memberインサートしている？？
     SQLiteStatement st = db.compileStatement("insert into t_member values (?, ?)");
     for (Person m : this.getRe_member()) {
       st.bindString(1, maxReId);
@@ -492,31 +485,6 @@ public class Reserve implements Serializable {
     return 1;
   }
 
-  private void insertReserve(String maxId, float priorityAverage) {
-    Log.d("call", "insertReserve() call ");
-    Log.d("call", "new purpose id : " + this.getRe_purpose_id());
-    Log.d("call", "emp id :" + this.getRe_applicant());
-    db.execSQL(
-            "insert into t_reserve (re_id, re_overview, re_startday, re_endday, re_starttime, re_endtime, re_switch, re_fixture, re_remarks, re_priority, com_id, emp_id, room_id, pur_id, re_applicant) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);",
-            new Object[]{
-                    maxId,
-                    this.getRe_name(),
-                    this.getRe_startDay(),
-                    this.getRe_endDay(),
-                    this.getRe_startTime(),
-                    this.getRe_endTime(),
-                    Integer.valueOf(this.getRe_switch()),
-                    this.getRe_fixtures(),
-                    this.getRe_remarks(),
-                    priorityAverage,
-                    "0001",
-                    this.getRe_applicant(),
-                    this.getRe_room_id(),
-                    this.getRe_purpose_id(),
-                    this.getRe_applicant()
-            });
-  }
-
   //*** --- SELF MADE METHOD --- 予約をキャンセルするメソッド ***//
   public void reserveCancel(String re_id) {
 
@@ -525,7 +493,7 @@ public class Reserve implements Serializable {
   //*** --- SELF MADE METHOD --- 早期退出するメソッド ***//
   public void earlyExit() {
     //*** DBインスタンス用意 ***//
-    MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
+    MyHelper helper = new MyHelper(ReserveConfirmActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getWritableDatabase();
     //*** 現在時刻取得 ***//
     Date ealDate = new Date();
@@ -534,20 +502,30 @@ public class Reserve implements Serializable {
     //*** 現在時刻をフォーマットにかけてStringへ変換 ***//
     String ealTime = ealFor.format(ealDate);
     Log.d(CALL, "早期退出した時刻：" + ealTime);
-
-    db.execSQL("update t_reserve set re_endtime = ? where re_id = ?", new Object[]{ealTime, re_id});
+    //*** 既に延長がされているか確認 ***//
+    MyHelper helper2 = new MyHelper(ReserveConfirmActivity.getInstance().getApplicationContext());
+    SQLiteDatabase db2 = helper2.getReadableDatabase();
+    Cursor cursor = db2.rawQuery(SQL_ALREADY_EXTENSION_CHECK, new String[]{re_id});
+    //*** 延長の有無でupdateするテーブルを分ける ***//
+    if (cursor.moveToNext()) {
+      db.execSQL(SQL_EARLY_OUT_EXTENSION, new Object[]{ealTime, re_id});
+    } else {
+      db.execSQL(SQL_EARLY_OUT_RESERVE, new Object[]{ealTime, re_id});
+    }
     //*** 各種クローズ ***//
+    db2.close();
+    helper2.close();
     db.close();
     helper.close();
   }
 
   //*** --- SELF MADE METHOD --- 終了時間を延長するメソッド ***//
-  public void endTimeExtention(String exTime) {
+  public void endTimeExtention() {
     //*** 必要なインスタンス類を用意 ***//
     MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
     db = helper.getWritableDatabase();
 
-    db.execSQL("insert into t_extension values(?,?,?,?,?)",
+    db.execSQL(SQL_EXTENSION_INSERT,
         new Object[]{re_id,
             re_startDay,
             re_endDay,
@@ -565,17 +543,15 @@ public class Reserve implements Serializable {
     MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getWritableDatabase();
     //*** SQLでアップデートかける ***//
-    db.execSQL("update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
-        " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
-        " where re_id = ? ", new Object[]{re_name, re_startDay, re_endDay, re_startTime,
+    db.execSQL(SQL_RESERVE_UPDATE, new Object[]{re_name, re_startDay, re_endDay, re_startTime,
         re_endTime, re_switch, re_fixtures, re_remarks, priorityAverage, re_room_id
         , re_purpose_id, re_id});
 
     re_member.forEach(person -> {
       if (person instanceof Employee) {
-        db.execSQL("replace into t_member values(?, ?) ", new Object[]{re_id, Util.returnEmpId(person.getName())});
+        db.execSQL(SQL_MEMBER_REPLACE, new Object[]{re_id, Util.returnEmpId(person.getName())});
       } else {
-        db.execSQL("replace into t_member values(?, ?)", new Object[]{re_id, Util.returnOutEmpId(person.getName())});
+        db.execSQL(SQL_MEMBER_REPLACE, new Object[]{re_id, Util.returnOutEmpId(person.getName())});
       }
     });
 
