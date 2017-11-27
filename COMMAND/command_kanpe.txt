@@ -1,0 +1,5 @@
+select * from t_reserve where re_id = '0021';
+
+cd /data/data/com.example.yuichi_oba.ecclesia/databases
+
+PRAGMA table_info(t_reserve);
