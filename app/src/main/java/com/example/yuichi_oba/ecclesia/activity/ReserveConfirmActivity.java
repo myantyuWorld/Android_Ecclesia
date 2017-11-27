@@ -561,8 +561,10 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
             Log.d(CALL, "予約ID:" + reserve.getRe_id());
             //*** 時間の重複も、優先度チェックも何も必要なし＝＝＞ そのままインサートする ***//
+            reserve.setRe_applicant(employee.getEmp_id());
             reserve.reserveCorrenct(setReserveDetail());     //*** 予約テーブル,参加者テーブル へのインサート ***//
             reserve = null;                                  //*** 予約を確定したので、reserveをnullにする ***//
+
         }
         //*** 管理者認証ずみ ***//
         else {
