@@ -64,7 +64,7 @@ public class HistorySearchActivity extends AppCompatActivity
     public static final int COM_MEMBER = 18;
     public static final int DAY = 2;
     public static final int GAIYOU = 1;
-    public static final int ID = 0;
+    public static final int FLAG = 0;
     public static final String Q_SELECT_HISTORY = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join m_out as a on y.mem_id = a.out_id inner join m_company as b on a.com_id = b.com_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id where x.emp_id = ?";
     public static final String Q_TEST = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where x.emp_id = ? group by x.re_id";
     public static final String Q_COMPANY = "select * from  t_reserve x inner join t_member y on x.re_id = y.re_id inner join t_emp as a on y.mem_id = a.emp_id inner join m_purpose as p on p.pur_id = x.pur_id inner join m_room as c on c.room_id = x.room_id inner join m_company as b on x.com_id = b.com_id where x.emp_id = ? group by x.com_id";
@@ -325,15 +325,16 @@ public class HistorySearchActivity extends AppCompatActivity
         final MyListAdapter adapter1 = new MyListAdapter(this);
         listView = (ListView) findViewById(R.id.ahs_lis_history);
         //*** アダプターにアイテムリストをセット ***//
-//        adapter1.setItemList(reserves);
-//        listView.setAdapter(adapter1);
+        adapter1.setItemList(reserves);
+        listView.setAdapter(adapter1);
 
-        //データベース検索
+
+        //*** データベース検索(目的) ***//
         purpose = new ArrayList<>();
         List<String> strings = new ArrayList<>();
         c = db.rawQuery(Q_PURPOSE, new String[]{employee.getEmp_id()});
         while (c.moveToNext()) {
-            strings.add(c.getString(1));
+            strings.add(c.getString(24));
             Purpose p = new Purpose();
             p.setPur_id(c.getString(13));
             p.setPur_name(c.getString(24));
@@ -341,24 +342,73 @@ public class HistorySearchActivity extends AppCompatActivity
             purpose.add(p);
         }
         c.close();
-        for (String s : strings) {
-            Log.d("call", s);
-        }
-        //*** スピナーを取得 ***//
+        //*** スピナーを取得(目的) ***//
         Spinner sp_purpose = (Spinner) findViewById(R.id.ahs_sp_purpose);
+        //*** スピナーを取得(会社名) ***//
+        Spinner sp_company = (Spinner) findViewById(R.id.ahs_sp_company);
         //*** スピナーのリストを設定 ***//
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item, strings);
+        //*** 目的スピナーにアダプターをセット ***//
         sp_purpose.setAdapter(adapter);
+        //*** 起動時にspinnerが動かないようにfalseを設定 ***//
+        sp_purpose.setSelection(FLAG,false);
         //*** スピナーに対してのイベントリスナーを登録 ***//
         sp_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Spinner sp = (Spinner) parent;
-                //選択項目を取得し、その値で検索をする？それとトースト表示
-                Toast.makeText(HistorySearchActivity.this, String.format("選択目的 : %s", sp.getSelectedItem()),
-                        Toast.LENGTH_SHORT).show();
-                Log.d("call", "");
+                //*** 選択した会社名spinnerの文字列を取得 ***//
+                String posi = (String) sp_company.getSelectedItem();
+                //*** 目的spinnerの文字列を取得 ***//
+                String purpose_name = (String) sp_purpose.getSelectedItem();
+                Log.d("call2",posi);
+                Log.d("call2", purpose_name);
+                SQLiteDatabase db_list = helper.getReadableDatabase();
+                db = helper.getReadableDatabase();
+                //*** SQLで指定したデータを設定 ***//
+                Cursor c = db.rawQuery(Q_H_SPINNER, new String[]{employee.getEmp_id(),posi,purpose_name});
+                ArrayList<Reserve> list = new ArrayList<>();
+                int count = FLAG;
+                while (c.moveToNext()) {
+                    Reserve reserve = new Reserve();
+                    reserve.setRe_startTime(c.getString(STARTTIME));
+                    reserve.setRe_endTime(c.getString(ENDTIME));
+                    reserve.setRe_applicant(c.getString(APPLICANT));
+                    reserve.setRe_switch(c.getString(SWITCH));
+                    reserve.setRe_room_name(c.getString(ROOMNAME));
+                    reserve.setRe_fixtures(c.getString(FIXTURES));
+                    reserve.setRe_remarks(c.getString(REMARKS));
+                    reserve.setRe_id(c.getString(RE_ID));
+                    reserve.setRe_name(c.getString(GAIYOU));
+                    reserve.setRe_startDay(c.getString(DAY));
+                    reserve.setRe_endDay(c.getString(ENDDAY));
+                    reserve.setRe_company(c.getString(COMPANY));
+                    reserve.setRe_purpose_name(c.getString(PURPOSE));
+                    //*** reservesにaddする ***//
+                    list.add(reserve);
+                    count++;
+                }
+                adapter1.setItemList(list);
+                c.close();
+                list.forEach(r -> {
+                    r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
+                });
+                //*** アダプターにアイテムリストをセット ***//
+                listView.setAdapter(adapter1);
+                if (count != FLAG) {
+                    //選択項目を取得し、その値で検索をする？それとトースト表示
+                    Toast.makeText(HistorySearchActivity.this, String.format("選択目的 : %s", sp.getSelectedItem()),
+                            Toast.LENGTH_SHORT).show();
+                    Log.d("call", "");
+                } else {
+                    //選択項目を取得し、その値で検索をする？それとトースト表示
+                    Toast.makeText(HistorySearchActivity.this, String.format("検索目的一致しません。 : %s", sp.getSelectedItem()),
+                            Toast.LENGTH_SHORT).show();
+                    //*** アダプターにアイテムリストをセット ***//
+                    adapter1.setItemList(reserves);
+                    listView.setAdapter(adapter1);
+                }
             }
 
             //項目が選択されなかったときの処理(今は空)
@@ -376,33 +426,33 @@ public class HistorySearchActivity extends AppCompatActivity
             Log.d("call", cursor.getString(1));
         }
 
-        //スピナーを取得
-        Spinner sp_company = (Spinner) findViewById(R.id.ahs_sp_company);
-        //adapterを宣言
+
+        //*** adapterを宣言 ***//
         ArrayAdapter<String> adapter_com = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item, strings1);
+        //*** アダプターの設定をspinnerカンパニーにセット ***//
         sp_company.setAdapter(adapter_com);
+        //*** 起動時にspinnerが動かないようにfalseを設定 ***//
+        sp_company.setSelection(FLAG,false);
         Log.d("call", "");
-        //スピナーに対してのイベントリスナーを登録
+        //*** スピナーに対してのイベントリスナーを登録 ***//
         sp_company.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Spinner sp = (Spinner) parent;
-                // TODO: 2017/11/14 スピナーに指定なし追加（デフォルト）？
-                //選択したspinnerの文字列を取得
+                //*** 選択した会社名spinnerの文字列を取得 ***//
                 String posi = (String) sp_company.getSelectedItem();
+                //*** 目的spinnerの文字列を取得 ***//
                 String purpose_name = (String) sp_purpose.getSelectedItem();
                 Log.d("call2",posi);
                 Log.d("call2", purpose_name);
-                //*** スピナーイベントの処理（よくわからん） ***//
                         SQLiteDatabase db_list = helper.getReadableDatabase();
                         db = helper.getReadableDatabase();
                         //*** SQLで指定したデータを設定 ***//
                 Cursor c = db.rawQuery(Q_H_SPINNER, new String[]{employee.getEmp_id(),posi,purpose_name});
                 ArrayList<Reserve> list = new ArrayList<>();
-                int target = 0;
+                int count = FLAG;
                         while (c.moveToNext()) {
-                            target++;
                             Reserve reserve = new Reserve();
                             reserve.setRe_startTime(c.getString(STARTTIME));
                             reserve.setRe_endTime(c.getString(ENDTIME));
@@ -419,6 +469,7 @@ public class HistorySearchActivity extends AppCompatActivity
                             reserve.setRe_purpose_name(c.getString(PURPOSE));
                             //*** reservesにaddする ***//
                             list.add(reserve);
+                            count++;
                         }
                         adapter1.setItemList(list);
                         c.close();
@@ -426,10 +477,18 @@ public class HistorySearchActivity extends AppCompatActivity
                             r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
                         });
                 //*** アダプターにアイテムリストをセット ***//
-                Log.d("call2", String.valueOf(target));
                 listView.setAdapter(adapter1);
-                //スピナーに対しての処理
-                Toast.makeText(HistorySearchActivity.this, String.format("選択会社名 : %s", sp.getSelectedItem()), Toast.LENGTH_SHORT).show();
+                if (count != FLAG) {
+                    //*** スピナーに対しての処理 ***//
+                    Toast.makeText(HistorySearchActivity.this, String.format("選択会社名 : %s", sp.getSelectedItem()), Toast.LENGTH_SHORT).show();
+                } else {
+                    //*** スピナーに対しての処理 ***//
+                    Toast.makeText(HistorySearchActivity.this, String.format("検索会社名一致しませんでした。 : %s", sp.getSelectedItem()), Toast.LENGTH_SHORT).show();
+                    //*** アダプターにアイテムリストをセット ***//
+                    adapter1.setItemList(reserves);
+                    listView.setAdapter(adapter1);
+                }
+
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -468,10 +527,10 @@ public class HistorySearchActivity extends AppCompatActivity
             }
         });
 
-        //フィルタ機能を有効化
+        //*** フィルタ機能を有効化 ***//
         listView.setTextFilterEnabled(true);
 
-        //serchviewの検索ボックスに入力された時の処理
+        //*** serchviewの検索ボックスに入力された時の処理 ***//
         searchView = (SearchView) findViewById(R.id.ahs_sea_freeword);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -536,3 +595,4 @@ public class HistorySearchActivity extends AppCompatActivity
         return true;
     }
 }
+
