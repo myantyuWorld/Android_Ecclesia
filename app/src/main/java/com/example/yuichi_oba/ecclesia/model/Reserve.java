@@ -22,6 +22,7 @@ import java.util.List;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.SQL_ALREADY_EXTENSION_CHECK;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
 
 ;
@@ -508,7 +509,7 @@ public class Reserve implements Serializable {
     //*** 既に延長がされているか確認 ***//
     MyHelper helper2 = new MyHelper(ReserveConfirmActivity.getInstance().getApplicationContext());
     SQLiteDatabase db2 = helper2.getReadableDatabase();
-    Cursor cursor = db2.rawQuery("select * from t_extension where re_id = ?", new String[]{re_id});
+    Cursor cursor = db2.rawQuery(SQL_ALREADY_EXTENSION_CHECK, new String[]{re_id});
     //*** 延長の有無でupdateするテーブルを分ける ***//
     if (cursor.moveToNext()) {
       db.execSQL("update t_extension set ex_endtime = ? where re_id = ?", new Object[]{ealTime, re_id});

@@ -398,7 +398,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
                     earlyOutDialog.show(getFragmentManager(), "out");
                 } else {
-                    Toast.makeText(this, "早期退出できる会議ではありません", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "本番では早期退出禁止", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
                     EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
                     earlyOutDialog.show(getFragmentManager(), "out");
@@ -427,7 +427,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     intent.putExtra("employee", employee);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(this, "変更できる会議ではありません", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "本番では変更禁止", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
                     intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
                     intent.putExtra(KEYCHANGE, reserve);
@@ -447,19 +447,33 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     e.getStackTrace();
                     break;
                 }
+                //*** 既に延長されているかの確認を行う ***//
+                //*** 延長の有無により処理を分ける ***//
+                MyHelper helper = new MyHelper(instance.getApplicationContext());
+                SQLiteDatabase db = helper.getReadableDatabase();
+                Cursor cursor = db.rawQuery(SQL_ALREADY_EXTENSION_CHECK, new String[]{reserve.getRe_id()});
                 //*** 延長できるのは会議終了の30分前まで ***//
                 end.add(Calendar.MINUTE, M_THIRTY);
                 //*** 延長しようとしている会議が現在日付・時刻に矛盾していないか ***//
                 //*** 会議の最中かどうか、自分が参加している会議かの判定 ***//
                 if (cal.after(start) && cal.before(end) && reserve.getRe_member().indexOf(employee.getEmp_id()) != MINUSONE) {
-                    //*** 延長ダイアログを表示 ***//
-                    ExtentionDialog extentionDialog = new ExtentionDialog();
-                    extentionDialog.show(getFragmentManager(), KEYEX);
+                    if (!cursor.moveToNext()) {
+                        //*** 延長ダイアログを表示 ***//
+                        ExtentionDialog extentionDialog = new ExtentionDialog();
+                        extentionDialog.show(getFragmentManager(), KEYEX);
+                    } else {
+                        Toast.makeText(this, "既に延長されています", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(this, "延長ができる会議ではありません", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "本番では延長禁止", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
-                    ExtentionDialog extentionDialog = new ExtentionDialog();
-                    extentionDialog.show(getFragmentManager(), KEYEX);
+                    if (!cursor.moveToNext()) {
+                        //*** 延長ダイアログを表示 ***//
+                        ExtentionDialog extentionDialog = new ExtentionDialog();
+                        extentionDialog.show(getFragmentManager(), KEYEX);
+                    } else {
+                        Toast.makeText(this, "既に延長されています", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
         }

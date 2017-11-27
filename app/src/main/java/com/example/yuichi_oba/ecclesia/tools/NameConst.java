@@ -60,4 +60,7 @@ public class NameConst {
     public static final String ROOM_A = "0002";
     public static final String ROOM_B = "0003";
     public static final String ROOM_C = "0004";
+
+    // SQL
+    public static final String SQL_ALREADY_EXTENSION_CHECK = "select * from t_extension where re_id = ?";
 }
