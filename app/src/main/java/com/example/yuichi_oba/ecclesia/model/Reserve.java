@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity;
+import com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
@@ -495,7 +496,7 @@ public class Reserve implements Serializable {
   //*** --- SELF MADE METHOD --- 早期退出するメソッド ***//
   public void earlyExit() {
     //*** DBインスタンス用意 ***//
-    MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
+    MyHelper helper = new MyHelper(ReserveConfirmActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getWritableDatabase();
     //*** 現在時刻取得 ***//
     Date ealDate = new Date();
@@ -504,9 +505,19 @@ public class Reserve implements Serializable {
     //*** 現在時刻をフォーマットにかけてStringへ変換 ***//
     String ealTime = ealFor.format(ealDate);
     Log.d(CALL, "早期退出した時刻：" + ealTime);
-
-    db.execSQL("update t_reserve set re_endtime = ? where re_id = ?", new Object[]{ealTime, re_id});
+    //*** 既に延長がされているか確認 ***//
+    MyHelper helper2 = new MyHelper(ReserveConfirmActivity.getInstance().getApplicationContext());
+    SQLiteDatabase db2 = helper2.getReadableDatabase();
+    Cursor cursor = db2.rawQuery("select * from t_extension where re_id = ?", new String[]{re_id});
+    //*** 延長の有無でupdateするテーブルを分ける ***//
+    if (cursor.moveToNext()) {
+      db.execSQL("update t_extension set ex_endtime = ? where re_id = ?", new Object[]{ealTime, re_id});
+    } else {
+      db.execSQL("update t_reserve set re_endtime = ? where re_id = ?", new Object[]{ealTime, re_id});
+    }
     //*** 各種クローズ ***//
+    db2.close();
+    helper2.close();
     db.close();
     helper.close();
   }

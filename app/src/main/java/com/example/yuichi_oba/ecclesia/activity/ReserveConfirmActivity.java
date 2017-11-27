@@ -132,6 +132,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     .setPositiveButton(OK, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+
                             //*** メソッドによる早期退出 ***//
                             reserve.earlyExit();
 
@@ -158,6 +159,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
         }
     }
 
+  //*** 延長ないし早期退出完了通知のダイアログフラグメントクラス ***//
   public static class ResultDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
