@@ -543,6 +543,11 @@ public class HistorySearchActivity extends AppCompatActivity
                 if (text == null || text.isEmpty()) {
                     listView.clearTextFilter();
                 } else {
+                    //*** 入力された文字が検索結果の日付と概要に一致したら検索結果を再構築する ***//
+
+                    //*** DB呼び出し ***//
+                    //SQLiteDatabase db_data_search = helper.getReadableDatabase();
+                    Log.d("call", text);
                     listView.setFilterText(text);
                 }
                 return false;
