@@ -23,6 +23,7 @@ public class NameConst {
     public static final int NINE = 9;
     public static final int TEN = 10;
     public static final int EREVEN = 11;
+    public static final int M_THIRTY = -30;
     public static final String NONE = "0";
 
     public static final int REQUEST_CODE = 1;

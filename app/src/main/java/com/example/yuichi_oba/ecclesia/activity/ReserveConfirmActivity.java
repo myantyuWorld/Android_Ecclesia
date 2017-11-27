@@ -244,7 +244,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                             }
 
                             //*** メソッドによる延長insert ***//
-                            reserve.endTimeExtention(exTime);
+                            reserve.endTimeExtention();
 
                             //*** 延長完了ダイアログの表示 ***//
                             Bundle diaBundle = new Bundle();
@@ -376,7 +376,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
         //*** フォーマット用意 ***//
         SimpleDateFormat timeFormat = new SimpleDateFormat(YYYY_MM_DD_HH_MM);
 
-        Bundle diaBundle = new Bundle();
+//        Bundle diaBundle = new Bundle();
         // idによって処理を分ける
         switch (id) {
             // 「早期退出」が選択された
@@ -405,14 +405,16 @@ public class ReserveConfirmActivity extends AppCompatActivity
             // 「予約変更」が選択された
             case R.id.option_reserveChange:
                 re_id = reserve.getRe_id();
-                String[] startDay = reserve.getRe_startDay().split("/");
+//                String[] startDay = reserve.getRe_startDay().split("/");
                 try {
                     //*** 変更しようとしている会議の開始時間をセット ***//
-                    start.setTime(timeFormat.parse(reserve.getRe_startDay() + " " + reserve.getRe_startTime()));
+                    start.setTime(timeFormat.parse(reserve.getRe_startDay() + SPACE + reserve.getRe_startTime()));
+                    end.setTime(timeFormat.parse(reserve.getRe_endDay() + SPACE + reserve.getRe_endTime()));
                 } catch (ParseException e) {
                     e.getStackTrace();
                     break;
                 }
+                end.add(Calendar.MINUTE, M_THIRTY);
                 //*** 変更しようとしている会議が現在日付・時刻に矛盾していないか ***//
                 //*** まだ始まっていない会議かの判定 ***//
                 if (cal.before(start)) {
@@ -443,6 +445,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     e.getStackTrace();
                     break;
                 }
+                //*** 延長できるのは会議終了の30分前まで ***//
+                end.add(Calendar.MINUTE, M_THIRTY);
                 //*** 延長しようとしている会議が現在日付・時刻に矛盾していないか ***//
                 //*** 会議の最中かどうか、自分が参加している会議かの判定 ***//
                 if (cal.after(start) && cal.before(end) && reserve.getRe_member().indexOf(employee.getEmp_id()) != MINUSONE) {

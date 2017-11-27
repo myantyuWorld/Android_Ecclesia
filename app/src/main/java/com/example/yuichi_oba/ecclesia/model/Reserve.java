@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.activity.ReserveCheckActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
@@ -12,7 +11,6 @@ import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,10 +21,9 @@ import java.util.List;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;;
+
+;
 
 /**
  * Created by Yuichi-Oba on 2017/09/15.
@@ -515,7 +512,7 @@ public class Reserve implements Serializable {
   }
 
   //*** --- SELF MADE METHOD --- 終了時間を延長するメソッド ***//
-  public void endTimeExtention(String exTime) {
+  public void endTimeExtention() {
     //*** 必要なインスタンス類を用意 ***//
     MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
     db = helper.getWritableDatabase();
