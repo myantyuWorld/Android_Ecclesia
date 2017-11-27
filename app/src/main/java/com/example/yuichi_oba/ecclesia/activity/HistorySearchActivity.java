@@ -324,6 +324,9 @@ public class HistorySearchActivity extends AppCompatActivity
         //*** ListItemとレイアウトとを関連付け ***//
         final MyListAdapter adapter1 = new MyListAdapter(this);
         listView = (ListView) findViewById(R.id.ahs_lis_history);
+        //*** アダプターにアイテムリストをセット ***//
+        adapter1.setItemList(reserves);
+        listView.setAdapter(adapter1);
 
 
         //*** データベース検索(目的) ***//
@@ -348,6 +351,8 @@ public class HistorySearchActivity extends AppCompatActivity
                 android.R.layout.simple_spinner_dropdown_item, strings);
         //*** 目的スピナーにアダプターをセット ***//
         sp_purpose.setAdapter(adapter);
+        //*** 起動時にspinnerが動かないようにfalseを設定 ***//
+        sp_purpose.setSelection(FLAG,false);
         //*** スピナーに対してのイベントリスナーを登録 ***//
         sp_purpose.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -425,7 +430,10 @@ public class HistorySearchActivity extends AppCompatActivity
         //*** adapterを宣言 ***//
         ArrayAdapter<String> adapter_com = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item, strings1);
+        //*** アダプターの設定をspinnerカンパニーにセット ***//
         sp_company.setAdapter(adapter_com);
+        //*** 起動時にspinnerが動かないようにfalseを設定 ***//
+        sp_company.setSelection(FLAG,false);
         Log.d("call", "");
         //*** スピナーに対してのイベントリスナーを登録 ***//
         sp_company.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
