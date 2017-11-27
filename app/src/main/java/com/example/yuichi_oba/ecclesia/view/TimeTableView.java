@@ -510,6 +510,10 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     String roomId = "";                         //*** 押された会議室の区分 ***//
     Log.d(CALL, String.valueOf(thread_flg));
 //        thread_flg = true;]
+    if (reserveInfo.size() == 0 && reserveOther.size() == 0) {
+      Log.d(CALL, "この日の会議は空！");
+      return new String[]{NONE, roomId};
+    }
 
 
     while (thread_flg) {

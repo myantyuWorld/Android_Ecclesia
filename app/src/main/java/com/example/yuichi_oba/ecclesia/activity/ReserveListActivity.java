@@ -378,6 +378,10 @@ public class ReserveListActivity extends AppCompatActivity
     Intent intent = null;
     // idで処理を分ける
     switch (id) {
+      case R.id.nav_reserve_list:
+        intent = new Intent(getApplicationContext(), ReserveListActivity.class);
+        startActivity(intent);
+        break;
       // 「履歴検索」が選択されたとき
       case R.id.nav_rireki:
         // Intentクラスのインスタンス生成し、画面遷移させる
