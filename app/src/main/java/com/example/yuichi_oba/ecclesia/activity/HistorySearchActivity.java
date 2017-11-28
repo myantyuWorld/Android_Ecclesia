@@ -289,8 +289,9 @@ public class HistorySearchActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        //*** データベースを準備 ***//
+        //*** ArrayListでインスタンス作成 ***//
         listItems = new ArrayList<>();
+        //*** データベースを準備 ***//
         SQLiteDatabase db_list = helper.getReadableDatabase();
         db = helper.getReadableDatabase();
         //*** SQLで指定したデータを設定 ***//
@@ -323,10 +324,13 @@ public class HistorySearchActivity extends AppCompatActivity
         });
 
 
-        //*** ListItemとレイアウトとを関連付け ***//
+
+
+
+        // ListItemとレイアウトとを関連付け ***//
         final MyListAdapter adapter1 = new MyListAdapter(this);
         listView = (ListView) findViewById(R.id.ahs_lis_history);
-        //*** アダプターにアイテムリストをセット ***//
+        //*** アダプターにアイテムリストをセット(spinner起動時に履歴を全件表示したいため) ***//
         adapter1.setItemList(reserves);
         listView.setAdapter(adapter1);
 
@@ -334,6 +338,7 @@ public class HistorySearchActivity extends AppCompatActivity
         //*** データベース検索(目的) ***//
         purpose = new ArrayList<>();
         List<String> strings = new ArrayList<>();
+        //*** 目的スピナーに未選択を追加 ***//
         strings.add("未選択");
         c = db.rawQuery(Q_PURPOSE, new String[]{employee.getEmp_id()});
         while (c.moveToNext()) {
@@ -371,12 +376,13 @@ public class HistorySearchActivity extends AppCompatActivity
                 db = helper.getReadableDatabase();
                 //*** SQLで指定(会社名と目的が一致)したデータを設定 ***//
                 Cursor c = db.rawQuery(Q_H_SPINNER, new String[]{employee.getEmp_id(),posi,purpose_name});
-                //*** SQLで指定した(会社名が一致した)データを設定 ***//
+                //*** SQLで指定(会社名)が一致したデータを設定 ***//
                 Cursor c_company = db.rawQuery(Q_H_SPI_COM, new String[]{employee.getEmp_id(),posi});
                 //*** SOLで指定した(目的)データ設定 ***//
                 Cursor c_pupose = db.rawQuery(Q_H_SPI_PUR, new String[]{employee.getEmp_id(),purpose_name});
                 ArrayList<Reserve> list = new ArrayList<>();
                 int count = FLAG;
+                //*** 未選択処理メソッド ***//
 //                if (!posi.equals("未選択") && !purpose_name.equals("未選択")) {
 
                     //*** 会社名と目的一致 ***//
@@ -400,6 +406,7 @@ public class HistorySearchActivity extends AppCompatActivity
                         count++;
                         Log.d("call", String.valueOf(count));
                     }
+                    //*** 未選択処理メソッド ***//
 //                } else if (purpose_name.equals("未選択") && !posi.equals("未選択")) {
 //                    //*** 会社名が一致 ***//
 //                    while (c_company.moveToNext()) {
@@ -446,8 +453,6 @@ public class HistorySearchActivity extends AppCompatActivity
 //                }
                 adapter1.setItemList(list);
                 c.close();
-                c_pupose.close();
-                c_company.close();
                 list.forEach(r -> {
                     r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
                 });
