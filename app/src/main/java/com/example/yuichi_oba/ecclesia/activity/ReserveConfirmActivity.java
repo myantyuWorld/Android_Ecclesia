@@ -106,7 +106,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialogInterface, int i) {
                         }
                     })
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(OK, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                         }
@@ -132,15 +132,16 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     .setPositiveButton(OK, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+
                             //*** メソッドによる早期退出 ***//
                             reserve.earlyExit();
 
                             //*** 早期退出完了ダイアログを出す ***//
                             Bundle diaBundle = new Bundle();
-                            diaBundle.putString("result", "ear");
+                            diaBundle.putString(KEYRESULT, KEYEAR);
                             ResultDialog resultDialog = new ResultDialog();
                             resultDialog.setArguments(diaBundle);
-                            resultDialog.show(getFragmentManager(), "ear");
+                            resultDialog.show(getFragmentManager(), KEYEAR);
                         }
                     })
                     .setNegativeButton(CANCEL, new DialogInterface.OnClickListener() {
@@ -158,16 +159,17 @@ public class ReserveConfirmActivity extends AppCompatActivity
         }
     }
 
+  //*** 延長ないし早期退出完了通知のダイアログフラグメントクラス ***//
   public static class ResultDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       String str = EMPTY, title = EMPTY;
-      switch (getArguments().getString("result")) {
-        case "ex":
+      switch (getArguments().getString(KEYRESULT)) {
+        case KEYSMALLEX:
           title = EX + COMPLETE;
           str = EX + RUNMESSAGE;
           break;
-        case "ear":
+        case KEYEAR:
           title = EARLY + COMPLETE;
           str = EARLY + RUNMESSAGE;
           break;
@@ -184,7 +186,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     //*** 延長オプション選択時の ダイアログフラグメントクラス ***//
     //*** 結果ダイアログが即出る 見た目をもうちょっとマシに ***//
-    public static class ExtentionDialog extends DialogFragment {
+    public static class ExtensionDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final RelativeLayout layout = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.extention_dialog, null);
@@ -244,14 +246,14 @@ public class ReserveConfirmActivity extends AppCompatActivity
                             }
 
                             //*** メソッドによる延長insert ***//
-                            reserve.endTimeExtention(exTime);
+                            reserve.endTimeExtention();
 
                             //*** 延長完了ダイアログの表示 ***//
                             Bundle diaBundle = new Bundle();
-                            diaBundle.putString("result", "ex");
+                            diaBundle.putString(KEYRESULT, KEYSMALLEX);
                             ResultDialog resultDialog = new ResultDialog();
                             resultDialog.setArguments(diaBundle);
-                            resultDialog.show(getFragmentManager(), "ex");
+                            resultDialog.show(getFragmentManager(), KEYSMALLEX);
                           }
                         }).setNegativeButton(CANCEL, new DialogInterface.OnClickListener() {
                           @Override
@@ -376,7 +378,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
         //*** フォーマット用意 ***//
         SimpleDateFormat timeFormat = new SimpleDateFormat(YYYY_MM_DD_HH_MM);
 
-        Bundle diaBundle = new Bundle();
+//        Bundle diaBundle = new Bundle();
         // idによって処理を分ける
         switch (id) {
             // 「早期退出」が選択された
@@ -394,25 +396,27 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 if (cal.after(start) && cal.before(end) && reserve.getRe_member().indexOf(employee.getEmp_id()) != MINUSONE) {
                     //*** 早期退出ダイアログを表示 ***//
                     EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
-                    earlyOutDialog.show(getFragmentManager(), "out");
+                    earlyOutDialog.show(getFragmentManager(), KEYOUT);
                 } else {
-                    Toast.makeText(this, "早期退出できる会議ではありません", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "本番では早期退出禁止", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
                     EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
-                    earlyOutDialog.show(getFragmentManager(), "out");
+                    earlyOutDialog.show(getFragmentManager(), KEYOUT);
                 }
                 break;
             // 「予約変更」が選択された
             case R.id.option_reserveChange:
                 re_id = reserve.getRe_id();
-                String[] startDay = reserve.getRe_startDay().split("/");
+//                String[] startDay = reserve.getRe_startDay().split("/");
                 try {
                     //*** 変更しようとしている会議の開始時間をセット ***//
-                    start.setTime(timeFormat.parse(reserve.getRe_startDay() + " " + reserve.getRe_startTime()));
+                    start.setTime(timeFormat.parse(reserve.getRe_startDay() + SPACE + reserve.getRe_startTime()));
+                    end.setTime(timeFormat.parse(reserve.getRe_endDay() + SPACE + reserve.getRe_endTime()));
                 } catch (ParseException e) {
                     e.getStackTrace();
                     break;
                 }
+                end.add(Calendar.MINUTE, M_THIRTY);
                 //*** 変更しようとしている会議が現在日付・時刻に矛盾していないか ***//
                 //*** まだ始まっていない会議かの判定 ***//
                 if (cal.before(start)) {
@@ -423,7 +427,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     intent.putExtra("employee", employee);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(this, "変更できる会議ではありません", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "本番では変更禁止", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
                     intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
                     intent.putExtra(KEYCHANGE, reserve);
@@ -443,17 +447,33 @@ public class ReserveConfirmActivity extends AppCompatActivity
                     e.getStackTrace();
                     break;
                 }
+                //*** 既に延長されているかの確認を行う ***//
+                //*** 延長の有無により処理を分ける ***//
+                MyHelper helper = new MyHelper(instance.getApplicationContext());
+                SQLiteDatabase db = helper.getReadableDatabase();
+                Cursor cursor = db.rawQuery(SQL_ALREADY_EXTENSION_CHECK, new String[]{reserve.getRe_id()});
+                //*** 延長できるのは会議終了の30分前まで ***//
+                end.add(Calendar.MINUTE, M_THIRTY);
                 //*** 延長しようとしている会議が現在日付・時刻に矛盾していないか ***//
                 //*** 会議の最中かどうか、自分が参加している会議かの判定 ***//
                 if (cal.after(start) && cal.before(end) && reserve.getRe_member().indexOf(employee.getEmp_id()) != MINUSONE) {
-                    //*** 延長ダイアログを表示 ***//
-                    ExtentionDialog extentionDialog = new ExtentionDialog();
-                    extentionDialog.show(getFragmentManager(), KEYEX);
+                    if (!cursor.moveToNext()) {
+                        //*** 延長ダイアログを表示 ***//
+                        ExtensionDialog extensionDialog = new ExtensionDialog();
+                        extensionDialog.show(getFragmentManager(), KEYEX);
+                    } else {
+                        Toast.makeText(this, "既に延長されています", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(this, "延長ができる会議ではありません", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "本番では延長禁止", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
-                    ExtentionDialog extentionDialog = new ExtentionDialog();
-                    extentionDialog.show(getFragmentManager(), KEYEX);
+                    if (!cursor.moveToNext()) {
+                        //*** 延長ダイアログを表示 ***//
+                        ExtensionDialog extensionDialog = new ExtensionDialog();
+                        extensionDialog.show(getFragmentManager(), KEYEX);
+                    } else {
+                        Toast.makeText(this, "既に延長されています", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
         }
