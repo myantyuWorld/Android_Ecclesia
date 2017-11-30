@@ -137,7 +137,8 @@ public class ReserveChangeActivity extends AppCompatActivity
             //*** メンバーリスト内容を破棄（同一のものが登録されるため） ***//
             changeMember.clear();
             //*** メンバーリストを再度作成 ***//
-            changeRes.getRe_member().forEach(per -> {
+            for (Person per : changeRes.getRe_member()){
+//            changeRes.getRe_member().forEach(per -> {
                 if (per instanceof Employee) {
                     changeMember.add("社内 : " + per.getName());
                 }
@@ -145,7 +146,7 @@ public class ReserveChangeActivity extends AppCompatActivity
 //                    member.add(changeRes.getRe_company() + " ： " + p.getName());
                     Log.d("change", "社外者");
                 }
-            });
+            }
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, changeMember);
             members.setAdapter(adapter);
             memberChange = true;
@@ -200,7 +201,8 @@ public class ReserveChangeActivity extends AppCompatActivity
 //            member.add(c.getString(ZERO));
 //        }
 //        c.close();
-        changeRes.getRe_member().forEach(p -> {
+        for (Person p :changeRes.getRe_member()){
+//        changeRes.getRe_member().forEach(p -> {
             if (p instanceof Employee) {
                 changeMember.add("社内 : " + p.getName());
             }
@@ -208,7 +210,7 @@ public class ReserveChangeActivity extends AppCompatActivity
 //                member.add(changeRes.getRe_company() + " ： " + p.getName());
                 Log.d("changeMember", "社外者");
             }
-        });
+        }
         ArrayAdapter<String> memberdap = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, changeMember);
         members.setAdapter(memberdap);
 

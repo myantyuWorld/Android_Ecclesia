@@ -302,14 +302,15 @@ public class ReserveActivity extends AppCompatActivity
 
           //*** 参加者を追加する ***//
           final List<String> list = new ArrayList<>();
-          member.forEach(p -> {
+          for (Person p : member){
+//          member.forEach(p -> {
             //*** 「社内」 ***//
             if (p instanceof Employee)
               list.add("社内 : " + p.getName());
               //*** 「社外」 ***//
             else if (p instanceof OutEmployee)
               list.add(((OutEmployee) p).getCom_name() + " : " + p.getName());
-          });
+          }
           //*** 参加者スピナーに反映する ***//
           ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
           sp_member.setAdapter(adapter_member);

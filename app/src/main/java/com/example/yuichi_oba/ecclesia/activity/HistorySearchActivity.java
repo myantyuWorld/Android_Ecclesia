@@ -318,9 +318,12 @@ public class HistorySearchActivity extends AppCompatActivity
         }
 
         c.close();
-        reserves.forEach(r -> {
+        for (Reserve r : reserves) {
             r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
-        });
+        }
+//        reserves.forEach(r -> {
+//
+//        });
 
 
         //*** ListItemとレイアウトとを関連付け ***//
@@ -448,9 +451,12 @@ public class HistorySearchActivity extends AppCompatActivity
                 c.close();
                 c_pupose.close();
                 c_company.close();
-                list.forEach(r -> {
+                for (Reserve r : list) {
                     r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
-                });
+                }
+//                list.forEach(r -> {
+//                    r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
+//                });
                 //*** アダプターにアイテムリストをセット ***//
                 listView.setAdapter(adapter1);
                 if (count != FLAG) {
@@ -558,9 +564,12 @@ public class HistorySearchActivity extends AppCompatActivity
                         }
                         adapter1.setItemList(list);
                         c.close();
-                        list.forEach(r -> {
-                            r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
-                        });
+                for (Reserve r : list) {
+                    r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
+                }
+//                        list.forEach(r -> {
+//                            r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
+//                        });
                 //*** アダプターにアイテムリストをセット ***//
                 listView.setAdapter(adapter1);
                 if (count != FLAG ) {
