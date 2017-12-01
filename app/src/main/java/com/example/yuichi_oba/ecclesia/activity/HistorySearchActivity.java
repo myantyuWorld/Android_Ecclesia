@@ -193,7 +193,7 @@ public class HistorySearchActivity extends AppCompatActivity
         }
     }
 
-    private class MyListAdapter extends BaseAdapter {
+    private class MyListAdapter extends BaseAdapter implements Filterable {
 
         private Context context;
         private ArrayList<Reserve> data = null;
@@ -238,38 +238,43 @@ public class HistorySearchActivity extends AppCompatActivity
             ((TextView) convertView.findViewById(R.id.txt_member)).setText(String.format("%s,他 %d名",item.getRe_member().get(0).getName(),item.getRe_member().size()));
             return convertView;
         }
+    	
+    	@Override
+    	public  Filter getFilter() {
+    		return new MyFilter();
+    }
 
-        /*** 大馬コーディング 独自フィルター ***/
-//        public class MyFilter extends Filter {
-//
-//            @Override
-//            protected FilterResults performFiltering(CharSequence c) {
-//                List<ListItem> list = new ArrayList<>();
-//                for (int i = 0, size = getCount(); i < size; i++){
-//                    ListItem d = (ListItem) getItem(i);
-//                    if (d.gaiyou != null && d.gaiyou.contains(c)
-//                            || d.company != null && d.company.contains(c)
-//                            || d.date != null && d.date.contains(c)){
-//                        list.add(d);
-//                    }
-//                }
-//                FilterResults f = new FilterResults();
-//                f.count = list.size();
-//                f.values = list;
-//
-//                return f;
-//            }
-//
-//            @Override
-//            protected void publishResults(CharSequence charSequence, FilterResults results) {
-//                if (results.count > 0){
-//                    List<ListItem> list = (List<ListItem>) results.values;
-//
-//
-//
-//                }
-//            }
-//        }
+        /***  独自フィルター ***/
+    	       public static class MyFilter extends Filter {
+
+            @Override
+          protected FilterResults performFiltering(CharSequence c) {
+               List<ListItem> list = new ArrayList<>();
+                for (int i = 0, size = getCount(); i < size; i++){
+                    ListItem d = (ListItem) getItem(i);
+                    if (d.gaiyou != null && d.gaiyou.contains(c)
+                            || d.company != null && d.company.contains(c)
+                            || d.date != null && d.date.contains(c)){
+                        list.add(d);
+                 }
+              }
+               FilterResults f = new FilterResults();
+                f.count = list.size();
+              f.values = list;
+          	
+              return f;
+          }
+
+          @Override
+           protected void publishResults(CharSequence charSequence, FilterResults results) {
+               if (results.count > 0){
+                   List<ListItem> list = (List<ListItem>) results.values;
+
+
+
+              }
+          }
+      }
     }
 
 
@@ -697,4 +702,3 @@ public class HistorySearchActivity extends AppCompatActivity
         return true;
     }
 }
-
