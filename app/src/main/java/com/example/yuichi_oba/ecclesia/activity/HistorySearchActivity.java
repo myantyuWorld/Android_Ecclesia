@@ -245,6 +245,8 @@ public class HistorySearchActivity extends AppCompatActivity
     public Filter getFilter() {
       Log.d("call", "public Filter getFilter() ");
       return new MyFilter();
+
+
     }
 
 
@@ -273,8 +275,10 @@ public class HistorySearchActivity extends AppCompatActivity
 
       @Override
       protected void publishResults(CharSequence charSequence, FilterResults results) {
+        Log.d("call", "protected void publishResults(CharSequence charSequence, FilterResults results) ");
         if (results.count > 0) {
           List<Reserve> list = (List<Reserve>) results.values;
+          notifyDataSetChanged();
         }
       }
     }
