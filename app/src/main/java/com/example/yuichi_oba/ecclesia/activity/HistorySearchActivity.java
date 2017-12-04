@@ -755,7 +755,7 @@ public class HistorySearchActivity extends AppCompatActivity
   public static HistorySearchActivity getInstance(){
     return instance;
   }
-
+ // TODO : メソッド化途中；
   public Cursor historyDataAdd(Cursor c) {
     //*** データベースにある情報だけループを回す ***//
     while (c.moveToNext()) {
