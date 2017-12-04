@@ -643,6 +643,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
     Bundle bundle = new Bundle();
     bundle.putString("re_id", re_id);
+    bundle.putString("emp_id", ReserveListActivity.employee.getEmp_id());
 //    Toast.makeText(ReserveListActivity.getInstance(), "この予約をキャンセルしますか？", Toast.LENGTH_SHORT).show();
     CancelDialog cancelDialog = new CancelDialog();
     cancelDialog.setArguments(bundle);

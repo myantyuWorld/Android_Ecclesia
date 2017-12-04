@@ -390,4 +390,14 @@ public class Util {
     return persons;
   }
 
+  public static String returnReserveApplicant(String reId){
+    MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
+    SQLiteDatabase db = helper.getReadableDatabase();
+    Cursor c = db.rawQuery("select emp_id from t_reserve where re_id = ?", new String[]{reId});
+    if (c.moveToNext()) {
+      return c.getString(0);
+    }
+    return "NG";
+  }
+
 }
