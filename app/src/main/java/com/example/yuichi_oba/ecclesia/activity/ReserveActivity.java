@@ -273,6 +273,12 @@ public class ReserveActivity extends AppCompatActivity
     Log.d(CALL, "call ReserveActivity->onActivityResult()");
     super.onActivityResult(requestCode, resultCode, data);
 
+    if (sp_member.getItemAtPosition(ZERO).toString().equals(MEMBERYETADD)) {
+      List<String> list = new ArrayList<>();
+      ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
+      sp_member.setAdapter(adapter);
+    }
+
     switch (requestCode) {
       //*** --------------------------***//
       //*** AddMemberActivityからの結果 ***//
@@ -429,6 +435,7 @@ public class ReserveActivity extends AppCompatActivity
 //        for (Employee employee : member) {
 //            list.add(employee.getCom_name() + " : " + employee.getName());
 //        }
+    list.add(MEMBERYETADD);
     ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
     sp_member.setAdapter(adapter_member);
 

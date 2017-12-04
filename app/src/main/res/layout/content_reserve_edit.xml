@@ -96,7 +96,7 @@
                 android:layout_alignEnd="@+id/acchange_txt_sinseisya"
                 android:layout_alignStart="@+id/acchange_txt_sinseisya"
                 android:layout_below="@+id/acchange_txt_sinseisya"
-                android:layout_marginTop="41dp" />
+                android:layout_marginTop="15dp" />
 
             <EditText
                 android:id="@+id/acchange_etxt_gaiyou"
@@ -107,7 +107,8 @@
                 android:layout_marginEnd="32dp"
                 android:layout_marginTop="14dp"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textAlignment="center"/>
 
             <Switch
                 android:id="@+id/acchange_sw_inout"
@@ -116,7 +117,7 @@
                 android:layout_alignStart="@+id/acchange_txt_sinseisya"
                 android:layout_below="@+id/acchange_sp_member"
                 android:layout_marginEnd="84dp"
-                android:layout_marginTop="37dp" />
+                android:layout_marginTop="25dp" />
 
             <TextView
                 android:id="@+id/acchange_txt_company"
@@ -135,9 +136,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/acchange_sp_room"
                 android:layout_below="@+id/acchange_sp_room"
-                android:layout_marginTop="10dp"
+                android:layout_alignEnd="@+id/acchange_sp_room"
+                android:layout_marginTop="20dp"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textAlignment="center"/>
 
             <EditText
                 android:id="@+id/acchange_txt_remarks"
@@ -145,9 +148,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/acchange_txt_fixtures"
                 android:layout_below="@+id/acchange_txt_fixtures"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="20dp"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textAlignment="center"/>
 
             <Spinner
                 android:id="@+id/acchange_sp_room"
