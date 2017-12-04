@@ -286,8 +286,9 @@ public class HistorySearchActivity extends AppCompatActivity
       protected void publishResults(CharSequence charSequence, FilterResults results) {
         Log.d("call", "protected void publishResults(CharSequence charSequence, FilterResults results) ");
         Log.d("call", String.format("result count :: %d", results.count));
-//        if (results.count > 0) {
+        if (results != null && results.count > 0) {
           Log.d("call", String.format("result count :: %d", results.count));
+          // TODO : ここら辺がまだ出来ていない;
           List<Reserve> list = (List<Reserve>) results.values;
           listItems.clear();
           listItems = (ArrayList<Reserve>) list;
@@ -300,7 +301,7 @@ public class HistorySearchActivity extends AppCompatActivity
 
           notifyDataSetChanged();
           onResume();
-//        }
+        }
       }
     }
   }
@@ -329,31 +330,33 @@ public class HistorySearchActivity extends AppCompatActivity
     //*** SQLで指定したデータを設定 ***//
     Cursor c = db.rawQuery(Q_TEST, new String[]{employee.getEmp_id()});
     //*** 会社用のデータベース ***//
-//    ArrayList<Reserve> reserves = new ArrayList<>();
-    //*** データベースにある情報だけループを回す ***//
-    while (c.moveToNext()) {
-      Reserve reserve = new Reserve();
-      reserve.setRe_startTime(c.getString(STARTTIME));
-      reserve.setRe_endTime(c.getString(ENDTIME));
-      reserve.setRe_applicant(c.getString(APPLICANT));
-      reserve.setRe_switch(c.getString(SWITCH));
-      reserve.setRe_room_name(c.getString(ROOMNAME));
-      reserve.setRe_fixtures(c.getString(FIXTURES));
-      reserve.setRe_remarks(c.getString(REMARKS));
-      reserve.setRe_id(c.getString(RE_ID));
-      reserve.setRe_name(c.getString(GAIYOU));
-      reserve.setRe_startDay(c.getString(DAY));
-      reserve.setRe_endDay(c.getString(ENDDAY));
-      reserve.setRe_company(c.getString(COMPANY));
-      reserve.setRe_purpose_name(c.getString(PURPOSE));
-      //*** reservesにaddする ***//
-      reserves.add(reserve);
-    }
-
-    c.close();
+    ArrayList<Reserve> reserves = new ArrayList<>();
+    historyDataAdd(c);
+//    //*** データベースにある情報だけループを回す ***//
+//    while (c.moveToNext()) {
+//      Reserve reserve = new Reserve();
+//      reserve.setRe_startTime(c.getString(STARTTIME));
+//      reserve.setRe_endTime(c.getString(ENDTIME));
+//      reserve.setRe_applicant(c.getString(APPLICANT));
+//      reserve.setRe_switch(c.getString(SWITCH));
+//      reserve.setRe_room_name(c.getString(ROOMNAME));
+//      reserve.setRe_fixtures(c.getString(FIXTURES));
+//      reserve.setRe_remarks(c.getString(REMARKS));
+//      reserve.setRe_id(c.getString(RE_ID));
+//      reserve.setRe_name(c.getString(GAIYOU));
+//      reserve.setRe_startDay(c.getString(DAY));
+//      reserve.setRe_endDay(c.getString(ENDDAY));
+//      reserve.setRe_company(c.getString(COMPANY));
+//      reserve.setRe_purpose_name(c.getString(PURPOSE));
+//      //*** reservesにaddする ***//
+//      reserves.add(reserve);
+//    }
+//
+//    c.close();
     for (Reserve r : reserves) {
       r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
     }
+
 //        reserves.forEach(r -> {
 //
 //        });
@@ -751,5 +754,31 @@ public class HistorySearchActivity extends AppCompatActivity
 
   public static HistorySearchActivity getInstance(){
     return instance;
+  }
+
+  public Cursor historyDataAdd(Cursor c) {
+    //*** データベースにある情報だけループを回す ***//
+    while (c.moveToNext()) {
+      Reserve reserve = new Reserve();
+      reserve.setRe_startTime(c.getString(STARTTIME));
+      reserve.setRe_endTime(c.getString(ENDTIME));
+      reserve.setRe_applicant(c.getString(APPLICANT));
+      reserve.setRe_switch(c.getString(SWITCH));
+      reserve.setRe_room_name(c.getString(ROOMNAME));
+      reserve.setRe_fixtures(c.getString(FIXTURES));
+      reserve.setRe_remarks(c.getString(REMARKS));
+      reserve.setRe_id(c.getString(RE_ID));
+      reserve.setRe_name(c.getString(GAIYOU));
+      reserve.setRe_startDay(c.getString(DAY));
+      reserve.setRe_endDay(c.getString(ENDDAY));
+      reserve.setRe_company(c.getString(COMPANY));
+      reserve.setRe_purpose_name(c.getString(PURPOSE));
+      //*** reservesにaddする ***//
+      reserves.add(reserve);
+      Log.d("call", "");
+    }
+
+    c.close();
+    return c;
   }
 }
