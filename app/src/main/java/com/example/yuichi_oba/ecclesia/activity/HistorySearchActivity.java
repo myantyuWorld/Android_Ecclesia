@@ -284,8 +284,9 @@ public class HistorySearchActivity extends AppCompatActivity
       protected void publishResults(CharSequence charSequence, FilterResults results) {
         Log.d("call", "protected void publishResults(CharSequence charSequence, FilterResults results) ");
         Log.d("call", String.format("result count :: %d", results.count));
-//        if (results.count > 0) {
+        if (results != null && results.count > 0) {
           Log.d("call", String.format("result count :: %d", results.count));
+          // TODO : ここら辺がまだ出来ていない;
           List<Reserve> list = (List<Reserve>) results.values;
           listItems.clear();
           listItems = (ArrayList<Reserve>) list;
@@ -298,7 +299,7 @@ public class HistorySearchActivity extends AppCompatActivity
 
           notifyDataSetChanged();
           onResume();
-//        }
+        }
       }
     }
   }
