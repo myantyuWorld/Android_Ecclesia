@@ -61,8 +61,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 public class ReserveChangeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    String re_id;
-    Reserve changeRes ;
+    Reserve changeRes;
     Employee employee;
     Button editBtn;
     public static String[] changes ;
@@ -124,7 +123,7 @@ public class ReserveChangeActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //*** AddMemberからの返答 ***//
-        if (requestCode == 1 && resultCode == RESULT_OK) {
+        if (requestCode == ONE && resultCode == RESULT_OK) {
             Person person = (Person) data.getSerializableExtra("member");
             if (person instanceof Employee) {
                 Employee employee = (Employee) person;
@@ -248,7 +247,7 @@ public class ReserveChangeActivity extends AppCompatActivity
                 Intent intent = new Intent(getApplicationContext(), AddMemberActivity.class);
                 Log.d(CALL, employee.getEmp_id());
                 intent.putExtra("emp_id", employee.getEmp_id());
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, ONE);
             }
         });
 
@@ -391,8 +390,10 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
+                    //*** 社外 ***//
                     changeRes.setRe_switch(String.valueOf(ONE));
                 } else {
+                    //*** 社内 ***//
                     changeRes.setRe_switch(String.valueOf(ZERO));
                 }
             }

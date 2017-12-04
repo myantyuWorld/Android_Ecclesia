@@ -418,8 +418,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
                 }
                 end.add(Calendar.MINUTE, M_THIRTY);
                 //*** 変更しようとしている会議が現在日付・時刻に矛盾していないか ***//
-                //*** まだ始まっていない会議かの判定 ***//
-                if (cal.before(start)) {
+                //*** まだ始まっていない会議か、自分の参加する会議もしくは自分が申請した会議かの判定 ***//
+                if (cal.before(start) && (reserve.getRe_member().indexOf(employee.getEmp_id()) != MINUSONE || reserve.getRe_applicant().equals(employee.getName()))) {
                     //*** 次画面（ReserveChangeActivity）に予約インスタンスを渡す ***//
                     intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
                     intent.putExtra(KEYCHANGE, reserve);
