@@ -45,6 +45,7 @@ public class NameConst {
     public static final String IN = "社内";
     public static final String OUT = "社外";
     public static final String CANCEL = "キャンセル";
+    public static final String MEMBERYETADD = "参加者未追加";
 
     public static final String KEYEX = "EX"; // 受け渡し用キー
     public static final String KEYRESULT = "result";
@@ -56,6 +57,7 @@ public class NameConst {
     public static final String YYYY_MM_DD_HH_MM = "yyyy/MM/dd HH：mm";
     public static final String HH_MM = "HH：mm";
     public static final String SPACE = " ";
+    public static final String FULLSPACE = "　";
     public static final String EMPTY = "";
     public static final String YYYY_MM_DD = "yyyy/MM/dd";
 
