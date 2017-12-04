@@ -77,4 +77,5 @@ public class NameConst {
             "update t_reserve set re_overview = ? , re_startday = ?, re_endday = ?, re_starttime = ?, re_endtime = ?," +
             " re_switch = ?, re_fixture = ?, re_remarks = ?, re_priority = ?, room_id = ?, pur_id = ?" +
             " where re_id = ? ";
+    public static final String SQL_ROOM_CAPACITY = "select room_capacity from m_room where room_id = ?";
 }

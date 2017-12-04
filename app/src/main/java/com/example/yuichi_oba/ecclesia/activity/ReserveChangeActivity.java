@@ -61,8 +61,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 public class ReserveChangeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    String re_id;
-    Reserve changeRes ;
+    Reserve changeRes;
     Employee employee;
     Button editBtn;
     public static String[] changes ;
@@ -124,7 +123,7 @@ public class ReserveChangeActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //*** AddMemberからの返答 ***//
-        if (requestCode == 1 && resultCode == RESULT_OK) {
+        if (requestCode == ONE && resultCode == RESULT_OK) {
             Person person = (Person) data.getSerializableExtra("member");
             if (person instanceof Employee) {
                 Employee employee = (Employee) person;
@@ -150,6 +149,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, changeMember);
             members.setAdapter(adapter);
             memberChange = true;
+            changeBtnEnable();
         }
     }
 
@@ -210,11 +210,11 @@ public class ReserveChangeActivity extends AppCompatActivity
 //                member.add(changeRes.getRe_company() + " ： " + p.getName());
                 Log.d("changeMember", "社外者");
             }
-        }
+        }c = db.rawQuery("select * from m_room", null);
         ArrayAdapter<String> memberdap = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, changeMember);
         members.setAdapter(memberdap);
 
-        c = db.rawQuery("select * from m_room", null);
+
         List<String> rooms = new ArrayList<>();
         int roomIndex = ZERO;
         while (c.moveToNext()) {
@@ -248,7 +248,7 @@ public class ReserveChangeActivity extends AppCompatActivity
                 Intent intent = new Intent(getApplicationContext(), AddMemberActivity.class);
                 Log.d(CALL, employee.getEmp_id());
                 intent.putExtra("emp_id", employee.getEmp_id());
-                startActivityForResult(intent, 1);
+                startActivityForResult(intent, ONE);
             }
         });
 
@@ -302,6 +302,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void afterTextChanged(Editable s) {
                 changeRes.setRe_startDay(s.toString());
+                changeBtnEnable();
             }
         });
 
@@ -314,6 +315,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void afterTextChanged(Editable s) {
                 changeRes.setRe_startTime(s.toString());
+                changeBtnEnable();
             }
         });
 
@@ -326,6 +328,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void afterTextChanged(Editable s) {
                 changeRes.setRe_endDay(s.toString());
+                changeBtnEnable();
             }
         });
 
@@ -336,7 +339,10 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
-            public void afterTextChanged(Editable s) { changeRes.setRe_endTime(s.toString()); }
+            public void afterTextChanged(Editable s) {
+                changeRes.setRe_endTime(s.toString());
+                changeBtnEnable();
+            }
         });
 
         //*** 会議室変更時 ***//
@@ -385,8 +391,10 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
+                    //*** 社外 ***//
                     changeRes.setRe_switch(String.valueOf(ONE));
                 } else {
+                    //*** 社内 ***//
                     changeRes.setRe_switch(String.valueOf(ZERO));
                 }
             }
@@ -467,9 +475,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             e.printStackTrace();
         }
         //*** 時間に矛盾がないか ***//
-        if ((start.get(Calendar.YEAR) <= end.get(Calendar.YEAR)) && (start.get(Calendar.MONTH) <= end.get(Calendar.MONTH)) && (start.get(Calendar.DAY_OF_MONTH) <= end.get(Calendar.DAY_OF_MONTH))
-                && (((start.get(Calendar.HOUR_OF_DAY) <= end.get(Calendar.HOUR_OF_DAY)) && (start.get(Calendar.MINUTE) <= end.get(Calendar.MINUTE)))
-                || ((start.get(Calendar.HOUR_OF_DAY) < end.get(Calendar.HOUR_OF_DAY)) && (start.get(Calendar.MINUTE) >= end.get(Calendar.MINUTE))))) {
+        if (start.before(end)) {
             res = true;
         } else {
             Toast.makeText(this, "開始日時より終了日時のほうが早くなっています", Toast.LENGTH_SHORT).show();
@@ -478,9 +484,25 @@ public class ReserveChangeActivity extends AppCompatActivity
     }
 
     //*** SelfMadeMethod ***//
+    //*** 会議室と人数チェックメソッド ***//
+    private boolean roomCheck() {
+        boolean res = true;
+        SQLiteDatabase db = helper.getReadableDatabase();
+        //*** 会議室の許容人数を問うSQL ***//
+        Cursor c = db.rawQuery(SQL_ROOM_CAPACITY, new String[]{changeRes.getRe_room_id()});
+        c.moveToNext();
+        //*** 会議室の許容人数よりも参加人数が多ければNG ***//
+        if (c.getInt(ZERO) < changeRes.getRe_member().size()) {
+            res = false;
+            Toast.makeText(this, "会議人数が会議室の許容人数よりも多いです", Toast.LENGTH_SHORT).show();
+        }
+        return res;
+    }
+
+    //*** SelfMadeMethod ***//
     //*** 入力項目が満足な場合のみボタンを押下可能にする ***//
     private void changeBtnEnable() {
-        if (overViewCheck() && timeCheck()) {
+        if (overViewCheck() && timeCheck() && roomCheck()) {
             editBtn.setEnabled(true);
         } else {
             editBtn.setEnabled(false);
