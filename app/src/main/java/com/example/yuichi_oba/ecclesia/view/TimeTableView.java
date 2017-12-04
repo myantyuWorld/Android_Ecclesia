@@ -515,6 +515,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     }
 
 
+    int cnt = 0;
     while (thread_flg) {
       float wX = 216;
       // タッチされたか
@@ -534,7 +535,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
           roomId = ROOM_C;
         }
         // roomId と y座標を基に、どの会議がタップされたかを返す
-        int cnt = 0;
+//        int cnt = 0;
         for (Reserve r : reserveInfo) {
           if (r.getCoop() != null && r.getCoop()[1] < y && r.getCoop()[3] > y) {
             // 特定した
@@ -574,11 +575,11 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         }
         Log.d(CALL, "cnt :: " + String.valueOf(cnt));
         Log.d(CALL, roomId);
-//        if (cnt > 0) {
-//          Log.d(CALL, "新規会議の登録ロジック開");
-//          return new String[]{NONE, roomId};    //*** 新規予約であることを返す ***//
-//        }
-        return new String[]{NONE, roomId};
+        if (cnt > 0) {
+          Log.d(CALL, "新規会議の登録ロジック開");
+          return new String[]{NONE, roomId};    //*** 新規予約であることを返す ***//
+        }
+//        return new String[]{NONE, roomId};
 //                x = 0;
 //                y = 0;
       }

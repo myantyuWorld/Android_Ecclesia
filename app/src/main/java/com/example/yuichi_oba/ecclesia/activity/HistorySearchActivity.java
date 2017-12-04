@@ -251,6 +251,7 @@ public class HistorySearchActivity extends AppCompatActivity
     @Override
     public Filter getFilter() {
       Log.d("call", "public Filter getFilter() ");
+
       return new MyFilter();
 
 
@@ -264,6 +265,7 @@ public class HistorySearchActivity extends AppCompatActivity
       protected FilterResults performFiltering(CharSequence c) {
         Log.d("call", "protected FilterResults performFiltering(CharSequence c) ");
         List<Reserve> list = new ArrayList<>();
+
         for (int i = 0, size = getCount(); i < size; i++) {
           Reserve d = (Reserve) getItem(i);
           if (d.getRe_name() != null && d.getRe_name().contains(c)
