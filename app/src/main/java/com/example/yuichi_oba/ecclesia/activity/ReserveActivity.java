@@ -625,7 +625,19 @@ public class ReserveActivity extends AppCompatActivity
 
     Integer memberCount = sp_member.getAdapter().getCount();    //*** 参加者スピナーの長さを取得する ***//
     String ss = (String) ar_sp_room.getSelectedItem();             //*** 選択されている会議室名を取得 ***//
-    if (memberCount == 0) {     //*** 参加者が0人 ***//
+//    if (memberCount == 0) {     //*** 参加者が0人 ***//
+//      Bundle bundle = new Bundle();
+//      bundle.putString("error", "zero");
+//
+//      CautionDialog dialog = new CautionDialog();
+//      dialog.setArguments(bundle);
+//      dialog.show(getFragmentManager(), "zero");
+//
+//      return false;   //*** 異常を返す ***//
+//    }
+
+    //*** 参加者が0人 ***//
+    if (sp_member.getItemAtPosition(ZERO).toString().equals(MEMBERYETADD)) {
       Bundle bundle = new Bundle();
       bundle.putString("error", "zero");
 
