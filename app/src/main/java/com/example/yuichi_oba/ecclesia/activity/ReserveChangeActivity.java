@@ -149,6 +149,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, changeMember);
             members.setAdapter(adapter);
             memberChange = true;
+            changeBtnEnable();
         }
     }
 
@@ -209,11 +210,11 @@ public class ReserveChangeActivity extends AppCompatActivity
 //                member.add(changeRes.getRe_company() + " ： " + p.getName());
                 Log.d("changeMember", "社外者");
             }
-        }
+        }c = db.rawQuery("select * from m_room", null);
         ArrayAdapter<String> memberdap = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, changeMember);
         members.setAdapter(memberdap);
 
-        c = db.rawQuery("select * from m_room", null);
+
         List<String> rooms = new ArrayList<>();
         int roomIndex = ZERO;
         while (c.moveToNext()) {
@@ -483,9 +484,25 @@ public class ReserveChangeActivity extends AppCompatActivity
     }
 
     //*** SelfMadeMethod ***//
+    //*** 会議室と人数チェックメソッド ***//
+    private boolean roomCheck() {
+        boolean res = true;
+        SQLiteDatabase db = helper.getReadableDatabase();
+        //*** 会議室の許容人数を問うSQL ***//
+        Cursor c = db.rawQuery(SQL_ROOM_CAPACITY, new String[]{changeRes.getRe_room_id()});
+        c.moveToNext();
+        //*** 会議室の許容人数よりも参加人数が多ければNG ***//
+        if (c.getInt(ZERO) < changeRes.getRe_member().size()) {
+            res = false;
+            Toast.makeText(this, "会議人数が会議室の許容人数よりも多いです", Toast.LENGTH_SHORT).show();
+        }
+        return res;
+    }
+
+    //*** SelfMadeMethod ***//
     //*** 入力項目が満足な場合のみボタンを押下可能にする ***//
     private void changeBtnEnable() {
-        if (overViewCheck() && timeCheck()) {
+        if (overViewCheck() && timeCheck() && roomCheck()) {
             editBtn.setEnabled(true);
         } else {
             editBtn.setEnabled(false);
