@@ -86,12 +86,17 @@ public class HistorySearchActivity extends AppCompatActivity
   public static final int ENDDAY = 3;
   public static final int COMPANY = 30;
   public static final int PURPOSE = 24;
+  public static HistorySearchActivity instance = null;
 
   SearchView searchView;
   ListView listView;
   List<Purpose> purpose;
   List<Company> companiesy;
   ArrayList<Reserve> listItems;
+  ArrayList<Reserve> reserves = new ArrayList<>();
+  //  MyListAdapter adapter1 = new MyListAdapter(HistorySearchActivity.getInstance());
+  MyListAdapter adapter1;
+
   private MyHelper helper = new MyHelper(this);
   public static SQLiteDatabase db;
   private Employee employee;
@@ -241,9 +246,12 @@ public class HistorySearchActivity extends AppCompatActivity
       return convertView;
     }
 
+
+
     @Override
     public Filter getFilter() {
       Log.d("call", "public Filter getFilter() ");
+
       return new MyFilter();
 
 
@@ -257,6 +265,7 @@ public class HistorySearchActivity extends AppCompatActivity
       protected FilterResults performFiltering(CharSequence c) {
         Log.d("call", "protected FilterResults performFiltering(CharSequence c) ");
         List<Reserve> list = new ArrayList<>();
+
         for (int i = 0, size = getCount(); i < size; i++) {
           Reserve d = (Reserve) getItem(i);
           if (d.getRe_name() != null && d.getRe_name().contains(c)
@@ -276,10 +285,22 @@ public class HistorySearchActivity extends AppCompatActivity
       @Override
       protected void publishResults(CharSequence charSequence, FilterResults results) {
         Log.d("call", "protected void publishResults(CharSequence charSequence, FilterResults results) ");
-        if (results.count > 0) {
+        Log.d("call", String.format("result count :: %d", results.count));
+//        if (results.count > 0) {
+          Log.d("call", String.format("result count :: %d", results.count));
           List<Reserve> list = (List<Reserve>) results.values;
+          listItems.clear();
+          listItems = (ArrayList<Reserve>) list;
+
+//          reserves.clear();
+//          reserves = (ArrayList<Reserve>) list;
+//          for (Reserve reserve : reserves) {
+//            Log.d("call", reserve.toString());
+//          }
+
           notifyDataSetChanged();
-        }
+          onResume();
+//        }
       }
     }
   }
@@ -308,7 +329,7 @@ public class HistorySearchActivity extends AppCompatActivity
     //*** SQLで指定したデータを設定 ***//
     Cursor c = db.rawQuery(Q_TEST, new String[]{employee.getEmp_id()});
     //*** 会社用のデータベース ***//
-    ArrayList<Reserve> reserves = new ArrayList<>();
+//    ArrayList<Reserve> reserves = new ArrayList<>();
     //*** データベースにある情報だけループを回す ***//
     while (c.moveToNext()) {
       Reserve reserve = new Reserve();
@@ -339,10 +360,11 @@ public class HistorySearchActivity extends AppCompatActivity
 
 
     //*** ListItemとレイアウトとを関連付け ***//
-    final MyListAdapter adapter1 = new MyListAdapter(this);
+    adapter1 = new MyListAdapter(this);
     listView = (ListView) findViewById(R.id.ahs_lis_history);
     //*** アダプターにアイテムリストをセット ***//
-    adapter1.setItemList(reserves);
+    listItems = reserves;
+    adapter1.setItemList(listItems);
     listView.setAdapter(adapter1);
 
 
@@ -679,6 +701,20 @@ public class HistorySearchActivity extends AppCompatActivity
     }
   }
 
+  @Override
+  protected void onResume() {
+    Log.d("call", "protected void onResume() {");
+    super.onResume();
+
+    adapter1 = new MyListAdapter(this);
+    listView = (ListView) findViewById(R.id.ahs_lis_history);
+    //*** アダプターにアイテムリストをセット ***//
+    adapter1.setItemList(listItems);
+    listView.setAdapter(adapter1);
+
+
+  }
+
   // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
   // _/_/
   // _/_/ ナビを選択したときの処理
@@ -711,5 +747,9 @@ public class HistorySearchActivity extends AppCompatActivity
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);
     return true;
+  }
+
+  public static HistorySearchActivity getInstance(){
+    return instance;
   }
 }
