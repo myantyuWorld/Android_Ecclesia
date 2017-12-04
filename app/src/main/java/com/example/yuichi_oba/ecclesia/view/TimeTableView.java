@@ -575,7 +575,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         }
         Log.d(CALL, "cnt :: " + String.valueOf(cnt));
         Log.d(CALL, roomId);
-        if (cnt == 0) {
+        if (cnt == 0 || cnt >= 100) {
           Log.d(CALL, "新規会議の登録ロジック開");
           return new String[]{NONE, roomId};    //*** 新規予約であることを返す ***//
         }
