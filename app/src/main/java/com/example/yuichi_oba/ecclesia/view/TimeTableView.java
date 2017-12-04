@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.dialog.CancelDialog;
@@ -520,6 +519,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
       float wX = 216;
       // タッチされたか
       if (isTouched()) {
+        Log.d("call", "public String[] getSelectedReserve() の isTouched()");
         if (x > wX && x < 2 * wX) {
           Log.d(CALL, "tokubetu");
           roomId = TOKUBETSU;
@@ -574,10 +574,11 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         }
         Log.d(CALL, "cnt :: " + String.valueOf(cnt));
         Log.d(CALL, roomId);
-        if (cnt > 0) {
-          Log.d(CALL, "新規会議の登録ロジック開");
-          return new String[]{NONE, roomId};    //*** 新規予約であることを返す ***//
-        }
+//        if (cnt > 0) {
+//          Log.d(CALL, "新規会議の登録ロジック開");
+//          return new String[]{NONE, roomId};    //*** 新規予約であることを返す ***//
+//        }
+        return new String[]{NONE, roomId};
 //                x = 0;
 //                y = 0;
       }
@@ -614,6 +615,8 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     Log.d(CALL, "onSingleTapUp!");
     x = e.getX();
     y = e.getY();
+
+    Log.d("call", String.valueOf("thread_flg :: " + thread_flg));
     return true;
   }
 

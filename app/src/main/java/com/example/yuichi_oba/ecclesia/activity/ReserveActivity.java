@@ -352,6 +352,10 @@ public class ReserveActivity extends AppCompatActivity
     } else {
       super.onBackPressed();
     }
+
+//    Intent intent = new Intent(getApplicationContext(), ReserveListActivity.class);
+//    startActivity(intent);
+
   }
 
   //*** ナビを選択したときの処理 ***//
