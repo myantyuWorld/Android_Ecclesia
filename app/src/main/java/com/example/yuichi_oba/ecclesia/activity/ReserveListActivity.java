@@ -428,6 +428,8 @@ public class ReserveListActivity extends AppCompatActivity
     super.onResume();
     arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
     arl_view_timetableView.thread_flg = true;
+    arl_view_timetableView.x = 0;
+    arl_view_timetableView.y = 0;
 
     Thread thread = new Thread(() -> {
       if (thCnt != 0) {
@@ -467,7 +469,7 @@ public class ReserveListActivity extends AppCompatActivity
       }
       thCnt++;
       try {
-        Thread.sleep(20);
+        Thread.sleep(100);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
