@@ -302,6 +302,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void afterTextChanged(Editable s) {
                 changeRes.setRe_startDay(s.toString());
+                changeBtnEnable();
             }
         });
 
@@ -314,6 +315,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void afterTextChanged(Editable s) {
                 changeRes.setRe_startTime(s.toString());
+                changeBtnEnable();
             }
         });
 
@@ -326,6 +328,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void afterTextChanged(Editable s) {
                 changeRes.setRe_endDay(s.toString());
+                changeBtnEnable();
             }
         });
 
@@ -336,7 +339,10 @@ public class ReserveChangeActivity extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
-            public void afterTextChanged(Editable s) { changeRes.setRe_endTime(s.toString()); }
+            public void afterTextChanged(Editable s) {
+                changeRes.setRe_endTime(s.toString());
+                changeBtnEnable();
+            }
         });
 
         //*** 会議室変更時 ***//
@@ -467,9 +473,7 @@ public class ReserveChangeActivity extends AppCompatActivity
             e.printStackTrace();
         }
         //*** 時間に矛盾がないか ***//
-        if ((start.get(Calendar.YEAR) <= end.get(Calendar.YEAR)) && (start.get(Calendar.MONTH) <= end.get(Calendar.MONTH)) && (start.get(Calendar.DAY_OF_MONTH) <= end.get(Calendar.DAY_OF_MONTH))
-                && (((start.get(Calendar.HOUR_OF_DAY) <= end.get(Calendar.HOUR_OF_DAY)) && (start.get(Calendar.MINUTE) <= end.get(Calendar.MINUTE)))
-                || ((start.get(Calendar.HOUR_OF_DAY) < end.get(Calendar.HOUR_OF_DAY)) && (start.get(Calendar.MINUTE) >= end.get(Calendar.MINUTE))))) {
+        if (start.before(end)) {
             res = true;
         } else {
             Toast.makeText(this, "開始日時より終了日時のほうが早くなっています", Toast.LENGTH_SHORT).show();
