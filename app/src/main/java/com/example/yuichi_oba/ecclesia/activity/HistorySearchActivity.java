@@ -691,7 +691,7 @@ public class HistorySearchActivity extends AppCompatActivity
         return instance;
     }
 
-
+//--- 渡されたデータをリストにAddするメソッド ---//
     public  static ArrayList<Reserve>  dbSpinnerAdd(Cursor c, ArrayList<Reserve> list) {
         while (c.moveToNext()) {
             Reserve reserve = new Reserve();
