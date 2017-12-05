@@ -285,7 +285,7 @@ public class HistorySearchActivity extends AppCompatActivity
                 Log.d("call", String.format("result count :: %d", results.count));
                 if (results != null && results.count > 0) {
                     Log.d("call", String.format("result count :: %d", results.count));
-                    // TODO : ここら辺がまだ出来ていない;
+                    // TODO 12/05 : メソッド内容を考える;
                     List<Reserve> list = (List<Reserve>) results.values;
                     listItems.clear();
                     listItems = (ArrayList<Reserve>) list;
@@ -327,7 +327,7 @@ public class HistorySearchActivity extends AppCompatActivity
         //*** 会社用のデータベース ***//
 //        ArrayList<Reserve> reserves = new ArrayList<>();
         //*** データベースにある情報だけループを回す ***//
-        reserves = dbSpinnerAdd(c,reserves);
+        reserves = listAdd(c,reserves);
 //        while (c.moveToNext()) {
 //            Reserve reserve = new Reserve();
 //            reserve.setRe_startTime(c.getString(STARTTIME));
@@ -442,15 +442,15 @@ public class HistorySearchActivity extends AppCompatActivity
                 ArrayList<Reserve> list = new ArrayList<>();
                 int count = FLAG;
                 if (!posi.equals("未選択") && !purpose_name.equals("未選択")) {
-                        list = dbSpinnerAdd(c,list);
+                        list = listAdd(c,list);
                     count++;
                     Log.d("call", String.valueOf(count));
                 } else if (purpose_name.equals("未選択") && !posi.equals("未選択")) {
-                    list = dbSpinnerAdd(c_company, list);
+                    list = listAdd(c_company, list);
                         count++;
                         Log.d("call", String.valueOf(count));
                 } else if (posi.equals("未選択") && !purpose_name.equals("未選択")) {
-                    list = dbSpinnerAdd(c_pupose,list);
+                    list = listAdd(c_pupose,list);
                         count++;
                         Log.d("call", String.valueOf(count));
                 }
@@ -525,15 +525,15 @@ public class HistorySearchActivity extends AppCompatActivity
                 ArrayList<Reserve> list = new ArrayList<>();
                 int count = FLAG;
                 if (!posi.equals("未選択") && !purpose_name.equals("未選択")) {
-                    list = dbSpinnerAdd(c,list);
+                    list = listAdd(c,list);
                     count++;
                     Log.d("call", String.valueOf(count));
                 } else if (purpose_name.equals("未選択") && !posi.equals("未選択")) {
-                    list = dbSpinnerAdd(c_company, list);
+                    list = listAdd(c_company, list);
                     count++;
                     Log.d("call", String.valueOf(count));
                 } else if (posi.equals("未選択") && !purpose_name.equals("未選択")) {
-                    list = dbSpinnerAdd(c_pupose,list);
+                    list = listAdd(c_pupose,list);
                     count++;
                     Log.d("call", String.valueOf(count));
                 }
@@ -559,9 +559,7 @@ public class HistorySearchActivity extends AppCompatActivity
                 } else {
                     //*** スピナーに対しての処理 ***//
                     Toast.makeText(HistorySearchActivity.this, String.format("検索会社名該当なし。 : %s %d 件", sp.getSelectedItem(),list.size()), Toast.LENGTH_SHORT).show();
-
                 }
-
             }
 
             @Override
@@ -687,7 +685,7 @@ public class HistorySearchActivity extends AppCompatActivity
     }
 
 //--- 渡されたデータをリストにAddするメソッド ---//
-    public  static ArrayList<Reserve>  dbSpinnerAdd(Cursor c, ArrayList<Reserve> list) {
+    public  static ArrayList<Reserve> listAdd(Cursor c, ArrayList<Reserve> list) {
         while (c.moveToNext()) {
             Reserve reserve = new Reserve();
             reserve.setRe_startTime(c.getString(STARTTIME));
