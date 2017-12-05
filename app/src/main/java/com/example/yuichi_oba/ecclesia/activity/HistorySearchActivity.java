@@ -544,11 +544,6 @@ public class HistorySearchActivity extends AppCompatActivity
                 for (Reserve r : list) {
                     r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
                 }
-                adapter1.setItemList(list);
-                c.close();
-                for (Reserve r : list) {
-                    r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
-                }
 //                        list.forEach(r -> {
 //                            r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
 //                        });
