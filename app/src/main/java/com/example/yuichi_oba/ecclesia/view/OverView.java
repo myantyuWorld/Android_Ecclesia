@@ -10,6 +10,10 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.example.yuichi_oba.ecclesia.tools.Util;
+
+import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
+
 /**
  * Created by yuichi_develop on 2017/11/14.
  */
@@ -59,6 +63,9 @@ public class OverView extends View {
   private void init() {
     p_line = new Paint();
     p_line.setColor(Color.parseColor("#303F9F"));
+    if (Util.isAuthAdmin(authFlg)){
+      p_line.setColor(Color.parseColor("#e91e63"));
+    }
     p_line.setStrokeWidth(5);
     p_line.setStyle(Paint.Style.FILL);
 

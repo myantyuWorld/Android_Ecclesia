@@ -26,7 +26,7 @@
             <view
                 android:id="@+id/ar_view_reserve"
                 class="com.example.yuichi_oba.ecclesia.view.ReserveView"
-                id="@+id/ar_view_reserve"
+                id="@+id/view_reserve"
                 layout_width="match_parent"
                 android:layout_width="wrap_content"
                 android:layout_height="730dp"
@@ -94,10 +94,10 @@
                 android:id="@+id/ar_sp_member"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/ar_btn_re_end_time"
+                android:layout_alignEnd="@+id/ar_txt_applicant"
                 android:layout_alignStart="@+id/ar_txt_applicant"
                 android:layout_below="@+id/ar_txt_applicant"
-                android:layout_marginTop="25dp" />
+                android:layout_marginTop="15dp" />
 
             <EditText
                 android:id="@+id/ar_etxt_overview"
@@ -119,7 +119,7 @@
                 android:layout_alignEnd="@+id/ar_txt_applicant"
                 android:layout_below="@+id/ar_sp_member"
                 android:layout_marginEnd="84dp"
-                android:layout_marginTop="50dp" />
+                android:layout_marginTop="25dp" />
 
             <TextView
                 android:id="@+id/ar_txt_company"
@@ -129,6 +129,7 @@
                 android:layout_alignStart="@+id/ar_sp_member"
                 android:layout_below="@+id/ar_sw_switch"
                 android:layout_marginTop="43dp"
+                android:text="aaa"
                 android:textSize="24sp"
                 android:textStyle="bold|italic" />
 
@@ -138,6 +139,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/ar_sp_room"
                 android:layout_below="@+id/ar_sp_room"
+                android:layout_alignEnd="@+id/ar_sp_room"
                 android:layout_marginTop="20dp"
                 android:ems="10"
                 android:hint="任意"

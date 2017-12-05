@@ -547,13 +547,20 @@ public class Reserve implements Serializable {
         re_endTime, re_switch, re_fixtures, re_remarks, priorityAverage, re_room_id
         , re_purpose_id, re_id});
 
-    re_member.forEach(person -> {
+    for (Person person:re_member) {
       if (person instanceof Employee) {
         db.execSQL(SQL_MEMBER_REPLACE, new Object[]{re_id, Util.returnEmpId(person.getName())});
       } else {
         db.execSQL(SQL_MEMBER_REPLACE, new Object[]{re_id, Util.returnOutEmpId(person.getName())});
       }
-    });
+    }
+//    re_member.forEach(person -> {
+//      if (person instanceof Employee) {
+//        db.execSQL(SQL_MEMBER_REPLACE, new Object[]{re_id, Util.returnEmpId(person.getName())});
+//      } else {
+//        db.execSQL(SQL_MEMBER_REPLACE, new Object[]{re_id, Util.returnOutEmpId(person.getName())});
+//      }
+//    });
 
     db.close();
     helper.close();

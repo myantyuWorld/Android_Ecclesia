@@ -22,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -250,11 +251,19 @@ public class ReserveListActivity extends AppCompatActivity
     Log.d(CALL, arl_txt_date.getText().toString());
     arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
 
-    arl_txt_date.setOnClickListener(view -> {
-      Log.d(TAG, "arl_txt_date click!");
-      MyDialog d = new MyDialog();
-      d.show(getFragmentManager(), "dateDialog");
+    arl_txt_date.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Log.d(TAG, "arl_txt_date click!");
+        MyDialog d = new MyDialog();
+        d.show(getFragmentManager(), "dateDialog");
+      }
     });
+//    arl_txt_date.setOnClickListener(view -> {
+//      Log.d(TAG, "arl_txt_date click!");
+//      MyDialog d = new MyDialog();
+//      d.show(getFragmentManager(), "dateDialog");
+//    });
 
     /*** 予約情報リストの同期エラーがでるため、コメアウトします ***/
 //        Button btPrev = (Button) findViewById(R.id.bt_prev);
@@ -276,11 +285,19 @@ public class ReserveListActivity extends AppCompatActivity
 //            }
 //        });
     Button arl_btn_search = (Button) findViewById(R.id.arl_btn_search);
-    arl_btn_search.setOnClickListener(v -> {
-      Toast.makeText(ReserveListActivity.this, arl_txt_date.getText().toString(), Toast.LENGTH_SHORT).show();
+    arl_btn_search.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Toast.makeText(ReserveListActivity.this, arl_txt_date.getText().toString(), Toast.LENGTH_SHORT).show();
 //         DO: 2017/10/04 自分の予約情報をもっているリストを一回クリアしないと、前の情報も描画されてしまう
-      arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
+        arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
+      }
     });
+//    arl_btn_search.setOnClickListener(v -> {
+//      Toast.makeText(ReserveListActivity.this, arl_txt_date.getText().toString(), Toast.LENGTH_SHORT).show();
+////         DO: 2017/10/04 自分の予約情報をもっているリストを一回クリアしないと、前の情報も描画されてしまう
+//      arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
+//    });
 
     /***
      *
@@ -411,6 +428,8 @@ public class ReserveListActivity extends AppCompatActivity
     super.onResume();
     arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
     arl_view_timetableView.thread_flg = true;
+    arl_view_timetableView.x = 0;
+    arl_view_timetableView.y = 0;
 
     Thread thread = new Thread(() -> {
       if (thCnt != 0) {
@@ -450,7 +469,7 @@ public class ReserveListActivity extends AppCompatActivity
       }
       thCnt++;
       try {
-        Thread.sleep(20);
+        Thread.sleep(100);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }

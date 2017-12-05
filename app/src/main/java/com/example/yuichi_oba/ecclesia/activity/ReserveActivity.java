@@ -273,6 +273,12 @@ public class ReserveActivity extends AppCompatActivity
     Log.d(CALL, "call ReserveActivity->onActivityResult()");
     super.onActivityResult(requestCode, resultCode, data);
 
+    if (sp_member.getItemAtPosition(ZERO).toString().equals(MEMBERYETADD)) {
+      List<String> list = new ArrayList<>();
+      ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
+      sp_member.setAdapter(adapter);
+    }
+
     switch (requestCode) {
       //*** --------------------------***//
       //*** AddMemberActivityからの結果 ***//
@@ -302,14 +308,15 @@ public class ReserveActivity extends AppCompatActivity
 
           //*** 参加者を追加する ***//
           final List<String> list = new ArrayList<>();
-          member.forEach(p -> {
+          for (Person p : member){
+//          member.forEach(p -> {
             //*** 「社内」 ***//
             if (p instanceof Employee)
               list.add("社内 : " + p.getName());
               //*** 「社外」 ***//
             else if (p instanceof OutEmployee)
               list.add(((OutEmployee) p).getCom_name() + " : " + p.getName());
-          });
+          }
           //*** 参加者スピナーに反映する ***//
           ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
           sp_member.setAdapter(adapter_member);
@@ -351,6 +358,10 @@ public class ReserveActivity extends AppCompatActivity
     } else {
       super.onBackPressed();
     }
+
+//    Intent intent = new Intent(getApplicationContext(), ReserveListActivity.class);
+//    startActivity(intent);
+
   }
 
   //*** ナビを選択したときの処理 ***//
@@ -428,6 +439,7 @@ public class ReserveActivity extends AppCompatActivity
 //        for (Employee employee : member) {
 //            list.add(employee.getCom_name() + " : " + employee.getName());
 //        }
+    list.add(MEMBERYETADD);
     ArrayAdapter<String> adapter_member = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, list);
     sp_member.setAdapter(adapter_member);
 
@@ -617,7 +629,19 @@ public class ReserveActivity extends AppCompatActivity
 
     Integer memberCount = sp_member.getAdapter().getCount();    //*** 参加者スピナーの長さを取得する ***//
     String ss = (String) ar_sp_room.getSelectedItem();             //*** 選択されている会議室名を取得 ***//
-    if (memberCount == 0) {     //*** 参加者が0人 ***//
+//    if (memberCount == 0) {     //*** 参加者が0人 ***//
+//      Bundle bundle = new Bundle();
+//      bundle.putString("error", "zero");
+//
+//      CautionDialog dialog = new CautionDialog();
+//      dialog.setArguments(bundle);
+//      dialog.show(getFragmentManager(), "zero");
+//
+//      return false;   //*** 異常を返す ***//
+//    }
+
+    //*** 参加者が0人 ***//
+    if (sp_member.getItemAtPosition(ZERO).toString().equals(MEMBERYETADD)) {
       Bundle bundle = new Bundle();
       bundle.putString("error", "zero");
 

@@ -405,7 +405,8 @@ public class AddMemberActivity extends AppCompatActivity
         OutEmployee o = new OutEmployee();
         String memName = sp_history.getSelectedItem().toString().split(":")[1]; //*** 社内[0]：大馬裕一[1] ***//
         Log.d(CALL, memName);
-        members.forEach(d -> {
+        for (Person d : members){
+//        members.forEach(d -> {
           Log.d(CALL, d.toString());
           //*** 選択されている社員名と同じ情報を発見 ***//
           if (d.getName().contains(memName)) {
@@ -434,7 +435,7 @@ public class AddMemberActivity extends AppCompatActivity
               intent.putExtra("member", o);
             }
           }
-        });
+        }
         //*** 抜き取った社員情報をReserveActivityに返す ***//
         setResult(RESULT_OK, intent);
         finish();
