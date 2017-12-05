@@ -331,28 +331,27 @@ public class HistorySearchActivity extends AppCompatActivity
     Cursor c = db.rawQuery(Q_TEST, new String[]{employee.getEmp_id()});
     //*** 会社用のデータベース ***//
     ArrayList<Reserve> reserves = new ArrayList<>();
-    historyDataAdd(c);
-//    //*** データベースにある情報だけループを回す ***//
-//    while (c.moveToNext()) {
-//      Reserve reserve = new Reserve();
-//      reserve.setRe_startTime(c.getString(STARTTIME));
-//      reserve.setRe_endTime(c.getString(ENDTIME));
-//      reserve.setRe_applicant(c.getString(APPLICANT));
-//      reserve.setRe_switch(c.getString(SWITCH));
-//      reserve.setRe_room_name(c.getString(ROOMNAME));
-//      reserve.setRe_fixtures(c.getString(FIXTURES));
-//      reserve.setRe_remarks(c.getString(REMARKS));
-//      reserve.setRe_id(c.getString(RE_ID));
-//      reserve.setRe_name(c.getString(GAIYOU));
-//      reserve.setRe_startDay(c.getString(DAY));
-//      reserve.setRe_endDay(c.getString(ENDDAY));
-//      reserve.setRe_company(c.getString(COMPANY));
-//      reserve.setRe_purpose_name(c.getString(PURPOSE));
-//      //*** reservesにaddする ***//
-//      reserves.add(reserve);
-//    }
-//
-//    c.close();
+    //*** データベースにある情報だけループを回す ***//
+    while (c.moveToNext()) {
+      Reserve reserve = new Reserve();
+      reserve.setRe_startTime(c.getString(STARTTIME));
+      reserve.setRe_endTime(c.getString(ENDTIME));
+      reserve.setRe_applicant(c.getString(APPLICANT));
+      reserve.setRe_switch(c.getString(SWITCH));
+      reserve.setRe_room_name(c.getString(ROOMNAME));
+      reserve.setRe_fixtures(c.getString(FIXTURES));
+      reserve.setRe_remarks(c.getString(REMARKS));
+      reserve.setRe_id(c.getString(RE_ID));
+      reserve.setRe_name(c.getString(GAIYOU));
+      reserve.setRe_startDay(c.getString(DAY));
+      reserve.setRe_endDay(c.getString(ENDDAY));
+      reserve.setRe_company(c.getString(COMPANY));
+      reserve.setRe_purpose_name(c.getString(PURPOSE));
+      //*** reservesにaddする ***//
+      reserves.add(reserve);
+    }
+
+    c.close();
     for (Reserve r : reserves) {
       r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
     }
@@ -369,6 +368,7 @@ public class HistorySearchActivity extends AppCompatActivity
     listItems = reserves;
     adapter1.setItemList(listItems);
     listView.setAdapter(adapter1);
+
 
 
     //*** データベース検索(目的) ***//
@@ -411,13 +411,44 @@ public class HistorySearchActivity extends AppCompatActivity
         db = helper.getReadableDatabase();
         //*** SQLで指定(会社名と目的が一致)したデータを設定 ***//
         Cursor c = db.rawQuery(Q_H_SPINNER, new String[]{employee.getEmp_id(), posi, purpose_name});
+        //*** spinnerで会社名が選ばれた際に使用するDB ***//
         //*** SQLで指定した(会社名が一致した)データを設定 ***//
         Cursor c_company = db.rawQuery(Q_H_SPI_COM, new String[]{employee.getEmp_id(), posi});
+//        //*** 会社名用リスト準備 ***//
+//        ArrayList<Reserve> list_com = new ArrayList<Reserve>();
+//        //*** データが存在するかのFLAG ***//
+//        int count_com = FLAG;
+//        while (c_company.moveToNext()) {
+//          Reserve reserve = new Reserve();
+//          reserve.setRe_startTime(c_company.getString(4));
+//          reserve.setRe_endTime(c_company.getString(5));
+//          reserve.setRe_applicant(c_company.getString(14));
+//          reserve.setRe_switch(c_company.getString(6));
+//          reserve.setRe_room_name(c_company.getString(27));
+//          reserve.setRe_fixtures(c_company.getString(7));
+//          reserve.setRe_remarks(c_company.getString(8));
+//          reserve.setRe_id(c_company.getString(0));
+//          reserve.setRe_name(c_company.getString(1));
+//          reserve.setRe_startDay(c_company.getString(2));
+//          reserve.setRe_endDay(c_company.getString(3));
+//          reserve.setRe_company(c_company.getString(30));
+//          reserve.setRe_purpose_name(c_company.getString(24));
+//          //*** reservesにaddする ***//
+//          list_com.add(reserve);
+//          count_com++;
+//          Log.d("call",c_company.getString(5) + " : " + c_company.getString(1));
+//        }
+//
+//        c_company.close();
+//        for (Reserve r : list_com) {
+//          r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
+//        }
+
         //*** SOLで指定した(目的)データ設定 ***//
         Cursor c_pupose = db.rawQuery(Q_H_SPI_PUR, new String[]{employee.getEmp_id(), purpose_name});
         ArrayList<Reserve> list = new ArrayList<>();
         int count = FLAG;
-//                if (!posi.equals("未選択") && !purpose_name.equals("未選択")) {
+                if (!posi.equals("未選択") && !purpose_name.equals("未選択")) {
 
         //*** 会社名と目的一致 ***//
         while (c.moveToNext()) {
@@ -440,50 +471,50 @@ public class HistorySearchActivity extends AppCompatActivity
           count++;
           Log.d("call", String.valueOf(count));
         }
-//                } else if (purpose_name.equals("未選択") && !posi.equals("未選択")) {
-//                    //*** 会社名が一致 ***//
-//                    while (c_company.moveToNext()) {
-//                        Reserve reserve = new Reserve();
-//                        reserve.setRe_startTime(c.getString(STARTTIME));
-//                        reserve.setRe_endTime(c.getString(ENDTIME));
-//                        reserve.setRe_applicant(c.getString(APPLICANT));
-//                        reserve.setRe_switch(c.getString(SWITCH));
-//                        reserve.setRe_room_name(c.getString(ROOMNAME));
-//                        reserve.setRe_fixtures(c.getString(FIXTURES));
-//                        reserve.setRe_remarks(c.getString(REMARKS));
-//                        reserve.setRe_id(c.getString(RE_ID));
-//                        reserve.setRe_name(c.getString(GAIYOU));
-//                        reserve.setRe_startDay(c.getString(DAY));
-//                        reserve.setRe_endDay(c.getString(ENDDAY));
-//                        reserve.setRe_company(c.getString(COMPANY));
-//                        reserve.setRe_purpose_name(c.getString(PURPOSE));
-//                        //*** reservesにaddする ***//
-//                        list.add(reserve);
-//                        count++;
-//                        Log.d("call", String.valueOf(count));
-//                    }
-//                } else if (posi.equals("未選択") && !purpose_name.equals("未選択")) {
-//                    while (c_pupose.moveToNext()) {
-//                        Reserve reserve = new Reserve();
-//                        reserve.setRe_startTime(c.getString(STARTTIME));
-//                        reserve.setRe_endTime(c.getString(ENDTIME));
-//                        reserve.setRe_applicant(c.getString(APPLICANT));
-//                        reserve.setRe_switch(c.getString(SWITCH));
-//                        reserve.setRe_room_name(c.getString(ROOMNAME));
-//                        reserve.setRe_fixtures(c.getString(FIXTURES));
-//                        reserve.setRe_remarks(c.getString(REMARKS));
-//                        reserve.setRe_id(c.getString(RE_ID));
-//                        reserve.setRe_name(c.getString(GAIYOU));
-//                        reserve.setRe_startDay(c.getString(DAY));
-//                        reserve.setRe_endDay(c.getString(ENDDAY));
-//                        reserve.setRe_company(c.getString(COMPANY));
-//                        reserve.setRe_purpose_name(c.getString(PURPOSE));
-//                        //*** reservesにaddする ***//
-//                        list.add(reserve);
-//                        count++;
-//                        Log.d("call", String.valueOf(count));
-//                    }
-//                }
+                } else if (purpose_name.equals("未選択") && !posi.equals("未選択")) {
+                    //*** 会社名が一致 ***//
+                    while (c_company.moveToNext()) {
+                        Reserve reserve = new Reserve();
+                        reserve.setRe_startTime(c_company.getString(STARTTIME));
+                        reserve.setRe_endTime(c_company.getString(ENDTIME));
+                        reserve.setRe_applicant(c_company.getString(APPLICANT));
+                        reserve.setRe_switch(c_company.getString(SWITCH));
+                        reserve.setRe_room_name(c_company.getString(ROOMNAME));
+                        reserve.setRe_fixtures(c_company.getString(FIXTURES));
+                        reserve.setRe_remarks(c_company.getString(REMARKS));
+                        reserve.setRe_id(c_company.getString(RE_ID));
+                        reserve.setRe_name(c_company.getString(GAIYOU));
+                        reserve.setRe_startDay(c_company.getString(DAY));
+                        reserve.setRe_endDay(c_company.getString(ENDDAY));
+                        reserve.setRe_company(c_company.getString(COMPANY));
+                        reserve.setRe_purpose_name(c_company.getString(PURPOSE));
+                        //*** reservesにaddする ***//
+                        list.add(reserve);
+                        count++;
+                        Log.d("call", String.valueOf(count));
+                    }
+                } else if (posi.equals("未選択") && !purpose_name.equals("未選択")) {
+                    while (c_pupose.moveToNext()) {
+                        Reserve reserve = new Reserve();
+                        reserve.setRe_startTime(c_pupose.getString(STARTTIME));
+                        reserve.setRe_endTime(c_pupose.getString(ENDTIME));
+                        reserve.setRe_applicant(c_pupose.getString(APPLICANT));
+                        reserve.setRe_switch(c_pupose.getString(SWITCH));
+                        reserve.setRe_room_name(c_pupose.getString(ROOMNAME));
+                        reserve.setRe_fixtures(c_pupose.getString(FIXTURES));
+                        reserve.setRe_remarks(c_pupose.getString(REMARKS));
+                        reserve.setRe_id(c_pupose.getString(RE_ID));
+                        reserve.setRe_name(c_pupose.getString(GAIYOU));
+                        reserve.setRe_startDay(c_pupose.getString(DAY));
+                        reserve.setRe_endDay(c_pupose.getString(ENDDAY));
+                        reserve.setRe_company(c_pupose.getString(COMPANY));
+                        reserve.setRe_purpose_name(c_pupose.getString(PURPOSE));
+                        //*** reservesにaddする ***//
+                        list.add(reserve);
+                        count++;
+                        Log.d("call", String.valueOf(count));
+                    }
+                }
         adapter1.setItemList(list);
         c.close();
         c_pupose.close();
@@ -508,10 +539,7 @@ public class HistorySearchActivity extends AppCompatActivity
         } else {
           //選択項目を取得し、その値で検索をする？それとトースト表示
           Toast.makeText(HistorySearchActivity.this, String.format("検索目的該当なし。 : %s", sp.getSelectedItem()),
-              Toast.LENGTH_SHORT).show();
-          //*** アダプターにアイテムリストをセット ***//
-//                    adapter1.setItemList(reserves);
-//                    listView.setAdapter(adapter1);
+                  Toast.LENGTH_SHORT).show();
         }
       }
 
@@ -556,48 +584,83 @@ public class HistorySearchActivity extends AppCompatActivity
         db = helper.getReadableDatabase();
         //*** SQLで指定(目的と会社名が一致)したデータを設定 ***//
         Cursor c = db.rawQuery(Q_H_SPINNER, new String[]{employee.getEmp_id(), posi, purpose_name});
+        Cursor c_company = db.rawQuery(Q_H_SPI_COM, new String[]{employee.getEmp_id(), posi});
+        Cursor c_pupose = db.rawQuery(Q_H_SPI_PUR, new String[]{employee.getEmp_id(), purpose_name});
         ArrayList<Reserve> list = new ArrayList<>();
         int count = FLAG;
-//                int count_com = FLAG;
-        //*** 会社名が一致したときにループする ***//
-//                while (c_company.moveToNext()) {
-//                    Reserve reserve = new Reserve();
-//                    reserve.setRe_startTime(c.getString());
-//                    reserve.setRe_endTime(c.getString(ENDTIME));
-//                    reserve.setRe_applicant(c.getString(APPLICANT));
-//                    reserve.setRe_switch(c.getString(SWITCH));
-//                    reserve.setRe_room_name(c.getString(ROOMNAME));
-//                    reserve.setRe_fixtures(c.getString(FIXTURES));
-//                    reserve.setRe_remarks(c.getString(REMARKS));
-//                    reserve.setRe_id(c.getString(RE_ID));
-//                    reserve.setRe_name(c.getString(GAIYOU));
-//                    reserve.setRe_startDay(c.getString(DAY));
-//                    reserve.setRe_endDay(c.getString(ENDDAY));
-//                    reserve.setRe_company(c.getString(COMPANY));
-//                    reserve.setRe_purpose_name(c.getString(PURPOSE));
-//                    //*** reservesにaddする ***//
-//                    list_com.add(reserve);
-//                    count_com++;
-//                }
-        //*** 目的と会社名が一致したときにループする ***//
-        while (c.moveToNext()) {
-          Reserve reserve = new Reserve();
-          reserve.setRe_startTime(c.getString(STARTTIME));
-          reserve.setRe_endTime(c.getString(ENDTIME));
-          reserve.setRe_applicant(c.getString(APPLICANT));
-          reserve.setRe_switch(c.getString(SWITCH));
-          reserve.setRe_room_name(c.getString(ROOMNAME));
-          reserve.setRe_fixtures(c.getString(FIXTURES));
-          reserve.setRe_remarks(c.getString(REMARKS));
-          reserve.setRe_id(c.getString(RE_ID));
-          reserve.setRe_name(c.getString(GAIYOU));
-          reserve.setRe_startDay(c.getString(DAY));
-          reserve.setRe_endDay(c.getString(ENDDAY));
-          reserve.setRe_company(c.getString(COMPANY));
-          reserve.setRe_purpose_name(c.getString(PURPOSE));
-          //*** reservesにaddする ***//
-          list.add(reserve);
-          count++;
+        if (!posi.equals("未選択") && !purpose_name.equals("未選択")) {
+
+          //*** 会社名と目的一致 ***//
+          while (c.moveToNext()) {
+            Reserve reserve = new Reserve();
+            reserve.setRe_startTime(c.getString(STARTTIME));
+            reserve.setRe_endTime(c.getString(ENDTIME));
+            reserve.setRe_applicant(c.getString(APPLICANT));
+            reserve.setRe_switch(c.getString(SWITCH));
+            reserve.setRe_room_name(c.getString(ROOMNAME));
+            reserve.setRe_fixtures(c.getString(FIXTURES));
+            reserve.setRe_remarks(c.getString(REMARKS));
+            reserve.setRe_id(c.getString(RE_ID));
+            reserve.setRe_name(c.getString(GAIYOU));
+            reserve.setRe_startDay(c.getString(DAY));
+            reserve.setRe_endDay(c.getString(ENDDAY));
+            reserve.setRe_company(c.getString(COMPANY));
+            reserve.setRe_purpose_name(c.getString(PURPOSE));
+            //*** reservesにaddする ***//
+            list.add(reserve);
+            count++;
+            Log.d("call", String.valueOf(count));
+          }
+        } else if (purpose_name.equals("未選択") && !posi.equals("未選択")) {
+          //*** 会社名が一致 ***//
+          while (c_company.moveToNext()) {
+            Reserve reserve = new Reserve();
+            reserve.setRe_startTime(c_company.getString(STARTTIME));
+            reserve.setRe_endTime(c_company.getString(ENDTIME));
+            reserve.setRe_applicant(c_company.getString(APPLICANT));
+            reserve.setRe_switch(c_company.getString(SWITCH));
+            reserve.setRe_room_name(c_company.getString(ROOMNAME));
+            reserve.setRe_fixtures(c_company.getString(FIXTURES));
+            reserve.setRe_remarks(c_company.getString(REMARKS));
+            reserve.setRe_id(c_company.getString(RE_ID));
+            reserve.setRe_name(c_company.getString(GAIYOU));
+            reserve.setRe_startDay(c_company.getString(DAY));
+            reserve.setRe_endDay(c_company.getString(ENDDAY));
+            reserve.setRe_company(c_company.getString(COMPANY));
+            reserve.setRe_purpose_name(c_company.getString(PURPOSE));
+            //*** reservesにaddする ***//
+            list.add(reserve);
+            count++;
+            Log.d("call", String.valueOf(count));
+          }
+        } else if (posi.equals("未選択") && !purpose_name.equals("未選択")) {
+          while (c_pupose.moveToNext()) {
+            Reserve reserve = new Reserve();
+            reserve.setRe_startTime(c_pupose.getString(STARTTIME));
+            reserve.setRe_endTime(c_pupose.getString(ENDTIME));
+            reserve.setRe_applicant(c_pupose.getString(APPLICANT));
+            reserve.setRe_switch(c_pupose.getString(SWITCH));
+            reserve.setRe_room_name(c_pupose.getString(ROOMNAME));
+            reserve.setRe_fixtures(c_pupose.getString(FIXTURES));
+            reserve.setRe_remarks(c_pupose.getString(REMARKS));
+            reserve.setRe_id(c_pupose.getString(RE_ID));
+            reserve.setRe_name(c_pupose.getString(GAIYOU));
+            reserve.setRe_startDay(c_pupose.getString(DAY));
+            reserve.setRe_endDay(c_pupose.getString(ENDDAY));
+            reserve.setRe_company(c_pupose.getString(COMPANY));
+            reserve.setRe_purpose_name(c_pupose.getString(PURPOSE));
+            //*** reservesにaddする ***//
+            list.add(reserve);
+            count++;
+            Log.d("call", String.valueOf(count));
+          }
+        }
+        adapter1.setItemList(list);
+        c.close();
+        c_pupose.close();
+        c_company.close();
+        for (Reserve r : list) {
+          r.setRe_member(Util.retHistoryPesonsList(employee.getEmp_id()));
         }
         adapter1.setItemList(list);
         c.close();
@@ -756,29 +819,4 @@ public class HistorySearchActivity extends AppCompatActivity
     return instance;
   }
  // TODO : メソッド化途中；
-  public Cursor historyDataAdd(Cursor c) {
-    //*** データベースにある情報だけループを回す ***//
-    while (c.moveToNext()) {
-      Reserve reserve = new Reserve();
-      reserve.setRe_startTime(c.getString(STARTTIME));
-      reserve.setRe_endTime(c.getString(ENDTIME));
-      reserve.setRe_applicant(c.getString(APPLICANT));
-      reserve.setRe_switch(c.getString(SWITCH));
-      reserve.setRe_room_name(c.getString(ROOMNAME));
-      reserve.setRe_fixtures(c.getString(FIXTURES));
-      reserve.setRe_remarks(c.getString(REMARKS));
-      reserve.setRe_id(c.getString(RE_ID));
-      reserve.setRe_name(c.getString(GAIYOU));
-      reserve.setRe_startDay(c.getString(DAY));
-      reserve.setRe_endDay(c.getString(ENDDAY));
-      reserve.setRe_company(c.getString(COMPANY));
-      reserve.setRe_purpose_name(c.getString(PURPOSE));
-      //*** reservesにaddする ***//
-      reserves.add(reserve);
-      Log.d("call", "");
-    }
-
-    c.close();
-    return c;
-  }
 }
