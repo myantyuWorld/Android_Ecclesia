@@ -746,6 +746,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
     //*** --- SELF MADE METHOD --- 会議参加者の社外者に対し、メールを送るため、社外者のメルアドを取得する ***//
     public String[] getOutMembersMailAddr() {
 
+        //***  ***//
         List<OutEmployee> outEmployees = new ArrayList<>();
         for (Person m : reserve.getRe_member()){
             if (m instanceof OutEmployee) {
