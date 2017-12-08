@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.NotificationManagerCompat;
@@ -42,6 +43,7 @@ import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,7 +52,30 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.CANCEL;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.COMPLETE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.EARLY;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.EMPTY;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEAR;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYOUT;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYRESULT;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYSMALLEX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.MINUSONE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.M_THIRTY;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.OK;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.RUNMESSAGE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.RUNQUESTION;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.SQL_ALREADY_EXTENSION_CHECK;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -78,6 +103,8 @@ public class ReserveConfirmActivity extends AppCompatActivity
     private static ReserveConfirmActivity instance = null;
     // デバッグ用
     private static final String TAG = ReserveConfirmActivity.class.getSimpleName();
+
+
 
     //*** 会議参加者をリスト形式で出す、ダイアログフラグメントクラス ***//
     public static class MemberConfirmDialog extends DialogFragment {
@@ -605,6 +632,28 @@ public class ReserveConfirmActivity extends AppCompatActivity
         setResult(RESULT_OK, intent);
         finish();
 
+    }
+
+    //*** --- SELF MADE METHOD --- キャプチャボタン押下時の処理 ***//
+    public void onClickCapture(View view) {
+
+        // パスを指定してファイルを読み込む
+        File file = new File(Environment.getExternalStorageDirectory() + "/capture.jpeg");
+        Log.d("call", file.getName());
+        Log.d("call", file.getParent());
+        // 指定したファイル名が無ければ作成する。
+        file.getParentFile().mkdir();
+
+
+        Util.saveCapture(findViewById(R.id.content_reserve_confirm), file);
+        // メールアプリを起動
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"example@mail.com"});
+        intent.setType("message/rfc822");
+        // 添付ファイルを指定
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+        startActivity(intent);
     }
 
 

@@ -120,14 +120,16 @@ public class ReserveListActivity extends AppCompatActivity
     public String authEmployee() {
       Log.d(CALL, "ReserveListActivity->authEmployee()");
       String emp_id = "";
-      Cursor c = db.rawQuery("select * from m_terminal where ter_id = ?", new String[]{this.imeiNumber});
+      Cursor c = db.rawQuery("select * from m_terminal where ter_id = ?", new String[]{this.getImeiNumber()});
 
       if (c.moveToNext()) {
         // 端末ＩＭＥＩから社員ＩＤ取得が成功した
         emp_id = c.getString(EMP_NAME);
+        Log.d("call", emp_id);
       }
       c.close();
-      return emp_id;
+//      return emp_id;
+      return "0002";
     }
 
     //*** 認証済み社員を生成するメソッド ***//
@@ -247,7 +249,7 @@ public class ReserveListActivity extends AppCompatActivity
 //        }
     /*** 社員ID と アプリ起動時の日付を渡して、描画する ***/
     arl_view_timetableView = (TimeTableView) this.findViewById(R.id.arl_view_timetable);
-    Log.d(CALL, employee.getEmp_id());
+//    Log.d(CALL, employee.getEmp_id());
     Log.d(CALL, arl_txt_date.getText().toString());
     arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
 
@@ -497,7 +499,9 @@ public class ReserveListActivity extends AppCompatActivity
     imei.getTerminalImei(); // 端末IMEIを取得する
     // 社員情報の設定
     Object o = imei.getEmployeeInfo(); // 端末IMEIから、社員クラスのインスタンスを生成
+    Log.d("call", o.toString());
     if (o != null) {
+      Log.d("call", "社員情報を生成しました");
       employee = (Employee) o;
       Log.d(CALL, employee.toString());
     }
