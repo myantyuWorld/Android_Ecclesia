@@ -106,6 +106,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
 
 
+
     //*** 会議参加者をリスト形式で出す、ダイアログフラグメントクラス ***//
     public static class MemberConfirmDialog extends DialogFragment {
         // ダイアログを生成するメソッド
@@ -649,18 +650,14 @@ public class ReserveConfirmActivity extends AppCompatActivity
         // メールアプリを起動
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"example@mail.com"});
+
+        //*** 会議参加者の社外者に対し、メールを送るため、社外者のメルアドを取得する ***//
+        intent.putExtra(Intent.EXTRA_EMAIL, getOutMembersMailAddr()); //*** 社外者のメルアドリストをセットする ***//
         intent.setType("message/rfc822");
         // 添付ファイルを指定
         intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
         startActivity(intent);
     }
-
-
-    //*** ------------------------ ***//
-    //*** --- SELF MADE METHOD --- ***//
-    //*** ------------------------ ***//
-
     //*** --- SELF MADE METHOD --- 各ウィジェットの初期化処理メソッド ***//
     public void init() {
         btn_confirm = (Button) findViewById(R.id.arconfirm_btn_mem_confirm);    //*** 参加者確認ボタン ***//
@@ -740,5 +737,24 @@ public class ReserveConfirmActivity extends AppCompatActivity
         Notification notification = builder.build();
         NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
         manager.notify(123, notification);
+    }
+
+    //*** --- SELF MADE METHOD --- 会議参加者の社外者に対し、メールを送るため、社外者のメルアドを取得する ***//
+    public String[] getOutMembersMailAddr() {
+
+        List<OutEmployee> outEmployees = new ArrayList<>();
+        for (Person m : reserve.getRe_member()){
+            if (m instanceof OutEmployee) {
+                outEmployees.add((OutEmployee) m);
+            }
+        }
+        String[] outMember = new String[outEmployees.size()];
+        int cnt = 0;
+        for (OutEmployee o : outEmployees) {
+            outMember[cnt] = o.getMailaddr();
+            Log.d("call", o.getMailaddr());
+        }
+
+        return outMember;
     }
 }
