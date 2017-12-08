@@ -54,11 +54,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.NONE;
 // _/_/ 予約状況(リストで視覚的にわかりやすい）を表示するアクティビティ
 // _/_/
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-// TODO: 2017/09/19  長押し対応は無理か？ 一覧での、タップは反応するが、長押しには反応しない・・・
 //*** オブジェクト渡しのはいし OK ***//
-// TODO: 2017/11/13 新規登録した会議をタップすると、purName がnullで落ちる
-// DO: 2017/11/13 赤は、自分、白は他人を説明するようなCanvasの追加？わかりにくい
-// TODO: 2017/11/13 会議優先度がないと、わかりにくい
 public class ReserveListActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -261,31 +257,6 @@ public class ReserveListActivity extends AppCompatActivity
         d.show(getFragmentManager(), "dateDialog");
       }
     });
-//    arl_txt_date.setOnClickListener(view -> {
-//      Log.d(TAG, "arl_txt_date click!");
-//      MyDialog d = new MyDialog();
-//      d.show(getFragmentManager(), "dateDialog");
-//    });
-
-    /*** 予約情報リストの同期エラーがでるため、コメアウトします ***/
-//        Button btPrev = (Button) findViewById(R.id.bt_prev);
-//        btPrev.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(ReserveListActivity.this, "Prev", Toast.LENGTH_SHORT).show();
-//                getReserveInfo();
-//                arl_view_timetableView.reView(reserveInfo);
-//            }
-//        });
-//        Button btNext = (Button) findViewById(R.id.bt_next);
-//        btNext.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(ReserveListActivity.this, "Next", Toast.LENGTH_SHORT).show();
-//                getReserveInfo();
-//                arl_view_timetableView.reView(reserveInfo);
-//            }
-//        });
     Button arl_btn_search = (Button) findViewById(R.id.arl_btn_search);
     arl_btn_search.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -295,12 +266,6 @@ public class ReserveListActivity extends AppCompatActivity
         arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
       }
     });
-//    arl_btn_search.setOnClickListener(v -> {
-//      Toast.makeText(ReserveListActivity.this, arl_txt_date.getText().toString(), Toast.LENGTH_SHORT).show();
-////         DO: 2017/10/04 自分の予約情報をもっているリストを一回クリアしないと、前の情報も描画されてしまう
-//      arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
-//    });
-
     /***
      *
      * 実験用：ステータス通知を出す隠し機能
@@ -311,31 +276,6 @@ public class ReserveListActivity extends AppCompatActivity
      ***/
     arl_btn_search.setOnLongClickListener(v -> {
       Log.d(CALL, "call ReserveListActivity.onLongClick()");
-//        Toast.makeText(ReserveListActivity.this, "aaaaaaaaa", Toast.LENGTH_SHORT).show();
-//
-//        Intent intent = new Intent(Intent.ACTION_VIEW);
-//        intent.setData(Uri.parse("http://www.google.com/"));
-//
-//        PendingIntent pendingIntent = PendingIntent.getActivity(
-//            ReserveListActivity.getInstance().getApplicationContext(),
-//            0,
-//            intent,
-//            0
-//        );
-//
-//        Notification notification = new Notification.Builder(ReserveListActivity.getInstance().getApplicationContext())
-//            .setContentTitle("タイトル！")
-//            .setContentText("お知らせぜよ～～")
-//            .addAction(R.drawable.aaa, "決まりて：押し出し", pendingIntent)
-//            .setContentIntent(pendingIntent)
-//            .setSmallIcon(R.drawable.aaa)
-//            .setAutoCancel(true)
-//            .build();
-//
-//        NotificationManager nm = (NotificationManager)
-//            getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//        nm.notify(1000, notification);
 
       //*** AlarmManagerで指定した日時にNotificationを送る実験 ***//
       //*** 作品展の実演用に残しておく ***//
@@ -352,8 +292,6 @@ public class ReserveListActivity extends AppCompatActivity
       alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
       return false;
     });
-
-
   }
 
   @Override
@@ -363,18 +301,6 @@ public class ReserveListActivity extends AppCompatActivity
     helper.close();
 
   }
-  //    @Override
-//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-//        super.onCreateContextMenu(menu, v, menuInfo);
-//        getMenuInflater().inflate(R.menu.menu, menu);
-//    }
-//
-//    @Override
-//    public boolean onContextItemSelected(MenuItem item) {
-//        Toast.makeText(getApplicationContext(), "ContextMenu click!", Toast.LENGTH_SHORT).show();
-//        return true;
-//    }
-
   //*** 戻るボタン押下時の処理 ***//
   @Override
   public void onBackPressed() {
@@ -452,6 +378,7 @@ public class ReserveListActivity extends AppCompatActivity
         intent.putExtra("emp_id", employee.getEmp_id());
         intent.putExtra("date", arl_txt_date.getText().toString()); //*** 選択されている日付をインテント渡し ***//
         intent.putExtra("roomId", info[1]);                         //*** 会議室IDを渡す ***//
+        intent.putExtra("hour", arl_view_timetableView.hour);
 
         startActivity(intent);  //*** 新規予約登録画面 ***//
       } else if (info[2].equals("itiran")) {
@@ -531,14 +458,6 @@ public class ReserveListActivity extends AppCompatActivity
       reserves.add(r);  //*** 会議インスタンス追加 ***//
     }
     c.close();
-
-    //*** 取得した会議リスト全件ループ ***//
-//    reserves.forEach(r -> {
-//      //*** AlarmManagerの登録 ***//
-//
-//    });
-
-
   }
 
   public void onReturnValue(String authFlg) {

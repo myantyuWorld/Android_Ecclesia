@@ -84,8 +84,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // DO: 2017/09/19 延長ダイアログの正常動作の実装
 // TODO: 2017/09/19 延長ダイアログのレイアウト調整およびデザインの考察
-public class ReserveConfirmActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class ReserveConfirmActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String NON_AUTH = "0";
     private MyHelper helper = new MyHelper(this);
@@ -103,6 +102,7 @@ public class ReserveConfirmActivity extends AppCompatActivity
     private static ReserveConfirmActivity instance = null;
     // デバッグ用
     private static final String TAG = ReserveConfirmActivity.class.getSimpleName();
+
 
 
 
@@ -636,31 +636,32 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     //*** --- SELF MADE METHOD --- キャプチャボタン押下時の処理 ***//
     public void onClickCapture(View view) {
+        String[] outMember = getOutMembersMailAddr();
+        if (outMember.length > 0) {
+            // パスを指定してファイルを読み込む
+            File file = new File(Environment.getExternalStorageDirectory() + "/capture.jpeg");
+            Log.d("call", file.getName());
+            Log.d("call", file.getParent());
+            // 指定したファイル名が無ければ作成する。
+            file.getParentFile().mkdir();
 
-        // パスを指定してファイルを読み込む
-        File file = new File(Environment.getExternalStorageDirectory() + "/capture.jpeg");
-        Log.d("call", file.getName());
-        Log.d("call", file.getParent());
-        // 指定したファイル名が無ければ作成する。
-        file.getParentFile().mkdir();
 
+            Util.saveCapture(findViewById(R.id.content_reserve_confirm), file);
+            // メールアプリを起動
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
 
-        Util.saveCapture(findViewById(R.id.content_reserve_confirm), file);
-        // メールアプリを起動
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"example@mail.com"});
-        intent.setType("message/rfc822");
-        // 添付ファイルを指定
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-        startActivity(intent);
+            //*** 会議参加者の社外者に対し、メールを送るため、社外者のメルアドを取得する ***//
+            intent.putExtra(Intent.EXTRA_EMAIL, outMember); //*** 社外者のメルアドリストをセットする ***//
+            intent.setType("message/rfc822");
+            // 添付ファイルを指定
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+            startActivity(intent);
+        } else {
+            Toast.makeText(getApplicationContext(), "社外参加者は存在しません", Toast.LENGTH_SHORT).show();
+        }
+
     }
-
-
-    //*** ------------------------ ***//
-    //*** --- SELF MADE METHOD --- ***//
-    //*** ------------------------ ***//
-
     //*** --- SELF MADE METHOD --- 各ウィジェットの初期化処理メソッド ***//
     public void init() {
         btn_confirm = (Button) findViewById(R.id.arconfirm_btn_mem_confirm);    //*** 参加者確認ボタン ***//
@@ -740,5 +741,25 @@ public class ReserveConfirmActivity extends AppCompatActivity
         Notification notification = builder.build();
         NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
         manager.notify(123, notification);
+    }
+
+    //*** --- SELF MADE METHOD --- 会議参加者の社外者に対し、メールを送るため、社外者のメルアドを取得する ***//
+    public String[] getOutMembersMailAddr() {
+
+        //***  ***//
+        List<OutEmployee> outEmployees = new ArrayList<>();
+        for (Person m : reserve.getRe_member()){
+            if (m instanceof OutEmployee) {
+                outEmployees.add((OutEmployee) m);
+            }
+        }
+        String[] outMember = new String[outEmployees.size()];
+        int cnt = 0;
+        for (OutEmployee o : outEmployees) {
+            outMember[cnt] = o.getMailaddr();
+            Log.d("call", o.getMailaddr());
+        }
+
+        return outMember;
     }
 }

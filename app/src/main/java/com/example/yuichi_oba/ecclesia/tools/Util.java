@@ -184,7 +184,7 @@ public class Util {
 
     String roomName = "";
     if (c.moveToNext()) {
-      roomName = c.getString(0);    //*** 会議室ID ***//
+      roomName = c.getString(1);    //*** 会議室ID ***//
     }
     c.close();
 
