@@ -278,7 +278,6 @@ public class HistorySearchActivity extends AppCompatActivity
 
                 return f;
             }
-
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults results) {
                 Log.d("call", "protected void publishResults(CharSequence charSequence, FilterResults results) ");
@@ -289,13 +288,15 @@ public class HistorySearchActivity extends AppCompatActivity
                     List<Reserve> list = (List<Reserve>) results.values;
                     listItems.clear();
                     listItems = (ArrayList<Reserve>) list;
-//          reserves.clear();
-//          reserves = (ArrayList<Reserve>) list;
-//          for (Reserve reserve : reserves) {
-//            Log.d("call", reserve.toString());
-//          }
+                    //*** アダプターにアイテムリストをセット ***//
+                    adapter1 = new MyListAdapter(HistorySearchActivity.this);
+                    adapter1.setItemList(listItems);
+                    listView.setAdapter(adapter1);
                     notifyDataSetChanged();
-                    onResume();
+//                    onResume();
+                }
+ else {
+                    notifyDataSetInvalidated();
                 }
             }
         }
@@ -632,19 +633,19 @@ public class HistorySearchActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    protected void onResume() {
-        Log.d("call", "protected void onResume() {");
-        super.onResume();
-
-        adapter1 = new MyListAdapter(this);
-        listView = (ListView) findViewById(R.id.ahs_lis_history);
-        //*** アダプターにアイテムリストをセット ***//
-        adapter1.setItemList(listItems);
-        listView.setAdapter(adapter1);
-
-
-    }
+//    @Override
+//    protected void onResume() {
+//        Log.d("call", "protected void onResume() {");
+//        super.onResume();
+//
+//        adapter1 = new MyListAdapter(this);
+//        listView = (ListView) findViewById(R.id.ahs_lis_history);
+//        //*** アダプターにアイテムリストをセット ***//
+//        adapter1.setItemList(listItems);
+//        listView.setAdapter(adapter1);
+//
+//
+//    }
 
     // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
     // _/_/
