@@ -127,6 +127,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
   public static float x = 0;    // タップしたｘ座標
   public static float y = 0;    // タップしたｙ座標
+  public Integer hour = 0;
 
   GestureDetector detector;
 
@@ -433,11 +434,70 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
         y = e.getY();
         Log.d(CALL, e.getX() + " : " + e.getY());
         Log.d(CALL, String.valueOf(x) + " : " + String.valueOf(y));
+        // TODO: 2017/12/08 タップしたｙ軸で、時間帯を特定・設定する ]
+        hour = getYOfCoodinate(y);
+        Log.d("call", hour.toString());
         break;
     }
     if (detector.onTouchEvent(e)) return true;
 
     return true;
+  }
+
+  private Integer getYOfCoodinate(float y) {
+    Integer hour = Math.round(y / 10) * 10;
+    if (100 <= hour && hour < 180) {
+      return 0;
+    } else if (180 <= hour && hour <= 260) {
+      return 1;
+    } else if (260 <= hour && hour <= 340) {
+      return 2;
+    } else if (340 <= hour && hour <= 420) {
+      return 3;
+    }else if (420 <= hour && hour <= 500) {
+      return 4;
+    }else if (500 <= hour && hour <= 580) {
+      return 5;
+    }else if (580 <= hour && hour <= 640) {
+      return 6;
+    }else if (720 <= hour && hour <= 800) {
+      return 7;
+    }else if (800 <= hour && hour <= 880) {
+      return 8;
+    }else if (880 <= hour && hour <= 960) {
+      return 9;
+    }else if (960 <= hour && hour <= 1040) {
+      return 10;
+    }else if (1040 <= hour && hour <= 1120) {
+      return 11;
+    }else if (1120 <= hour && hour <= 1200) {
+      return 12;
+    }else if (1200 <= hour && hour <= 1280) {
+      return 13;
+    }else if (1280 <= hour && hour <= 1360) {
+      return 14;
+    }else if (1360 <= hour && hour <= 1440) {
+      return 15;
+    }else if (1440 <= hour && hour <= 1520) {
+      return 16;
+    }else if (1520 <= hour && hour <= 1600) {
+      return 17;
+    }else if (1600 <= hour && hour <= 1680) {
+      return 18;
+    }else if (1680 <= hour && hour <= 1760) {
+      return 19;
+    }else if (1760 <= hour && hour <= 1840) {
+      return 20;
+    }else if (1840 <= hour && hour <= 1920) {
+      return 21;
+    }else if (1920 <= hour && hour <= 2000) {
+      return 22;
+    }else if (2000 <= hour && hour <= 2080) {
+      return 23;
+    }else if (2080 <= hour && hour <= 2160) {
+      return 24;
+    }
+    return 7;
   }
 
   //*** 再描画を行うメソッド ***//

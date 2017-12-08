@@ -378,6 +378,7 @@ public class ReserveListActivity extends AppCompatActivity
         intent.putExtra("emp_id", employee.getEmp_id());
         intent.putExtra("date", arl_txt_date.getText().toString()); //*** 選択されている日付をインテント渡し ***//
         intent.putExtra("roomId", info[1]);                         //*** 会議室IDを渡す ***//
+        intent.putExtra("hour", arl_view_timetableView.hour);
 
         startActivity(intent);  //*** 新規予約登録画面 ***//
       } else if (info[2].equals("itiran")) {

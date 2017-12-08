@@ -203,6 +203,8 @@ public class ReserveActivity extends AppCompatActivity
     Intent intent = getIntent();
 //        employee = (Employee) intent.getSerializableExtra("emp");   //*** 社員インスタンス ***//
     String emp_id = intent.getStringExtra("emp_id");
+    Integer hour = intent.getIntExtra("hour", 0);
+    Log.d("call", "渡された時間帯 : " + hour);
     MyHelper helper = new MyHelper(this);
     db = helper.getWritableDatabase();
     Cursor c = db.rawQuery("select * from v_employee where emp_id = ?", new String[]{emp_id});
@@ -263,6 +265,11 @@ public class ReserveActivity extends AppCompatActivity
     //*** 参加者をからにする ***//
     Log.d(CALL, "参加者を殻にします");
     member.clear();
+
+    //*** 受け取った時間帯で、会議の開始時刻を設定する ***//
+    String format = "%d：00";
+    btStartTime.setText(String.format(format, hour));
+    btEndTime.setText(String.format(format, hour + 2));
 
   }
 
