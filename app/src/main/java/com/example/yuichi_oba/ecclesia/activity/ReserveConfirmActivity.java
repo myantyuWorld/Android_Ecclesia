@@ -84,8 +84,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // DO: 2017/09/19 延長ダイアログの正常動作の実装
 // TODO: 2017/09/19 延長ダイアログのレイアウト調整およびデザインの考察
-public class ReserveConfirmActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class ReserveConfirmActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String NON_AUTH = "0";
     private MyHelper helper = new MyHelper(this);
