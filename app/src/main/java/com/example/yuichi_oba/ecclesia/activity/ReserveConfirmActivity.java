@@ -637,26 +637,31 @@ public class ReserveConfirmActivity extends AppCompatActivity
 
     //*** --- SELF MADE METHOD --- キャプチャボタン押下時の処理 ***//
     public void onClickCapture(View view) {
+        String[] outMember = getOutMembersMailAddr();
+        if (outMember.length > 0) {
+            // パスを指定してファイルを読み込む
+            File file = new File(Environment.getExternalStorageDirectory() + "/capture.jpeg");
+            Log.d("call", file.getName());
+            Log.d("call", file.getParent());
+            // 指定したファイル名が無ければ作成する。
+            file.getParentFile().mkdir();
 
-        // パスを指定してファイルを読み込む
-        File file = new File(Environment.getExternalStorageDirectory() + "/capture.jpeg");
-        Log.d("call", file.getName());
-        Log.d("call", file.getParent());
-        // 指定したファイル名が無ければ作成する。
-        file.getParentFile().mkdir();
 
+            Util.saveCapture(findViewById(R.id.content_reserve_confirm), file);
+            // メールアプリを起動
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
 
-        Util.saveCapture(findViewById(R.id.content_reserve_confirm), file);
-        // メールアプリを起動
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
+            //*** 会議参加者の社外者に対し、メールを送るため、社外者のメルアドを取得する ***//
+            intent.putExtra(Intent.EXTRA_EMAIL, outMember); //*** 社外者のメルアドリストをセットする ***//
+            intent.setType("message/rfc822");
+            // 添付ファイルを指定
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+            startActivity(intent);
+        } else {
+            Toast.makeText(getApplicationContext(), "社外参加者は存在しません", Toast.LENGTH_SHORT).show();
+        }
 
-        //*** 会議参加者の社外者に対し、メールを送るため、社外者のメルアドを取得する ***//
-        intent.putExtra(Intent.EXTRA_EMAIL, getOutMembersMailAddr()); //*** 社外者のメルアドリストをセットする ***//
-        intent.setType("message/rfc822");
-        // 添付ファイルを指定
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-        startActivity(intent);
     }
     //*** --- SELF MADE METHOD --- 各ウィジェットの初期化処理メソッド ***//
     public void init() {
