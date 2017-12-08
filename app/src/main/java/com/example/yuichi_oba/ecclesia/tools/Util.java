@@ -3,7 +3,9 @@ package com.example.yuichi_oba.ecclesia.tools;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.View;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
@@ -13,6 +15,9 @@ import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.OutEmployee;
 import com.example.yuichi_oba.ecclesia.model.Person;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -399,5 +404,51 @@ public class Util {
     }
     return "NG";
   }
+
+  /**
+   * キャプチャを撮る
+   * @return 撮ったキャプチャ(Bitmap)
+   */
+  public static Bitmap getViewCapture(View view) {
+    view.setDrawingCacheEnabled(true);
+
+    // Viewのキャッシュを取得
+    Bitmap cache = view.getDrawingCache();
+    if(cache == null){
+      return null;
+    }
+    Bitmap screenShot = Bitmap.createBitmap(cache);
+    view.setDrawingCacheEnabled(false);
+    return screenShot;
+  }
+
+  /**
+   * 撮ったキャプチャを保存
+   * @param view
+   */
+  public static void saveCapture(View view, File file) {
+    // キャプチャを撮る
+    Bitmap capture = getViewCapture(view);
+    FileOutputStream fos = null;
+    try {
+      fos = new FileOutputStream(file, false);
+      // 画像のフォーマットと画質と出力先を指定して保存
+      assert capture != null;
+      capture.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+      fos.flush();
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      if (fos != null) {
+        try {
+          fos.close();
+        } catch (IOException ie) {
+          fos = null;
+        }
+      }
+    }
+  }
+
+
 
 }
