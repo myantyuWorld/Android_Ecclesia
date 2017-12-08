@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -97,6 +98,7 @@ public class HistorySearchActivity extends AppCompatActivity
     //  MyListAdapter adapter1 = new MyListAdapter(HistorySearchActivity.getInstance());
     MyListAdapter adapter1;
 
+    private List<Reserve> BackData;
     private MyHelper helper = new MyHelper(this);
     public static SQLiteDatabase db;
     private Employee employee;
@@ -261,14 +263,20 @@ public class HistorySearchActivity extends AppCompatActivity
             @Override
             protected FilterResults performFiltering(CharSequence c) {
                 Log.d("call", "protected FilterResults performFiltering(CharSequence c) ");
+                FilterResults results = new FilterResults();
                 List<Reserve> list = new ArrayList<>();
 
-                for (int i = 0, size = getCount(); i < size; i++) {
-                    Reserve d = (Reserve) getItem(i);
-                    if (d.getRe_name() != null && d.getRe_name().contains(c)
-                            || d.getRe_company() != null && d.getRe_company().contains(c)
-                            || d.getRe_startDay() != null && d.getRe_startDay().contains(c)) {
-                        list.add(d);
+                //*** 検索ボックスのコンテンツが空った場合は元のデータを復元 ***//
+                if (TextUtils.isEmpty(listView.getTextFilter())) {
+                    list = reserves;
+                } else {
+                    for (int i = 0, size = getCount(); i < size; i++) {
+                        Reserve d = (Reserve) getItem(i);
+                        if (d.getRe_name() != null && d.getRe_name().contains(c)
+                                || d.getRe_company() != null && d.getRe_company().contains(c)
+                                || d.getRe_startDay() != null && d.getRe_startDay().contains(c)) {
+                            list.add(d);
+                        }
                     }
                 }
                 FilterResults f = new FilterResults();
@@ -286,7 +294,7 @@ public class HistorySearchActivity extends AppCompatActivity
                     Log.d("call", String.format("result count :: %d", results.count));
                     // TODO 12/05 : メソッド内容を考える;
                     List<Reserve> list = (List<Reserve>) results.values;
-                    listItems.clear();
+                    list.clear();
                     listItems = (ArrayList<Reserve>) list;
                     //*** アダプターにアイテムリストをセット ***//
                     adapter1 = new MyListAdapter(HistorySearchActivity.this);
@@ -294,8 +302,7 @@ public class HistorySearchActivity extends AppCompatActivity
                     listView.setAdapter(adapter1);
                     notifyDataSetChanged();
 //                    onResume();
-                }
- else {
+                } else {
                     notifyDataSetInvalidated();
                 }
             }
