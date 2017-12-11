@@ -67,7 +67,6 @@ public class ReserveChangeActivity extends AppCompatActivity
     Employee employee;
     Button editBtn;
     public static String[] changes ;
-//    List<Person> memberList = new ArrayList<>();
     List<String> changeMember = new ArrayList<>();
 
     //*** メンバーに変更が生じたかの判定 ***//
@@ -140,14 +139,12 @@ public class ReserveChangeActivity extends AppCompatActivity
             int sum = ZERO;
             //*** メンバーリストを再度作成 ***//
             for (Person per : changeRes.getRe_member()){
-//            changeRes.getRe_member().forEach(per -> {
                 String posName;
                 if (per instanceof Employee) {
                     changeMember.add("社内 : " + per.getName());
                     posName = ((Employee) per).getPos_name();
                 }
                 else {
-//                    member.add(changeRes.getRe_company() + " ： " + p.getName());
                     posName = ((OutEmployee) per).getPos_name();
                     Log.d("change", "社外者");
                 }
@@ -180,7 +177,6 @@ public class ReserveChangeActivity extends AppCompatActivity
         editBtn = (Button) findViewById(R.id.acchange_btn_confirm);
         inout = (Switch) findViewById(R.id.acchange_sw_inout);
 
-//        SQLiteOpenHelper helper = new DB(getApplicationContext());
         //*** 目的スピナー ***//
         SQLiteDatabase db = helper.getReadableDatabase();
         List<String> purpose = new ArrayList<>();
@@ -200,23 +196,11 @@ public class ReserveChangeActivity extends AppCompatActivity
 
 
         //*** 参加者スピナー ***//
-//        c = db.rawQuery("select emp_name from v_reserve_member where re_id = ? ", new String[]{changeRes.getRe_id()});
-//        while (c.moveToNext()) {
-//            member.add(c.getString(ZERO));
-//        }
-//        c.close();
-//        c = db.rawQuery("select out_name from v_reserve_out_member where re_id = ?", new String[]{changeRes.getRe_id()});
-//        while (c.moveToNext()) {
-//            member.add(c.getString(ZERO));
-//        }
-//        c.close();
         for (Person p :changeRes.getRe_member()){
-//        changeRes.getRe_member().forEach(p -> {
             if (p instanceof Employee) {
                 changeMember.add("社内 : " + p.getName());
             }
             else {
-//                member.add(changeRes.getRe_company() + " ： " + p.getName());
                 Log.d("changeMember", "社外者");
             }
         }c = db.rawQuery("select * from m_room", null);
