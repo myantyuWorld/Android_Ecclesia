@@ -656,6 +656,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
             intent.setType("message/rfc822");
             // 添付ファイルを指定
             intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+            //*** エミュレーターでメールの設定が必要か？ ***//
             startActivity(intent);
         } else {
             Toast.makeText(getApplicationContext(), "社外参加者は存在しません", Toast.LENGTH_SHORT).show();
