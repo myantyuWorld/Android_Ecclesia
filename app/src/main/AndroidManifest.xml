@@ -33,7 +33,13 @@
         <activity
             android:name=".activity.ReserveConfirmActivity"
             android:label="@string/title_activity_reserve_confirm"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.AddMemberActivity"
             android:label="参加者登録" />
