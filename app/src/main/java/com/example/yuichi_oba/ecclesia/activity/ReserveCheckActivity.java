@@ -86,6 +86,8 @@ implements NavigationView.OnNavigationItemSelectedListener{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkRes.setRe_purpose_id(Util.returnPurposeId(checkRes.getRe_purpose_name()));
+
                 //*** 追い出しがあった場合はここで追い出す ***//
                 //*** 優先度による予約不可メッセージはChangeで ***//
                 if (!eviTarget.equals(FALSE) && !eviTarget.equals(TRUE)) {
@@ -146,8 +148,6 @@ implements NavigationView.OnNavigationItemSelectedListener{
 
     public void onClickMemConfirm(View view) {
         //*** 参加者一覧ダイアログを表示する ***//
-//        ReserveConfirmActivity.MemberConfirmDialog dialog = new ReserveConfirmActivity.MemberConfirmDialog();
-//        dialog.show(getFragmentManager(), "confirm_a");
         Bundle bundle = new Bundle();
         bundle.putSerializable("checkRes", checkRes);
         ChangeMemberConfirmDialog dialog = new ChangeMemberConfirmDialog();
