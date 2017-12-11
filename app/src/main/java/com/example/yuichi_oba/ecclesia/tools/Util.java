@@ -14,6 +14,7 @@ import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.OutEmployee;
 import com.example.yuichi_oba.ecclesia.model.Person;
+import com.example.yuichi_oba.ecclesia.model.Reserve;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -447,6 +448,33 @@ public class Util {
         }
       }
     }
+  }
+
+  public static Reserve getReserveInfo(String reId){
+    MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
+    SQLiteDatabase db = helper.getWritableDatabase();
+    Cursor c = db.rawQuery("select * from v_reserve_member where re_id = ?", new String[]{reId});
+    Reserve r = new Reserve();
+    // TODO: 2017/12/11 ここ、不十分にとっているので通知の画面遷移でエラーでますよ
+    if (c.moveToNext()) {
+      //*** 追い出し対象の予約インスタンスを生成 ***//
+      r.setRe_id(reId);         //*** 予約ID ***//
+      r.setRe_name(c.getString(1));           //*** 概要 ***//
+      r.setRe_startDay(c.getString(2));       //*** 開始日時 ***//
+      r.setRe_endDay(c.getString(3));         //*** 終了日時 ***//
+      r.setRe_startTime(c.getString(4));      //*** 開始時刻 ***//
+      r.setRe_endTime(c.getString(5));        //*** 終了時刻 ***/
+      r.setRe_switch(c.getString(6));         //*** 社内社外区分 ***//
+      r.setRe_fixtures(c.getString(7));       //*** 備品 ***//
+      r.setRe_remarks(c.getString(8));        //*** 備考 ***//
+      r.setRe_room_id(c.getString(10));       //*** 会議室ID ***//
+      r.setRe_room_name(Util.returnRoomName(r.getRe_room_id()));
+      r.setRe_purpose_name(c.getString(19));  //*** 会議目的名 ***//
+        r.setRe_applicant(c.getString(21));
+    }
+    c.close();
+
+    return r;
   }
 
 

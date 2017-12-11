@@ -187,7 +187,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
     }
 
   //*** 延長ないし早期退出完了通知のダイアログフラグメントクラス ***//
-  public static class ResultDialog extends DialogFragment {
+    public static class ResultDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       String str = EMPTY, title = EMPTY;
@@ -298,32 +298,60 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(CALL, "ReserveConfirmActivity->onCreate()");
 
-//        helper = new DB(getApplicationContext());
-
         //*** 前画面からの引数を受け取る ***//
         Intent intent = getIntent();
-        gamen = intent.getStringExtra("gamen").contains("0") ? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***//
-
-
+//        gamen = intent.getStringExtra("gamen").contains("0") ? "新規" : "一覧"; //*** 0: 新規  1: 一覧　からの画面遷移 ***//
+        String gamenCode = intent.getStringExtra("gamen");
+        switch (gamenCode) {
+            case "0":
+                gamen = "新規";
+                break;
+            case "1":
+                gamen = "一覧";
+                break;
+            case "2":
+                gamen = "通知";
+                break;
+        }
         Log.d(CALL, "画面遷移元　" + gamen);
+//        //*** 画面遷移元によって、処理を分ける ***//
+//        if (gamen.contains("新規")) {    //*** 「新規」画面からの画面遷移 ***//
+//            employee = (Employee) intent.getSerializableExtra("emp");        //*** 社員情報の取得 ***//
+//            reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
+//
+//        } else {                         //*** 「一覧」画面からの画面遷移 ***//
+//            reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
+//            Log.d("call", reserve.toString());
+//            employee = (Employee) intent.getSerializableExtra("employee");
+//            Log.d("Emp in Confirm:", employee.toString());
+//
+////          btn_confirm = (Button) findViewById(R.id.arconfirm_btn_mem_confirm);    //*** 参加者確認ボタン ***//
+////          btn_confirm.setText("戻る");
+//        }
         //*** 画面遷移元によって、処理を分ける ***//
-        if (gamen.contains("新規")) {    //*** 「新規」画面からの画面遷移 ***//
-            employee = (Employee) intent.getSerializableExtra("emp");        //*** 社員情報の取得 ***//
-            reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
+        switch(gamen){
+            case "新規":
+                employee = (Employee) intent.getSerializableExtra("emp");        //*** 社員情報の取得 ***//
+                reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
+                reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
+                break;
+            case "通知":
+                String reId = intent.getStringExtra("reId");
+                reserve = Util.getReserveInfo(reId);
+                break;
+            default:
+                reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
+                Log.d("call", reserve.toString());
+                employee = (Employee) intent.getSerializableExtra("employee");
+                Log.d("Emp in Confirm:", employee.toString());
+                reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
+                break;
 
-        } else {                         //*** 「一覧」画面からの画面遷移 ***//
-            reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
-            Log.d("call", reserve.toString());
-            employee = (Employee) intent.getSerializableExtra("employee");
-            Log.d("Emp in Confirm:", employee.toString());
-
-//          btn_confirm = (Button) findViewById(R.id.arconfirm_btn_mem_confirm);    //*** 参加者確認ボタン ***//
-//          btn_confirm.setText("戻る");
         }
         instance = this;
 
 //    intent.getIntExtra("gamen", 1);
-        reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
+//        reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
 
         /***
          * レイアウト情報をマッピングする
@@ -346,16 +374,11 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        /***
-         * ここまで
-         */
-        if (gamen.contains("一覧")) {
+
+        if (gamen.equals("一覧")) {
             btn_confirm = (Button) findViewById(R.id.arconfirm_btn_correct);
             btn_confirm.setText("戻る");
         }
-
-        // 予約詳細をDB検索して、画面にマッピングするメソッド
-//        dbSearchReserveConfirm();
     }
 
     //*** アクティビティのライフサイクルとして、別の画面にいってまた帰ってきたとき、コールされる ***//
@@ -625,6 +648,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
         //*** 画面を殺す 結果を、ReserveActivityに返す ***//
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
+        Toast.makeText(getApplicationContext(), "予約を確定しました", Toast.LENGTH_SHORT).show();
         finish();
 
     }
@@ -641,13 +665,9 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
             file.getParentFile().mkdir();
 
 
-            Util.saveCapture(findViewById(R.id.content_reserve_confirm), file);
-            // メールアプリを起動
             Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_SEND);
-
-            //*** 会議参加者の社外者に対し、メールを送るため、社外者のメルアドを取得する ***//
-            intent.putExtra(Intent.EXTRA_EMAIL, outMember); //*** 社外者のメルアドリストをセットする ***//
+            Util.saveCapture(findViewById(R.id.content_reserve_confirm), file); //*** 会議参加者の社外者に対し、メールを送るため、社外者のメルアドを取得する ***//
+                    intent.putExtra(Intent.EXTRA_EMAIL, outMember); //*** 社外者のメルアドリストをセットする ***//
             intent.setType("message/rfc822");
             // 添付ファイルを指定
             intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
@@ -655,7 +675,11 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
             //*** 学校でメールアプリ立ち上げて設定しようとすると失敗…要自宅検証 ***//
             //*** googleアカウンコ追加してgMailしたほうが早いのかもしれない ***//
             //*** どのみち学校ではgoogleアカウンコ追加も無理っぽい。ネットの関係か？ ***//
-            startActivity(intent);
+//            startActivity(intent); file);
+            // メールアプリを起動
+            intent.setAction(Intent.ACTION_SEND);
+
+
         } else {
             Toast.makeText(getApplicationContext(), "社外参加者は存在しません", Toast.LENGTH_SHORT).show();
         }
@@ -717,14 +741,18 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
         c.close();
 
         //*** ステータス通知をタップで、どの処理を行うか設定 ***//
-        Intent intent = new Intent(Intent.ACTION_VIEW);       //*** 通知押下で遷移するIntent ***//
-        intent.setData(Uri.parse("http://www.google.com/"));  //***  ***//
+//        Intent intent = new Intent(Intent.ACTION_VIEW);       //*** 通知押下で遷移するIntent ***//
+        Intent intent = new Intent(getApplicationContext(), ReserveConfirmActivity.class);
+        intent.putExtra("reId", r.getRe_id());
+        intent.putExtra("gamen", "2");
+        // TODO: 2017/12/11 ヘッドアップ通知で遷移する画面を、追い出された会議を見られる画面に変更
+//        intent.setData(Uri.parse("http://www.google.com/"));  //*** ヘッドアップ通知で遷移する画面指定 ***//
 
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 getApplicationContext(),
                 0,
                 intent,
-                0
+                PendingIntent.FLAG_UPDATE_CURRENT
         );
         //*** ヘッドアップ通知 ***//
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
