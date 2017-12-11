@@ -657,6 +657,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
             // 添付ファイルを指定
             intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
             //*** エミュレーターでメールの設定が必要か？ ***//
+            //*** 学校でメールアプリ立ち上げて設定しようとすると失敗…要自宅検証 ***//
             startActivity(intent);
         } else {
             Toast.makeText(getApplicationContext(), "社外参加者は存在しません", Toast.LENGTH_SHORT).show();
