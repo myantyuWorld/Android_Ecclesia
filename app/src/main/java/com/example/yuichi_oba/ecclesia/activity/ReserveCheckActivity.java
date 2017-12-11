@@ -32,15 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.COMPLETE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEVITARGET;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.OK;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.RESERVECHANGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.RUNMESSAGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 public class ReserveCheckActivity extends AppCompatActivity
 implements NavigationView.OnNavigationItemSelectedListener{

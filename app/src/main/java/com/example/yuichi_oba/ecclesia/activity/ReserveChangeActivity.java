@@ -49,18 +49,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.BTNDAYFORMAT;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.EMPTY;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEVITARGET;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ONE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SQL_ROOM_CAPACITY;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 
