@@ -266,7 +266,7 @@ public class HistorySearchActivity extends AppCompatActivity
                 FilterResults f = new FilterResults();
 
                 //*** 検索ボックスのコンテンツが空になった場合は元のデータを復元 ***//
-                //TODO : ココの条件式を考え中;
+
                     for (int i = 0, size = getCount(); i < size; i++) {
                         Reserve d = (Reserve) getItem(i);
                         if (d.getRe_name() != null && d.getRe_name().contains(c)
@@ -274,7 +274,8 @@ public class HistorySearchActivity extends AppCompatActivity
                                 || d.getRe_startDay() != null && d.getRe_startDay().contains(c)) {
                             list.add(d);
                         }
-                        }
+                    }
+                        
 
 
                 f.count = list.size();
