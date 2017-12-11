@@ -200,11 +200,6 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
           title = EARLY + COMPLETE;
           str = EARLY + RUNMESSAGE;
           break;
-
-//        case "change":
-//          title = "変更完了";
-//          str = "変更が完了しました";
-//          break;
             }
 
             return new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(str).setPositiveButton(OK, null).create();

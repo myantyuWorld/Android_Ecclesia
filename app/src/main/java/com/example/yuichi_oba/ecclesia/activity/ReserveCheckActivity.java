@@ -14,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -32,13 +31,23 @@ import com.example.yuichi_oba.ecclesia.tools.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity.NON_AUTH;
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.COMPLETE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEVITARGET;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.OK;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.RESERVECHANGE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.RUNMESSAGE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
 
 public class ReserveCheckActivity extends AppCompatActivity
 implements NavigationView.OnNavigationItemSelectedListener{
     private static ReserveCheckActivity instance = null;
+
+    //*** 追い出しが発生している場合に、追い出す会議IDのIntentを受け取る。なければ"false" ***//
+    String eviTarget;
 
     //*** 変更情報を入力した後の予約インスタンス ***//
     Reserve checkRes;
@@ -60,6 +69,8 @@ implements NavigationView.OnNavigationItemSelectedListener{
 
         //*** 変更箇所入力後の予約インスタンスを受け取る ***//
         checkRes = (Reserve) getIntent().getSerializableExtra(KEYCHECK);
+        //*** 時間重複チェックの結果を受け取る ***//
+        eviTarget = getIntent().getStringExtra(KEYEVITARGET);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -83,40 +94,10 @@ implements NavigationView.OnNavigationItemSelectedListener{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (authFlg.contains(NON_AUTH)) {
-                    //*** 会議の重複をチェックする ***//
-                    String resultCode = checkRes.timeDuplicationCheck(checkRes);
-                    if (resultCode.equals(FALSE)) {
-                        //*** 重複あり ***//
-                        Log.d(CALL, "時間の重複が発生！ 優先度も負けたパターン:処理を抜けます");
-//                        Toast.makeText(this, "予約不可能です", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (resultCode.equals(TRUE)) {
-                        Log.d(CALL, "(重複なし)で追い出しを行わない");
-                    } else {
-                        Log.d(CALL, "追い出し処理検知！追い出された予約情報を通知します");
-                        Log.d(CALL, "追い出しされる予約IDは" + resultCode);
-//                        notificationEviction(resultCode);
-                        checkRes.eviction(resultCode);
-                    }
-
-                    Log.d(CALL, "予約ID:" + checkRes.getRe_id());
-                    checkRes.reserveEdit(setReserveDetail());
-                    checkRes = null;
-                }
-                //*** 管理者認証ずみ ***//
-                else {
-                    //*** 追い出す会議だけ特定して、ヘッドアップ通知を行う ※時間重複も、優先度も関係なし ***//
-                    String resultCode = checkRes.timeDuplicationCheck(checkRes);
-                    Log.d(CALL, resultCode);
-                    if (!resultCode.equals(TRUE) && !resultCode.equals(FALSE)) {
-//                        notificationEviction(resultCode);            //*** 会議追い出し"通知"を行う ***//
-                        checkRes.eviction(resultCode);                //*** 会議の追い出しを行う ***//
-                    }
-                    //*** 会議をインサートする ***//
-//                    checkRes.reserveCorrenct(setReserveDetail());
-                    checkRes.reserveEdit(setReserveDetail());
-                    checkRes = null;
+                //*** 追い出しがあった場合はここで追い出す ***//
+                //*** 優先度による予約不可メッセージはChangeで ***//
+                if (!eviTarget.equals(FALSE) && !eviTarget.equals(TRUE)) {
+                    checkRes.eviction(eviTarget);
                 }
                 reserveChange();
             }

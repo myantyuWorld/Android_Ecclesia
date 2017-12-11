@@ -49,7 +49,18 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.BTNDAYFORMAT;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.EMPTY;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHECK;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEVITARGET;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ONE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.SQL_ROOM_CAPACITY;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 
@@ -61,6 +72,7 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 public class ReserveChangeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    String resultCode;
     Reserve changeRes;
     Employee employee;
     Button editBtn;
@@ -369,21 +381,32 @@ public class ReserveChangeActivity extends AppCompatActivity
 
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+                public void onClick(View v){
 //                setReserveInfo();
-                String result = changeRes.timeDuplicationCheck(changeRes);
-
+//                String result = changeRes.timeDuplicationCheck(changeRes);
                 String member = EMPTY;
                 if (memberChange) {
                     member = SPACE;
                 }
-                //*** 変更後の予約情報をViewで扱う配列に格納 ***//
-                changes = new String[]{changeRes.getRe_name(), changeRes.getRe_purpose_name(), changeRes.getRe_startDay() + SPACE + changeRes.getRe_startTime(), changeRes.getRe_endDay() + SPACE + changeRes.getRe_endTime(),
-                        changeRes.getRe_applicant(), member, changeRes.getRe_switch(), "何々会社", changeRes.getRe_room_name(), changeRes.getRe_fixtures(), changeRes.getRe_remarks()};
 
-                Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
-                intent.putExtra(KEYCHECK, changeRes);
-                startActivity(intent);
+
+                //*** 会議の重複をチェックする ***//
+                resultCode = changeRes.timeDuplicationCheck(changeRes);
+                if (resultCode.equals(FALSE)) {
+                    //*** 重複あり ***//
+                    Log.d(CALL, "予約変更における時間重複＆優先度敗北");
+                    Toast.makeText(getApplicationContext(), "他会議の優先度を下回るため予約不可能です", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    //*** 変更後の予約情報をViewで扱う配列に格納 ***//
+                    changes = new String[]{changeRes.getRe_name(), changeRes.getRe_purpose_name(), changeRes.getRe_startDay() + SPACE + changeRes.getRe_startTime(), changeRes.getRe_endDay() + SPACE + changeRes.getRe_endTime(),
+                            changeRes.getRe_applicant(), member, changeRes.getRe_switch(), "何々会社", changeRes.getRe_room_name(), changeRes.getRe_fixtures(), changeRes.getRe_remarks()};
+                    //*** 以降画面遷移 ***//
+                    Intent intent = new Intent(getApplicationContext(), ReserveCheckActivity.class);
+                    intent.putExtra(KEYCHECK, changeRes);
+                    intent.putExtra(KEYEVITARGET, resultCode);
+                    startActivity(intent);
+                }
             }
         });
 
