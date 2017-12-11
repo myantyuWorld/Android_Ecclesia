@@ -187,7 +187,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
     }
 
   //*** 延長ないし早期退出完了通知のダイアログフラグメントクラス ***//
-  public static class ResultDialog extends DialogFragment {
+    public static class ResultDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       String str = EMPTY, title = EMPTY;
@@ -630,6 +630,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
         //*** 画面を殺す 結果を、ReserveActivityに返す ***//
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
+        Toast.makeText(getApplicationContext(), "予約を確定しました", Toast.LENGTH_SHORT).show();
         finish();
 
     }
@@ -646,13 +647,9 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
             file.getParentFile().mkdir();
 
 
-            Util.saveCapture(findViewById(R.id.content_reserve_confirm), file);
-            // メールアプリを起動
             Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_SEND);
-
-            //*** 会議参加者の社外者に対し、メールを送るため、社外者のメルアドを取得する ***//
-            intent.putExtra(Intent.EXTRA_EMAIL, outMember); //*** 社外者のメルアドリストをセットする ***//
+            Util.saveCapture(findViewById(R.id.content_reserve_confirm), file); //*** 会議参加者の社外者に対し、メールを送るため、社外者のメルアドを取得する ***//
+                    intent.putExtra(Intent.EXTRA_EMAIL, outMember); //*** 社外者のメルアドリストをセットする ***//
             intent.setType("message/rfc822");
             // 添付ファイルを指定
             intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
@@ -660,7 +657,11 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
             //*** 学校でメールアプリ立ち上げて設定しようとすると失敗…要自宅検証 ***//
             //*** googleアカウンコ追加してgMailしたほうが早いのかもしれない ***//
             //*** どのみち学校ではgoogleアカウンコ追加も無理っぽい。ネットの関係か？ ***//
-            startActivity(intent);
+//            startActivity(intent); file);
+            // メールアプリを起動
+            intent.setAction(Intent.ACTION_SEND);
+
+
         } else {
             Toast.makeText(getApplicationContext(), "社外参加者は存在しません", Toast.LENGTH_SHORT).show();
         }
