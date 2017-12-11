@@ -537,14 +537,14 @@ public class Reserve implements Serializable {
   }
 
   //*** --- SELF MADE METHOD --- 予約を変更するメソッド ***//
-  public void reserveEdit(float priorityAverage) {
+  public void reserveEdit() {
     //*** 必要なインスタンスを用意 ***//
 //        SQLiteOpenHelper helper = new DB(ReserveCheckAcetInstance().getApplicationContext());
     MyHelper helper = new MyHelper(ReserveCheckActivity.getInstance().getApplicationContext());
     SQLiteDatabase db = helper.getWritableDatabase();
     //*** SQLでアップデートかける ***//
     db.execSQL(SQL_RESERVE_UPDATE, new Object[]{re_name, re_startDay, re_endDay, re_startTime,
-        re_endTime, re_switch, re_fixtures, re_remarks, priorityAverage, re_room_id
+        re_endTime, re_switch, re_fixtures, re_remarks, re_mem_priority, re_room_id
         , re_purpose_id, re_id});
 
     for (Person person:re_member) {

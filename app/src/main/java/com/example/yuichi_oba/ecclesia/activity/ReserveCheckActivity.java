@@ -91,6 +91,7 @@ implements NavigationView.OnNavigationItemSelectedListener{
                 if (!eviTarget.equals(FALSE) && !eviTarget.equals(TRUE)) {
                     checkRes.eviction(eviTarget);
                 }
+                checkRes.reserveEdit();
                 reserveChange();
             }
         });

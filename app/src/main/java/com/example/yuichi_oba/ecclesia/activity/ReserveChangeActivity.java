@@ -50,6 +50,7 @@ import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.Util.returnPositionId;
 
 //import com.example.yuichi_oba.ecclesia.dialog.AuthDialog;
 
@@ -136,17 +137,24 @@ public class ReserveChangeActivity extends AppCompatActivity
 
             //*** メンバーリスト内容を破棄（同一のものが登録されるため） ***//
             changeMember.clear();
+            int sum = ZERO;
             //*** メンバーリストを再度作成 ***//
             for (Person per : changeRes.getRe_member()){
 //            changeRes.getRe_member().forEach(per -> {
+                String posName;
                 if (per instanceof Employee) {
                     changeMember.add("社内 : " + per.getName());
+                    posName = ((Employee) per).getPos_name();
                 }
                 else {
 //                    member.add(changeRes.getRe_company() + " ： " + p.getName());
+                    posName = ((OutEmployee) per).getPos_name();
                     Log.d("change", "社外者");
                 }
+                sum += Integer.parseInt(returnPositionId(posName).posPriority);
             }
+            changeRes.setRe_mem_priority(sum / changeRes.getRe_member().size());
+
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, changeMember);
             members.setAdapter(adapter);
             memberChange = true;
