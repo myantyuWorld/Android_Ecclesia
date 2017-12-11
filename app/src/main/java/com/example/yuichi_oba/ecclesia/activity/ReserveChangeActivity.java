@@ -248,7 +248,7 @@ public class ReserveChangeActivity extends AppCompatActivity
                 // ここで、参加者
                 Intent intent = new Intent(getApplicationContext(), AddMemberActivity.class);
                 Log.d(CALL, employee.getEmp_id());
-                intent.putExtra("emp_id", employee.getEmp_id());
+                intent.putExtra(KEYEMPID, employee.getEmp_id());
                 startActivityForResult(intent, ONE);
             }
         });
@@ -417,9 +417,9 @@ public class ReserveChangeActivity extends AppCompatActivity
             public void onClick(View view) {
                 ChangeDateDialog changeDateDialog = new ChangeDateDialog();
                 Bundle bundle = new Bundle();
-                bundle.putString("date", "startDay");
+                bundle.putString(KEYDATE, KEYSTARTDAY);
                 changeDateDialog.setArguments(bundle);
-                changeDateDialog.show(getFragmentManager(), "startDay");
+                changeDateDialog.show(getFragmentManager(), KEYSTARTDAY);
             }
         });
 
@@ -428,9 +428,9 @@ public class ReserveChangeActivity extends AppCompatActivity
             public void onClick(View view) {
                 ChangeTimeDialog changeTimeDialog = new ChangeTimeDialog();
                 Bundle bundle = new Bundle();
-                bundle.putString("time", "startTime");
+                bundle.putString(KEYTIME, KEYSTARTTIME);
                 changeTimeDialog.setArguments(bundle);
-                changeTimeDialog.show(getFragmentManager(), "startTime");
+                changeTimeDialog.show(getFragmentManager(), KEYSTARTTIME);
             }
         });
 
@@ -439,9 +439,9 @@ public class ReserveChangeActivity extends AppCompatActivity
             public void onClick(View view) {
                 ChangeDateDialog changeDateDialog = new ChangeDateDialog();
                 Bundle bundle = new Bundle();
-                bundle.putString("date", "endDay");
+                bundle.putString(KEYDATE, KEYENDDAY);
                 changeDateDialog.setArguments(bundle);
-                changeDateDialog.show(getFragmentManager(), "endDay");
+                changeDateDialog.show(getFragmentManager(), KEYENDDAY);
             }
         });
 
@@ -450,9 +450,9 @@ public class ReserveChangeActivity extends AppCompatActivity
             public void onClick(View view) {
                 ChangeTimeDialog changeTimeDialog = new ChangeTimeDialog();
                 Bundle bundle = new Bundle();
-                bundle.putString("time", "endTime");
+                bundle.putString(KEYTIME, KEYENDTIME);
                 changeTimeDialog.setArguments(bundle);
-                changeTimeDialog.show(getFragmentManager(), "endTime");
+                changeTimeDialog.show(getFragmentManager(), KEYENDTIME);
             }
         });
     }
@@ -581,8 +581,8 @@ public class ReserveChangeActivity extends AppCompatActivity
                     new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                            String date = getArguments().getString("date");
-                            if (date.contains("startDay")) {
+                            String date = getArguments().getString(KEYDATE);
+                            if (date.contains(KEYSTARTDAY)) {
                                 startDayBtn.setText(String.format(BTNDAYFORMAT, year, month + ONE, day));
                             } else {
                                 endDayBtn.setText(String.format(BTNDAYFORMAT, year, month + ONE, day));
@@ -605,12 +605,12 @@ public class ReserveChangeActivity extends AppCompatActivity
                     new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                            String time = getArguments().getString("time");
+                            String time = getArguments().getString(KEYTIME);
                             Log.d(CALL, time);
-                            if (time.contains("startTime")) {
-                                startTimeBtn.setText(String.format("%02d：%02d", hourOfDay, minute));
+                            if (time.contains(KEYSTARTTIME)) {
+                                startTimeBtn.setText(String.format(BTNTIMEFORMAT, hourOfDay, minute));
                             } else {
-                                endTimeBtn.setText(String.format("%02d：%02d", hourOfDay, minute));
+                                endTimeBtn.setText(String.format(BTNTIMEFORMAT, hourOfDay, minute));
                             }
                         }
                     },

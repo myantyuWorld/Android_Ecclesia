@@ -33,6 +33,7 @@ public class NameConst {
 
     public static final String CALL = "call";
     public static final String BTNDAYFORMAT = "%04d/%02d/%02d";
+    public static final String BTNTIMEFORMAT = "%02d：%02d";
 
     public static final String EX = "延長";
     public static final String EARLY = "早期退出";
@@ -56,6 +57,13 @@ public class NameConst {
     public static final String KEYCHANGE = "Change";
     public static final String KEYOUT = "out";
     public static final String KEYEVITARGET = "eviTarget";
+    public static final String KEYEMPID = "emp_id";
+    public static final String KEYDATE = "date";
+    public static final String KEYTIME = "time";
+    public static final String KEYSTARTDAY = "startDay";
+    public static final String KEYSTARTTIME = "startTime";
+    public static final String KEYENDDAY = "endDay";
+    public static final String KEYENDTIME = "endTime";
 
     public static final String YYYY_MM_DD_HH_MM = "yyyy/MM/dd HH：mm";
     public static final String HH_MM = "HH：mm";
