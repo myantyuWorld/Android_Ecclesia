@@ -455,6 +455,7 @@ public class Util {
     SQLiteDatabase db = helper.getWritableDatabase();
     Cursor c = db.rawQuery("select * from v_reserve_member where re_id = ?", new String[]{reId});
     Reserve r = new Reserve();
+    // TODO: 2017/12/11 ここ、不十分にとっているので通知の画面遷移でエラーでますよ
     if (c.moveToNext()) {
       //*** 追い出し対象の予約インスタンスを生成 ***//
       r.setRe_id(reId);         //*** 予約ID ***//
@@ -467,7 +468,9 @@ public class Util {
       r.setRe_fixtures(c.getString(7));       //*** 備品 ***//
       r.setRe_remarks(c.getString(8));        //*** 備考 ***//
       r.setRe_room_id(c.getString(10));       //*** 会議室ID ***//
+      r.setRe_room_name(Util.returnRoomName(r.getRe_room_id()));
       r.setRe_purpose_name(c.getString(19));  //*** 会議目的名 ***//
+        r.setRe_applicant(c.getString(21));
     }
     c.close();
 

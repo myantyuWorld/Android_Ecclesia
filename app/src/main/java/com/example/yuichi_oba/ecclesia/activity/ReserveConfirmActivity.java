@@ -338,6 +338,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
             case "新規":
                 employee = (Employee) intent.getSerializableExtra("emp");        //*** 社員情報の取得 ***//
                 reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
+                reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
                 break;
             case "通知":
                 String reId = intent.getStringExtra("reId");
@@ -348,13 +349,14 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                 Log.d("call", reserve.toString());
                 employee = (Employee) intent.getSerializableExtra("employee");
                 Log.d("Emp in Confirm:", employee.toString());
+                reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
                 break;
 
         }
         instance = this;
 
 //    intent.getIntExtra("gamen", 1);
-        reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
+//        reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
 
         /***
          * レイアウト情報をマッピングする
@@ -755,7 +757,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                 getApplicationContext(),
                 0,
                 intent,
-                0
+                PendingIntent.FLAG_UPDATE_CURRENT
         );
         //*** ヘッドアップ通知 ***//
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
