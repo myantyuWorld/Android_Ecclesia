@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
+import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.activity.AddMemberActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.model.Employee;
@@ -33,7 +34,7 @@ public class Util {
   public static final int COLUMN_INDEX = 1;
   public static final String DATE_PATTERN = "yyyy/MM/dd HH:mm";
   public static final String Q_SELECT_M_PURPOSE = "select * from m_purpose where pur_name = ?";
-
+  private static Employee employee;
   /***
    * 項目引数に渡すと、その項目のインデックスを返すUtilityメソッド
    * @param spinner   スピナー
@@ -450,10 +451,11 @@ public class Util {
     }
   }
 
+
   public static Reserve getReserveInfo(String reId){
     MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
     SQLiteDatabase db = helper.getWritableDatabase();
-    Cursor c = db.rawQuery("select * from v_reserve_member where re_id = ?", new String[]{reId});
+    Cursor c = db.rawQuery("select * from  v_reserve_member where re_id = ?", new String[]{reId});
     Reserve r = new Reserve();
     // TODO: 2017/12/11 ここ、不十分にとっているので通知の画面遷移でエラーでますよ
     if (c.moveToNext()) {
@@ -467,14 +469,59 @@ public class Util {
       r.setRe_switch(c.getString(6));         //*** 社内社外区分 ***//
       r.setRe_fixtures(c.getString(7));       //*** 備品 ***//
       r.setRe_remarks(c.getString(8));        //*** 備考 ***//
-      r.setRe_room_id(c.getString(10));       //*** 会議室ID ***//
+      r.setRe_room_id(c.getString(12));       //*** 会議室ID ***//
+//      r.setRe_company(c.getString(30));       //*** 会社名 ***//
       r.setRe_room_name(Util.returnRoomName(r.getRe_room_id()));
       r.setRe_purpose_name(c.getString(19));  //*** 会議目的名 ***//
-        r.setRe_applicant(c.getString(21));
+        r.setRe_applicant(c.getString(14));
     }
     c.close();
 
     return r;
+  }
+//------    ReserveConfirmようにメソッド制作中   -----------//
+  public static List<Person> retResevePesonsList(String re_id) {
+    MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getBaseContext());
+    SQLiteDatabase db = helper.getReadableDatabase();
+    String sqlArgs = "select *, count(*) as cnt from v_reserve_member x " +
+            "inner join m_depart y on x.dep_name = y.dep_name " +
+            " where re_id in (select re_id from t_member where mem_id = ?) group by mem_id order by cnt desc limit 10 ";
+    Cursor c = db.rawQuery(sqlArgs, new String[]{re_id});
+    List<Person> persons = new ArrayList<>();
+    while (c.moveToNext()) {
+      //*** [社員]クラスのインスタンスを生成 ***//
+      Employee e = new Employee();
+      e.setEmp_id(c.getString(11));           // ID
+      e.setName(c.getString(12));         // 氏名
+      e.setTel(c.getString(13));          // 電話番号
+      e.setMailaddr(c.getString(14));     // メールアドレス
+      e.setDep_id(c.getString(22));       //*** 部署ＩＤ ***//
+      e.setPos_name(c.getString(16));     // 役職名
+      e.setPos_priority(c.getString(17)); // 役職の優先度
+
+      Log.d("call", String.format("社員情報 : %s", e.toString()));    //***  ***//
+
+      persons.add(e);
+    }
+    c.close();
+
+
+    c = db.rawQuery("select * from v_reserve_out_member where re_id in (select re_id from t_member where mem_id = ?)", new String[]{re_id});
+    while (c.moveToNext()) {
+      //*** [社外者]クラスのインスタンスを生成 ***//
+      OutEmployee e = new OutEmployee(
+              c.getString(10),            //*** ID ***//
+              c.getString(11),            //*** 氏名 ***//
+              c.getString(12),            //*** 電話番号 ***//
+              c.getString(13),            //*** メールアドレス ***//
+              c.getString(14),            //*** 部署名 ***//
+              c.getString(15),            //*** 役職名 ***//
+              c.getString(16),            //*** 役職優先度 ***//
+              c.getString(18)             //*** 会社名 ***//
+      );
+      persons.add(e);
+    }
+    return persons;
   }
 
 

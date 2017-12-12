@@ -117,6 +117,8 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
             CharSequence[] items;                       //***  ***//
             List<String> list = new ArrayList<>();      //***  ***//
 
+
+
             //***  ***//
             for (Person p : reserve.getRe_member()) {
                 if (p instanceof Employee) {            //***  ***//
@@ -337,7 +339,9 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                 break;
             case "通知":
                 String reId = intent.getStringExtra("reId");
-                reserve = Util.getReserveInfo(reId);
+                Log.d("call", "aaaaaaa." + reId);
+                //*** re_idの値がおかしいので仮で0001を指定***//
+                reserve = Util.getReserveInfo("0001");
                 break;
             default:
                 reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
