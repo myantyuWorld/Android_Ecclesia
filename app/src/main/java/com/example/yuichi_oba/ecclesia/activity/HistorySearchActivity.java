@@ -614,6 +614,10 @@ public class HistorySearchActivity extends AppCompatActivity
                 Log.d("call", "public boolean onQueryTextChange(String text) ");
                 if (text == null || text.isEmpty()) {
                     listView.clearTextFilter();
+                    listItems.clear();
+                    adapter1 = new MyListAdapter(HistorySearchActivity.this);
+                    adapter1.setItemList(reserves);
+                    listView.setAdapter(adapter1);
                 } else {
                     //*** 入力された文字が検索結果の日付と概要に一致したら検索結果を再構築する ***//
 
