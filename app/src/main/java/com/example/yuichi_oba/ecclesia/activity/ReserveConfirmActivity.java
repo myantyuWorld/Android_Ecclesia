@@ -377,7 +377,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (gamen.equals("一覧")) {
+        if (gamen.equals("一覧") || gamen.equals("通知")) {
             btn_confirm = (Button) findViewById(R.id.arconfirm_btn_correct);
             btn_confirm.setText("戻る");
         }
@@ -600,7 +600,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
         Log.d(CALL, "call onClickKakutei");
 
         //*** 新規からの画面遷移でなければ、以降の処理は無効なので、戻る ***//
-        if (gamen.contains("一覧")) {
+        if (gamen.contains("一覧") || gamen.contains("通知")) {
             finish();
             return;
         }
