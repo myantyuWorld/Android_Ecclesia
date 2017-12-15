@@ -339,17 +339,15 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                 break;
             case "通知":
                 String reId = intent.getStringExtra("reId");
-                Log.d("call", "aaaaaaa." + reId);
-                //*** re_idの値がおかしいので仮で0001を指定***//
+                Log.d("call", "選択会議 : " + reId);
                 reserve = Util.getReserveInfo("0001");
                 break;
             default:
                 reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
-                Log.d("call", reserve.toString());
+                Log.d("call2", reserve.toString());
                 employee = (Employee) intent.getSerializableExtra("employee");
                 Log.d("Emp in Confirm:", employee.toString());
                 reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
-                break;
 
         }
         instance = this;
@@ -730,7 +728,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
         Reserve r = new Reserve();
         if (c.moveToNext()) {
             //*** 追い出し対象の予約インスタンスを生成 ***//
-            r.setRe_id(otherReId);         //*** 予約ID ***//
+            r.setRe_id(c.getString(0));         //*** 予約ID ***//
             r.setRe_name(c.getString(1));           //*** 概要 ***//
             r.setRe_startDay(c.getString(2));       //*** 開始日時 ***//
             r.setRe_endDay(c.getString(3));         //*** 終了日時 ***//

@@ -697,7 +697,7 @@ public class HistorySearchActivity extends AppCompatActivity
     }
 
 //--- 渡されたデータをリストにAddするメソッド ---//
-    public  static ArrayList<Reserve> listAdd(Cursor c, ArrayList<Reserve> list) {
+    public ArrayList<Reserve> listAdd(Cursor c, ArrayList<Reserve> list) {
         while (c.moveToNext()) {
             Reserve reserve = new Reserve();
             reserve.setRe_startTime(c.getString(STARTTIME));
