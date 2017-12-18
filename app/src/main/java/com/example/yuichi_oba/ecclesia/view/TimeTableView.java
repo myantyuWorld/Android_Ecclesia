@@ -254,6 +254,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 //            }
       // 予約会議の描画
       c.drawRoundRect(rectF, 30, 30, p_myConference);
+      c.drawRoundRect(rectF, 30, 30, p_myConference_waku);
       //*** 矩形内部に社内社外・会議目的の文字を描画する ***//
       onDrawRectText(r, rectF, c);
 
@@ -272,11 +273,17 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
   //*** --- SELF MADE METHOD --- 矩形内部に社内社外・会議目的の文字を描画する ***//
   private void onDrawRectText(Reserve r, RectF rectF, Canvas c) {
     //*** RECTの高さが、100dp以上ならば、描画を行う ***//
-    if (rectF.bottom - rectF.top >= 100) {
+    if (rectF.bottom - rectF.top >= 150) {
       float margin = 20;
       c.drawText(r.getRe_switch().contains("0") ? "[社内]" : "[社外]",
           rectF.centerX(), rectF.centerY() - margin, p_detail);                               //*** 社内社外区分の描画 ***//
-      c.drawText(r.getRe_purpose_name(), rectF.centerX(), rectF.centerY() + margin, p_detail);    //*** 会議目的名の描画 ***//
+
+
+      String str = r.getRe_purpose_name();
+      if (str.length() > 4){
+        str = str.substring(0, 4) + "...";
+      }
+      c.drawText(str, rectF.centerX(), rectF.centerY() + margin + 20, p_detail);    //*** 会議目的名の描画 ***//
     }
   }
 
@@ -396,24 +403,24 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
     //*** 自分の会議の描画用 ***//
     p_myConference = new Paint();
-    p_myConference.setColor(Color.parseColor("#ff6347"));       //*** 再考の余地あり ***//
+    p_myConference.setColor(Color.parseColor("#ff6347"));
     p_myConference.setStyle(Paint.Style.FILL);
     p_myConference.setStrokeWidth(10);
 
     p_myConference_waku = new Paint();
-    p_myConference_waku.setColor(Color.parseColor("#000000"));
+    p_myConference_waku.setColor(Color.parseColor("#a0222222")); //*** 透明度指定AARRGGBB ***//
     p_myConference_waku.setStyle(Paint.Style.STROKE);
-    p_myConference_waku.setStrokeWidth(3);
+    p_myConference_waku.setStrokeWidth(10);
 
     //*** 他人の会議の描画用 ***//
     p_otherConference = new Paint();
-    p_otherConference.setColor(Color.parseColor("#f5f5f5"));    //*** 再考の余地あり ***//
+    p_otherConference.setColor(Color.parseColor("#f5f5f5"));
     p_otherConference.setStyle(Paint.Style.FILL);
     p_otherConference.setStrokeWidth(10);
 
     //*** RECT内部の社内社外・会議目的 描画用 ***//
     p_detail = new Paint();
-    p_detail.setTextSize(25);
+    p_detail.setTextSize(40);
     p_detail.setTextAlign(Paint.Align.CENTER);
     p_detail.setTypeface(Typeface.DEFAULT_BOLD);
     p_detail.setColor(Color.BLACK);

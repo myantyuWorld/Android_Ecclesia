@@ -238,6 +238,7 @@ public class ReserveListActivity extends AppCompatActivity
 //    Log.d(CALL, employee.getEmp_id());
     Log.d(CALL, arl_txt_date.getText().toString());
     arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
+    arl_view_timetableView.invalidate();
 
     arl_txt_date.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -254,6 +255,7 @@ public class ReserveListActivity extends AppCompatActivity
         Toast.makeText(ReserveListActivity.this, arl_txt_date.getText().toString(), Toast.LENGTH_SHORT).show();
 //         DO: 2017/10/04 自分の予約情報をもっているリストを一回クリアしないと、前の情報も描画されてしまう
         arl_view_timetableView.reView(employee.getEmp_id(), arl_txt_date.getText().toString());
+        arl_view_timetableView.invalidate();
       }
     });
     /***
