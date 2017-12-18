@@ -11,6 +11,7 @@ import android.widget.SpinnerAdapter;
 
 import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.activity.AddMemberActivity;
+import com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.model.Employee;
 import com.example.yuichi_oba.ecclesia.model.OutEmployee;
@@ -27,7 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 public class Util {
 
@@ -523,6 +524,19 @@ public class Util {
     }
     return persons;
   }
+
+    //*** --- SELF MADE METHOD --- 既に延長がされている会議かを判定するメソッド ***//
+    public static String alreadyExtensionCheck(String re_id) {
+        String result = FALSE;
+        MyHelper helper = new MyHelper(ReserveConfirmActivity.getInstance().getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery(SQL_ALREADY_EXTENSION_CHECK, new String[]{re_id});
+        if (cursor.moveToNext()) {
+            //*** 既に延長がされている場合、trueを返す ***//
+            result = cursor.getString(ZERO) + SPACE + cursor.getString(ONE);
+        }
+        return result;
+    }
 
 
 

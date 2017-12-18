@@ -79,7 +79,7 @@ public class NameConst {
     public static final String ROOM_C = "0004";
 
     // SQL
-    public static final String SQL_ALREADY_EXTENSION_CHECK = "select * from t_extension where re_id = ?";
+    public static final String SQL_ALREADY_EXTENSION_CHECK = "select ex_endDay, ex_endTime from t_extension where re_id = ?";
     public static final String SQL_EARLY_OUT_EXTENSION = "update t_extension set ex_endtime = ? where re_id = ?";
     public static final String SQL_EARLY_OUT_RESERVE = "update t_reserve set re_endtime = ? where re_id = ?";
     public static final String SQL_EXTENSION_INSERT = "insert into t_extension values(?,?,?,?,?)";

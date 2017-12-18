@@ -10,7 +10,9 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity;
-import com.example.yuichi_oba.ecclesia.model.Reserve;
+import com.example.yuichi_oba.ecclesia.tools.Util;
+
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 
 /**
  * Created by yuki on 2017/09/08.
@@ -92,10 +94,17 @@ public class Reseve_confirmView extends View {
         float y_fixture = 1150;
         float y_remark = 1270;
 
+        String exEnd = Util.alreadyExtensionCheck(ReserveConfirmActivity.reserve.getRe_id());
+
         c.drawText(ReserveConfirmActivity.reserve.getRe_name(), 500, y_name, p_text);
         c.drawText(ReserveConfirmActivity.reserve.getRe_purpose_name(), 500, y_purpose, p_text);
         c.drawText(ReserveConfirmActivity.reserve.getRe_startDay() + " " + ReserveConfirmActivity.reserve.getRe_startTime(), 500, y_start, p_text);
-        c.drawText(ReserveConfirmActivity.reserve.getRe_endDay() + " " + ReserveConfirmActivity.reserve.getRe_endTime(), 500, y_end, p_text);
+        if (exEnd.equals(FALSE)) {
+            c.drawText(ReserveConfirmActivity.reserve.getRe_endDay() + " " + ReserveConfirmActivity.reserve.getRe_endTime(), 500, y_end, p_text);
+        } else {
+            c.drawText(exEnd, 500, y_end, p_text);
+        }
+//        c.drawText(ReserveConfirmActivity.reserve.getRe_endDay() + " " + ReserveConfirmActivity.reserve.getRe_endTime(), 500, y_end, p_text);
         c.drawText(ReserveConfirmActivity.reserve.getRe_applicant(), 500, y_applicant, p_text);
         // DO: 2017/09/16 参加者を検索するロジックの実装
         c.drawText("", 500, y_member, p_text);
