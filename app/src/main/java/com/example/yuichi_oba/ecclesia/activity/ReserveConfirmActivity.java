@@ -72,10 +72,10 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.OK;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.RUNMESSAGE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.RUNQUESTION;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SQL_ALREADY_EXTENSION_CHECK;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.Util.alreadyExtensionCheck;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 // _/_/
@@ -494,15 +494,12 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                 }
                 //*** 既に延長されているかの確認を行う ***//
                 //*** 延長の有無により処理を分ける ***//
-                MyHelper helper = new MyHelper(instance.getApplicationContext());
-                SQLiteDatabase db = helper.getReadableDatabase();
-                Cursor cursor = db.rawQuery(SQL_ALREADY_EXTENSION_CHECK, new String[]{reserve.getRe_id()});
                 //*** 延長できるのは会議終了の30分前まで ***//
                 end.add(Calendar.MINUTE, M_THIRTY);
                 //*** 延長しようとしている会議が現在日付・時刻に矛盾していないか ***//
                 //*** 会議の最中かどうか、自分が参加している会議かの判定 ***//
                 if (cal.after(start) && cal.before(end) && reserve.getRe_member().indexOf(employee.getEmp_id()) != MINUSONE) {
-                    if (!cursor.moveToNext()) {
+                    if (!alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
                         //*** 延長ダイアログを表示 ***//
                         ExtensionDialog extensionDialog = new ExtensionDialog();
                         extensionDialog.show(getFragmentManager(), KEYEX);
@@ -512,7 +509,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                 } else {
                     Toast.makeText(this, "本番では延長禁止", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
-                    if (!cursor.moveToNext()) {
+                    if (!alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
                         //*** 延長ダイアログを表示 ***//
                         ExtensionDialog extensionDialog = new ExtensionDialog();
                         extensionDialog.show(getFragmentManager(), KEYEX);
