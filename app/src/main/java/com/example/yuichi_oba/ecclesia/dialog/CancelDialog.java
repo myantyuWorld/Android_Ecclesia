@@ -14,6 +14,8 @@ import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
 import com.example.yuichi_oba.ecclesia.tools.Util;
 
+import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
+
 /**
  * Created by 5151021 on 2017/11/27.
  */
@@ -41,10 +43,11 @@ public class CancelDialog extends DialogFragment {
                         SQLiteOpenHelper helper = new MyHelper(getContext());
                         SQLiteDatabase db = helper.getWritableDatabase();
                         // TODO: 2017/11/27 キャンセルしようとする人間が、予約者または管理者のみ削除できるロジックの実装
+                        //  キャンセル対象の会議の予約者社員番号を取得する
                         String empId = Util.returnReserveApplicant(re_id);
                         Log.d("call", "キャンセルしようとしている予約者ID : " + empId);
 
-                        if (myEmpId.equals(empId) || myEmpId.equals("123456")) {
+                        if (myEmpId.equals(empId) || Util.isAuthAdmin(authFlg)) {
 
                             //*** 該当データの、予約テーブルの削除 ***//
 //                        db.execSQL("delete from t_reserve where re_id = ?", new Object[]{re_id});

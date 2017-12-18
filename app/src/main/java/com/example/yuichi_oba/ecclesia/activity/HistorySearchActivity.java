@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -263,13 +262,11 @@ public class HistorySearchActivity extends AppCompatActivity
             @Override
             protected FilterResults performFiltering(CharSequence c) {
                 Log.d("call", "protected FilterResults performFiltering(CharSequence c) ");
-                FilterResults results = new FilterResults();
                 List<Reserve> list = new ArrayList<>();
+                FilterResults f = new FilterResults();
 
-                //*** 検索ボックスのコンテンツが空った場合は元のデータを復元 ***//
-                if (TextUtils.isEmpty(listView.getTextFilter())) {
-                    list = reserves;
-                } else {
+                //*** 検索ボックスのコンテンツが空になった場合は元のデータを復元 ***//
+                //TODO : ココの条件式を考え中;
                     for (int i = 0, size = getCount(); i < size; i++) {
                         Reserve d = (Reserve) getItem(i);
                         if (d.getRe_name() != null && d.getRe_name().contains(c)
@@ -277,9 +274,9 @@ public class HistorySearchActivity extends AppCompatActivity
                                 || d.getRe_startDay() != null && d.getRe_startDay().contains(c)) {
                             list.add(d);
                         }
-                    }
-                }
-                FilterResults f = new FilterResults();
+                        }
+
+
                 f.count = list.size();
                 f.values = list;
                 Log.d("call", f.values.toString());
@@ -294,16 +291,18 @@ public class HistorySearchActivity extends AppCompatActivity
                     Log.d("call", String.format("result count :: %d", results.count));
                     // TODO 12/05 : メソッド内容を考える;
                     List<Reserve> list = (List<Reserve>) results.values;
-                    list.clear();
                     listItems = (ArrayList<Reserve>) list;
                     //*** アダプターにアイテムリストをセット ***//
                     adapter1 = new MyListAdapter(HistorySearchActivity.this);
                     adapter1.setItemList(listItems);
                     listView.setAdapter(adapter1);
-                    notifyDataSetChanged();
+                    adapter1.notifyDataSetChanged();
 //                    onResume();
                 } else {
-                    notifyDataSetInvalidated();
+                    adapter1.notifyDataSetInvalidated();
+                    adapter1 = new MyListAdapter(HistorySearchActivity.this);
+                    adapter1.setItemList(reserves);
+                    listView.setAdapter(adapter1);
                 }
             }
         }
@@ -623,7 +622,7 @@ public class HistorySearchActivity extends AppCompatActivity
                     listView.setFilterText(text);
 
                     // TODO: 2017/12/01 ここで、listviewの再描画をかける
-                    listView.invalidate();
+//                    listView.invalidate();
                 }
                 return false;
             }
