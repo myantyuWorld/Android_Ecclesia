@@ -65,6 +65,8 @@ public class ReserveListActivity extends AppCompatActivity
   public static Employee employee;
   private int thCnt = 0;
   public static ReserveListActivity instance = null;
+  private static final String TAG = ReserveListActivity.class.getSimpleName();
+  public static final String RESERVE_INFO = "reserve_info";
   //    private DB helper;
   private MyHelper helper;
   public static SQLiteDatabase db;
@@ -137,16 +139,6 @@ public class ReserveListActivity extends AppCompatActivity
         Cursor c = db.rawQuery("select * from v_employee where emp_id = ?",
             new String[]{emp_id});
         if (c.moveToNext()) {
-          // 社員ＩＤから社員情報を検索して、設定する
-//                    Employee e = new Employee();
-//                    e.setId(emp_id);
-//                    e.setName(c.getString(EMP_NAME));
-//                    e.setTel(c.getString(EMP_TEL));
-//                    e.setMailaddr(c.getString(EMP_MAIL_ADDR));
-//                    e.setDep_name(c.getString(DEP_NAME));
-//                    e.setPos_name(c.getString(POS_NAME));
-//                    e.setPos_priority(c.getString(POS_PRIORITY));
-
           //*** 「社員」クラスのインスタンスを生成 ***//
           Employee e = new Employee(
               emp_id,                     //*** 社員ID ***//
@@ -156,7 +148,6 @@ public class ReserveListActivity extends AppCompatActivity
               c.getString(4),             //*** 部署ID ***//
               c.getString(6)              //*** 役職ID ***//
           );
-
           return e;   //*** インスタンスを返す ***//
         }
         c.close();
@@ -189,8 +180,7 @@ public class ReserveListActivity extends AppCompatActivity
   }
 
 
-  private static final String TAG = ReserveListActivity.class.getSimpleName();
-  public static final String RESERVE_INFO = "reserve_info";
+
 
 
 //    public static List<Reserve> reserveInfo;    // 予約情報記録クラスの変数   非同期エラーが起きるため使用禁止する！
@@ -230,7 +220,7 @@ public class ReserveListActivity extends AppCompatActivity
     // 画面情報の設定
     arl_txt_date = (TextView) findViewById(R.id.arl_txt_date);
     final Calendar c = Calendar.getInstance();
-    arl_txt_date.setText(String.format(Locale.JAPAN, "%04d/%02d/%02d", c.get(Calendar.YEAR) + 1, 1, 17));
+    arl_txt_date.setText(String.format(Locale.JAPAN, "%04d/%02d/%02d", c.get(Calendar.YEAR) + 1, 2, 14));
 
     //*** コンテキストメニューの発生元ビューを取得 ***//
     registerForContextMenu(findViewById(R.id.content_main));
