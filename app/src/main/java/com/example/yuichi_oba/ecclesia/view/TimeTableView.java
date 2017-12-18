@@ -108,6 +108,8 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
   public static final int RE_END_TIME = 5;
   public static final int RE_SWITCH = 6;
   public static final int RE_ROOM_ID = 10;
+  private static final String Q_MY_MEETING = "select * from v_reserve_member where mem_id = ? and re_startday = ? group by re_id";
+  private static final String Q_OTHER_MEETING = "select * from v_reserve_member where mem_id <> ? and re_startday = ? group by re_id";
 
   //*** Field ***//
   private Paint p;
@@ -444,6 +446,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     return true;
   }
 
+  //*** タップしたY座標の時間帯を返すメソッド ***//
   private Integer getYOfCoodinate(float y) {
     Integer hour = Math.round(y / 10) * 10;
     if (100 <= hour && hour < 180) {
@@ -510,7 +513,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     //*** 自分の参加会議の検索 ***//
     SQLiteOpenHelper helper = new MyHelper(getContext());
     SQLiteDatabase db = helper.getReadableDatabase();
-    Cursor c = db.rawQuery("select * from v_reserve_member where mem_id = ? and re_startday = ?", new String[]{emp_id, date});
+    Cursor c = db.rawQuery(Q_MY_MEETING, new String[]{emp_id, date});
     while (c.moveToNext()) {
       // 予約情報のインスタンス生成
       Reserve r = new Reserve();
@@ -525,9 +528,6 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
       r.setRe_remarks(c.getString(8));        //*** 備考 ***//
       r.setRe_room_id(c.getString(10));       //*** 会議室ID ***//
       r.setRe_purpose_name(c.getString(19));  //*** 会議目的名 ***//
-//            r.setRe_pur_priority(c.getString(18));
-      // TODO: 2017/10/04 会議目的優先度の取得のロジックの実装
-
 
       reserveInfo.add(r);
       Log.d(CALL, "取得した自分の参加会議 " + c.getString(0) + " : " + c.getString(2) + " : " + c.getString(3));
@@ -536,7 +536,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
     //*** 他人の参加会議の検索 ***//
     // TODO: 2017/11/13 group by re_idで予約IDでくくる
-    c = db.rawQuery("select * from v_reserve_member where mem_id <> ? and re_startday = ?", new String[]{emp_id, date});
+    c = db.rawQuery(Q_OTHER_MEETING, new String[]{emp_id, date});
     while (c.moveToNext()) {
 
       Reserve r = new Reserve();
@@ -551,9 +551,6 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
       r.setRe_remarks(c.getString(8));
       r.setRe_room_id(c.getString(10));
       r.setRe_purpose_name(c.getString(19));  //*** 会議目的名 ***//
-//            r.setRe_pur_priority(c.getString(18));
-      // TODO: 2017/10/04  会議目的優先度の取得のロジックの実装
-
 
       reserveOther.add(r);
       Log.d(CALL, "取得した他人の参加会議 " + c.getString(0) + " : " + c.getString(2) + " : " + c.getString(3));
