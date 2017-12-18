@@ -164,7 +164,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
         }
     }
 
-  //*** 延長ないし早期退出完了通知のダイアログフラグメントクラス ***//
+  //*** 延長ないし早期退出処理の結果通知のダイアログフラグメントクラス ***//
     public static class ResultDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {

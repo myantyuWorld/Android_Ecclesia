@@ -47,7 +47,7 @@ public class NameConst {
     public static final String OUT = "社外";
     public static final String CANCEL = "キャンセル";
     public static final String MEMBERYETADD = "参加者未追加";
-    public static final String NOTNOW = "現時点で行われている会議ではありません";
+    public static final String NOTNOW = "延長可能な時間帯ではありません";
     public static final String NOTPARTICIPATION = "参加会議ではありません";
     public static final String IMPOSSIBLE = "不可能";
     public static final String ALREADYEX = "既に延長されています";
