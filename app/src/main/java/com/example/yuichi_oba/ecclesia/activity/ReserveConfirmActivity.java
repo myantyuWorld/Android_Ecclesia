@@ -52,6 +52,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ALREADYEX;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.CANCEL;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.COMPLETE;
@@ -60,14 +61,21 @@ import static com.example.yuichi_oba.ecclesia.tools.NameConst.EMPTY;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.IMPOSSIBLE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYALREADYEX;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCONTENT;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEAR;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYNOTNOW;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYNOTPARTICIPATION;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYOUT;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYRESULT;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYSMALLEX;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.MINUSONE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.M_THIRTY;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.NOTNOW;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.NOTPARTICIPATION;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.OK;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.RUNMESSAGE;
 import static com.example.yuichi_oba.ecclesia.tools.NameConst.RUNQUESTION;
@@ -188,21 +196,34 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
 
   //*** 延長ないし早期退出完了通知のダイアログフラグメントクラス ***//
     public static class ResultDialog extends DialogFragment {
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-      String str = EMPTY, title = EMPTY;
-      switch (getArguments().getString(KEYRESULT)) {
-        case KEYSMALLEX:
-          title = EX + COMPLETE;
-          str = EX + RUNMESSAGE;
-          break;
-        case KEYEAR:
-          title = EARLY + COMPLETE;
-          str = EARLY + RUNMESSAGE;
-          break;
-            }
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+          String str = EMPTY, title = EMPTY;
+          switch (getArguments().getString(KEYRESULT)) {
+              case KEYSMALLEX:
+                  title = EX + COMPLETE;
+                  str = EX + RUNMESSAGE;
+                  break;
+              case KEYEAR:
+                  title = EARLY + COMPLETE;
+                  str = EARLY + RUNMESSAGE;
+                  break;
+              case KEYNOTPARTICIPATION:
+                  title = getArguments().getString(KEYCONTENT) + IMPOSSIBLE;
+                  str = NOTPARTICIPATION;
+                  break;
+              case KEYNOTNOW:
+                  title = getArguments().getString(KEYCONTENT) + IMPOSSIBLE;
+                  str = NOTNOW;
+                  break;
+              case KEYALREADYEX:
+                  title = getArguments().getString(KEYCONTENT) + IMPOSSIBLE;
+                  str = ALREADYEX;
+                  break;
 
-            return new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(str).setPositiveButton(OK, null).create();
+            //*** 延長専用の30分前verも作る ***//
+          }
+          return new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(str).setPositiveButton(OK, null).create();
         }
     }
 
@@ -423,6 +444,8 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
         //*** フォーマット用意 ***//
         SimpleDateFormat timeFormat = new SimpleDateFormat(YYYY_MM_DD_HH_MM);
 
+        Bundle diaBundle = new Bundle();
+
 //        Bundle diaBundle = new Bundle();
         // idによって処理を分ける
         switch (id) {
@@ -442,11 +465,19 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                     //*** 早期退出ダイアログを表示 ***//
                     EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
                     earlyOutDialog.show(getFragmentManager(), KEYOUT);
+                } else if (cal.after(start) && cal.before(end)) {
+                    //*** 初めに時間のチェック（現在行われている会議がtrueの場合、未参加のfalseを食らっている） ***//
+                    diaBundle.putString(KEYRESULT, KEYNOTPARTICIPATION);
+                    diaBundle.putString(KEYCONTENT, EARLY);
+                    ResultDialog resultDialog = new ResultDialog();
+                    resultDialog.setArguments(diaBundle);
+                    resultDialog.show(getFragmentManager(), KEYNOTPARTICIPATION);
                 } else {
-                    Toast.makeText(this, "本番では早期退出禁止", Toast.LENGTH_SHORT).show();
-                    //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
-                    EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
-                    earlyOutDialog.show(getFragmentManager(), KEYOUT);
+                    diaBundle.putString(KEYRESULT, KEYNOTNOW);
+                    diaBundle.putString(KEYCONTENT, EARLY);
+                    ResultDialog resultDialog = new ResultDialog();
+                    resultDialog.setArguments(diaBundle);
+                    resultDialog.show(getFragmentManager(), KEYNOTNOW);
                 }
                 break;
             // 「予約変更」が選択された
@@ -504,18 +535,53 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                         ExtensionDialog extensionDialog = new ExtensionDialog();
                         extensionDialog.show(getFragmentManager(), KEYEX);
                     } else {
-                        Toast.makeText(this, "既に延長されています", Toast.LENGTH_SHORT).show();
+                        diaBundle.putString(KEYRESULT, KEYALREADYEX);
+                        diaBundle.putString(KEYCONTENT, EX);
+                        ResultDialog resultDialog = new ResultDialog();
+                        resultDialog.setArguments(diaBundle);
+                        resultDialog.show(getFragmentManager(), KEYALREADYEX);
+//                        Toast.makeText(this, "既に延長されています", Toast.LENGTH_SHORT).show();
                     }
+                } else if (cal.after(start) && cal.before(end)) {
+                    //*** 延長を試験的に無条件で行いたくなったら---> ***//
+                    diaBundle.putString(KEYRESULT, KEYNOTPARTICIPATION);
+                    diaBundle.putString(KEYCONTENT, EX);
+                    ResultDialog resultDialog = new ResultDialog();
+                    resultDialog.setArguments(diaBundle);
+                    resultDialog.show(getFragmentManager(), KEYNOTPARTICIPATION);
+                    //*** <---ここまでのコードをコメ化し、下のコードを復活させる ***//
+
+//                    Toast.makeText(this, "試験的に通します", Toast.LENGTH_SHORT).show();
+//                    if (!alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
+//                        ExtensionDialog extensionDialog = new ExtensionDialog();
+//                        extensionDialog.show(getFragmentManager(), KEYEX);
+//                    } else {
+//                        diaBundle.putString(KEYRESULT, KEYALREADYEX);
+//                        diaBundle.putString(KEYCONTENT, EX);
+//                        ResultDialog notDialog = new ResultDialog();
+//                        notDialog.setArguments(diaBundle);
+//                        notDialog.show(getFragmentManager(), KEYALREADYEX);
+//                    }
                 } else {
-                    Toast.makeText(this, "本番では延長禁止", Toast.LENGTH_SHORT).show();
-                    //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
-                    if (!alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
-                        //*** 延長ダイアログを表示 ***//
-                        ExtensionDialog extensionDialog = new ExtensionDialog();
-                        extensionDialog.show(getFragmentManager(), KEYEX);
-                    } else {
-                        Toast.makeText(this, "既に延長されています", Toast.LENGTH_SHORT).show();
-                    }
+                    //*** 延長を試験的に無条件で行いたくなったら---> ***//
+                    diaBundle.putString(KEYRESULT, KEYNOTNOW);
+                    diaBundle.putString(KEYCONTENT, EX);
+                    ResultDialog resultDialog = new ResultDialog();
+                    resultDialog.setArguments(diaBundle);
+                    resultDialog.show(getFragmentManager(), KEYNOTNOW);
+                    //*** <---ここまでのコードをコメ化し、下のコードを復活させる ***//
+
+//                    Toast.makeText(this, "試験的に通します", Toast.LENGTH_SHORT).show();
+//                    if (!alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
+//                        ExtensionDialog extensionDialog = new ExtensionDialog();
+//                        extensionDialog.show(getFragmentManager(), KEYEX);
+//                    } else {
+//                        diaBundle.putString(KEYRESULT, KEYALREADYEX);
+//                        diaBundle.putString(KEYCONTENT, EX);
+//                        ResultDialog notDialog = new ResultDialog();
+//                        notDialog.setArguments(diaBundle);
+//                        notDialog.show(getFragmentManager(), KEYALREADYEX);
+//                    }
                 }
                 break;
         }
