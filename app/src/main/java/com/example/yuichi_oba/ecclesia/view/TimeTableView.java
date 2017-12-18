@@ -186,7 +186,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
 
     // 会議室名の描画
-    float y_conference = 60;
+    float y_conference = 70;
     c.drawText("特別", 316, y_conference, p_txtConference);
     c.drawText("A", 532, y_conference, p_txtConference);
     c.drawText("B", 748, y_conference, p_txtConference);
@@ -396,8 +396,8 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     p_txtTime.setColor(Color.BLACK);
 
     p_txtConference = new Paint();
-    p_txtConference.setTypeface(Typeface.MONOSPACE);
-    p_txtConference.setTextSize(60);
+    p_txtConference.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
+    p_txtConference.setTextSize(70);
     p_txtConference.setTextAlign(Paint.Align.CENTER);
     p_txtConference.setColor(Color.BLACK);
 
