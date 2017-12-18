@@ -534,7 +534,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
 
                     //*** 以下は試験的に無条件に行うコード ***//
                     Toast.makeText(this, "試験的に通します", Toast.LENGTH_SHORT).show();
-                    if (!alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
+                    if (alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
                         ExtensionDialog extensionDialog = new ExtensionDialog();
                         extensionDialog.show(getFragmentManager(), KEYEX);
                     } else {
@@ -555,7 +555,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
 
                     //*** 以下は試験的に無条件に行うコード ***//
                     Toast.makeText(this, "試験的に通します", Toast.LENGTH_SHORT).show();
-                    if (!alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
+                    if (alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
                         ExtensionDialog extensionDialog = new ExtensionDialog();
                         extensionDialog.show(getFragmentManager(), KEYEX);
                     } else {
