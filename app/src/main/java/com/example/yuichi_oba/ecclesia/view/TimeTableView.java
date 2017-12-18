@@ -21,6 +21,7 @@ import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
 import com.example.yuichi_oba.ecclesia.dialog.CancelDialog;
 import com.example.yuichi_oba.ecclesia.model.Reserve;
 import com.example.yuichi_oba.ecclesia.tools.MyHelper;
+import com.example.yuichi_oba.ecclesia.tools.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,6 +126,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
   private Paint p_myConference_waku;
   private Paint p_otherConference;        //*** 他人の会議用 ***//
   private Paint p_detail;                 //*** RECT内部の、社内社外・会議目的描画 ***//
+  private Paint p_extension;
 
 
   public static float x = 0;    // タップしたｘ座標
@@ -137,6 +139,7 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
   public boolean thread_flg;
   private List<Reserve> reserveInfo;      //*** 自分の会議記録用リスト ***//
   private List<Reserve> reserveOther;     //*** 他人の会議記録用リスト ***//
+  private List<Reserve> reserveExtension; //*** 「延長用」リスト ***//
   private boolean longPressLfg = false;
 
   //*** Constractor ***//
@@ -217,9 +220,17 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
       Log.d(CALL, String.format("%s startTime : %s endTime : %s", r.getId(), sTime, eTime));
 
       String room_id = r.getRe_room_id();
+      String extensionTime = r.getRe_extensionEndTime();
+      //*** その会議が延長されているなら、描画する（null対策) ***//
+      if (r.getRe_extensionEndTime() != null) {
+        c.drawRoundRect(retRectCooperation(sTime, extensionTime, room_id), 30, 30, p_extension);
+        c.drawRoundRect(retRectCooperation(sTime, extensionTime, room_id), 30, 30, p_myConference_waku);
+
+      }
 
       RectF rectF = retRectCooperation(sTime, eTime, room_id);
       // 予約会議のざ行情報を記録する
+      // TODO: 2017/12/18 延長終了時刻があれば、そっちで記録するロジックの実装
       reserveOther.get(cnt).setCoop(new float[]{rectF.left, rectF.top, rectF.right, rectF.bottom});
 
       c.drawRoundRect(rectF, 30, 30, p_otherConference);
@@ -231,12 +242,24 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     cnt = 0;
     //*** 自分の参加会議に対する処理 ***//
     for (Reserve r : reserveInfo) {
+
+
+
       String sTime = r.getRe_startTime();                         //*** 開始時刻の取得 ***//
       String eTime = r.getRe_endTime();                           //*** 終了時刻の取得 ***//
       String room_id = r.getRe_room_id();                         //*** 会議室ＩＤの取得 ***//
+      String extensionTime = r.getRe_extensionEndTime();
+      //*** その会議が延長されているなら、描画する（null対策) ***//
+      if (r.getRe_extensionEndTime() != null) {
+          c.drawRoundRect(retRectCooperation(sTime, extensionTime, room_id), 30, 30, p_extension);
+          c.drawRoundRect(retRectCooperation(sTime, extensionTime, room_id), 30, 30, p_myConference_waku);
+
+      }
+
 
       RectF rectF = retRectCooperation(sTime, eTime, room_id);    //***  ***//
       // 予約会議の座標情報を記録する
+      // TODO: 2017/12/18 延長終了時刻があれば、そっちで記録するロジックの実装
       reserveInfo.get(cnt).setCoop(new float[]{rectF.left, rectF.top, rectF.right, rectF.bottom});
 //            switch (room_id) {
 //                case "0001":
@@ -253,10 +276,13 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 //                    break;
 //            }
       // 予約会議の描画
-      c.drawRoundRect(rectF, 30, 30, p_myConference);
-      c.drawRoundRect(rectF, 30, 30, p_myConference_waku);
+      c.drawRoundRect(rectF, 30, 30, p_myConference);       //*** 会議の矩形を描画 ***//
+      c.drawRoundRect(rectF, 30, 30, p_myConference_waku);  //*** 矩形の枠を描画 ***//
       //*** 矩形内部に社内社外・会議目的の文字を描画する ***//
       onDrawRectText(r, rectF, c);
+
+
+
 
 //            //*** RECTの高さが、100dp以上ならば、描画を行う ***//
 //            if (rectF.bottom - rectF.top >= 100) {
@@ -350,8 +376,9 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     Log.d(CALL, "call TimeTableView->init()");
 
 
-    reserveInfo = new ArrayList<>();    //***  ***//
-    reserveOther = new ArrayList<>();   //***  ***//
+    reserveInfo = new ArrayList<>();      //*** 自分会議記録用リスト ***//
+    reserveOther = new ArrayList<>();     //*** 他人会議記録用リスト ***//
+    reserveExtension = new ArrayList<>(); //*** 延長用リスト        ***//
 
     detector = new GestureDetector(ReserveListActivity.getInstance(), this);
 
@@ -424,6 +451,14 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     p_detail.setTextAlign(Paint.Align.CENTER);
     p_detail.setTypeface(Typeface.DEFAULT_BOLD);
     p_detail.setColor(Color.BLACK);
+
+    //*** 延長用 ***//
+    p_extension = new Paint();
+//    p_extension.setColor(Color.YELLOW);
+    p_extension.setColor(Color.parseColor("#FFCA28"));
+    p_extension.setStyle(Paint.Style.FILL);
+    p_extension.setStrokeWidth(10);
+
   }
 
   //*** 画面タッチ時のイベント ***//
@@ -517,10 +552,22 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     reserveInfo.clear();
     reserveOther.clear();
 
-    //*** 自分の参加会議の検索 ***//
     SQLiteOpenHelper helper = new MyHelper(getContext());
     SQLiteDatabase db = helper.getReadableDatabase();
-    Cursor c = db.rawQuery(Q_MY_MEETING, new String[]{emp_id, date});
+    Cursor c = null;
+
+//    //*** 自分、他人の会議を全件検索して延長会議を調べる ***//
+//    Cursor c = db.rawQuery("select * from t_extension where re_id = ?", null);
+//    while (c.moveToNext()) {
+//      Reserve r = new Reserve();
+//      r.setRe_id(c.getString(0));               //*** 延長テーブルにある予約ID ***//
+//      r.setRe_extensionEndTime(c.getString(4)); //*** 延長の終了時刻 ***//
+//      reserveExtension.add(r);
+//    }
+
+
+    //*** 自分の参加会議の検索 ***//
+    c = db.rawQuery(Q_MY_MEETING, new String[]{emp_id, date});
     while (c.moveToNext()) {
       // 予約情報のインスタンス生成
       Reserve r = new Reserve();
@@ -536,13 +583,18 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
       r.setRe_room_id(c.getString(10));       //*** 会議室ID ***//
       r.setRe_purpose_name(c.getString(19));  //*** 会議目的名 ***//
 
+      String extensionEndTime = Util.isExtensionConference(r.getRe_id());
+      //*** 延長テーブルを検索してその会議が延長されているなら、値をセットする ***//
+      if (extensionEndTime != null) {
+        r.setRe_extensionEndTime(extensionEndTime);
+      }
+
       reserveInfo.add(r);
       Log.d(CALL, "取得した自分の参加会議 " + c.getString(0) + " : " + c.getString(2) + " : " + c.getString(3));
     }
     c.close();
 
     //*** 他人の参加会議の検索 ***//
-    // TODO: 2017/11/13 group by re_idで予約IDでくくる
     c = db.rawQuery(Q_OTHER_MEETING, new String[]{emp_id, date});
     while (c.moveToNext()) {
 
@@ -559,9 +611,21 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
       r.setRe_room_id(c.getString(10));
       r.setRe_purpose_name(c.getString(19));  //*** 会議目的名 ***//
 
+      String extensionEndTime = Util.isExtensionConference(r.getRe_id());
+      //*** 延長テーブルを検索してその会議が延長されているなら、値をセットする ***//
+      if (extensionEndTime != null) {
+        r.setRe_extensionEndTime(extensionEndTime);
+      }
+
       reserveOther.add(r);
       Log.d(CALL, "取得した他人の参加会議 " + c.getString(0) + " : " + c.getString(2) + " : " + c.getString(3));
     }
+
+    //*** 延長テーブルの検索 ***//
+    List<Reserve> listAll = new ArrayList<>();
+
+
+
     c.close();
     invalidate();
   }

@@ -48,6 +48,7 @@ public class Reserve implements Serializable {
   private String re_startTime;            //*** 開始時刻 ***//
   private String re_endDay;               //*** 終了日時 ***//
   private String re_endTime;              //*** 終了時刻 ***//
+  private String re_extensionEndTime;     //*** 延長の終了時刻 ***//
   private String re_fixtures;             //*** 備品 ***//
   private String re_remarks;              //*** 備考 ***//
   private String re_switch;               //*** 社内/社外区分 0 社内 1 社外***//
@@ -217,6 +218,14 @@ public class Reserve implements Serializable {
 
   public void setId(long id) {
     this.id = id;
+  }
+
+  public String getRe_extensionEndTime() {
+    return re_extensionEndTime;
+  }
+
+  public void setRe_extensionEndTime(String re_extensionEndTime) {
+    this.re_extensionEndTime = re_extensionEndTime;
   }
 
   @Override

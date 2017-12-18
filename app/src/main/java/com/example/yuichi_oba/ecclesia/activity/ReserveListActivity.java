@@ -179,10 +179,6 @@ public class ReserveListActivity extends AppCompatActivity
     }
   }
 
-
-
-
-
 //    public static List<Reserve> reserveInfo;    // 予約情報記録クラスの変数   非同期エラーが起きるため使用禁止する！
 
 

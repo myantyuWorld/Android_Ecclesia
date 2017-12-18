@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
-import com.example.yuichi_oba.ecclesia.R;
 import com.example.yuichi_oba.ecclesia.activity.AddMemberActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveConfirmActivity;
 import com.example.yuichi_oba.ecclesia.activity.ReserveListActivity;
@@ -28,7 +27,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ONE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.SQL_ALREADY_EXTENSION_CHECK;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.ZERO;
 
 public class Util {
 
@@ -537,6 +541,19 @@ public class Util {
         }
         return result;
     }
+
+  //*** 当該予約IDの会議が延長されているかちぇっくし、されているならば、延長の終了時間をかえすメソッド ***//
+  public static String isExtensionConference(String reId) {
+    String result = null;
+    MyHelper helper = new MyHelper(ReserveListActivity.getInstance().getApplicationContext());
+    SQLiteDatabase db = helper.getReadableDatabase();
+    Cursor c = db.rawQuery("select * from t_extension where re_id = ?", new String[]{reId});
+    if (c.moveToNext()) {
+      result = c.getString(4); //*** 延長テーブルの延長終了時間 ***//
+    }
+    return result;  //*** 要nullチェック ***//
+  }
+
 
 
 
