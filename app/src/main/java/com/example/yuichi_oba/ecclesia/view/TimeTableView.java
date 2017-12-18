@@ -221,17 +221,18 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
 
       String room_id = r.getRe_room_id();
       String extensionTime = r.getRe_extensionEndTime();
-      //*** その会議が延長されているなら、描画する（null対策) ***//
-      if (r.getRe_extensionEndTime() != null) {
-        c.drawRoundRect(retRectCooperation(sTime, extensionTime, room_id), 30, 30, p_extension);
-        c.drawRoundRect(retRectCooperation(sTime, extensionTime, room_id), 30, 30, p_myConference_waku);
-
-      }
-
       RectF rectF = retRectCooperation(sTime, eTime, room_id);
       // 予約会議のざ行情報を記録する
       // TODO: 2017/12/18 延長終了時刻があれば、そっちで記録するロジックの実装
       reserveOther.get(cnt).setCoop(new float[]{rectF.left, rectF.top, rectF.right, rectF.bottom});
+      //*** その会議が延長されているなら、描画する（null対策) ***//
+      if (r.getRe_extensionEndTime() != null) {
+        RectF rectFEx = retRectCooperation(sTime, extensionTime, room_id);
+        c.drawRoundRect(rectFEx, 30, 30, p_extension);
+        c.drawRoundRect(rectFEx, 30, 30, p_myConference_waku);
+        reserveOther.get(cnt).setCoop(new float[]{rectFEx.left, rectFEx.top, rectFEx.right, rectFEx.bottom});
+      }
+
 
       c.drawRoundRect(rectF, 30, 30, p_otherConference);
       c.drawRoundRect(rectF, 30, 30, p_myConference_waku);
@@ -242,39 +243,22 @@ public class TimeTableView extends View implements GestureDetector.OnGestureList
     cnt = 0;
     //*** 自分の参加会議に対する処理 ***//
     for (Reserve r : reserveInfo) {
-
-
-
       String sTime = r.getRe_startTime();                         //*** 開始時刻の取得 ***//
       String eTime = r.getRe_endTime();                           //*** 終了時刻の取得 ***//
       String room_id = r.getRe_room_id();                         //*** 会議室ＩＤの取得 ***//
       String extensionTime = r.getRe_extensionEndTime();
-      //*** その会議が延長されているなら、描画する（null対策) ***//
-      if (r.getRe_extensionEndTime() != null) {
-          c.drawRoundRect(retRectCooperation(sTime, extensionTime, room_id), 30, 30, p_extension);
-          c.drawRoundRect(retRectCooperation(sTime, extensionTime, room_id), 30, 30, p_myConference_waku);
-
-      }
-
-
       RectF rectF = retRectCooperation(sTime, eTime, room_id);    //***  ***//
       // 予約会議の座標情報を記録する
       // TODO: 2017/12/18 延長終了時刻があれば、そっちで記録するロジックの実装
       reserveInfo.get(cnt).setCoop(new float[]{rectF.left, rectF.top, rectF.right, rectF.bottom});
-//            switch (room_id) {
-//                case "0001":
-//                    room = tokubetsu;
-//                    break;
-//                case "0002":
-//                    room = roomA;
-//                    break;
-//                case "0003":
-//                    room = roomB;
-//                    break;
-//                case "0004":
-//                    room = roomC;
-//                    break;
-//            }
+      //*** その会議が延長されているなら、描画する（null対策) ***//
+      if (r.getRe_extensionEndTime() != null) {
+        RectF rectFEx = retRectCooperation(sTime, extensionTime, room_id);
+          c.drawRoundRect(rectFEx, 30, 30, p_extension);
+          c.drawRoundRect(rectFEx, 30, 30, p_myConference_waku);
+        reserveInfo.get(cnt).setCoop(new float[]{rectFEx.left, rectFEx.top, rectFEx.right, rectFEx.bottom});
+      }
+
       // 予約会議の描画
       c.drawRoundRect(rectF, 30, 30, p_myConference);       //*** 会議の矩形を描画 ***//
       c.drawRoundRect(rectF, 30, 30, p_myConference_waku);  //*** 矩形の枠を描画 ***//

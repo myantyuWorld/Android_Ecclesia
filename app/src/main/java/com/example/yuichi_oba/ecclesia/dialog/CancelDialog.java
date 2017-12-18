@@ -58,6 +58,9 @@ public class CancelDialog extends DialogFragment {
                             int rs_member = db.delete("t_member", "re_id = ?", new String[]{re_id});
                             Log.d("call", "参加者テーブルの削除件数 : " + rs_member);
 
+                            int rs_extension = db.delete("t_extension", "re_id = ?", new String[]{re_id});
+                            Log.d("call", "延長テーブルの削除件数 : " + rs_extension);
+
 
                             //*** 画面の再描画を行う ***//
                             ReserveListActivity.arl_view_timetableView.reView(ReserveListActivity.employee.getEmp_id(), ReserveListActivity.arl_txt_date.getText().toString());
