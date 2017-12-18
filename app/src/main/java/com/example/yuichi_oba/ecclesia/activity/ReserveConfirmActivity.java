@@ -381,6 +381,10 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
             btn_confirm = (Button) findViewById(R.id.arconfirm_btn_correct);
             btn_confirm.setText("戻る");
         }
+        if (gamen.equals("通知")) {
+            Toolbar toolbar1 = (Toolbar) findViewById(R.id.toolbarConfirm);
+            toolbar1.setTitle("キャンセルされた会議内容の確認");
+        }
     }
 
     //*** アクティビティのライフサイクルとして、別の画面にいってまた帰ってきたとき、コールされる ***//
