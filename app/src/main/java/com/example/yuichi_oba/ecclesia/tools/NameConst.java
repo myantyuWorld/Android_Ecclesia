@@ -51,6 +51,8 @@ public class NameConst {
     public static final String NOTPARTICIPATION = "参加会議ではありません";
     public static final String IMPOSSIBLE = "不可能";
     public static final String ALREADYEX = "既に延長されています";
+    public static final String ALREADYSTART = "既に開始されている会議です";
+    public static final String CANNOTCHANGE = "変更を行える会議ではありません";
 
     // 受け渡し用キー
     public static final String KEYEX = "EX";
@@ -72,6 +74,8 @@ public class NameConst {
     public static final String KEYNOTNOW = "notNow";
     public static final String KEYCONTENT = "content";
     public static final String KEYALREADYEX = "alreadyEx";
+    public static final String KEYALREADYSTART = "alreadyStart";
+    public static final String KEYCANNOTCHANGE = "canNotChange";
 
     public static final String YYYY_MM_DD_HH_MM = "yyyy/MM/dd HH：mm";
     public static final String HH_MM = "HH：mm";

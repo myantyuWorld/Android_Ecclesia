@@ -52,37 +52,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.yuichi_oba.ecclesia.activity.ReserveListActivity.authFlg;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.ALREADYEX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.CALL;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.CANCEL;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.COMPLETE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.EARLY;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.EMPTY;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.EX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.FALSE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.HH_MM;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.IMPOSSIBLE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYALREADYEX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCHANGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYCONTENT;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEAR;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYEX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYNOTNOW;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYNOTPARTICIPATION;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYOUT;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYRESULT;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.KEYSMALLEX;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.MINUSONE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.M_THIRTY;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.NOTNOW;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.NOTPARTICIPATION;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.OK;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.RUNMESSAGE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.RUNQUESTION;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.SPACE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.TRUE;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD;
-import static com.example.yuichi_oba.ecclesia.tools.NameConst.YYYY_MM_DD_HH_MM;
+import static com.example.yuichi_oba.ecclesia.tools.NameConst.*;
 import static com.example.yuichi_oba.ecclesia.tools.Util.alreadyExtensionCheck;
 
 // _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
@@ -220,7 +190,14 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                   title = getArguments().getString(KEYCONTENT) + IMPOSSIBLE;
                   str = ALREADYEX;
                   break;
-
+              case KEYALREADYSTART:
+                  title = getArguments().getString(KEYCONTENT) + IMPOSSIBLE;
+                  str = ALREADYSTART;
+                  break;
+              case KEYCANNOTCHANGE:
+                  title = getArguments().getString(KEYCONTENT) + IMPOSSIBLE;
+                  str = CANNOTCHANGE;
+                  break;
             //*** 延長専用の30分前verも作る ***//
           }
           return new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(str).setPositiveButton(OK, null).create();
@@ -502,16 +479,35 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                     Log.d(CALL, employee.toString());
                     intent.putExtra("employee", employee);
                     startActivity(intent);
+                } else if (!cal.before(start)) {
+                    //*** 変更を試験的に無条件で行いたくなったら---> ***//
+                    diaBundle.putString(KEYRESULT, KEYALREADYSTART);
+                    diaBundle.putString(KEYCONTENT, RESERVECHANGE);
+                    ResultDialog resultDialog = new ResultDialog();
+                    resultDialog.setArguments(diaBundle);
+                    resultDialog.show(getFragmentManager(), KEYALREADYSTART);
+                    //*** <---ここまでのコードをコメ化し、下のコードを復活させる ***//
+
+//                    intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
+//                    intent.putExtra(KEYCHANGE, reserve);
+//                    Log.d(CALL, employee.toString());
+//                    intent.putExtra("employee", employee);
+//                    startActivity(intent);
                 } else {
-                    Toast.makeText(this, "本番では変更禁止", Toast.LENGTH_SHORT).show();
-                    //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
-                    intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
-                    intent.putExtra(KEYCHANGE, reserve);
-                    Log.d(CALL, employee.toString());
-                    intent.putExtra("employee", employee);
-                    startActivity(intent);
+                    //*** 変更を試験的に無条件で行いたくなったら---> ***//
+                    diaBundle.putString(KEYRESULT, KEYCANNOTCHANGE);
+                    diaBundle.putString(KEYCONTENT, RESERVECHANGE);
+                    ResultDialog resultDialog = new ResultDialog();
+                    resultDialog.setArguments(diaBundle);
+                    resultDialog.show(getFragmentManager(), KEYCANNOTCHANGE);
+                    //*** <---ここまでのコードをコメ化し、下のコードを復活させる ***//
+
+//                    intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
+//                    intent.putExtra(KEYCHANGE, reserve);
+//                    Log.d(CALL, employee.toString());
+//                    intent.putExtra("employee", employee);
+//                    startActivity(intent);
                 }
-                //                Toast.makeText(this, "予約変更", Toast.LENGTH_SHORT).show();
                 break;
             // 「延長」が選択された
             case R.id.option_extention:
