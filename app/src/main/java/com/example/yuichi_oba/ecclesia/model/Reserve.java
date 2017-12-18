@@ -498,9 +498,11 @@ public class Reserve implements Serializable {
     //*** 現在時刻取得 ***//
     Date ealDate = new Date();
     //*** フォ－マットを用意 ***//
-    SimpleDateFormat ealFor = new SimpleDateFormat(HH_MM);
+    SimpleDateFormat ealForDay = new SimpleDateFormat(YYYY_MM_DD);
+    SimpleDateFormat ealForTime = new SimpleDateFormat(HH_MM);
     //*** 現在時刻をフォーマットにかけてStringへ変換 ***//
-    String ealTime = ealFor.format(ealDate);
+    String ealDay = ealForDay.format(ealDate);
+    String ealTime = ealForTime.format(ealDate);
     Log.d(CALL, "早期退出した時刻：" + ealTime);
     //*** 既に延長がされているか確認 ***//
     MyHelper helper2 = new MyHelper(ReserveConfirmActivity.getInstance().getApplicationContext());
@@ -508,9 +510,9 @@ public class Reserve implements Serializable {
     Cursor cursor = db2.rawQuery(SQL_ALREADY_EXTENSION_CHECK, new String[]{re_id});
     //*** 延長の有無でupdateするテーブルを分ける ***//
     if (cursor.moveToNext()) {
-      db.execSQL(SQL_EARLY_OUT_EXTENSION, new Object[]{ealTime, re_id});
+      db.execSQL(SQL_EARLY_OUT_EXTENSION, new Object[]{ealDay, ealTime, re_id});
     } else {
-      db.execSQL(SQL_EARLY_OUT_RESERVE, new Object[]{ealTime, re_id});
+      db.execSQL(SQL_EARLY_OUT_RESERVE, new Object[]{ealDay, ealTime, re_id});
     }
     //*** 各種クローズ ***//
     db2.close();

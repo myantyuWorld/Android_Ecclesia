@@ -92,8 +92,8 @@ public class NameConst {
 
     // SQL
     public static final String SQL_ALREADY_EXTENSION_CHECK = "select ex_endDay, ex_endTime from t_extension where re_id = ?";
-    public static final String SQL_EARLY_OUT_EXTENSION = "update t_extension set ex_endtime = ? where re_id = ?";
-    public static final String SQL_EARLY_OUT_RESERVE = "update t_reserve set re_endtime = ? where re_id = ?";
+    public static final String SQL_EARLY_OUT_EXTENSION = "update t_extension set ex_endday = ?, ex_endtime = ? where re_id = ?";
+    public static final String SQL_EARLY_OUT_RESERVE = "update t_reserve set re_endday = ?, re_endtime = ? where re_id = ?";
     public static final String SQL_EXTENSION_INSERT = "insert into t_extension values(?,?,?,?,?)";
     public static final String SQL_MEMBER_REPLACE = "replace into t_member values(?, ?)";
     public static final String SQL_RESERVE_UPDATE =
