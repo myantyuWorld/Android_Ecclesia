@@ -561,9 +561,6 @@ public class ReserveChangeActivity extends AppCompatActivity
         return true;
     }
 
-    //*** 変更情報確認画面で用いるカスタムビュー ***//
-    //*** Viewパッケージに移行できたので内部クラス化は中止 ***//
-
     //*** 日付変更のダイアログ ***//
     public static class ChangeDateDialog extends DialogFragment {
         @Override

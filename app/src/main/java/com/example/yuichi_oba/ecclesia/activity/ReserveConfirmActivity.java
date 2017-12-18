@@ -198,14 +198,12 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                   title = getArguments().getString(KEYCONTENT) + IMPOSSIBLE;
                   str = CANNOTCHANGE;
                   break;
-            //*** 延長専用の30分前verも作る ***//
           }
           return new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(str).setPositiveButton(OK, null).create();
         }
     }
 
     //*** 延長オプション選択時の ダイアログフラグメントクラス ***//
-    //*** 結果ダイアログが即出る 見た目をもうちょっとマシに ***//
     public static class ExtensionDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -444,17 +442,23 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                     earlyOutDialog.show(getFragmentManager(), KEYOUT);
                 } else if (cal.after(start) && cal.before(end)) {
                     //*** 初めに時間のチェック（現在行われている会議がtrueの場合、未参加のfalseを食らっている） ***//
-                    diaBundle.putString(KEYRESULT, KEYNOTPARTICIPATION);
-                    diaBundle.putString(KEYCONTENT, EARLY);
-                    ResultDialog resultDialog = new ResultDialog();
-                    resultDialog.setArguments(diaBundle);
-                    resultDialog.show(getFragmentManager(), KEYNOTPARTICIPATION);
+//                    diaBundle.putString(KEYRESULT, KEYNOTPARTICIPATION);
+//                    diaBundle.putString(KEYCONTENT, EARLY);
+//                    ResultDialog resultDialog = new ResultDialog();
+//                    resultDialog.setArguments(diaBundle);
+//                    resultDialog.show(getFragmentManager(), KEYNOTPARTICIPATION);
+                    Toast.makeText(this, "試験的に通します", Toast.LENGTH_SHORT).show();
+                    EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
+                    earlyOutDialog.show(getFragmentManager(), KEYOUT);
                 } else {
-                    diaBundle.putString(KEYRESULT, KEYNOTNOW);
-                    diaBundle.putString(KEYCONTENT, EARLY);
-                    ResultDialog resultDialog = new ResultDialog();
-                    resultDialog.setArguments(diaBundle);
-                    resultDialog.show(getFragmentManager(), KEYNOTNOW);
+//                    diaBundle.putString(KEYRESULT, KEYNOTNOW);
+//                    diaBundle.putString(KEYCONTENT, EARLY);
+//                    ResultDialog resultDialog = new ResultDialog();
+//                    resultDialog.setArguments(diaBundle);
+//                    resultDialog.show(getFragmentManager(), KEYNOTNOW);
+                    Toast.makeText(this, "試験的に通します", Toast.LENGTH_SHORT).show();
+                    EarlyOutDialog earlyOutDialog = new EarlyOutDialog();
+                    earlyOutDialog.show(getFragmentManager(), KEYOUT);
                 }
                 break;
             // 「予約変更」が選択された
@@ -481,32 +485,33 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                     startActivity(intent);
                 } else if (!cal.before(start)) {
                     //*** 変更を試験的に無条件で行いたくなったら---> ***//
-                    diaBundle.putString(KEYRESULT, KEYALREADYSTART);
-                    diaBundle.putString(KEYCONTENT, RESERVECHANGE);
-                    ResultDialog resultDialog = new ResultDialog();
-                    resultDialog.setArguments(diaBundle);
-                    resultDialog.show(getFragmentManager(), KEYALREADYSTART);
+//                    diaBundle.putString(KEYRESULT, KEYALREADYSTART);
+//                    diaBundle.putString(KEYCONTENT, RESERVECHANGE);
+//                    ResultDialog resultDialog = new ResultDialog();
+//                    resultDialog.setArguments(diaBundle);
+//                    resultDialog.show(getFragmentManager(), KEYALREADYSTART);
                     //*** <---ここまでのコードをコメ化し、下のコードを復活させる ***//
 
-//                    intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
-//                    intent.putExtra(KEYCHANGE, reserve);
-//                    Log.d(CALL, employee.toString());
-//                    intent.putExtra("employee", employee);
-//                    startActivity(intent);
+                    intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
+                    intent.putExtra(KEYCHANGE, reserve);
+                    Log.d(CALL, employee.toString());
+                    intent.putExtra("employee", employee);
+                    startActivity(intent);
                 } else {
                     //*** 変更を試験的に無条件で行いたくなったら---> ***//
-                    diaBundle.putString(KEYRESULT, KEYCANNOTCHANGE);
-                    diaBundle.putString(KEYCONTENT, RESERVECHANGE);
-                    ResultDialog resultDialog = new ResultDialog();
-                    resultDialog.setArguments(diaBundle);
-                    resultDialog.show(getFragmentManager(), KEYCANNOTCHANGE);
+//                    diaBundle.putString(KEYRESULT, KEYCANNOTCHANGE);
+//                    diaBundle.putString(KEYCONTENT, RESERVECHANGE);
+//                    ResultDialog resultDialog = new ResultDialog();
+//                    resultDialog.setArguments(diaBundle);
+//                    resultDialog.show(getFragmentManager(), KEYCANNOTCHANGE);
                     //*** <---ここまでのコードをコメ化し、下のコードを復活させる ***//
 
-//                    intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
-//                    intent.putExtra(KEYCHANGE, reserve);
-//                    Log.d(CALL, employee.toString());
-//                    intent.putExtra("employee", employee);
-//                    startActivity(intent);
+                    Toast.makeText(this, "試験的に通します", Toast.LENGTH_SHORT).show();
+                    intent = new Intent(getApplicationContext(), ReserveChangeActivity.class);
+                    intent.putExtra(KEYCHANGE, reserve);
+                    Log.d(CALL, employee.toString());
+                    intent.putExtra("employee", employee);
+                    startActivity(intent);
                 }
                 break;
             // 「延長」が選択された
@@ -540,44 +545,46 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                     }
                 } else if (cal.after(start) && cal.before(end)) {
                     //*** 延長を試験的に無条件で行いたくなったら---> ***//
-                    diaBundle.putString(KEYRESULT, KEYNOTPARTICIPATION);
-                    diaBundle.putString(KEYCONTENT, EX);
-                    ResultDialog resultDialog = new ResultDialog();
-                    resultDialog.setArguments(diaBundle);
-                    resultDialog.show(getFragmentManager(), KEYNOTPARTICIPATION);
+//                    diaBundle.putString(KEYRESULT, KEYNOTPARTICIPATION);
+//                    diaBundle.putString(KEYCONTENT, EX);
+//                    ResultDialog resultDialog = new ResultDialog();
+//                    resultDialog.setArguments(diaBundle);
+//                    resultDialog.show(getFragmentManager(), KEYNOTPARTICIPATION);
                     //*** <---ここまでのコードをコメ化し、下のコードを復活させる ***//
 
-//                    Toast.makeText(this, "試験的に通します", Toast.LENGTH_SHORT).show();
-//                    if (!alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
-//                        ExtensionDialog extensionDialog = new ExtensionDialog();
-//                        extensionDialog.show(getFragmentManager(), KEYEX);
-//                    } else {
-//                        diaBundle.putString(KEYRESULT, KEYALREADYEX);
-//                        diaBundle.putString(KEYCONTENT, EX);
-//                        ResultDialog notDialog = new ResultDialog();
-//                        notDialog.setArguments(diaBundle);
-//                        notDialog.show(getFragmentManager(), KEYALREADYEX);
-//                    }
+                    //*** 以下は試験的に無条件に行うコード ***//
+                    Toast.makeText(this, "試験的に通します", Toast.LENGTH_SHORT).show();
+                    if (!alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
+                        ExtensionDialog extensionDialog = new ExtensionDialog();
+                        extensionDialog.show(getFragmentManager(), KEYEX);
+                    } else {
+                        diaBundle.putString(KEYRESULT, KEYALREADYEX);
+                        diaBundle.putString(KEYCONTENT, EX);
+                        ResultDialog notDialog = new ResultDialog();
+                        notDialog.setArguments(diaBundle);
+                        notDialog.show(getFragmentManager(), KEYALREADYEX);
+                    }
                 } else {
                     //*** 延長を試験的に無条件で行いたくなったら---> ***//
-                    diaBundle.putString(KEYRESULT, KEYNOTNOW);
-                    diaBundle.putString(KEYCONTENT, EX);
-                    ResultDialog resultDialog = new ResultDialog();
-                    resultDialog.setArguments(diaBundle);
-                    resultDialog.show(getFragmentManager(), KEYNOTNOW);
+//                    diaBundle.putString(KEYRESULT, KEYNOTNOW);
+//                    diaBundle.putString(KEYCONTENT, EX);
+//                    ResultDialog resultDialog = new ResultDialog();
+//                    resultDialog.setArguments(diaBundle);
+//                    resultDialog.show(getFragmentManager(), KEYNOTNOW);
                     //*** <---ここまでのコードをコメ化し、下のコードを復活させる ***//
 
-//                    Toast.makeText(this, "試験的に通します", Toast.LENGTH_SHORT).show();
-//                    if (!alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
-//                        ExtensionDialog extensionDialog = new ExtensionDialog();
-//                        extensionDialog.show(getFragmentManager(), KEYEX);
-//                    } else {
-//                        diaBundle.putString(KEYRESULT, KEYALREADYEX);
-//                        diaBundle.putString(KEYCONTENT, EX);
-//                        ResultDialog notDialog = new ResultDialog();
-//                        notDialog.setArguments(diaBundle);
-//                        notDialog.show(getFragmentManager(), KEYALREADYEX);
-//                    }
+                    //*** 以下は試験的に無条件に行うコード ***//
+                    Toast.makeText(this, "試験的に通します", Toast.LENGTH_SHORT).show();
+                    if (!alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
+                        ExtensionDialog extensionDialog = new ExtensionDialog();
+                        extensionDialog.show(getFragmentManager(), KEYEX);
+                    } else {
+                        diaBundle.putString(KEYRESULT, KEYALREADYEX);
+                        diaBundle.putString(KEYCONTENT, EX);
+                        ResultDialog notDialog = new ResultDialog();
+                        notDialog.setArguments(diaBundle);
+                        notDialog.show(getFragmentManager(), KEYALREADYEX);
+                    }
                 }
                 break;
         }
