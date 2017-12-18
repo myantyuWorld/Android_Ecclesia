@@ -479,7 +479,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                 //*** 延長しようとしている会議が現在日付・時刻に矛盾していないか ***//
                 //*** 会議の最中かどうか、自分が参加している会議かの判定 ***//
                 if (cal.after(start) && cal.before(end) && reserve.getRe_member().indexOf(employee.getEmp_id()) != MINUSONE) {
-                    if (!alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
+                    if (alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
                         //*** 延長ダイアログを表示 ***//
                         ExtensionDialog extensionDialog = new ExtensionDialog();
                         extensionDialog.show(getFragmentManager(), KEYEX);
@@ -489,7 +489,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                 } else {
                     Toast.makeText(this, "本番では延長禁止", Toast.LENGTH_SHORT).show();
                     //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
-                    if (!alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
+                    if (alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
                         //*** 延長ダイアログを表示 ***//
                         ExtensionDialog extensionDialog = new ExtensionDialog();
                         extensionDialog.show(getFragmentManager(), KEYEX);
