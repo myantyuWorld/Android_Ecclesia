@@ -539,17 +539,6 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
 //                        notDialog.show(getFragmentManager(), KEYALREADYEX);
 //                    }
                 } else {
-<<<<<<< HEAD
-                    Toast.makeText(this, "本番では延長禁止", Toast.LENGTH_SHORT).show();
-                    //*** 試験的に、ダメでも出来るようにしておく（いずれ削除） ***//
-                    if (alreadyExtensionCheck(reserve.getRe_id()).equals(FALSE)) {
-                        //*** 延長ダイアログを表示 ***//
-                        ExtensionDialog extensionDialog = new ExtensionDialog();
-                        extensionDialog.show(getFragmentManager(), KEYEX);
-                    } else {
-                        Toast.makeText(this, "既に延長されています", Toast.LENGTH_SHORT).show();
-                    }
-=======
                     //*** 延長を試験的に無条件で行いたくなったら---> ***//
                     diaBundle.putString(KEYRESULT, KEYNOTNOW);
                     diaBundle.putString(KEYCONTENT, EX);
@@ -569,7 +558,6 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
 //                        notDialog.setArguments(diaBundle);
 //                        notDialog.show(getFragmentManager(), KEYALREADYEX);
 //                    }
->>>>>>> syama/master
                 }
                 break;
         }
