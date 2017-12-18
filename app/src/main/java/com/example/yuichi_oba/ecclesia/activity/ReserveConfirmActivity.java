@@ -307,12 +307,23 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
         switch (gamenCode) {
             case "0":
                 gamen = "新規";
+                employee = (Employee) intent.getSerializableExtra("emp");        //*** 社員情報の取得 ***//
+                reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
+                reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
                 break;
             case "1":
                 gamen = "一覧";
+                reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
+                Log.d("call2", reserve.toString());
+                employee = (Employee) intent.getSerializableExtra("employee");
+                Log.d("Emp in Confirm:", employee.toString());
+                reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
                 break;
             case "2":
                 gamen = "通知";
+                String reId = intent.getStringExtra("reId");
+                Log.d("call", "選択会議 : " + reId);
+                reserve = Util.getReserveInfo("0001");
                 break;
         }
         Log.d(CALL, "画面遷移元　" + gamen);
@@ -331,25 +342,25 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
 ////          btn_confirm.setText("戻る");
 //        }
         //*** 画面遷移元によって、処理を分ける ***//
-        switch(gamen){
-            case "新規":
-                employee = (Employee) intent.getSerializableExtra("emp");        //*** 社員情報の取得 ***//
-                reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
-                reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
-                break;
-            case "通知":
-                String reId = intent.getStringExtra("reId");
-                Log.d("call", "選択会議 : " + reId);
-                reserve = Util.getReserveInfo("0001");
-                break;
-            default:
-                reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
-                Log.d("call2", reserve.toString());
-                employee = (Employee) intent.getSerializableExtra("employee");
-                Log.d("Emp in Confirm:", employee.toString());
-                reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
-
-        }
+//        switch(gamen){
+//            case "新規":
+//                employee = (Employee) intent.getSerializableExtra("emp");        //*** 社員情報の取得 ***//
+//                reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
+//                reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
+//                break;
+//            case "通知":
+//                String reId = intent.getStringExtra("reId");
+//                Log.d("call", "選択会議 : " + reId);
+//                reserve = Util.getReserveInfo("0001");
+//                break;
+//            default:
+//                reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
+//                Log.d("call2", reserve.toString());
+//                employee = (Employee) intent.getSerializableExtra("employee");
+//                Log.d("Emp in Confirm:", employee.toString());
+//                reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
+//
+//        }
         instance = this;
 
 //    intent.getIntExtra("gamen", 1);
