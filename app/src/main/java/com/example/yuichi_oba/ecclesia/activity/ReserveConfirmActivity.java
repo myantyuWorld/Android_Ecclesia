@@ -327,44 +327,7 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
                 break;
         }
         Log.d(CALL, "画面遷移元　" + gamen);
-//        //*** 画面遷移元によって、処理を分ける ***//
-//        if (gamen.contains("新規")) {    //*** 「新規」画面からの画面遷移 ***//
-//            employee = (Employee) intent.getSerializableExtra("emp");        //*** 社員情報の取得 ***//
-//            reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
-//
-//        } else {                         //*** 「一覧」画面からの画面遷移 ***//
-//            reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
-//            Log.d("call", reserve.toString());
-//            employee = (Employee) intent.getSerializableExtra("employee");
-//            Log.d("Emp in Confirm:", employee.toString());
-//
-////          btn_confirm = (Button) findViewById(R.id.arconfirm_btn_mem_confirm);    //*** 参加者確認ボタン ***//
-////          btn_confirm.setText("戻る");
-//        }
-        //*** 画面遷移元によって、処理を分ける ***//
-//        switch(gamen){
-//            case "新規":
-//                employee = (Employee) intent.getSerializableExtra("emp");        //*** 社員情報の取得 ***//
-//                reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
-//                reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
-//                break;
-//            case "通知":
-//                String reId = intent.getStringExtra("reId");
-//                Log.d("call", "選択会議 : " + reId);
-//                reserve = Util.getReserveInfo("0001");
-//                break;
-//            default:
-//                reserve = (Reserve) intent.getSerializableExtra("reserve");     //*** 予約情報のインスタンスを取得 ***//
-//                Log.d("call2", reserve.toString());
-//                employee = (Employee) intent.getSerializableExtra("employee");
-//                Log.d("Emp in Confirm:", employee.toString());
-//                reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
-//
-//        }
         instance = this;
-
-//    intent.getIntExtra("gamen", 1);
-//        reserve.setRe_mem_priority((int) setReserveDetail()); //*** 会議優先度をセットする ***//
 
         /***
          * レイアウト情報をマッピングする
@@ -393,8 +356,8 @@ public class ReserveConfirmActivity extends AppCompatActivity implements Navigat
             btn_confirm.setText("戻る");
         }
         if (gamen.equals("通知")) {
-            Toolbar toolbar1 = (Toolbar) findViewById(R.id.toolbarConfirm);
-            toolbar1.setTitle("キャンセルされた会議内容の確認");
+//            Toolbar toolbar1 = (Toolbar) findViewById(R.id.toolbar);
+            toolbar.setTitle("キャンセルされた会議内容の確認");
         }
     }
 
